@@ -1,0 +1,28 @@
+{
+    "name": "milestone/smartkitchen",
+    "description": "Smart Kitchen - KOT",
+    "type": "laravel-package",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Milestone Innovative Technologies",
+            "email": "info@milestoneit.net"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Milestone\\SmartKitchen\\SmartKitchenServiceProvider"
+            ]
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Milestone\\SmartKitchen\\": "src/"
+        }
+    }
+}
