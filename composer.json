@@ -11,7 +11,8 @@
     ],
     "minimum-stability": "dev",
     "require": {
-        
+        "spatie/laravel-medialibrary": "^8.0.0",
+        "doctrine/dbal": "^2.11.1"
     },
     "extra": {
         "laravel": {
