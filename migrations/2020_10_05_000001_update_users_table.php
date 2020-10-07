@@ -15,7 +15,7 @@ class UpdateUsersTable extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->string('email',64)->nullable()->change();
-            $table->string('login',16)->index()->unique()->after('name');
+            $table->string('login',24)->index()->unique()->after('name');
             $table->enum('role',['Administrator','Management','Receptionist','Waiter','Chef'])->index()->default('Waiter')->after('password');
             $table->dropUnique(['email']);
         });
