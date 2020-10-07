@@ -2,16 +2,12 @@
 
 namespace Milestone\SmartKitchen\Models;
 
-use Illuminate\Database\Eloquent\Builder;
+use Milestone\SmartKitchen\Scopes\NotCancelledScope;
 
 class Token extends Model
 {
-    protected static function booted()
-    {
-        static::addGlobalScope('not_cancelled', function (Builder $builder) {
-            $builder->where('progress', '!=', 'Cancelled');
-        });
-    }
+    protected static function booted(){ static::addGlobalScope(new NotCancelledScope); }
+
     public function Customer(){ return $this->belongsTo(Customer::class,'customer','id'); }
     public function Seating(){ return $this->belongsTo(Seating::class,'customer','id'); }
     public function User(){ return $this->belongsTo(User::class,'user','id'); }
