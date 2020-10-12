@@ -18,7 +18,7 @@ class CreateKitchenItemsTable extends Migration
             $table->unsignedBigInteger('kitchen')->index();
             $table->unsignedBigInteger('item')->index();
             $table->unsignedBigInteger('duration')->default(0);
-            $table->enum('active',['Y','N'])->default('Y');
+            $table->enum('status',['Active','Inactive'])->default('Active');
             $table->timestamps();
         });
     }

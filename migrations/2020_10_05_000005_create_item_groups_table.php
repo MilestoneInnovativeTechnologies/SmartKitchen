@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateItemsTable extends Migration
+class CreateItemGroupsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,12 @@ class CreateItemsTable extends Migration
      */
     public function up()
     {
-        Schema::create('items', function (Blueprint $table) {
+        Schema::create('item_groups', function (Blueprint $table) {
             $table->id();
             $table->string('name',256)->index();
             $table->string('detail',1024)->nullable();
-            $table->enum('active',['Y','N'])->default('Y');
+            $table->json('items')->nullable();
+            $table->enum('status',['Active','Inactive'])->default('Active');
             $table->timestamps();
         });
     }
@@ -29,6 +30,6 @@ class CreateItemsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('items');
+        Schema::dropIfExists('item_groups');
     }
 }

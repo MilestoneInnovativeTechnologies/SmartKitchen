@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePriceListsTable extends Migration
+class CreateSeatingsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,13 @@ class CreatePriceListsTable extends Migration
      */
     public function up()
     {
-        Schema::create('price_lists', function (Blueprint $table) {
+        Schema::create('seating', function (Blueprint $table) {
             $table->id();
             $table->string('name',256)->index();
             $table->string('detail',1024)->nullable();
-            $table->enum('active',['Y','N'])->default('Y');
+            $table->unsignedBigInteger('price_list');
+            $table->json('seats')->nullable();
+            $table->enum('status',['Active','Inactive'])->default('Active');
             $table->timestamps();
         });
     }
@@ -29,6 +31,6 @@ class CreatePriceListsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('price_lists');
+        Schema::dropIfExists('seating');
     }
 }

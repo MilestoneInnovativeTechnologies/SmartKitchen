@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateKitchensTable extends Migration
+class CreateMenusTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,11 @@ class CreateKitchensTable extends Migration
      */
     public function up()
     {
-        Schema::create('kitchens', function (Blueprint $table) {
+        Schema::create('menus', function (Blueprint $table) {
             $table->id();
             $table->string('name',256)->index();
             $table->string('detail',1024)->nullable();
-            $table->enum('active',['Y','N'])->default('N');
+            $table->json('groups')->nullable();
             $table->enum('status',['Active','Inactive'])->default('Active');
             $table->timestamps();
         });
@@ -30,6 +30,6 @@ class CreateKitchensTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('kitchens');
+        Schema::dropIfExists('menus');
     }
 }

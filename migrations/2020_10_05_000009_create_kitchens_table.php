@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateSeatingsTable extends Migration
+class CreateKitchensTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,11 @@ class CreateSeatingsTable extends Migration
      */
     public function up()
     {
-        Schema::create('seating', function (Blueprint $table) {
+        Schema::create('kitchens', function (Blueprint $table) {
             $table->id();
             $table->string('name',256)->index();
             $table->string('detail',1024)->nullable();
-            $table->unsignedBigInteger('price_list');
-            $table->json('seats')->nullable();
-            $table->enum('active',['Y','N'])->default('Y');
+            $table->enum('status',['Active','Inactive'])->default('Active');
             $table->timestamps();
         });
     }
@@ -31,6 +29,6 @@ class CreateSeatingsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('seating');
+        Schema::dropIfExists('kitchens');
     }
 }
