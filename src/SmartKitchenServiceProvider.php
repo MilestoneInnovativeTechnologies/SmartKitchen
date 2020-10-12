@@ -3,6 +3,7 @@
 namespace Milestone\SmartKitchen;
 
 use Illuminate\Support\ServiceProvider;
+use Milestone\SmartKitchen\Models\Model;
 
 class SmartKitchenServiceProvider extends ServiceProvider
 {
@@ -12,7 +13,7 @@ class SmartKitchenServiceProvider extends ServiceProvider
      * @return void
      */
 
-    private static array $configs = ['filesystems.disks'];
+    private static array $configs = ['sk','filesystems.disks','logging.channels','auth.providers'];
 
     public function register()
     {
@@ -28,7 +29,9 @@ class SmartKitchenServiceProvider extends ServiceProvider
     {
         if($this->app->runningInConsole()){
             self::loadMigrations();
+            self::publishConfigs();
         }
+        Model::unguard();
     }
 
     private static function path(...$path){
@@ -38,6 +41,13 @@ class SmartKitchenServiceProvider extends ServiceProvider
     private function mergeConfigs(){
         foreach (self::$configs as $config)
             $this->mergeConfigFrom(self::path('config',"$config.php"), $config);
+        config(['auth.guards.web.provider' => 'smart_kitchen']);
+    }
+
+    private function publishConfigs(){
+        $this->publishes([
+            self::path('config','sk.php') => config_path('sk.php'),
+        ]);
     }
 
     private function loadMigrations(){
