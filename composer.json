@@ -12,12 +12,14 @@
     "minimum-stability": "dev",
     "require": {
         "spatie/laravel-medialibrary": "^8.0.0",
-        "doctrine/dbal": "^2.11.1"
+        "doctrine/dbal": "^2.12",
+        "tymon/jwt-auth": "^1.0"
     },
     "extra": {
         "laravel": {
             "providers": [
-                "Milestone\\SmartKitchen\\SmartKitchenServiceProvider"
+                "Milestone\\SmartKitchen\\SmartKitchenServiceProvider",
+                "Milestone\\SmartKitchen\\SmartKitchenEventServiceProvider"
             ]
         }
     },

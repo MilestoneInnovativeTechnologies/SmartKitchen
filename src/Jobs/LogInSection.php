@@ -20,7 +20,7 @@ class LogInSection implements ShouldQueue
     /**
      * Create a new job instance.
      *
-     * @param UserLogin $userLogin
+     * @param UserLoggedIn $userLogin
      */
     public function __construct(UserLogin $userLogin)
     {

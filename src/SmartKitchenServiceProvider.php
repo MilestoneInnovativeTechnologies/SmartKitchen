@@ -13,7 +13,7 @@ class SmartKitchenServiceProvider extends ServiceProvider
      * @return void
      */
 
-    private static array $configs = ['sk','filesystems.disks','logging.channels','auth.providers'];
+    private static $configs = ['sk','filesystems.disks','logging.channels','auth.providers','queue.connections'];
 
     public function register()
     {
@@ -41,7 +41,10 @@ class SmartKitchenServiceProvider extends ServiceProvider
     private function mergeConfigs(){
         foreach (self::$configs as $config)
             $this->mergeConfigFrom(self::path('config',"$config.php"), $config);
-        config(['auth.guards.web.provider' => 'smart_kitchen']);
+        config([
+            'auth.guards.web.provider'  => 'smart_kitchen',
+            'queue.default'             =>  'sk'
+        ]);
     }
 
     private function publishConfigs(){

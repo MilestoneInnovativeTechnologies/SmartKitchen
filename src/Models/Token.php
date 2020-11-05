@@ -2,11 +2,31 @@
 
 namespace Milestone\SmartKitchen\Models;
 
+use Illuminate\Support\Facades\Auth;
 use Milestone\SmartKitchen\Scopes\NotCancelledScope;
 
 class Token extends Model
 {
-    protected static function booted(){ static::addGlobalScope(new NotCancelledScope); }
+    private static $timingRequests = ['user','comment'];
+    public static $summableProgress = ['New','Accepted','Processing','Completed','Served'];
+
+    protected static function booted(){
+        static::addGlobalScope(new NotCancelledScope);
+        static::creating(function ($Token){ $Token->progress_timing = [['New' => time(),'user' => $Token->user, 'auth' => Auth::id()]]; });
+        static::updating(function ($Token){
+            if($Token->isDirty('progress')){
+                $timings = $Token->progress_timing ?: [];
+                $data = [$Token->progress => time(), 'auth' => Auth::id()];
+                foreach (self::$timingRequests as $input) if(request()->input($input)) $data[$input] = request()->input($input);
+                array_push($timings,$data);
+                $Token->progress_timing = $timings;
+            }
+        });
+    }
+
+    protected $casts = [
+        'progress_timing'   =>  'array',
+    ];
 
     public function Customer(){ return $this->belongsTo(Customer::class,'customer','id'); }
     public function Seating(){ return $this->belongsTo(Seating::class,'customer','id'); }

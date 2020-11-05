@@ -15,4 +15,6 @@ class KitchenStatus extends Model
         'users' => 'array'
     ];
 
+    public function Kitchen(){ return $this->belongsTo(Kitchen::class,'kitchen','id'); }
+
 }

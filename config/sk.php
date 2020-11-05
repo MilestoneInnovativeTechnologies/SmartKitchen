@@ -13,7 +13,13 @@ return [
     'login_log_section_role_key' => [
         'Waiter' => 'menu',
         'Chef' => 'kitchen'
-    ]
+    ],
+
+    'settings' => [
+        'kot'   =>  [
+            'auto_process_on_accepting' =>  false,
+        ]
+    ],
 
 
 ];
