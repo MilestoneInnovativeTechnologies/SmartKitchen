@@ -21,6 +21,7 @@ class SmartKitchenDummyDataSeeder extends Seeder
             Menu::class,
             PriceList::class,
             Price::class,
+            Tax::class,
             Kitchen::class,
             KitchenItem::class,
             KitchenStatus::class,

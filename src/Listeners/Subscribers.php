@@ -23,14 +23,18 @@ class Subscribers
             \Milestone\SmartKitchen\Events\TokenCreated::class =>  [],
             \Milestone\SmartKitchen\Events\TokenItemPrepared::class =>  [],
             \Milestone\SmartKitchen\Events\TokenItemsSaving::class =>  [],
-            \Milestone\SmartKitchen\Events\TokenItemsSaved::class =>  [],
+            \Milestone\SmartKitchen\Events\TokenItemsSaved::class =>  [
+                TryDistributingTokenItems::class
+            ],
             \Milestone\SmartKitchen\Events\TokenItemAccepting::class =>  [],
             \Milestone\SmartKitchen\Events\TokenItemAccepted::class =>  [
-                KOTAutoProcessAccepted::class
+                KOTAutoProcessAccepted::class,
+                ReduceKitchenItemStock::class
             ],
             \Milestone\SmartKitchen\Events\TokenItemResetting::class =>  [],
             \Milestone\SmartKitchen\Events\TokenItemReset::class =>  [
-                TryResettingTokenProgress::class
+                TryResettingTokenProgress::class,
+                IncrementKitchenItemStock::class
             ],
             \Milestone\SmartKitchen\Events\TokenItemProcessing::class =>  [],
             \Milestone\SmartKitchen\Events\TokenItemProcessed::class =>  [
@@ -81,6 +85,12 @@ class Subscribers
             \Milestone\SmartKitchen\Events\PaymentCreated::class =>  [
                 UpdateBillProgress::class
             ],
+
+            \Milestone\SmartKitchen\Events\KitchenStockReducing::class =>  [],
+            \Milestone\SmartKitchen\Events\KitchenStockReduced::class =>  [],
+            \Milestone\SmartKitchen\Events\KitchenStockIncrementing::class =>  [],
+            \Milestone\SmartKitchen\Events\KitchenStockIncremented::class =>  [],
+
         ];
     }
 }

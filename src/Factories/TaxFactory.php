@@ -3,31 +3,27 @@
 namespace Milestone\SmartKitchen\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Milestone\SmartKitchen\Models\Item;
-use Milestone\SmartKitchen\Models\Kitchen;
-use Milestone\SmartKitchen\Models\KitchenItem;
+use Milestone\SmartKitchen\Models\Tax;
 
-class KitchenItemFactory extends Factory
+class TaxFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
      *
      * @var string
      */
-    protected $model = KitchenItem::class;
+    protected $model = Tax::class;
 
     /**
      * Define the model's default state.
      *
      * @return array
      */
+
     public function definition()
     {
-        $items = Item::pluck('id');
-
         return [
-            'duration'  =>  rand(0,5) * 60,
-            'stock'     =>  rand(0,35)
+
         ];
     }
 }

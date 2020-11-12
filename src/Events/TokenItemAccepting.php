@@ -19,7 +19,7 @@ class TokenItemAccepting
 
     public $tokenItem, $kitchen, $user;
 
-    public function __construct(TokenItem $tokenItem, $kitchen, $user)
+    public function __construct($tokenItem, $kitchen, $user)
     {
         $this->tokenItem = $tokenItem;
         $this->kitchen = $kitchen;

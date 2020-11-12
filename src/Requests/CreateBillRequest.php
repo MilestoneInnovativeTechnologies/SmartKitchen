@@ -4,6 +4,7 @@ namespace Milestone\SmartKitchen\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
+use Milestone\SmartKitchen\Controllers\BillController;
 use Milestone\SmartKitchen\Controllers\TokenController;
 use Milestone\SmartKitchen\Events\BillCreated;
 use Milestone\SmartKitchen\Events\BillCreating;
@@ -35,14 +36,18 @@ class CreateBillRequest extends FormRequest
     }
 
     protected function prepareForValidation(){
+        $nature = $this->input('nature',null);
+        $discount = doubleval($this->input('discount') ?: 0);
         $this->merge([
+            'nature'    => $nature,
+            'discount'  => $discount,
             'amount'    => TokenController::Amount($this->input('token')),
-            'discount'  => doubleval($this->input('discount') ?: 0),
+            'contents'  => BillController::Contents($this->input('token'),$nature,$discount),
         ]);
     }
 
     public function store(){
-        $data = $this->only(['token','customer','user','amount','discount']);
+        $data = $this->only(['token','customer','user','amount','discount','nature','contents']);
         BillCreating::dispatch($data);
         $bill = Bill::create($data);
         BillCreated::dispatch($bill);

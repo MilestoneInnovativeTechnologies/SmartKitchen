@@ -7,6 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Milestone\SmartKitchen\Controllers\TokenController;
 use Milestone\SmartKitchen\Events\TokenItemProcessed;
 use Milestone\SmartKitchen\Events\TokenItemProcessing;
 use Milestone\SmartKitchen\Models\TokenItem;
@@ -17,7 +18,7 @@ class AutoProcessAcceptedOrder implements ShouldQueue
 
     public $tokenItem, $kitchen, $user;
 
-    public function __construct(TokenItem $tokenItem, $kitchen, $user)
+    public function __construct($tokenItem, $kitchen, $user)
     {
         $this->tokenItem = $tokenItem;
         $this->kitchen = $kitchen;
@@ -26,9 +27,6 @@ class AutoProcessAcceptedOrder implements ShouldQueue
 
     public function handle()
     {
-        if($this->tokenItem->progress !== 'Accepted') return;
-        $tokenItem = $this->tokenItem; $tokenItem->progress = 'Processing';
-        TokenItemProcessing::dispatch($tokenItem);
-        $tokenItem->save(); TokenItemProcessed::dispatch($tokenItem);
+        TokenController::TokenItemProcess($this->tokenItem,$this->user);
     }
 }

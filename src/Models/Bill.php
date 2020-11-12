@@ -11,11 +11,11 @@ class Bill extends Model
 
     protected static function booted(){
         static::addGlobalScope(new NotCancelledScope);
-        static::creating(function ($Bill){ if(!$Bill->user) $Bill->user = Auth::id(); $Bill->progress_timing = [['Pending' => time(),'user' => $Bill->user ?? Auth::id(), 'auth' => Auth::id()]]; });
+        static::creating(function ($Bill){ if(!$Bill->user) $Bill->user = Auth::id(); $Bill->progress_timing = [['progress' => 'Pending','time' => time(),'user' => $Bill->user ?? Auth::id(), 'auth' => Auth::id()]]; });
         static::updating(function ($Bill){
             if($Bill->isDirty('progress')){
                 $timings = $Bill->progress_timing ?: [];
-                $data = [$Bill->progress => time(), 'auth' => Auth::id()];
+                $data = ['progress' => $Bill->progress, 'time' => time(), 'auth' => Auth::id()];
                 foreach (self::$timingRequests as $input) if(request()->input($input)) $data[$input] = request()->input($input);
                 array_push($timings,$data);
                 $Bill->progress_timing = $timings;
@@ -25,6 +25,7 @@ class Bill extends Model
 
     protected $casts = [
         'progress_timing'   =>  'array',
+        'contents'          =>  'array',
     ];
 
     public function Customer(){ return $this->belongsTo(Customer::class,'customer','id'); }

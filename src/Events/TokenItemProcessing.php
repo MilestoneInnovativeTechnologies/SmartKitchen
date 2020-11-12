@@ -15,11 +15,14 @@ class TokenItemProcessing
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $tokenItem, $user;
+    public $tokenItem, $kitchen, $item, $token, $user;
 
     public function __construct(TokenItem $tokenItem, $user)
     {
-        $this->tokenItem = $tokenItem;
+        $this->tokenItem = $tokenItem->id;
+        $this->kitchen = $tokenItem->kitchen;
+        $this->item = $tokenItem->item;
+        $this->token = $tokenItem->token;
         $this->user = $user;
     }
 

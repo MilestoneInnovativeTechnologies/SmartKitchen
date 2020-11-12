@@ -18,7 +18,7 @@ class ResetTokenProgress
 
     public $token;
 
-    public function __construct(Token $token)
+    public function __construct($token)
     {
         $this->token = $token;
     }
@@ -26,7 +26,8 @@ class ResetTokenProgress
     public function handle()
     {
         Log::info('Initialized Token Resetting Activity');
-        $token = $this->token; $id = $token->id; $progress = $token->progress;
+        $token = Token::find($this->token); if(!$token) return Log::warning('Token does not exists to reset, Token ID: ' . $this->token);
+        $id = $token->id; $progress = $token->progress;
         if($progress === 'Processing') {
             if(TokenItem::where('token',$id)->whereIn('progress',['Processing','Completed'])->exists())
                 return Log::info('Trying token reset: Some items are of progress, Processing or Completed. Cant reset.. Terminating');

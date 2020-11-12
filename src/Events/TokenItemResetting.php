@@ -17,10 +17,10 @@ class TokenItemResetting
 
     public $tokenItem, $kitchen, $user;
 
-    public function __construct(TokenItem $tokenItem, $kitchen, $user)
+    public function __construct($tokenItem, $user)
     {
-        $this->tokenItem = $tokenItem;
-        $this->kitchen = $kitchen;
+        $this->tokenItem = $tokenItem->id;
+        $this->kitchen = $tokenItem->kitchen;
         $this->user = $user;
     }
 

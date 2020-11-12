@@ -26,7 +26,7 @@ class ItemGroupFactory extends Factory
         return [
             'name'  =>  $this->faker->name,
             'detail'=>  $this->faker->text,
-            'items'=>  json_encode($items->random(random_int(6,20))->toArray()),
+            'items' =>  $items->random(rand(6,20))->toArray(),
         ];
     }
 }

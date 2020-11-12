@@ -18,12 +18,14 @@ class TokenItemAccepted
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $tokenItem, $kitchen, $user;
+    public $tokenItem, $kitchen, $item, $quantity, $user;
 
-    public function __construct(TokenItem $tokenItem, $kitchen, $user)
+    public function __construct($tokenItem, $user)
     {
-        $this->tokenItem = $tokenItem;
-        $this->kitchen = $kitchen;
+        $this->tokenItem = $tokenItem->id;
+        $this->kitchen = $tokenItem->kitchen;
+        $this->item = $tokenItem->item;
+        $this->quantity = $tokenItem->quantity;
         $this->user = $user;
     }
 

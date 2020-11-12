@@ -9,11 +9,11 @@ class TokenItem extends Model
     private static $timingRequests = ['user','comment'];
 
     protected static function booted(){
-        static::creating(function ($Item){ $Item->progress_timing = [['New' => time(),'user' => $Item->user, 'auth' => Auth::id()]]; });
+        static::creating(function ($Item){ $Item->progress_timing = [[ 'status' => 'New', 'time' => time(),'user' => $Item->user, 'auth' => Auth::id()]]; });
         static::updating(function ($Item){
             if($Item->isDirty('progress')){
                 $timings = $Item->progress_timing ?: [];
-                $data = [$Item->progress => time(), 'auth' => Auth::id()];
+                $data = ['status' => $Item->progress, 'time' => time(), 'auth' => Auth::id()];
                 foreach (self::$timingRequests as $input) if(request()->input($input)) $data[$input] = request()->input($input);
                 array_push($timings,$data);
                 $Item->progress_timing = $timings;

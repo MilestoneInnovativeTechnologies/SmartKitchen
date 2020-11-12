@@ -19,7 +19,7 @@ class TokenItemCancelling
 
     public function __construct(TokenItem $tokenItem, $user)
     {
-        $this->tokenItem = $tokenItem;
+        $this->tokenItem = $tokenItem->id;
         $this->user = $user;
     }
 

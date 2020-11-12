@@ -18,7 +18,7 @@ class Menu extends Seeder
         $i = 0;
         $group_ids = \Milestone\SmartKitchen\Models\ItemGroup::pluck('id');
         while ($i++ < self::$times){
-            $groups = json_encode($group_ids->random(rand(6,14))->toArray());
+            $groups = $group_ids->random(rand(6,14))->toArray();
             MenuFactory::times(1)->state(compact('groups'))->create();
         }
     }
