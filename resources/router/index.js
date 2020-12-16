@@ -14,7 +14,7 @@ Vue.use(VueRouter)
  * with the Router instance.
  */
 
-export default function (/* { store, ssrContext } */) {
+export default function ({ store }) {
   const Router = new VueRouter({
     scrollBehavior: () => ({ x: 0, y: 0 }),
     routes,
@@ -23,7 +23,15 @@ export default function (/* { store, ssrContext } */) {
     // quasar.conf.js -> build -> vueRouterMode
     // quasar.conf.js -> build -> publicPath
     mode: process.env.VUE_ROUTER_MODE,
-    base: process.env.VUE_ROUTER_BASE
+    base: process.env.VUE_ROUTER_BASE,
+
+  })
+
+  Router.beforeEach((to,from,next) => {
+    store.commit('title',_.get(to,['meta','title'],''),{ root:true });
+    store.commit('back',(_.has(to,['meta','back']) && to['meta']['back']) ? from : null,{ root:true });
+    store.commit('footer',(_.has(to,['meta','footer']) && to['meta']['footer'] === false) ? false : true,{ root:true });
+    next()
   })
 
   return Router

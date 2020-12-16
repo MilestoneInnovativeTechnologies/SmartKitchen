@@ -1,29 +1,38 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 
-// import example from './module-example'
-
 Vue.use(Vuex)
 
-/*
- * If not building with SSR mode, you can
- * directly export the Store instantiation;
- *
- * The function below can be async too; either use
- * async/await or return a Promise which resolves
- * with the Store instance.
- */
+import server from './server'
+import users from './users'
+import tokens from './tokens'
+import customers from './customers'
+import items from './items'
+import groups from './groups'
+import kitchens from './kitchens'
+import menus from './menus'
+import prices from './prices'
+import tax from './tax'
+import seating from './seating'
+import bills from './bills'
+import payments from './payments'
 
-export default function (/* { ssrContext } */) {
-  const Store = new Vuex.Store({
-    modules: {
-      // example
-    },
 
-    // enable strict mode (adds overhead!)
-    // for dev mode only
-    strict: process.env.DEBUGGING
-  })
-
-  return Store
-}
+export default new Vuex.Store({
+  modules: {
+    server,
+    users, customers, items, groups, menus, prices, kitchens, tax, seating,
+    tokens, bills, payments
+  },
+  state: {
+    title: '',
+    back: null,
+    footer: true,
+  },
+  mutations: {
+    title(state,title){ Vue.set(state,'title',title) },
+    back(state,from){ Vue.set(state,'back',from) },
+    footer(state,status){ Vue.set(state,'footer',status) },
+  },
+  strict: process.env.DEBUGGING
+})
