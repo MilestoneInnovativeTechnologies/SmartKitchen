@@ -3,6 +3,7 @@
 namespace Milestone\SmartKitchen\Controllers;
 
 use Illuminate\Http\Request;
+use Milestone\SmartKitchen\Events\LoggedIn;
 
 class AuthController extends Controller
 {
@@ -19,9 +20,13 @@ class AuthController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     public function login(){
-        $credentials = request(['login', 'password']);
-        if (!$token = auth()->attempt($credentials)) { return response()->json(['error' => 'Unauthorized'], 401); }
-        return $this->respondWithToken($token);
+        $credentials = request(['id', 'password']);
+        if (!$token = auth()->attempt($credentials))
+            return redirect()->route('login',['msg' => 'Unauthorized Access!!']);
+        $lsk = config("sk.login_log_section_role_key"); $section = null;
+        if($lsk && array_key_exists(auth()->user()->role,$lsk)) $section = request()->input($lsk[auth()->user()->role]);
+        LoggedIn::dispatch(auth()->user(),$section);
+        return redirect()->route('pre_home',compact('token'))->withCookie(cookie()->forever('token',$token));
     }
 
     /**
@@ -37,8 +42,9 @@ class AuthController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     public function logout() {
+        $key = cache()->forget(ck());
         auth()->logout();
-        return response()->json(['message' => 'Successfully logged out']);
+        return redirect()->route('login');
     }
 
     /**

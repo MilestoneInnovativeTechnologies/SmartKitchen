@@ -12,9 +12,9 @@ class BillController extends Controller
 {
     public static $contentKeys = ['id','item','name','price','quantity','tax','discount'];
 
-    public function Create(CreateBillRequest $createBillRequest){
+    public function create(CreateBillRequest $createBillRequest){
         $createBillRequest->store();
-        return redirect()->back();
+        return [];
     }
 
     public function Cancel(Request $request){

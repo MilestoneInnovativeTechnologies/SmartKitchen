@@ -39,6 +39,7 @@ class CreateBillRequest extends FormRequest
         $nature = $this->input('nature',null);
         $discount = doubleval($this->input('discount') ?: 0);
         $this->merge([
+            'date' => now()->toDateTimeString(),
             'nature'    => $nature,
             'discount'  => $discount,
             'amount'    => TokenController::Amount($this->input('token')),

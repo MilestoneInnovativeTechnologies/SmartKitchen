@@ -10,11 +10,11 @@ use Milestone\SmartKitchen\Events\LoggedOut;
 class UserController extends Controller
 {
     public function Logout(){
-        if(Auth::user()){
-            $user = Auth::user(); Log::info('User logging out. User ID: ' . $user->id);
+        if(auth()->user()){
+            $user = auth()->user(); Log::info('User logging out. User ID: ' . $user->id);
             LoggingOut::dispatch($user);
-            Auth::logout(); LoggedOut::dispatch($user);
+            auth()->logout(); LoggedOut::dispatch($user);
         }
-        return redirect('login');
+        return redirect()->route('login')->withCookie(cookie()->forget('token'));
     }
 }

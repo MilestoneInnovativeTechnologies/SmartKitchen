@@ -34,7 +34,10 @@ class CreateTokenRequest extends FormRequest
     }
 
     protected function prepareForValidation(){
-//        $this->merge(['user' => $this->input('user')]);
+        $this->merge([
+            'user' => $this->input('user',auth()->id()),
+            'date' => now()->toDateTimeString(),
+        ]);
     }
 
     public function store(){

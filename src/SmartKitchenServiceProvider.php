@@ -2,6 +2,8 @@
 
 namespace Milestone\SmartKitchen;
 
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\ServiceProvider;
 use Milestone\SmartKitchen\Models\Model;
 
@@ -30,6 +32,9 @@ class SmartKitchenServiceProvider extends ServiceProvider
         if($this->app->runningInConsole()){
             self::loadMigrations();
             self::publishConfigs();
+        } else {
+            self::loadRoutes();
+            self::loadViews();
         }
         Model::unguard();
     }
@@ -43,7 +48,10 @@ class SmartKitchenServiceProvider extends ServiceProvider
             $this->mergeConfigFrom(self::path('config',"$config.php"), $config);
         config([
             'auth.guards.web.provider'  => 'smart_kitchen',
-            'queue.default'             =>  'sk'
+            'queue.default'             =>  'sk',
+            'auth.defaults.guard'       =>  'api',
+            'auth.guards.api.driver'    =>  'jwt',
+            'auth.guards.api.provider'  =>  'smart_kitchen',
         ]);
     }
 
@@ -55,6 +63,14 @@ class SmartKitchenServiceProvider extends ServiceProvider
 
     private function loadMigrations(){
         $this->loadMigrationsFrom(self::path('migrations'));
+    }
+
+    private function loadViews(){
+        $this->loadViewsFrom(self::path('views'),'SK');
+    }
+
+    private function loadRoutes(){
+        $this->loadRoutesFrom(self::path('routes/route.php'));
     }
 
 }

@@ -5,19 +5,9 @@ namespace Milestone\SmartKitchen\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
-use Milestone\SmartKitchen\Events\TokenItemAccepted;
-use Milestone\SmartKitchen\Events\TokenItemAccepting;
-use Milestone\SmartKitchen\Events\TokenItemCancelled;
-use Milestone\SmartKitchen\Events\TokenItemCancelling;
-use Milestone\SmartKitchen\Events\TokenItemCompleted;
-use Milestone\SmartKitchen\Events\TokenItemCompleting;
+use Milestone\SmartKitchen\Events\TokenItemAdded;
+use Milestone\SmartKitchen\Events\TokenItemAdding;
 use Milestone\SmartKitchen\Events\TokenItemPrepared;
-use Milestone\SmartKitchen\Events\TokenItemProcessed;
-use Milestone\SmartKitchen\Events\TokenItemProcessing;
-use Milestone\SmartKitchen\Events\TokenItemReset;
-use Milestone\SmartKitchen\Events\TokenItemResetting;
-use Milestone\SmartKitchen\Events\TokenItemServed;
-use Milestone\SmartKitchen\Events\TokenItemServing;
 use Milestone\SmartKitchen\Events\TokenItemsSaved;
 use Milestone\SmartKitchen\Events\TokenItemsSaving;
 use Milestone\SmartKitchen\Models\Tax;
@@ -27,13 +17,15 @@ use Milestone\SmartKitchen\Requests\CreateTokenRequest;
 
 class TokenController extends Controller
 {
-    public function Create(CreateTokenRequest $request){
+    public function create(CreateTokenRequest $request){
         $Token = $request->store(); $user = $Token->user;
         $Items = [];
-        foreach ($request->input('items') as $item){
-            $quantity = $request->input("quantity.$item");
-            $narration = $request->input("narration.$item");
-            $delay = $request->input("delay.$item",0);
+        foreach ($request->input('items') as $obj){
+            if(!$obj['item']) continue;
+            $item = $obj['item'];
+            $quantity = $obj['quantity'] ?? 0;
+            $narration = $obj['narration'] ?? null;
+            $delay = $obj['delay'] ?? 0; $delay = intval($delay) * 60;
             $data = compact('user','item','quantity','delay','narration');
             $Items[] = new TokenItem($data);
             TokenItemPrepared::dispatch($data);
@@ -41,45 +33,45 @@ class TokenController extends Controller
         TokenItemsSaving::dispatch($Items);
         $Token->Items()->saveMany($Items);
         TokenItemsSaved::dispatch($Token->fresh()->Items,$user);
-        return redirect('order');
+        return $Token;
     }
 
-    public function Accept(Request $request){
+    public function accept(Request $request){
         $tokenItem = $request->input('id');
         $kitchen = $request->input('kitchen');
         $user = $request->input('user',Auth::id());
-        self::TokenItemAccept($tokenItem,$kitchen,$user);
+        TokenItemController::Accept($tokenItem,$kitchen,$user);
     }
 
-    public function Reset(Request $request){
+    public function reset(Request $request){
         $tokenItem = $request->input('id');
         $kitchen = $request->input('kitchen');
         $user = $request->input('user',Auth::id());
-        self::TokenItemReset($tokenItem,$kitchen,$user);
+        TokenItemController::Reset($tokenItem,$kitchen,$user);
     }
 
-    public function Process(Request $request){
+    public function process(Request $request){
         $tokenItem = $request->input('id');
         $user = $request->input('user',Auth::id());
-        self::TokenItemProcess($tokenItem,$user);
+        TokenItemController::Process($tokenItem,$user);
     }
 
-    public function Complete(Request $request){
+    public function complete(Request $request){
         $tokenItem = $request->input('id');
         $user = $request->input('user',Auth::id());
-        self::TokenItemComplete($tokenItem,$user);
+        TokenItemController::Complete($tokenItem,$user);
     }
 
-    public function Served(Request $request){
+    public function served(Request $request){
         $tokenItem = $request->input('id');
         $user = $request->input('user',Auth::id());
-        self::TokenItemServe($tokenItem,$user);
+        TokenItemController::Serve($tokenItem,$user);
     }
 
-    public function Cancel(Request $request){
+    public function cancel(Request $request){
         $tokenItem = $request->input('id');
         $user = $request->input('user',Auth::id());
-        self::TokenItemCancel($tokenItem,$user);
+        TokenItemController::Cancel($tokenItem,$user);
     }
 
     public static function Items($token, $progress = null){
@@ -100,48 +92,32 @@ class TokenController extends Controller
         return self::Items($token, $progress)->sum(function($item){ return doubleval(($item['quantity'] ?? 1) * ($item['price'] ?? 0)); });
     }
 
-    public static function TokenItemAccept($tokenItem,$kitchen,$user){
-        $progress = 'Accepted'; $tokenItem = TokenItem::find($tokenItem);
-        if(!$tokenItem) return Log::warning('Called function to Accept token item: ' . $tokenItem->id . ', But such token item does not exist..');
-        TokenItemAccepting::dispatch($tokenItem->id,$kitchen,$tokenItem->item,$user);
-        $tokenItem->update(compact('kitchen','progress'));
-        TokenItemAccepted::dispatch($tokenItem,$user);
-        return $tokenItem;
+    public function waiter(){
+        return Token::with(['Items'])->waiter()->active()->get();
     }
-    public static function TokenItemReset($tokenItem,$kitchen,$user){
-        $progress = 'New'; $tokenItem = TokenItem::find($tokenItem);
-        if(!$tokenItem) return Log::warning('Called function to Reset token item: ' . $tokenItem->id . ', But such token item does not exist..');
-        TokenItemResetting::dispatch($tokenItem,$kitchen,$user);
-        $tokenItem->update(compact('kitchen','progress'));
-        TokenItemReset::dispatch($tokenItem,$user);
-        return $tokenItem;
+
+    public function item(Request $request){
+        if(!$request->has('user')) $request->merge(['user' => auth()->id()]);
+        $ti_data = $request->only(['item','quantity','delay','narration','user']);
+        if($request->has('token')){
+            $token_id = $request->input('token');
+            $token_item = new TokenItem($ti_data);
+            $token_item->token = $token_id;
+            TokenItemAdding::dispatch($token_id,$ti_data['item'],$ti_data['quantity'],$request->input('user'),$ti_data);
+            $token_item->save();
+            TokenItemAdded::dispatch($token_item->fresh(),$request->input('user'),$ti_data);
+            return TokenItem::where(['token' => $token_id, 'item' => $ti_data['item'], 'progress' => 'New'])->first();
+        }
+        elseif($request->has('id')){
+            $token_item = TokenItem::find($request->input('id'));
+            $token_item->update($ti_data);
+            return $token_item;
+        }
+        return [];
     }
-    public static function TokenItemProcess($tokenItem,$user){
-        $progress = 'Processing'; $tokenItem = TokenItem::find($tokenItem);
-        if(!$tokenItem) return Log::warning('Called function to Process token item: ' . $tokenItem->id . ', But such token item does not exist..');
-        TokenItemProcessing::dispatch($tokenItem,$user);
-        $tokenItem->update(compact('progress'));
-        TokenItemProcessed::dispatch($tokenItem,$user);
-    }
-    public static function TokenItemCancel($tokenItem,$user){
-        $progress = 'Cancelled'; $tokenItem = TokenItem::find($tokenItem);
-        if(!$tokenItem) return Log::warning('Called function to Cancel token item: ' . $tokenItem->id . ', But such token item does not exist..');
-        TokenItemCancelling::dispatch($tokenItem, $user);
-        $tokenItem->update(compact('progress'));
-        TokenItemCancelled::dispatch($tokenItem, $user);
-    }
-    public static function TokenItemComplete($tokenItem,$user){
-        $progress = 'Completed'; $tokenItem = TokenItem::find($tokenItem);
-        if(!$tokenItem) return Log::warning('Called function to Complete token item: ' . $tokenItem->id . ', But such token item does not exist..');
-        TokenItemCompleting::dispatch($tokenItem,$user);
-        $tokenItem->update(compact('progress'));
-        TokenItemCompleted::dispatch($tokenItem,$user);
-    }
-    public static function TokenItemServe($tokenItem,$user){
-        $progress = 'Served'; $tokenItem = TokenItem::find($tokenItem);
-        if(!$tokenItem) return Log::warning('Called function to Serve token item: ' . $tokenItem->id . ', But such token item does not exist..');
-        TokenItemServing::dispatch($tokenItem, $user);
-        $tokenItem->update(compact('progress'));
-        TokenItemServed::dispatch($tokenItem, $user);
+
+    public function customer(Request $request){
+        if(!$request->filled(['token','customer'])) return;
+        Token::find($request->input('token'))->update($request->only('customer'));
     }
 }

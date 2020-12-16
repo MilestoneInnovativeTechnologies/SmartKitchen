@@ -13,6 +13,7 @@ class Tax extends Model
         'contents'  =>  'array',
         'items'     =>  'array',
     ];
+    protected $hidden = ['created_at','updated_at'];
 
     public static function Contents($contents,$price,$quantity){
         if(empty($contents)) return [];

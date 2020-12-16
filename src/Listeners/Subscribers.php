@@ -12,7 +12,8 @@ class Subscribers
     {
         return [
             \Milestone\SmartKitchen\Events\LoggedIn::class      =>  [
-                LoggedIn::class
+                LoggedIn::class,
+                CacheInit::class
             ],
             \Milestone\SmartKitchen\Events\LoggingOut::class    =>  [],
             \Milestone\SmartKitchen\Events\LoggedOut::class     =>  [
@@ -49,6 +50,10 @@ class Subscribers
             \Milestone\SmartKitchen\Events\TokenItemCancelling::class =>  [],
             \Milestone\SmartKitchen\Events\TokenItemCancelled::class =>  [
                 TryResettingTokenProgress::class
+            ],
+            \Milestone\SmartKitchen\Events\TokenItemAdding::class =>  [],
+            \Milestone\SmartKitchen\Events\TokenItemAdded::class =>  [
+                TryRefreshingTokenProgress::class,
             ],
             \Milestone\SmartKitchen\Events\TokenProgressMakingAsProcessing::class =>  [],
             \Milestone\SmartKitchen\Events\TokenProgressMadeAsProcessing::class =>  [],

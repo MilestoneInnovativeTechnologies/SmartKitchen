@@ -16,10 +16,10 @@ return [
     ],
 
     'settings' => [
-        'kot'   =>  [
-            'auto_process_on_accepting' =>  false,
-        ]
-    ],
+        // true => kitchens with item having no stock will not consider while auto assigning items to kitchen
+        // false => kitchens with item having no stock will also consider while auto assigning items to kitchen
+        'consider_stock' => false
+    ]
 
 
 ];

@@ -35,6 +35,7 @@ class CreatePaymentRequest extends FormRequest
 
     protected function prepareForValidation(){
         $this->merge([
+            'date' => now()->toDateTimeString(),
             'amount'  => doubleval($this->input('amount') ?: 0),
             'type'    => $this->input('type','Cash'),
             'status'    => $this->input('status','Active'),

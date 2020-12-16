@@ -8,6 +8,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Milestone\SmartKitchen\Controllers\TokenController;
+use Milestone\SmartKitchen\Controllers\TokenItemController;
 use Milestone\SmartKitchen\Events\TokenItemProcessed;
 use Milestone\SmartKitchen\Events\TokenItemProcessing;
 use Milestone\SmartKitchen\Models\TokenItem;
@@ -27,6 +28,6 @@ class AutoProcessAcceptedOrder implements ShouldQueue
 
     public function handle()
     {
-        TokenController::TokenItemProcess($this->tokenItem,$this->user);
+        TokenItemController::Process($this->tokenItem,$this->user);
     }
 }
