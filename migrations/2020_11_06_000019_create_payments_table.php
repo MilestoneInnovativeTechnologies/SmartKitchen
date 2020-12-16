@@ -16,6 +16,7 @@ class CreatePaymentsTable extends Migration
         Schema::create('payments', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('bill')->index();
+            $table->timestamp('date')->default(\Illuminate\Support\Facades\DB::raw('CURRENT_TIMESTAMP'));
             $table->enum('type',['Cash','Card','Wallet','Credit'])->default('Cash');
             $table->string('detail',512)->nullable();
             $table->decimal('amount',9,3)->nullable();

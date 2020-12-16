@@ -17,6 +17,7 @@ class CreateTokensTable extends Migration
             $table->id();
             $table->enum('type',['Dining','Home Delivery','Take Away','Other'])->default('Dining');
             $table->unsignedBigInteger('seating')->nullable();
+            $table->timestamp('date')->default(\Illuminate\Support\Facades\DB::raw('CURRENT_TIMESTAMP'));
             $table->unsignedBigInteger('price_list');
             $table->unsignedBigInteger('user')->nullable();
             $table->unsignedBigInteger('customer')->nullable();

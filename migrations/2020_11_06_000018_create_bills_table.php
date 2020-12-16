@@ -18,6 +18,7 @@ class CreateBillsTable extends Migration
             $table->unsignedBigInteger('token')->index();
             $table->unsignedBigInteger('user')->nullable();
             $table->unsignedBigInteger('customer')->index();
+            $table->timestamp('date')->default(\Illuminate\Support\Facades\DB::raw('CURRENT_TIMESTAMP'));
             $table->decimal('amount',9,3)->default(0);
             $table->decimal('discount',9,3)->default(0);
             $table->decimal('round',9,3)->default(0);
