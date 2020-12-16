@@ -11,3 +11,4 @@
 1. run `vendor:publish`
 1. modify setting in `sk.php` if necessary
 1. php artisan migrate
+1. php artisan jwt:secret
