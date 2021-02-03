@@ -1,5 +1,5 @@
 <template>
-  <q-table :data="tokens" grid title="Ongoing Seating">
+  <q-table :data="tokens" grid title="Ongoing Seating" :pagination="{ rowsPerPage:16 }">
     <template v-slot:item="props">
       <div class="q-pa-xs col-xs-6 col-sm-4 col-md-3 col-lg-2 col-xl-1">
         <q-card :class="'bg-' + pColor[props.row.progress]">
