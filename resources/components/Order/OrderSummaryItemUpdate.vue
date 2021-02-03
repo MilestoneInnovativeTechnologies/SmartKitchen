@@ -10,7 +10,9 @@
       <q-input dense type="textarea" outlined label="Narration if any" v-model="params.narration"/>
     </q-card-section>
     <q-card-actions align="right" class="q-px-md q-pt-xs">
-      <q-btn color="danger" label="Cancel" type="submit" flat dense @click.prevent="cancel" :disable="loading" />
+      <q-btn color="negative" label="Cancel Item" type="submit" @click.prevent="cancel" :disable="loading" icon="delete" />
+      <q-space />
+      <q-btn color="warning" flat label="Close" type="submit" @click.prevent="$emit('close',null)" :disable="loading" />
       <q-btn color="primary" label="Update Item" type="submit" @click.prevent="update" :loading="loading"/>
     </q-card-actions>
   </q-card>
@@ -44,7 +46,10 @@ export default {
     }
   },
   created(){
-    _.forEach(['item','quantity','narration','delay','id'],key => this.params[key] = _.get(this.$attrs,key))
+    _.forEach(['item','quantity','narration','id'],key => this.params[key] = _.get(this.$attrs,key))
+    if(this.$attrs.delay && this.$attrs.delay > 0 && this.$attrs.delay * 1000 > new Date().getTime()){
+      this.params.delay = _.ceil((this.$attrs.delay - _.toInteger(new Date().getTime()/1000))/60)
+    } else this.params.delay = 0;
   }
 }
 </script>

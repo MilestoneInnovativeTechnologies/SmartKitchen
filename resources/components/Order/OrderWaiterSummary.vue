@@ -1,24 +1,19 @@
 <template>
-  <q-card>
-    <q-card-section class="bg-purple-2 q-pa-xs"></q-card-section>
-    <q-card-section class="">
-      <div class="text-h6">Orders</div>
-      <div class="text-subtitle2">Today Total: {{ total }}</div>
-    </q-card-section>
-    <q-list dense>
-      <q-item v-for="status in d_status" :key="'order-waiter-summary-status-' + status">
-        <q-item-section>{{ status }}</q-item-section>
-        <q-item-section side>{{ orderOfStatus(status) }}</q-item-section>
-      </q-item>
-    </q-list>
-  </q-card>
+  <div class="row q-col-gutter-xs">
+    <div class="col-xs-6 col-sm-3" v-for="(status,idx) in d_status" :key="'order-waiter-summary-status-' + status">
+      <DigitMetric :value="orderOfStatus(status)" :title="status" :bg="prop[idx][0]" text="white" :icon="prop[idx][1]" />
+    </div>
+  </div>
 </template>
 
 <script>
+import DigitMetric from "components/Metric/DigitMetric";
 export default {
   name: "OrderWaiterSummary",
+  components: {DigitMetric},
   data(){ return {
-    d_status: ['New','Processing','Completed','Billed','Cancelled']
+    d_status: ['New','Processing','Completed','Billed'],
+    prop:[['cyan','note_add'],['orange','published_with_changes'],['green','done'],['blue','done_outline']]
   } },
   computed: {
     orders(){ return this.$store.getters['tokens/today'] },

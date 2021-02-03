@@ -5,8 +5,10 @@
       <q-toolbar>
         <q-toolbar-title>
           <q-btn v-if="$store.state.back" :to="$store.state.back" flat round dense icon="arrow_back_ios" />
-          {{ $store.state.title }}
+          {{ $store.state.title || chef }}
         </q-toolbar-title>
+        <ManualSync />
+        <q-btn flat round dense icon="power_settings_new" type="a" :href="logout" />
       </q-toolbar>
     </q-header>
 
@@ -14,10 +16,10 @@
       <router-view />
     </q-page-container>
 
-    <q-footer elevated class="bg-primary text-white">
+    <q-footer elevated class="bg-primary text-white" v-show="$store.state.footer">
       <q-tabs align="left">
         <q-route-tab :to="{ name:'chef_index' }" label="Home" icon="home"  />
-        <q-route-tab :to="{ name:'kitchen_items' }" label="Items" icon="category"  />
+        <q-route-tab :to="{ name:'chef_kitchens' }" label="Kitchens" icon="kitchen"  />
         <q-route-tab :to="{ name:'tokens' }" label="Tokens" icon="receipt" />
       </q-tabs>
     </q-footer>
@@ -26,8 +28,12 @@
 </template>
 
 <script>
+import ManualSync from "components/ManualSync";
+
 export default {
   name: 'ChefLayout',
+  components: {ManualSync},
+  data(){ return { chef:_USER.name, logout: LOGOUT } },
   created(){
     let kitchens = _SECTION['kitchen'];
     this.$store.commit('kitchens/assign',kitchens,{ root:true })

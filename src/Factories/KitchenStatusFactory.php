@@ -29,7 +29,7 @@ class KitchenStatusFactory extends Factory
 
         return [
             'kitchen'  =>  $items->random(),
-            'users'  =>  [intval($users->random())],
+            'Users'  =>  [intval($users->random())],
         ];
     }
 }

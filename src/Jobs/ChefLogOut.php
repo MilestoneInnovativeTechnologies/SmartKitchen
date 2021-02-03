@@ -22,9 +22,9 @@ class ChefLogOut
 
     public function handle() {
         $chef = $this->chef->id;
-        if(!KitchenStatus::whereJsonContains('users',strval($chef))->orWhereJsonContains('users',intval($chef))->exists())
+        if(!KitchenStatus::whereJsonContains('Users',strval($chef))->orWhereJsonContains('Users',intval($chef))->exists())
             return Log::info("Logging out Chef: $chef, No Kitchens");
-        KitchenStatus::whereJsonContains('users',strval($chef))->orWhereJsonContains('users',intval($chef))->each(function($ks)use($chef){
+        KitchenStatus::whereJsonContains('Users',strval($chef))->orWhereJsonContains('Users',intval($chef))->each(function($ks)use($chef){
             $users = $ks->users; $chefs = array_values(array_unique(array_diff($users,[$chef])));
             $ks->users = $chefs; $ks->save(); Log::info("Chef: $chef Logged Out from Kitchen: {$ks->kitchen}");
         });

@@ -1,13 +1,9 @@
 <template>
   <q-card>
     <CardImageTitle :image="src" :title="seat.name" />
-    <q-card-actions>
-      <q-badge :label="token.progress"  />
-      <q-space />
-      <q-btn v-if="token.progress !== 'Billed'" icon="add_box" color="primary" flat dense @click="add_mode = true" padding="0" />
-    </q-card-actions>
+    <q-card-actions><q-badge :label="token.id" class="q-py-sm q-px-sm" /><q-badge :label="token.progress" class="q-py-sm q-ml-sm" /><q-space /><q-btn v-if="token.progress !== 'Billed'" icon="add_box" color="primary" flat @click="add_mode = true" padding="0" /></q-card-actions>
     <OrderSummaryWaiterOrderItemsList :order="id" />
-    <q-dialog v-model="add_mode" persistent v-if="token.progress !== 'Billed'"><OrderSummaryItemAdd :token="id" style="width: 700px; max-width: 60vw;" @close="add_mode = false" /></q-dialog>
+    <q-dialog v-model="add_mode" persistent v-if="token.progress !== 'Billed'"><OrderSummaryItemAdd :token="id" style="width: 700px; max-width: 90vw;" @close="add_mode = false" /></q-dialog>
   </q-card>
 </template>
 
@@ -18,7 +14,7 @@ import CardImageTitle from "components/CardImageTitle";
 export default {
   components: {CardImageTitle, OrderSummaryItemAdd, OrderSummaryWaiterOrderItemsList},
   data(){ return {
-    src: 'https://cdn.quasar.dev/img/parallax2.jpg',
+    src: 'img/defaults/seating.jpg',
     add_mode: false
   } },
   props: ['id'],

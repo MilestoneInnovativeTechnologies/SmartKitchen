@@ -1,7 +1,7 @@
 <template>
   <q-page padding>
     <div class="row q-col-gutter-xs">
-      <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2 col-xl-2" v-for="token in tokens" :key="hKey(token)">
+      <div class="col col-xs-6 col-sm-4 col-md-3 col-xl-2 col-xl-1" v-for="token in tokens" :key="hKey(token)">
         <TokenDetailCard :id="token.id" />
       </div>
     </div>

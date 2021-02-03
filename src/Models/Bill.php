@@ -23,6 +23,10 @@ class Bill extends Model
         });
     }
 
+    public function scopeRecent($Q){
+        return $Q->where('created_at','>=',now()->subDays(5)->startOfDay()->toDateTimeString());
+    }
+
     protected $casts = [
         'progress_timing'   =>  'array',
         'contents'          =>  'array',
@@ -31,5 +35,9 @@ class Bill extends Model
     public function Customer(){ return $this->belongsTo(Customer::class,'customer','id'); }
     public function Token(){ return $this->belongsTo(Token::class,'token','id'); }
     public function Payments(){ return $this->hasMany(Payment::class,'bill','id')->where('status','Active'); }
+
+    public static function fetch($after,$before,$lid){
+        return self::recent()->sync($after,$before,$lid)->get();
+    }
 
 }

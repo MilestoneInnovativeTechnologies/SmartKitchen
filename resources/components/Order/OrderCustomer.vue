@@ -18,16 +18,22 @@
 <script>
 import CustomerCreate from "components/Customer/CustomerCreate";
 import {o_customer, o_customers} from "assets/helpers";
+import { mapState } from 'vuex';
 export default {
   name: "OrderCustomer",
   components: {CustomerCreate},
+  props: ['value','get'],
   data(){ return {
     create_mode: false, param: 'name', param_value: '',
-    customer: null,
     options: [],
   } },
   computed: {
-    customers(){ return this.$store.state.customers.data },
+    ...mapState('customers',{ customers:'data' }),
+    customer_options(){ return o_customers(this.customers) },
+    customer: {
+      get(){ return this.value === undefined ? null : (this.get === undefined ? this.value : _.find(this.customer_options,[this.get,this.value])) },
+      set(customer){ this.$emit('input',this.get === undefined ? customer : _.get(customer,this.get,null)) }
+    }
   },
   methods: {
     filter(val, update){
@@ -49,10 +55,7 @@ export default {
     },
   },
   created(){
-    this.options = o_customers(this.customers);
-  },
-  watch: {
-    customer(customer){ this.$emit('customer',customer) }
+    this.options = this.customer_options;
   }
 }
 </script>

@@ -1,6 +1,6 @@
 <template>
   <q-card>
-    <q-card-section class="bg-amber-2 q-pa-xs"></q-card-section>
+    <q-card-section class="bg-accent q-pa-xs"></q-card-section>
     <q-list dense>
       <q-item dense v-for="(key,label) in header" :key="hKey('header',key)">
         <q-item-section>{{  label }}</q-item-section>
@@ -46,8 +46,9 @@
     </q-list>
     <q-card-actions vertical align="center" class="q-gutter-y-xs">
       <q-input dense outlined type="number" v-model.number="amount" label="Amount" class="full-width" />
-      <q-btn dense label="Make Payment" class="full-width" color="primary" @click="pay" :loading="loading" />
+      <q-btn label="Make Payment" class="full-width" color="primary" @click="pay" :loading="loading" />
     </q-card-actions>
+    <q-inner-loading :showing="loading"><q-spinner-facebook color="primary" size="2em" /></q-inner-loading>
   </q-card>
 </template>
 

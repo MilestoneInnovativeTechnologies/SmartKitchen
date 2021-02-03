@@ -29,7 +29,7 @@
       </q-item-section>
     </q-item>
     <q-dialog persistent v-model="update_mode" transition-show="scale" transition-hide="scale">
-      <OrderItemUpdateForm style="width: 700px; max-width: 60vw;" @close="close" @update="update" v-if="update_obj" v-bind="update_obj" />
+      <OrderItemUpdateForm style="width: 700px; max-width: 90vw;" @close="close" @update="update" v-if="update_obj" v-bind="update_obj" />
     </q-dialog>
   </q-list>
 </template>

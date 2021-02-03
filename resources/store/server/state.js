@@ -14,9 +14,11 @@ export default function () {
       price_lists: 'price_lists',
       seating: 'seating',
       tokens: 'tokens',
-      token_items: ['tokens','items']
+      token_items: ['tokens','items'],
+      users: 'users',
     },
     interval: 15 * 1000,
-    timeOut: null
+    timeOut: null,
+    pinged: 0
   }
 }

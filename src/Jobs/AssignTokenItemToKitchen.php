@@ -8,7 +8,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Auth;
-use Milestone\SmartKitchen\Controllers\TokenController;
+use Milestone\SmartKitchen\Controllers\TokenItemController;
 use Milestone\SmartKitchen\Models\Kitchen;
 use Milestone\SmartKitchen\Models\KitchenItem;
 use Milestone\SmartKitchen\Models\TokenItem;
@@ -37,7 +37,7 @@ class AssignTokenItemToKitchen
             $auto_accept_kitchen = $kitchens->firstWhere('auto_accept','Yes');
             if($auto_accept_kitchen) {
                 Log::info('Item: ' . $item_id . ', is auto accepted at kitchen: ' . $auto_accept_kitchen->id . '. Doing auto accepting..');
-                return TokenController::TokenItemAccept($this->tokenItem,$auto_accept_kitchen->id,Auth::id());
+                return TokenItemController::Accept($this->tokenItem,$auto_accept_kitchen->id,Auth::id());
             }
         }
     }

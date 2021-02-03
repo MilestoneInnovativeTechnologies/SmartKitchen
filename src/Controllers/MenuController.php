@@ -10,7 +10,7 @@ class MenuController extends Controller
     public function toggle(Request $request){
         $id = intval($request->input('menu')); $user = auth()->id();
         if(!UserLogin::where(['user' => $user, 'out' => 0])->exists()) {
-            Log::warning('Trying to select menu of user which not exists in UserLogin.. User: ' . $user);
+            Log::warning('Trying to set menu of user which not exists in UserLogin.. User: ' . $user);
             return;
         }
         $menus = [];

@@ -17,8 +17,8 @@
 </template>
 
 <script>
-import RolesSelect from "components/users/RolesSelect";
-import GetRoleUserLogin from "components/users/GetRoleUserLogin";
+import RolesSelect from "components/Users/RolesSelect";
+import GetRoleUserLogin from "components/Users/GetRoleUserLogin";
 
 export default {
   name: 'LoginLayout',

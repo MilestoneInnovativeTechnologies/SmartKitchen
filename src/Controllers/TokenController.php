@@ -26,6 +26,7 @@ class TokenController extends Controller
             $quantity = $obj['quantity'] ?? 0;
             $narration = $obj['narration'] ?? null;
             $delay = $obj['delay'] ?? 0; $delay = intval($delay) * 60;
+            if($delay > 0) $delay += time();
             $data = compact('user','item','quantity','delay','narration');
             $Items[] = new TokenItem($data);
             TokenItemPrepared::dispatch($data);
@@ -99,6 +100,7 @@ class TokenController extends Controller
     public function item(Request $request){
         if(!$request->has('user')) $request->merge(['user' => auth()->id()]);
         $ti_data = $request->only(['item','quantity','delay','narration','user']);
+        if(array_key_exists('delay',$ti_data)){ $delay = intval($ti_data['delay']) * 60; $delay += time(); $ti_data['delay'] = $delay; }
         if($request->has('token')){
             $token_id = $request->input('token');
             $token_item = new TokenItem($ti_data);
@@ -117,7 +119,7 @@ class TokenController extends Controller
     }
 
     public function customer(Request $request){
-        if(!$request->filled(['token','customer'])) return;
+        if(!$request->filled(['token'])) return;
         Token::find($request->input('token'))->update($request->only('customer'));
     }
 }

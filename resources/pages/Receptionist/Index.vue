@@ -1,15 +1,17 @@
 <template>
-  <q-page padding class="flex flex-center">
-    <a :href="'http://sk/logout?token=' + token">Logout</a>
+  <q-page padding class="q-gutter-y-sm">
+    <ReceptionistBillSummary />
+    <ReceptionistNonDiningTokens />
+    <ReceptionistServableItems />
   </q-page>
 </template>
 
 <script>
+import ReceptionistBillSummary from "components/Receptionist/ReceptionistBillSummary";
+import ReceptionistNonDiningTokens from "components/Receptionist/ReceptionistNonDiningTokens";
+import ReceptionistServableItems from "components/Receptionist/ReceptionistServableItems";
 export default {
-  name: "PageChefIndex",
-  data(){ return { token: new URLSearchParams(document.location.search.substring(1)).get('token') } },
-  created(){
-    this.$store.commit('title','Receptionist')
-  }
+  name: "PageReceptionistIndex",
+  components: {ReceptionistServableItems, ReceptionistNonDiningTokens, ReceptionistBillSummary},
 }
 </script>

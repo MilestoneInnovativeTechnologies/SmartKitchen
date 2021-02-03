@@ -18,13 +18,14 @@
 
     <script src="{!! \Milestone\SmartKitchen\Controllers\AssetController::AssetRoute('Menu') !!}"></script>
     <script src="{!! \Milestone\SmartKitchen\Controllers\AssetController::AssetRoute('Kitchen') !!}"></script>
+    <script src="{!! \Milestone\SmartKitchen\Controllers\AssetController::AssetRoute('User') !!}"></script>
 
     @php $dev = true @endphp
     @include('SK::inc.styles',['dev' => $dev])
     <script type="text/javascript">
         const DATA = [], BASE_URL = '{{ route('base_url') }}', _ROLE = 'Login', LOGOUT = '{!! route('logout') !!}', LOGIN = '{!! route('login') !!}';
         const LoginSelect = @json(config('sk.login_log_section_role_key'));
-        DATA['USERS'] = @json(\Milestone\SmartKitchen\Models\User::select('id','name','role')->get());
+        {{--DATA['USERS'] = @json(\Milestone\SmartKitchen\Models\User::select('id','name','role')->get());--}}
         window.onload = function(){ localStorage.removeItem('jwt_TOKEN'); localStorage.removeItem('jwt_SECRET'); }
     </script>
 </head>

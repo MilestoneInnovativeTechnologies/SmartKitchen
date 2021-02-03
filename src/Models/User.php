@@ -9,6 +9,7 @@ class User extends BaseUser implements JWTSubject
 {
 
     protected $fillable = ['name','email','login','password','role'];
+    protected $hidden = ['created_at','updated_at','password', 'remember_token','email_verified_at','email'];
 
     public function Logs(){ return $this->hasMany(UserLogin::class,'user','id'); }
     public function Tokens(){ return $this->hasMany(Token::class,'user','id'); }

@@ -21,7 +21,8 @@
                 </template>
 
                 <template v-slot:after>
-                  <GroupItemsPanel :selected="group ? group.id : null" @item="item" style="height: 85vh" />
+                  <div class="q-px-md q-pt-xs"><FilterInputText @text="item_filter = $event" /></div>
+                  <GroupItemsPanel :selected="group ? group.id : null" :filter="item_filter" v-bind="params" @item="item" style="height: 85vh" />
                 </template>
               </q-splitter>
             </q-tab-panel>
@@ -30,11 +31,15 @@
       </template>
       <template v-slot:after>
         <OrderSeatingInfo class="q-mt-sm q-px-md" :seating="params.seating" />
-        <OrderCustomer class="q-mt-sm q-px-md" @customer="customer" :key="refresh" />
+        <OrderCustomer class="q-mt-sm q-px-md" v-model="params.customer" get="id" />
         <OrderItemsSummary :items="params.items" :price_list="params.price_list" @quantity="quantity" @update="update" @delete="remove" class="q-ma-sm" />
         <div class="q-mt-sm q-px-md"><q-btn color="primary" class="full-width" label="Submit" @click="create" :disable="!params.items.length" :loading="loading" /></div>
       </template>
     </q-splitter>
+    <q-page-sticky position="bottom-right" :offset="[24, 24]" v-if="order_info">
+      <q-btn v-if="horizontal" fab glossy color="accent" :icon="'vertical_align_' + (hide ? 'top' : 'bottom')" @click="hide = !hide" />
+      <q-btn v-else fab glossy color="accent" icon="keyboard_tab" @click="hide = !hide" :style="{ transform: hide ? 'rotateY(180deg)' : null }" />
+    </q-page-sticky>
   </q-page>
 </template>
 
@@ -45,15 +50,18 @@ import GroupItemsPanel from "components/Group/GroupItemsPanel";
 import OrderCustomer from "components/Order/OrderCustomer";
 import OrderItemsSummary from "components/Order/OrderItemsSummary";
 import OrderSeatingInfo from "components/Order/OrderSeatingInfo";
+import FilterInputText from "components/FilterInputText";
 
 export default {
   name: "PageOrderNew",
-  components: {OrderSeatingInfo, OrderItemsSummary, OrderCustomer, GroupItemsPanel, MenuGroupTabs, SeatSelect},
+  components: {
+    FilterInputText,
+    OrderSeatingInfo, OrderItemsSummary, OrderCustomer, GroupItemsPanel, MenuGroupTabs, SeatSelect},
   data() {
     return {
-      tab: 'seating', split: 60, iSplit: 20,
+      tab: 'seating', m_split: 60, iSplit: 20,
       pos: null, group: null, loading: false,
-      refresh: 0,
+      refresh: 0, item_filter: '', hide: false,
       params: {
         seating: null,
         price_list: null,
@@ -63,6 +71,11 @@ export default {
     }
   },
   computed: {
+    order_info(){ return this.params.seating && this.params.items.length },
+    split: {
+      get(){ return (this.order_info && !this.hide) ? this.m_split : 100 },
+      set(n){ this.m_split = (this.order_info && !this.hide && n !== 100) ? n : this.m_split },
+    },
     horizontal() {
       let {height, width} = this.$q.screen;
       return this.pos === null ? (width <= height) : this.pos
@@ -94,7 +107,6 @@ export default {
       if(!items_item) return null;
       _.forEach(_.omit(obj,'item'),(v,k) => items_item[k] = v)
     },
-    customer(customer){ this.params.customer = customer ? customer.id : null },
     create(){
       this.loading = true;
       post('token','create',this.params).then(r => {

@@ -15,7 +15,7 @@
       />
       <q-input dense outlined type="number" label="Stock" v-model.number="params.stock"/>
       <q-input dense outlined type="number" label="Prepare Duration in Minutes" v-model.number="params.duration"/>
-      <q-select dense outlined :options="['Yes','No']" v-model="params.auto_process" />
+      <q-select dense outlined :options="['Yes','No']" label="Auto Process on Accept" v-model="params.auto_process" />
     </q-card-section>
     <q-card-actions align="right" class="q-px-md q-pt-xs">
       <q-btn color="primary" label="Add Item" type="submit" @click.prevent="add" :loading="loading"/>

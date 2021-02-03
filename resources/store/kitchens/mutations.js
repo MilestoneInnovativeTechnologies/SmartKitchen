@@ -27,8 +27,13 @@ export function items (state,records) {
 }
 
 export function assign(state,id){
-  if(_.isArray(id)) return state.assign = _.map(id,_.toSafeInteger);
-  id = _.toSafeInteger(id); if(!state.assign.includes(id)) state.assign.push(id);
+  if(_.isArray(id)) {
+    state.assign.splice(0,state.assign.length);
+    _.forEach(id,i => state.assign.push(_.toInteger(i)));
+  } else {
+    id = _.toInteger(id);
+    if(!state.assign.includes(id)) state.assign.push(id);
+  }
 }
 
 export function status (state,records) {

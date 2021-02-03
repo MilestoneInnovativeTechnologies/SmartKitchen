@@ -1,48 +1,54 @@
 <template>
-  <q-item :disable="!items.includes(parseInt(item))">
-<!--    <q-item-section avatar><q-badge :label="progress" /></q-item-section>-->
+  <q-item :disable="!eligible" v-if="item.progress !== 'Cancelled'">
     <q-item-section>
-      <q-item-label>{{ quantity }} x {{ name }}</q-item-label>
-      <q-item-label caption class="text-primary">{{ progress }}</q-item-label>
-      <q-item-label caption v-if="kitchen && kitchen != user_kitchen" class="text-secondary">Kitchen: {{ kitchens[parseInt(kitchen)].name }}</q-item-label>
-      <q-item-label caption v-if="narration">{{ narration }}</q-item-label>
-      <q-item-label caption v-if="delay">{{ delay }}</q-item-label>
+      <q-item-label v-if="eligible && wait" class="text-weight-bolder text-red" style="font-size: 0.8rem">Wait {{ item.delay - now }} seconds</q-item-label>
+      <q-item-label v-if="eligible && item.narration && !wait" class="text-weight-bolder text-red" style="font-size: 0.8rem">{{ item.narration }}</q-item-label>
+      <q-item-label><span class="text-weight-bolder">{{ item.quantity }}</span> x {{ name }}</q-item-label>
+      <q-item-label caption :temp="next">{{ time }} {{ unit }} ago</q-item-label>
+      <q-item-label caption v-if="item.kitchen && item.kitchen !== kitchen">Kitchen: {{ kName(item.kitchen) }}</q-item-label>
     </q-item-section>
-    <q-item-section class="text-center">
-      <q-item-label caption :key="progresses">{{ time }} {{ unit }} ago</q-item-label>
+    <q-item-section side v-if="item.progress === 'Processing' && eligible && !loading && !wait"><q-spinner-dots color="primary" size="2em" /></q-item-section>
+    <q-item-section side>
+      <q-badge :color="color[item.progress]" :label="item.progress" class="q-py-xs" />
     </q-item-section>
-    <q-item-section side v-if="items.includes(parseInt(item))">
-      <q-btn v-if="progress === 'New'" icon="mark_chat_read" flat color="primary" @click="accept" padding="0" />
-      <q-btn v-if="progress === 'Accepted'" icon="autorenew" flat color="primary" @click="process" padding="0" />
-      <q-spinner-bars v-if="progress === 'Processing'" flat color="primary" @click="complete" size="sm" style="cursor: pointer" class="q-px-none" />
+    <q-item-section side v-if="eligible && action.hasOwnProperty(item.progress)">
+      <q-btn icon="reply_all" style="transform: rotateY(180deg)" color="primary" @click="progress" round size="sm" />
     </q-item-section>
+    <q-inner-loading v-if="eligible && (wait || loading)" :showing="true"><q-spinner-facebook color="primary" size="2em" /></q-inner-loading>
   </q-item>
 </template>
 
 <script>
+import {mapState} from "vuex";
+
 export default {
   name: "TokenDetailCardItem",
-  props: ['user_kitchen','id','item','progress','quantity','kitchen','narration','delay','progress_timing'],
+  props: ['token','item','kitchen'],
   data(){ return {
-    since: 0
+    color: { New:'red', Accepted:'green-6', Processing:'purple-9' },
+    action: { New:'accept', Accepted:'process', Processing:'complete' },
+    now: _.toInteger(new Date().getTime()/1000),
+    loading: false,
   } },
   computed: {
-    progresses(){ if(this.progress_timing.length){
-      let time = _.toSafeInteger(_.get(_.last(this.progress_timing),'time')) * 1000;
-      this.since = _.toInteger((new Date().getTime() - new Date(time).getTime())/1000)
-      setInterval(vm => vm.since+=10,10000,this);
-      return this.progress_timing.length;
-    } },
-    name(){ return _.get(this.$store.state.items.data,[_.toSafeInteger(this.item),'name']) },
-    time(){ let s = this.since; let time = (s < 60) ? s : ((s < 3600) ? _.toInteger(s/60) : _.toInteger(s/3600)); return _.toInteger(time); },
-    unit(){ let s = this.since; return (s < 60) ? 'seconds' : ((s < 3600) ? 'minutes' : 'hours') },
-    items(){ return this.$store.getters['kitchens/my_kitchen_items'](_.toInteger(this.user_kitchen)) },
-    kitchens(){ return this.$store.state.kitchens.data }
+    ...mapState({
+      name({ items:{ data }}){ return _.get(data,[this.item.item,'name']) },
+      available({ kitchens:{ items } }){ return !!_.filter(_.get(items,this.kitchen),['item',this.item.item]).length }
+    }),
+    eligible(){ return this.item.kitchen === this.kitchen || (!this.item.kitchen && this.available) },
+    since(){ return _.toInteger(_.get(_.last(this.item.progress_timing),'time')) },
+    time(){ let s = this.now - this.since; let time = (s < 60) ? s : ((s < 3600) ? _.toInteger(s/60) : _.toInteger(s/3600)); return _.toInteger(time); },
+    unit(){ let s = this.now - this.since; return (s < 60) ? 'seconds' : ((s < 3600) ? 'minutes' : 'hours') },
+    wait(){ return (this.item.delay > 0 && this.now < this.item.delay)  },
+    next(){ let now = this.now; return setTimeout((vm) => vm.now = _.toInteger(new Date().getTime()/1000),(this.wait || this.unit === 'seconds') ? 1000 : (this.unit === 'minutes' ? 60000 : 3600000),this) }
   },
   methods: {
-    accept(){ post('token','accept',{ id:this.id,kitchen:this.user_kitchen }) },
-    process(){ post('token','process',{ id:this.id }) },
-    complete(){ post('token','complete',{ id:this.id }) },
-  }
+    kName(id){ return _.get(this.$store.state.kitchens.data,[id,'name']) },
+    progress(){
+      this.loading = true;
+      post('token',this.action[this.item.progress],{ id:this.item.id,kitchen:this.kitchen })
+        .then(() => this.loading = false)
+    },
+  },
 }
 </script>

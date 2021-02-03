@@ -18,6 +18,6 @@ class AssetController extends Controller
 
     public static function JSAsset($time,$model){
         $class = Str::of(Model::class)->replaceLast('Model',ucfirst($model))->__toString();
-        return 'const _ASSET_' . ucfirst($model) . ' = ' . $class::all()->toJson();
+        return response('const _ASSET_' . ucfirst($model) . ' = ' . $class::all()->toJson())->withHeaders(['Content-Type' => 'text/javascript']);
     }
 }

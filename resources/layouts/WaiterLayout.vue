@@ -7,6 +7,7 @@
           <q-btn v-if="$store.state.back" :to="$store.state.back" flat round dense icon="arrow_back_ios" />
           {{ $store.state.title || waiter }}
         </q-toolbar-title>
+        <ManualSync />
         <q-btn flat round dense icon="power_settings_new" type="a" :href="logout" />
       </q-toolbar>
     </q-header>
@@ -27,8 +28,10 @@
 </template>
 
 <script>
+import ManualSync from "components/ManualSync";
 export default {
   name: 'WaiterLayout',
+  components: {ManualSync},
   data () { return { waiter:_USER.name, logout: LOGOUT } },
 }
 </script>

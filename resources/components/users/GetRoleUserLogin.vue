@@ -26,8 +26,8 @@
 
 <script>
 import {mapGetters} from "vuex";
-import LoginMenuSelect from "components/users/LoginMenuSelect";
-import LoginKitchenSelect from "components/users/LoginKitchenSelect";
+import LoginMenuSelect from "components/Users/LoginMenuSelect";
+import LoginKitchenSelect from "components/Users/LoginKitchenSelect";
 
 export default {
   name: "GetRoleUserLogin",

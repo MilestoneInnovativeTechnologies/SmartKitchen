@@ -1,9 +1,6 @@
 import axios from 'axios'
 const jwt = require('jsonwebtoken');
 
-global.j = require('jsonwebtoken');
-global.jj = localStorage.getItem('jwt_SECRET');
-
 const aInstance = axios.create({
   /*headers:{
     Authorization: `Bearer ${new URLSearchParams(document.location.search.substring(1)).get('token')}`

@@ -1,5 +1,5 @@
 @php
-    $files = ['vendor.876a95c1','app.6870eb7d'];
+    $files = ['vendor.46ef27fc','app.99fd7eec'];
 @endphp
 @if(isset($dev) && $dev)
     <script src=vendor.js></script>

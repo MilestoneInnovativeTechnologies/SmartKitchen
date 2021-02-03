@@ -96,6 +96,11 @@ class Subscribers
             \Milestone\SmartKitchen\Events\KitchenStockIncrementing::class =>  [],
             \Milestone\SmartKitchen\Events\KitchenStockIncremented::class =>  [],
 
+            \Milestone\SmartKitchen\Events\KitchenStatusCreating::class => [],
+            \Milestone\SmartKitchen\Events\KitchenStatusCreated::class => [],
+            \Milestone\SmartKitchen\Events\KitchenStatusUpdating::class => [],
+            \Milestone\SmartKitchen\Events\KitchenStatusUpdated::class => [],
+
         ];
     }
 }

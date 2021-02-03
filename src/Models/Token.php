@@ -42,12 +42,12 @@ class Token extends Model
         return $Q->where('created_at','>=',now()->startOfDay()->toDateTimeString());
     }
     public function scopeRecent($Q){
-        return $Q->where('created_at','>=',now()->subDays(15)->startOfDay()->toDateTimeString());
+        return $Q->where('created_at','>=',now()->subDays(5)->startOfDay()->toDateTimeString());
     }
     public function scopeActive($Q){
         return $Q
             ->where('progress','!=','Billed')
-            ->orWhere(function($q1){ $q1->where('progress','Billed')->where('updated_at','>',now()->subMinutes(90)->toDateTimeString()); });
+            ->orWhere(function($q1){ $q1->where('progress','Billed')->where('updated_at','>',now()->subDays(5)->toDateTimeString()); });
     }
 
     public function Customer(){ return $this->belongsTo(Customer::class,'customer','id'); }
