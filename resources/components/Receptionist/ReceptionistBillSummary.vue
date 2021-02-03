@@ -18,9 +18,9 @@ export default {
   computed: {
     today(){ return _(this.bills).filter(({ date }) => is_today(date)).value() },
     pending(){ return _(this.today).filter(['progress','Pending']).value() },
-    pending_amount(){ return _.sumBy(this.pending,({ amount }) => _.toNumber(amount)) },
+    pending_amount(){ return _.sumBy(this.pending,({ payable }) => _.toNumber(payable)) },
     paid(){ return _(this.today).filter(({ progress }) => ['Paid','Partial'].includes(progress)).value() },
-    paid_amount(){ return _.sumBy(this.paid,({ amount }) => _.toNumber(amount)) },
+    paid_amount(){ return _.sumBy(this.paid,({ paid }) => _.toNumber(paid)) },
   }
 }
 </script>
