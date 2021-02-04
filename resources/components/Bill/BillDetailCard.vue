@@ -58,6 +58,7 @@
 
 <script>
 import {h_key, precision} from "assets/helpers";
+import {DiningTypeColor} from "assets/assets";
 
 export default {
   name: "BillDetailCard",
@@ -68,7 +69,7 @@ export default {
   computed: {
     type(){ return _.get(this.$attrs,['token','type'],'') },
     customer(){ return _.get(this.$attrs,['customer','name'],'') },
-    bgCls(){ let t = this.type; return 'bg-' + (t === 'Dining' ? 'purple' : (t === 'Take Away' ? 'green' : 'orange')) },
+    bgCls(){ return 'bg-' + DiningTypeColor[this.type] },
     contents(){ return _.get(this.$attrs,'contents',[]) },
     total(){ return _.sum(_.map(this.contents,this.getTotal)) },
     discount(){ return _.sum(_.map(this.contents,({ discount }) => _.toNumber(discount))) },

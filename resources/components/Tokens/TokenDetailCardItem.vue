@@ -20,12 +20,13 @@
 
 <script>
 import {mapState} from "vuex";
+import { TokenItemProgressColor } from "assets/assets";
 
 export default {
   name: "TokenDetailCardItem",
   props: ['token','item','kitchen'],
   data(){ return {
-    color: { New:'red', Accepted:'green-6', Processing:'purple-9' },
+    color: TokenItemProgressColor,
     action: { New:'accept', Accepted:'process', Processing:'complete' },
     now: _.toInteger(new Date().getTime()/1000),
     loading: false,
