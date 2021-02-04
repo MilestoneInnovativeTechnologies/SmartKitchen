@@ -1,10 +1,10 @@
 <template>
   <q-page padding>
-        <div class="q-mx-auto q-col-gutter-sm q-pb-sm" style="max-width: 360px; width: 90vw">
-          <div class="col" v-for="kitchen in kitchens" :key="hKey(kitchen,'all')">
-            <KitchenActionsView :id="kitchen.id" />
-          </div>
-        </div>
+    <div class="row q-col-gutter-sm">
+      <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3" v-for="kitchen in kitchens" :key="hKey(kitchen,'all')">
+        <KitchenActionsView :id="kitchen.id" />
+      </div>
+    </div>
   </q-page>
 </template>
 

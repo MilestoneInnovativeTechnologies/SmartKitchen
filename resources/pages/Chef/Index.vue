@@ -6,9 +6,9 @@
       <div class="col-xs-12 col-sm-6"><KitchenItemLeastStock /></div>
       <div class="col-xs-12 col-sm-6"><KitchenItemDayMostProcessing /></div>
     </div>
-    <div class="q-mt-sm q-mx-auto q-gutter-y-sm" style="max-width: 360px; width: 90vw">
+<!--    <div class="q-mt-sm q-mx-auto q-gutter-y-sm" style="max-width: 360px; width: 90vw">-->
 <!--      <KitchenAssigned />-->
-    </div>
+<!--    </div>-->
   </q-page>
 </template>
 
