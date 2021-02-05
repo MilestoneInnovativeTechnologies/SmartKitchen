@@ -12,6 +12,18 @@ export function options(ary,nAry,sep){ return _.map(ary,data => option(data,nAry
 
 export function matches(obj,keys,text){ return _.includes(_.values(_.pick(obj,keys)).join(' ').toLowerCase(),text.toString().toLowerCase()) }
 
-
+export function now(){ return _.toInteger(new Date().getTime()/1000) }
 export function time(datetime,format){ format = format || 'YYYY-MM-DD HH:mm:ss'; return date.formatDate(date.extractDate(datetime,format),'hh:mm A') }
 export function is_today(datetime,format){ format = format || 'YYYY-MM-DD HH:mm:ss'; return date.isSameDate(date.extractDate(datetime,format),new Date(),'day') }
+
+export function crypt(str, seed = 0) {
+  let h1 = 0xdeadbeef ^ seed, h2 = 0x41c6ce57 ^ seed;
+  for (let i = 0, ch; i < str.length; i++) {
+    ch = str.charCodeAt(i);
+    h1 = Math.imul(h1 ^ ch, 2654435761);
+    h2 = Math.imul(h2 ^ ch, 1597334677);
+  }
+  h1 = Math.imul(h1 ^ (h1>>>16), 2246822507) ^ Math.imul(h2 ^ (h2>>>13), 3266489909);
+  h2 = Math.imul(h2 ^ (h2>>>16), 2246822507) ^ Math.imul(h1 ^ (h1>>>13), 3266489909);
+  return 4294967296 * (2097151 & h2) + (h1>>>0);
+}
