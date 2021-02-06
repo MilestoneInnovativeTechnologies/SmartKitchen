@@ -36,17 +36,17 @@ class ResetTokenProgress
                     MakeTokenProgressCompleted::dispatch($token);
                 }
             } else {
-                $this->makeNew();
+                $this->makeNew($token);
             }
 
         }
         return true;
     }
 
-    private function makeNew(){
-        TokenProgressMakingAsNew::dispatch($this->token);
-        $this->token->update(['progress' => 'New']);
+    private function makeNew($token){
+        TokenProgressMakingAsNew::dispatch($token->id);
+        $token->update(['progress' => 'New']);
         Log::info('Token progress made to Processing!!');
-        TokenProgressMadeAsNew::dispatch($this->token);
+        TokenProgressMadeAsNew::dispatch($token->id);
     }
 }

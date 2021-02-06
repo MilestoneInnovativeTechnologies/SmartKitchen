@@ -9,7 +9,6 @@ use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
-use Milestone\SmartKitchen\Models\Token;
 
 class TokenProgressMakingAsNew
 {
@@ -17,7 +16,7 @@ class TokenProgressMakingAsNew
 
     public $token;
 
-    public function __construct(Token $token)
+    public function __construct($token)
     {
         $this->token = $token;
     }
