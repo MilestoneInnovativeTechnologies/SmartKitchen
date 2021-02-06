@@ -103,10 +103,13 @@ class TokenController extends Controller
         if(array_key_exists('delay',$ti_data)){ $delay = intval($ti_data['delay']) * 60; $delay += time(); $ti_data['delay'] = $delay; }
         if($request->has('token')){
             $token_id = $request->input('token');
+            TokenItemPrepared::dispatch($ti_data);
             $token_item = new TokenItem($ti_data);
+            TokenItemsSaving::dispatch([$token_item]);
             $token_item->token = $token_id;
             TokenItemAdding::dispatch($token_id,$ti_data['item'],$ti_data['quantity'],$request->input('user'),$ti_data);
             $token_item->save();
+            TokenItemsSaved::dispatch(Token::find($token_id)->Items,$request->input('user'));
             TokenItemAdded::dispatch($token_item->fresh(),$request->input('user'),$ti_data);
             return TokenItem::where(['token' => $token_id, 'item' => $ti_data['item'], 'progress' => 'New'])->first();
         }
