@@ -5,7 +5,7 @@
       <KitchenTokenBundleItem v-for="(bind,key) in dist" :key="key" :identify="key" v-bind="bind" :show-stock="stock" :processing="processing.includes(key)" @proceed="item = $event" />
     </q-list>
     <q-card-section class="text-center text-bold">{{ total ? ('Total: ' + total) : 'No Items' }}</q-card-section>
-    <q-dialog v-if="action !== undefined" persistent v-model="dialog"><KitchenTokenBundleAction v-bind="dist[item]" @progress="progress" /></q-dialog>
+    <q-dialog v-if="action !== undefined" persistent v-model="dialog"><KitchenTokenBundleAction v-bind="dist[item]" @progress="progress"  style="width: 50vw; max-width: 330px" /></q-dialog>
   </q-card>
 </template>
 

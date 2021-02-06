@@ -1,5 +1,5 @@
 <template>
-    <q-card style="width: 50vw; max-width: 330px">
+    <q-card>
       <CardImageTitle :image="image" :title="$attrs.name" />
       <q-card-section class="bg-teal text-white" v-if="$attrs.narration">
         <div class="text-h6">{{ $attrs.narration }}</div>
