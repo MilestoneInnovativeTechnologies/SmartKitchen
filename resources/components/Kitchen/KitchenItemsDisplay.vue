@@ -12,7 +12,8 @@
         <q-item-section><q-item-label>Item</q-item-label></q-item-section>
         <q-item-section><q-item-label>Stock</q-item-label></q-item-section>
         <q-item-section><q-item-label>Duration</q-item-label></q-item-section>
-        <q-item-section><q-item-label>Auto</q-item-label></q-item-section>
+        <q-item-section><q-item-label>Auto Process</q-item-label></q-item-section>
+        <q-item-section><q-item-label>Auto Complete</q-item-label></q-item-section>
         <q-item-section side>&nbsp;</q-item-section>
       </q-item>
       <q-item class="text-bold">

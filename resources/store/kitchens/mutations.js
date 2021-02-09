@@ -47,7 +47,7 @@ export function status (state,records) {
   })
 }
 
-function kimap({ id,stock,item,kitchen,duration,auto_process,status }){
+function kimap({ id,stock,item,kitchen,duration,auto_process,auto_complete,status }){
   return _.fromPairs([
     ['id',_.toSafeInteger(id)],
     ['stock',_.toNumber(stock)],
@@ -55,6 +55,7 @@ function kimap({ id,stock,item,kitchen,duration,auto_process,status }){
     ['kitchen',_.toSafeInteger(kitchen)],
     ['duration',_.toNumber(duration)],
     ['auto_process',auto_process],
+    ['auto_complete',auto_complete],
     ['status',status],
   ])
 }

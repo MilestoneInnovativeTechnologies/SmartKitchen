@@ -1,21 +1,28 @@
 <template>
   <q-card :flat="!card">
-    <q-card-section v-if="card" class="bg-grey-2 row items-center"><div class="text-bold">{{ kitchen.name }}</div><q-space /><KitchenTokenDisplayMode v-if="pView" @mode="mode = $event" /></q-card-section>
-    <q-card-section v-else-if="pView" class="row items-center"><div>&nbsp;</div><q-space /><KitchenTokenDisplayMode @mode="mode = $event" /></q-card-section>
+    <q-card-section v-if="card" class="bg-grey-2 row items-center">
+      <div class="text-bold">{{ kitchen.name }}</div><q-space />
+      <KitchenTokenDisplayMode v-if="pView" @mode="mode = $event" /><q-space />
+      <q-btn color="deep-orange" text-color="white" label="Cancel Items" @click="cancel = !cancel" />
+    </q-card-section>
+    <q-card-section v-else-if="pView" class="row items-center">
+      <div>&nbsp;</div><q-space />
+      <KitchenTokenDisplayMode @mode="mode = $event" /><q-space />
+      <q-btn color="deep-orange" text-color="white" label="Cancel Items" @click="cancel = !cancel" />
+    </q-card-section>
     <q-card-section class="row q-col-gutter-sm" v-show="tokens.length && pView && (mode === 'progress' || mode === 'both')">
-      <div class="col-4"><KitchenTokenBundle :kitchen="id" type="New" stock action="true" /></div>
+      <div class="col-4"><KitchenTokenBundle :kitchen="id" type="New" stock="true" action="true" /></div>
       <div class="col-4"><KitchenTokenBundle :kitchen="id" type="Accepted" action="true" /></div>
       <div class="col-4"><KitchenTokenBundle :kitchen="id" type="Processing" action="true" /></div>
     </q-card-section>
-    <hr v-show="mode === 'both'" />
+    <hr v-show="mode === 'both' && pView" />
     <q-card-section class="row q-col-gutter-sm" v-show="tokens.length && (mode === 'token' || mode === 'both')">
       <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 col-xl-2" v-for="token in tokens" :key="hKey(token)">
         <TokenDetailCard :id="token" :kitchen="kitchen.id" :multiple="card" />
       </div>
     </q-card-section>
-    <q-card-section v-if="tokens.length === 0" class="text-center">
-      NO TOKENS
-    </q-card-section>
+    <q-card-section v-if="tokens.length === 0" class="text-center">NO TOKENS</q-card-section>
+    <q-dialog persistent v-model="cancel"><KitchenItemCancel :kitchen="id"  style="width: 80vw; max-width: 330px" @cancel="doCancel" :cancelling="cancelling" /></q-dialog>
   </q-card>
 </template>
 
@@ -25,14 +32,15 @@ import {mapState} from "vuex";
 import {h_key} from "assets/helpers";
 import KitchenTokenBundle from "components/Kitchen/KitchenTokenBundle";
 import KitchenTokenDisplayMode from "components/Kitchen/KitchenTokenDisplayMode";
+import KitchenItemCancel from "components/Kitchen/KitchenItemCancel";
 
 export default {
   name: "KitchenTokens",
-  components: {KitchenTokenDisplayMode, KitchenTokenBundle, TokenDetailCard},
+  components: {KitchenItemCancel, KitchenTokenDisplayMode, KitchenTokenBundle, TokenDetailCard},
   props: ['id','card'],
   data(){ return {
     processing: ['Accepted','Processing'],
-    mode: 'both',
+    mode: 'both', cancel: false, cancelling: false,
   } },
   computed: mapState({
     pView(){ return this.$q.screen.width > 799 },
@@ -42,7 +50,12 @@ export default {
   }),
   methods: {
     hKey(token){ return h_key('kitchen',this.id,'tokens','detail',token) },
-    isAct({ item,progress,kitchen }){ return (kitchen === this.kitchen.id && this.processing.includes(progress)) || (progress === 'New' && _.includes(this.items,item)) }
+    isAct({ item,progress,kitchen }){ return (kitchen === this.kitchen.id && this.processing.includes(progress)) || (progress === 'New' && _.includes(this.items,item)) },
+    doCancel(selected){ if(selected.length) this.cancelling = true; this.post(0,selected,this.id) },
+    post(idx,ids,kitchen){
+      if(!ids || ids.length === 0 || ids.length <= idx) return this.cancel = this.cancelling = false;
+      post('token','reset',{ id:ids[idx],kitchen }).then(() => setTimeout(this.post,300,idx+1,ids,kitchen))
+    }
   }
 }
 </script>

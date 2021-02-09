@@ -16,6 +16,7 @@
       <q-input dense outlined type="number" label="Stock" v-model.number="params.stock"/>
       <q-input dense outlined type="number" label="Prepare Duration in Minutes" v-model.number="params.duration"/>
       <q-select dense outlined :options="['Yes','No']" label="Auto Process on Accept" v-model="params.auto_process" />
+      <q-select dense outlined :options="['Yes','No']" label="Auto Complete on Processing" v-model="params.auto_complete" />
     </q-card-section>
     <q-card-actions align="right" class="q-px-md q-pt-xs">
       <q-btn color="primary" label="Add Item" type="submit" @click.prevent="add" :loading="loading"/>
@@ -33,7 +34,7 @@ export default {
   data(){ return {
     item_obj: null, item_options: [], loading: false,
     params: {
-      item: null, stock: 1, duration: 0, auto_process: 'No', kitchen: null,
+      item: null, stock: 1, duration: 0, auto_process: 'No', auto_complete: 'No', kitchen: null,
     }
   } },
   computed: {
