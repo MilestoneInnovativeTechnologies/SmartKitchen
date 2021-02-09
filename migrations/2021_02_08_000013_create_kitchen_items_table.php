@@ -20,6 +20,7 @@ class CreateKitchenItemsTable extends Migration
             $table->decimal('stock')->default(0);
             $table->unsignedBigInteger('duration')->default(0);
             $table->enum('auto_process',['No','Yes'])->default('No');
+            $table->enum('auto_complete',['No','Yes'])->default('No');
             $table->enum('status',['Active','Inactive'])->default('Active');
             $table->timestamps();
         });

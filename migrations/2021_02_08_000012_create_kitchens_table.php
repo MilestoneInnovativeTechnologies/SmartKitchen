@@ -18,6 +18,10 @@ class CreateKitchensTable extends Migration
             $table->string('name',256)->index();
             $table->string('detail',1024)->nullable();
             $table->enum('auto_accept',['No','Yes'])->default('No');
+            $table->enum('cloud',['No','Yes'])->default('No');
+            $table->char('location',12)->nullable()->index();
+            $table->unsignedBigInteger('ref')->nullable()->index();
+            $table->unsignedBigInteger('server')->nullable();
             $table->enum('status',['Active','Inactive'])->default('Active');
             $table->timestamps();
         });

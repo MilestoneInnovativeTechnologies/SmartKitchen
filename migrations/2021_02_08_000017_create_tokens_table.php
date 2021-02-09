@@ -15,12 +15,16 @@ class CreateTokensTable extends Migration
     {
         Schema::create('tokens', function (Blueprint $table) {
             $table->id();
-            $table->enum('type',['Dining','Home Delivery','Take Away','Other'])->default('Dining');
+            $table->enum('type',['Dining','Home Delivery','Take Away','Order','Remote','Other'])->default('Dining');
             $table->unsignedBigInteger('seating')->nullable();
             $table->timestamp('date')->default(\Illuminate\Support\Facades\DB::raw('CURRENT_TIMESTAMP'));
             $table->unsignedBigInteger('price_list');
             $table->unsignedBigInteger('user')->nullable();
             $table->unsignedBigInteger('customer')->nullable();
+            $table->string('narration',1024)->nullable();
+            $table->char('location',12)->nullable()->index();
+            $table->unsignedBigInteger('ref')->nullable()->index();
+            $table->unsignedBigInteger('server')->nullable();
             $table->enum('progress',['New','Processing','Completed','Billed','Cancelled'])->default('New');
             $table->json('progress_timing')->nullable();
             $table->timestamps();

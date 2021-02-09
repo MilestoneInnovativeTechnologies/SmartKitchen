@@ -16,6 +16,7 @@ class UpdateUsersTable extends Migration
         Schema::table('users', function (Blueprint $table) {
             $table->string('email',64)->nullable()->change();
             $table->string('login',24)->index()->unique()->after('name');
+            $table->char('pin',4)->index()->nullable()->unique()->after('name');
             $table->enum('role',array_keys(config('sk.role_names')))->index()->default('Waiter')->after('password');
             $table->dropUnique(['email']);
         });
@@ -29,7 +30,7 @@ class UpdateUsersTable extends Migration
     public function down()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn(['login','role']);
+            $table->dropColumn(['login','role','pin']);
             $table->unique('email');
         });
     }
