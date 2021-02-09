@@ -13,7 +13,7 @@ use Milestone\SmartKitchen\Events\TokenItemProcessed;
 use Milestone\SmartKitchen\Events\TokenItemProcessing;
 use Milestone\SmartKitchen\Models\TokenItem;
 
-class AutoProcessAcceptedOrder// implements ShouldQueue
+class AutoCompleteProcessingOrder// implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -28,6 +28,6 @@ class AutoProcessAcceptedOrder// implements ShouldQueue
 
     public function handle()
     {
-        TokenItemController::Process($this->tokenItem,$this->user);
+        TokenItemController::Complete($this->tokenItem,$this->user);
     }
 }

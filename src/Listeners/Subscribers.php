@@ -39,7 +39,8 @@ class Subscribers
             ],
             \Milestone\SmartKitchen\Events\TokenItemProcessing::class =>  [],
             \Milestone\SmartKitchen\Events\TokenItemProcessed::class =>  [
-                TryMakingTokenProgressAsProcessing::class
+                TryMakingTokenProgressAsProcessing::class,
+                KOTAutoCompleteProcessing::class,
             ],
             \Milestone\SmartKitchen\Events\TokenItemCompleting::class =>  [],
             \Milestone\SmartKitchen\Events\TokenItemCompleted::class =>  [],

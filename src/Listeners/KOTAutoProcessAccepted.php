@@ -19,6 +19,6 @@ class KOTAutoProcessAccepted
     {
         $kitchen = $event->kitchen; $item = $event->item;
         $auto_process = Arr::get(KitchenItem::where(compact('kitchen','item'))->first(),'auto_process','No');
-        if($auto_process === 'Yes') AutoProcessAcceptedOrder::dispatch($event->tokenItem, $kitchen, $event->user)->afterResponse();
+        if($auto_process === 'Yes') AutoProcessAcceptedOrder::dispatch($event->tokenItem, $kitchen, $event->user);//->afterResponse();
     }
 }

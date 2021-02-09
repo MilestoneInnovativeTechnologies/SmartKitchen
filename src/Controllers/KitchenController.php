@@ -13,7 +13,7 @@ use Milestone\SmartKitchen\Models\UserLogin;
 class KitchenController extends Controller
 {
     public function item(Request $request){
-        $ki_data = $request->only(['item','stock','duration','auto_process']);
+        $ki_data = $request->only(['item','stock','duration','auto_process','auto_complete']);
         if($request->has('kitchen')){
             $kitchen = Kitchen::find($request->input('kitchen'));
             $kitchen_item = new KitchenItem($ki_data);
