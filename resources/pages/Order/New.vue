@@ -61,7 +61,7 @@ export default {
     return {
       tab: 'seating', m_split: 60, iSplit: 20,
       pos: null, group: null, loading: false,
-      refresh: 0, item_filter: '', hide: false,
+      item_filter: '', hide: false,
       params: {
         seating: null,
         price_list: null,
@@ -110,10 +110,10 @@ export default {
     create(){
       this.loading = true;
       post('token','create',this.params).then(r => {
-        this.loading = false;
-        this.params.seating = null;
+        this.loading = false; this.group = null;
+        this.params.seating = null; this.params.customer = null;
         this.params.items.splice(0,this.params.items.length)
-        this.tab = "seating"; this.refresh++;
+        this.tab = "seating"; this.item_filter = "";
       })
     }
   }
