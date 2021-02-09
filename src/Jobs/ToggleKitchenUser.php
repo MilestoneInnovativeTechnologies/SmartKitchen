@@ -32,7 +32,7 @@ class ToggleKitchenUser
     {
         $kitchen = $this->kitchen; $chef = intval($this->chef);
         if($kitchen && $chef){
-            if(!KitchenStatus::where('kitchen',$kitchen)->exists()) return Log::warning('While removing user from kitchen, No such kitchen found for Kitchen: ' . $kitchen . ', User: ' . $chef);
+            if(!KitchenStatus::where('kitchen',$kitchen)->exists()) KitchenStatus::create(['kitchen' => $kitchen, 'users' => []]);
             $ks = KitchenStatus::where('kitchen',$kitchen)->first();
             $chefs = Arr::get($ks,'users',[]);
             if(in_array($chef,$chefs)) $chefs = array_values(array_unique(array_diff($chefs,[$chef])));
