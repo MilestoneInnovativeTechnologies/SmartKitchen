@@ -36,6 +36,12 @@ export function assign(state,id){
   }
 }
 
+export function item_remove(state,{ kitchen,id }){
+  let k = _.toInteger(kitchen), i = _.toInteger(id),
+  idx = _.findIndex(state.items[k],['id',i]);
+  state.items[k].splice(idx,1);
+}
+
 export function status (state,records) {
   if(!records) return;
   if(!_.isArray(records)) records = [records];

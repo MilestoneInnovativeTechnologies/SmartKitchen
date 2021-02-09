@@ -23,6 +23,14 @@ class KitchenController extends Controller
             $kitchen_item = KitchenItem::find($request->input('id'));
             $kitchen_item->update($ki_data);
             return $kitchen_item;
+        } elseif($request->has('delete')) {
+            $kitchen_item = KitchenItem::find($request->input('delete'));
+            if($kitchen_item) {
+                $aKI = KitchenItem::where(['kitchen' => $kitchen_item->kitchen])->first();
+                $kitchen_item->delete();
+                if($aKI) $aKI->update(['updated_at' => now()->toDateTimeString()]);
+            }
+            return 1;
         }
         return [];
     }
