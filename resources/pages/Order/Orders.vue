@@ -10,6 +10,7 @@
         <q-fab icon="add" color="primary" glossy :to="{ name: 'order_new' }" v-touch-pan.prevent.mouse="move" />
       </q-page-sticky>
     </transition>
+    <q-dialog v-model="m_show" persistent><MenuSelect style="width: 75vw; max-width: 330px" /></q-dialog>
   </q-page>
 </template>
 
@@ -18,16 +19,24 @@ import OrderSummaryWaiterItem from "components/Order/OrderSummaryWaiterOrder";
 import {h_key} from "assets/helpers";
 import {mapState} from "vuex";
 import { debounce } from 'quasar'
+import MenuSelect from "components/Menu/MenuSelect";
 export default {
   name: 'PageOrders',
-  components: {OrderSummaryWaiterItem},
+  components: {MenuSelect, OrderSummaryWaiterItem},
   data(){ return {
     fab: true, timeout: 0, offset: [24,24],
-    progresses: ['New','Processing','Completed']
+    progresses: ['New','Processing','Completed'],
+    r_menu: false
   } },
-  computed: mapState('tokens',{
-    tokens({ data }){ return _(data).filter(({ progress }) => this.progresses.includes(progress)).value() }
-  }),
+  computed: {
+    ...mapState('tokens',{
+      tokens({ data }){ return _(data).filter(({ progress }) => this.progresses.includes(progress)).value() },
+    }),
+    m_show: {
+      get(){ return !this.$store.state.menus.s_items.length || this.r_menu },
+      set(s){ this.r_menu = !!s }
+    }
+  },
   methods: {
     hKey({ id }){ h_key('order','summary','order',id) },
     scrolled: debounce(function(){this.fab = false},500,true),
@@ -38,6 +47,9 @@ export default {
       immediate: true,
       handler: function(s){ if(s) return; clearTimeout(this.timeout); this.timeout = setTimeout(vm => vm.fab = true,1500,this) }
     }
+  },
+  created() {
+    this.r_menu = this.m_show;
   }
 }
 </script>
