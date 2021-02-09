@@ -35,7 +35,7 @@ class AddKitchenUser
             foreach ($kitchens as $kitchen){
                 if(!KitchenStatus::where(compact('kitchen'))->exists()) {
                     KitchenStatusCreating::dispatch($kitchen,$chef);
-                    KitchenStatus::create(['kitchen' => $kitchen, 'Users' => $chef]);
+                    KitchenStatus::create(['kitchen' => $kitchen, 'users' => $chef]);
                     KitchenStatusCreated::dispatch($kitchen,$chef);
                     Log::info('Kitchen status inserted for kitchen: ' . $kitchen);
                 } else {
