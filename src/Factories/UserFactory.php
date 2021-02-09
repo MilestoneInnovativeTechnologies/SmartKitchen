@@ -25,6 +25,7 @@ class UserFactory extends Factory
     {
         return [
             'name' => $this->faker->name,
+            'pin' => $this->faker->unique()->numerify('####'),
             'email' => $this->faker->unique()->safeEmail,
             'login' => $this->faker->unique()->userName,
             'email_verified_at' => now(),
