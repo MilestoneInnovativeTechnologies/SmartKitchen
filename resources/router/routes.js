@@ -8,13 +8,14 @@ const layout_master = {
 }
 
 const layout_child = {
-  Login: [],
+  Login: ['login_index'],
   Waiter: ['waiter_index','waiter_menu','orders','order_new'],
   Chef: ['chef_index','chef_kitchens','kitchen_items','kitchen_stocks','tokens'],
   Receptionist: ['receptionist_index','seat_status','receptionist_tokens','bills','seat_status_order','receptionist_orders','receptionist_order_new','receptionist_order_new_items'],
 }
 
 const route_master = {
+  login_index: {  name:'login_index', path:'/', component: () => import('pages/Login/Index'), meta:{ title:'' }  },
   waiter_index: {  name:'waiter_index', path:'/', component: () => import('pages/Waiter/Index'), meta:{ title:'' }  },
   waiter_menu: {  name:'waiter_menu', path:'/menu', component: () => import('pages/Waiter/Menu'), meta:{ title:'Menu' }  },
   orders: {  name:'orders', path:'/orders', component: () => import('pages/Order/Orders'), meta:{ title:'Order' }  },
