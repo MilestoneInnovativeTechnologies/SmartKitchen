@@ -4,6 +4,8 @@ namespace Milestone\SmartKitchen\Controllers;
 
 use Illuminate\Http\Request;
 use Milestone\SmartKitchen\Events\LoggedIn;
+use Milestone\SmartKitchen\Models\User;
+use Tymon\JWTAuth\JWTAuth;
 
 class AuthController extends Controller
 {
@@ -20,9 +22,15 @@ class AuthController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     public function login(){
-        $credentials = request(['id', 'password']);
-        if (!$token = auth()->attempt($credentials))
-            return redirect()->route('login',['msg' => 'Unauthorized Access!!']);
+        if(request()->has('pin')) {
+            $credentials = request(['pin']);
+            $user = User::where($credentials)->first();
+            $token = $user ? auth()->login($user) : null;
+        } else {
+            $credentials = request(['id', 'password']);
+            $token = auth()->attempt($credentials);
+        }
+        if (!$token) return redirect()->route('login',['msg' => 'Unauthorized Access!!']);
         $lsk = config("sk.login_log_section_role_key"); $section = null;
         if($lsk && array_key_exists(auth()->user()->role,$lsk)) $section = request()->input($lsk[auth()->user()->role]);
         LoggedIn::dispatch(auth()->user(),$section);
