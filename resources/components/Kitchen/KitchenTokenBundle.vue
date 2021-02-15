@@ -2,7 +2,9 @@
   <q-card>
     <q-card-section :class="colClass" class="text-white text-bold">{{ type }}</q-card-section>
     <q-list bordered separator v-show="Object.keys(dist).length > 0">
-      <KitchenTokenBundleItem v-for="(bind,key) in dist" :key="key" :identify="key" v-bind="bind" :show-stock="stock" :processing="processing.includes(key)" @proceed="item = $event" />
+      <transition-group appear enter-active-class="animated bounceIn" leave-active-class="animated bounceOut" mode="out-in">
+        <KitchenTokenBundleItem v-for="(bind,key) in dist" :key="hKey(key)" :identify="key" v-bind="bind" :show-stock="stock" :processing="processing.includes(key)" @proceed="item = $event" />
+      </transition-group>
     </q-list>
     <q-card-section class="text-center text-bold">{{ total ? ('Total: ' + total) : 'No Items' }}</q-card-section>
     <q-dialog v-if="action !== undefined" persistent v-model="dialog"><KitchenTokenBundleAction v-bind="dist[item]" @progress="progress"  style="width: 50vw; max-width: 330px" /></q-dialog>
@@ -40,7 +42,7 @@ export default {
     }
   },
   methods: {
-    hKey(token){ return h_key('kitchen',this.id,'tokens','detail',token) },
+    hKey(key){ return h_key('kitchen',this.id,'tokens','bundle',key) },
     isAct({ item,progress,kitchen }){ return (!kitchen && progress === 'New' && this.type === 'New' && _.some(this.kItems,['item',item.id])) || (kitchen && kitchen.id === _.toInteger(this.kitchen) && this.type === progress) },
     itmObj(itmAry){ let itm = itmAry[0]; return Object.assign({},this.pure(itm),{ total: _.sumBy(itmAry,'quantity'),token: _(itmAry).keyBy('token').mapValues(({ token,id,user,quantity }) => new Object({ token,id,user,quantity })).value() }) },
     crypt({ delay,item:{ id },narration }){ return crypt([id,this.getWait(delay),narration].join('|')) + '' },

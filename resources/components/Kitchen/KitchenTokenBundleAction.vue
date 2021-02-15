@@ -10,7 +10,11 @@
       </q-card-actions>
       <q-list bordered separator class="bg-grey-2">
         <q-item v-for="obj in $attrs.token" :key="hKey(obj)" clickable @click="clicked(obj)" :class="{ 'bg-grey-4':selected.includes(obj.id) }">
-          <q-item-section avatar><q-avatar icon="done_all" :color="selected.includes(obj.id) ? 'green' : 'grey-2'" text-color="grey-2"></q-avatar></q-item-section>
+          <q-item-section avatar>
+            <transition mode="out-in" appear enter-active-class="animated bounceIn" leave-active-class="animated bounceOut">
+              <q-avatar v-if="selected.includes(obj.id)" icon="done_all" color="green" text-color="grey-2" />
+            </transition>
+          </q-item-section>
           <q-item-section>
             <q-item-label>Token: {{ obj.token }} - ({{ time(Tokens[obj.token].date) }})</q-item-label>
             <q-item-label caption>Type: {{ Tokens[obj.token].type }}</q-item-label>
