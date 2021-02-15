@@ -3,12 +3,18 @@
     <q-card-section class="row bg-deep-orange items-center text-white"><div class="text-h6">Cancel Item</div><q-space /><q-btn flat icon="clear" v-close-popup /></q-card-section>
     <q-item-section class="q-pa-md"><FilterInputText lazy="true" @text="filter = $event" /></q-item-section>
     <q-list bordered separator>
-      <q-item-label header>Accepted Items</q-item-label>
-      <KitchenItemCancelItem v-for="(item,idx) in accepted" :key="hKey('accepted',idx,item)" :item="item" :token="Tokens[item.token]" :selected="selected" @select="select" />
-      <q-item-label header>Processing Items</q-item-label>
-      <KitchenItemCancelItem v-for="(item,idx) in processing" :key="hKey('processing',idx,item)" :item="item" :token="Tokens[item.token]" :selected="selected" @select="select" />
-      <q-item-label header>Completed Items</q-item-label>
-      <KitchenItemCancelItem v-for="(item,idx) in completed" :key="hKey('completed',idx,item)" :item="item" :token="Tokens[item.token]" :selected="selected" @select="select" />
+      <template v-if="!!accepted.length">
+        <q-item-label header>Accepted Items</q-item-label>
+        <KitchenItemCancelItem v-for="(item,idx) in accepted" :key="hKey('accepted',idx,item)" :item="item" :token="Tokens[item.token]" :selected="selected" @select="select" />
+      </template>
+      <template v-if="!!processing.length">
+        <q-item-label header>Processing Items</q-item-label>
+        <KitchenItemCancelItem v-for="(item,idx) in processing" :key="hKey('processing',idx,item)" :item="item" :token="Tokens[item.token]" :selected="selected" @select="select" />
+      </template>
+      <template v-if="!!completed.length">
+        <q-item-label header>Completed Items</q-item-label>
+        <KitchenItemCancelItem v-for="(item,idx) in completed" :key="hKey('completed',idx,item)" :item="item" :token="Tokens[item.token]" :selected="selected" @select="select" />
+      </template>
     </q-list>
     <q-card-actions align="right"><q-btn push :loading="$attrs.cancelling" color="deep-orange" label="Cancel Selected" @click="$emit('cancel',selected)" /></q-card-actions>
   </q-card>
