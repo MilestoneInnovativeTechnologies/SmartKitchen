@@ -28,11 +28,13 @@ export default new Vuex.Store({
     title: '',
     back: null,
     footer: true,
+    public: {}
   },
   mutations: {
     title(state,title){ Vue.set(state,'title',title) },
     back(state,from){ Vue.set(state,'back',from) },
     footer(state,status){ Vue.set(state,'footer',status) },
+    public(state,obj){ _.forEach(obj,(val,key) => Vue.set(state.public,key,val)) }
   },
   strict: process.env.DEBUGGING
 })

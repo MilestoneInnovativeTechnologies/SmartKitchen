@@ -1,14 +1,20 @@
 <template>
-  <q-btn-group>
-    <q-btn color="secondary" glossy label="Token" @click="$emit('mode','token')" />
-    <q-btn color="secondary" glossy label="Item" @click="$emit('mode','item')" />
-    <q-btn color="secondary" glossy label="Progress" @click="$emit('mode','progress')" />
-<!--    <q-btn color="secondary" glossy label="Both" @click="$emit('mode','both')" />-->
-  </q-btn-group>
+  <q-select :options="modes" v-model="mode" v-bind="$attrs" />
 </template>
 
 <script>
+import {KitchenTokensDisplayMode} from "assets/assets";
+const append = ' Mode'
 export default {
-  name: "KitchenTokenDisplayMode"
+  name: "KitchenTokenDisplayMode",
+  props: ['value'],
+  computed: {
+    modes(){ return KitchenTokensDisplayMode.map(mode => mode + append) },
+    mode: {
+      get(){ return this.value ? this.value + append : _.first(this.modes) },
+      set(mode){ this.$emit('input',mode.replace(append,'')) },
+    }
+  },
+  mounted(){ if(!this.value) this.mode = _.first(this.modes) }
 }
 </script>
