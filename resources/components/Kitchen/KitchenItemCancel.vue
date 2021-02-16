@@ -1,6 +1,6 @@
 <template>
   <q-card>
-    <q-card-section class="row bg-deep-orange items-center text-white"><div class="text-h6">Cancel Item</div><q-space /><q-btn flat icon="clear" v-close-popup /></q-card-section>
+    <q-card-section class="row bg-deep-orange items-center text-white"><div class="text-h6">Reset Item</div><q-space /><q-btn flat icon="clear" v-close-popup /></q-card-section>
     <q-item-section class="q-pa-md"><FilterInputText lazy="true" @text="filter = $event" /></q-item-section>
     <q-list bordered separator>
       <template v-if="!!accepted.length">
@@ -16,7 +16,7 @@
         <KitchenItemCancelItem v-for="(item,idx) in completed" :key="hKey('completed',idx,item)" :item="item" :token="Tokens[item.token]" :selected="selected" @select="select" />
       </template>
     </q-list>
-    <q-card-actions align="right"><q-btn push :loading="$attrs.cancelling" color="deep-orange" label="Cancel Selected" @click="$emit('cancel',selected)" /></q-card-actions>
+    <q-card-actions align="right"><q-btn push :loading="$attrs.cancelling" color="deep-orange" label="Reset All Selected" @click="$emit('cancel',selected)" /></q-card-actions>
   </q-card>
 </template>
 
@@ -35,7 +35,7 @@ export default {
   computed: {
     Tokens(){ return _(this.tokens).filter(({ progress }) => ['New','Processing'].includes(progress)).keyBy('id').value() },
     items(){ return _(this.Tokens).flatMap('items').filter(this.isAct).value() },
-    filtered(){ return (this.filter === '') ? this.items : _.filter(this.items,({ item:{ name } }) => _.includes(_.toLower(name),_.toLower(this.filter))) },
+    filtered(){ return (this.filter === '') ? this.items : _.filter(this.items,({ item:{ name },token }) => _.includes(token+' '+_.toLower(name),_.toLower(this.filter))) },
     accepted(){ return _.filter(this.filtered,['progress','Accepted']) },
     processing(){ return _.filter(this.filtered,['progress','Processing']) },
     completed(){ return _.filter(this.filtered,['progress','Completed']) },
