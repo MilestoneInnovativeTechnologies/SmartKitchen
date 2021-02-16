@@ -12,7 +12,7 @@
       <q-badge :color="color[item.progress]" :label="item.progress" class="q-py-xs" />
     </q-item-section>
     <q-item-section side v-if="eligible && action.hasOwnProperty(item.progress)">
-      <q-btn icon="reply_all" style="transform: rotateY(180deg)" color="primary" @click="progress" round size="sm" />
+      <q-btn icon="reply_all" class="flip-horizontal" color="primary" @click="progress" round size="sm" />
     </q-item-section>
     <q-inner-loading v-if="eligible && (wait || loading)" :showing="true"><q-spinner-facebook color="primary" size="2em" /></q-inner-loading>
   </q-item>

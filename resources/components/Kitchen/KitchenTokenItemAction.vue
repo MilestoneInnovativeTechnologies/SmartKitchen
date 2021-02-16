@@ -26,7 +26,7 @@
       <q-card-actions align="left" class="bg-white text-teal">
         <q-btn flat label="CLOSE" @click="$emit('progress')" /><q-space />
         <q-badge v-show="selected.length" :label="total" class="q-py-sm q-px-md" /><q-space />
-        <q-btn icon="reply_all" :disable="!selected.length" round color="positive" style="transform: rotateY(180deg)" @click="$emit('progress',selected)" />
+        <q-btn icon="reply_all" :disable="!selected.length" round color="positive" class="flip-horizontal" @click="$emit('progress',selected)" />
       </q-card-actions>
     </q-card>
 </template>
