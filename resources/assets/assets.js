@@ -6,3 +6,4 @@ export const OrderTypeRequiredFieldsDB = { Dining:['type','seating','user','cust
 export const TokenItemProgressColor = { New:'red', Accepted:'green-6', Processing:'purple-9' }
 export const TokenProgressColor = { New:'red', Processing:'purple-9', Completed: 'green-6', Billed: 'positive', Cancelled: 'grey-2' }
 export const DiningTypeColor = { Dining:'purple', 'Home Delivery':'orange', 'Take Away':'green' }
+export const KitchenTokensDisplayMode = ['Token','Progress','Item']
