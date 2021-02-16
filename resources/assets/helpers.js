@@ -1,4 +1,4 @@
-import { date } from 'quasar'
+const { formatDate,extractDate,isSameDate } = require('quasar').date
 
 export function h_key(){ return Array.from(arguments).join('-') }
 
@@ -13,8 +13,8 @@ export function options(ary,nAry,sep){ return _.map(ary,data => option(data,nAry
 export function matches(obj,keys,text){ return _.includes(_.values(_.pick(obj,keys)).join(' ').toLowerCase(),text.toString().toLowerCase()) }
 
 export function now(){ return _.toInteger(new Date().getTime()/1000) }
-export function time(datetime,format){ format = format || 'YYYY-MM-DD HH:mm:ss'; return date.formatDate(date.extractDate(datetime,format),'hh:mm A') }
-export function is_today(datetime,format){ format = format || 'YYYY-MM-DD HH:mm:ss'; return date.isSameDate(date.extractDate(datetime,format),new Date(),'day') }
+export function time(datetime,format){ format = format || 'YYYY-MM-DD HH:mm:ss'; return formatDate(extractDate(datetime,format),'hh:mm A') }
+export function is_today(datetime,format){ format = format || 'YYYY-MM-DD HH:mm:ss'; return isSameDate(extractDate(datetime,format),new Date(),'day') }
 
 export function crypt(str, seed = 0) {
   let h1 = 0xdeadbeef ^ seed, h2 = 0x41c6ce57 ^ seed;
