@@ -13,7 +13,7 @@
       </div>
     </div>
     <div class="row q-col-gutter-sm">
-      <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2 col-xl-1" v-for="seat in filtered" :key="hKey(seat)">
+      <div class="col-xs-12 col-sm-6 col-md-3 col-lg-2 col-xl-1" v-for="seat in filtered" :key="hKey(seat)">
         <SeatStatusPreview v-bind="seat" />
       </div>
     </div>
