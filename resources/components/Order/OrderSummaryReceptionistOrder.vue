@@ -1,6 +1,6 @@
 <template>
   <q-card>
-    <q-card-section class="bg-teal-5 q-py-xs text-center text-white"><span v-if="token.user">{{ token.user.name }}</span></q-card-section>
+    <q-card-section class="q-py-xs text-center text-white" :class="cColor"><span v-if="token.user">{{ token.user.name }}</span></q-card-section>
     <CardImageTitle :image="src" :title="token.seating ? token.seating.name : (token.customer ? token.customer.name : token.type)" />
     <q-card-actions><q-badge :label="token.id" class="q-py-sm q-px-sm" /><q-badge :label="token.type" class="q-py-sm q-ml-xs" /><q-badge :label="token.progress" class="q-py-sm q-ml-xs" /><q-space /><q-btn v-if="token.progress !== 'Billed'" icon="add_box" color="primary" flat @click="add_mode = true" padding="0" /></q-card-actions>
     <OrderSummaryWaiterOrderItemsList :order="id" />
@@ -14,6 +14,7 @@ import OrderSummaryItemAdd from "components/Order/OrderSummaryItemAdd";
 import CardImageTitle from "components/CardImageTitle";
 import { mapState } from 'vuex'
 import {images} from "assets/default_images";
+import {DiningTypeColor} from "assets/assets";
 export default {
   components: {CardImageTitle, OrderSummaryItemAdd, OrderSummaryWaiterOrderItemsList},
   data(){ return {
@@ -30,7 +31,8 @@ export default {
           { customer:customers.data[_.toInteger(token.customer)] }
         )
       }}),
-    src(){ let type = this.token.type; return type === 'Dining' ? images.seating : (type === 'Take Away' ? images.takeaway : images.homedelivery) }
+    src(){ let type = this.token.type; return type === 'Dining' ? images.seating : (type === 'Take Away' ? images.takeaway : images.homedelivery) },
+    cColor(){ return 'bg-' + DiningTypeColor[this.token.type] }
   }
 }
 </script>

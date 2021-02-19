@@ -3,11 +3,11 @@
     <q-card-section :class="colClass" class="text-white text-bold">{{ type }}</q-card-section>
     <q-list bordered separator v-show="Object.keys(dist).length > 0">
       <transition-group appear enter-active-class="animated bounceIn" leave-active-class="animated bounceOut" mode="out-in">
-        <KitchenTokenBundleItem v-for="(bind,key) in dist" :key="hKey(key)" :identify="key" v-bind="bind" :show-stock="stock" :processing="processing.includes(key)" @proceed="item = $event" />
+        <KitchenTokenBundleItem v-for="(bind,key) in dist" :key="hKey(key)" :identify="key" v-bind="bind" :progress="type" :show-stock="stock" :processing="processing.includes(key)" @proceed="item = $event" />
       </transition-group>
     </q-list>
     <q-card-section class="text-center text-bold">{{ total ? ('Total: ' + total) : 'No Items' }}</q-card-section>
-    <q-dialog v-if="action !== undefined" persistent v-model="dialog"><KitchenTokenBundleAction v-bind="dist[item]" @progress="progress"  style="width: 50vw; max-width: 330px" /></q-dialog>
+    <q-dialog v-if="action !== undefined" persistent v-model="dialog"><KitchenTokenBundleAction v-bind="dist[item]" :progress="type" @progress="progress"  style="width: 50vw; max-width: 330px" /></q-dialog>
   </q-card>
 </template>
 

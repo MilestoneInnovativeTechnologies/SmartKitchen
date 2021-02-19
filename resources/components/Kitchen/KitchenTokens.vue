@@ -11,9 +11,9 @@
         </div>
       </q-card-section>
       <q-card-section class="row q-col-gutter-sm" v-show="mode === 'Progress'">
-        <div class="col-4"><KitchenTokenBundle :kitchen="id" type="New" stock="true" action="true" /></div>
-        <div class="col-4"><KitchenTokenBundle :kitchen="id" type="Accepted" action="true" /></div>
-        <div class="col-4"><KitchenTokenBundle :kitchen="id" type="Processing" action="true" /></div>
+        <div class="col-xs-12 col-sm-4"><KitchenTokenBundle :kitchen="id" type="New" stock="true" action="true" /></div>
+        <div class="col-xs-12 col-sm-4"><KitchenTokenBundle :kitchen="id" type="Accepted" action="true" /></div>
+        <div class="col-xs-12 col-sm-4"><KitchenTokenBundle :kitchen="id" type="Processing" action="true" /></div>
       </q-card-section>
       <q-card-section class="row q-col-gutter-sm" v-show="mode === 'Token'">
         <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 col-xl-2" v-for="token in Tokens" :key="hKey(token,'token')">

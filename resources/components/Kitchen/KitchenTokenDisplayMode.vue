@@ -4,15 +4,15 @@
 
 <script>
 import {KitchenTokensDisplayMode} from "assets/assets";
-const append = ' Mode'
 export default {
   name: "KitchenTokenDisplayMode",
   props: ['value'],
   computed: {
-    modes(){ return KitchenTokensDisplayMode.map(mode => mode + append) },
+    append(){ return this.$q.screen.width < 500 ? '' : ' Mode' },
+    modes(){ return KitchenTokensDisplayMode.map(mode => mode + this.append) },
     mode: {
-      get(){ return this.value ? this.value + append : _.first(this.modes) },
-      set(mode){ this.$emit('input',mode.replace(append,'')) },
+      get(){ return this.value ? this.value + this.append : _.first(this.modes) },
+      set(mode){ this.$emit('input',mode.replace(this.append,'')) },
     }
   },
   mounted(){ if(!this.value) this.mode = _.first(this.modes) }

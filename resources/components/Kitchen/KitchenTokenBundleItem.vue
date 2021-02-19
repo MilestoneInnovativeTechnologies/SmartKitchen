@@ -7,20 +7,21 @@
       <q-item-label caption class="text-bold" v-if="wait">Wait: {{ wait }}</q-item-label>
       <q-item-label caption class="text-red text-bold" v-if="$attrs.narration">{{ $attrs.narration }}</q-item-label>
     </q-item-section>
-    <q-item-section side><q-avatar color="accent" rounded text-color="white" class="text-weight-bold">{{ $attrs.total }}</q-avatar></q-item-section>
+    <q-item-section side><q-avatar :color="color" rounded text-color="white" class="text-weight-bold">{{ $attrs.total }}</q-avatar></q-item-section>
     <q-inner-loading :showing="$attrs.processing" transition-hide="fadeOut" transition-show="fadeIn"><q-spinner-facebook color="primary" size="2em" /></q-inner-loading>
   </q-item>
 </template>
 
 <script>
 import {images} from "src/assets/default_images";
+import {TokenItemProgressColor} from "assets/assets";
 
 export default {
   name: "KitchenTokenBundleItem",
   data(){ return {
     wait: _.toInteger(this.$attrs.wait),
     src:images.item,
-    interval: 0,
+    interval: 0, color: TokenItemProgressColor[this.$attrs.progress]
   } },
   created() {
     if(!this.wait) return;

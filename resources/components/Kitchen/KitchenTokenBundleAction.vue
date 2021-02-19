@@ -21,7 +21,7 @@
             <q-item-label caption v-if="Tokens[obj.token].waiter">Waiter: {{ Tokens[obj.token].waiter.name }}</q-item-label>
             <q-item-label caption v-if="Tokens[obj.token].seating">Seat: {{ Tokens[obj.token].seating.name }}</q-item-label>
           </q-item-section>
-          <q-item-section side><q-avatar rounded text-color="white" color="purple">{{ obj.quantity }}</q-avatar></q-item-section>
+          <q-item-section side><q-avatar rounded text-color="white" :color="color">{{ obj.quantity }}</q-avatar></q-item-section>
         </q-item>
       </q-list>
       <q-card-actions align="left" class="bg-white text-teal">
@@ -37,13 +37,14 @@ import CardImageTitle from "components/CardImageTitle";
 import {images} from "assets/default_images";
 import Tokens from "assets/mixins/Tokens";
 import {h_key, time} from "assets/helpers";
+import {TokenItemProgressColor} from "assets/assets";
 
 export default {
   name: "KitchenTokenBundleAction",
   components: {CardImageTitle},
   data(){ return {
     image:images.item,
-    selected: [],
+    selected: [], color: TokenItemProgressColor[this.$attrs.progress]
   } },
   mixins: [Tokens],
   computed: {

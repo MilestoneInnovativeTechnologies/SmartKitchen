@@ -1,7 +1,9 @@
 <template>
   <q-card>
     <CardImageTitle :title="item.name" :image="src" />
-    <q-card-section class="row items-center q-py-sm"><div class="text-primary text-bold">Stock</div><q-space /><q-avatar size="md" text-color="white" rounded color="primary">{{ iStock }}</q-avatar></q-card-section>
+    <q-card-section class="row items-center q-py-sm">
+      <div class="text-primary text-bold">Stock</div><q-space /><q-avatar size="md" text-color="white" rounded color="primary">{{ iStock }}</q-avatar>
+    </q-card-section>
     <q-list bordered dense>
       <template v-for="(itemObj,progress) in data">
         <q-item :class="bgClrCls(progress)" dense>
