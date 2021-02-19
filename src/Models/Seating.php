@@ -2,7 +2,9 @@
 
 namespace Milestone\SmartKitchen\Models;
 
-class Seating extends Model
+use Spatie\MediaLibrary\HasMedia;
+
+class Seating extends Model implements HasMedia
 {
     protected $table = 'seating';
     protected $hidden = ['created_at','updated_at'];

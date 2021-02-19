@@ -15,7 +15,7 @@ class SmartKitchenServiceProvider extends ServiceProvider
      * @return void
      */
 
-    private static $configs = ['sk','filesystems.disks','logging.channels','auth.providers','queue.connections','jwt'];
+    private static $configs = ['sk','filesystems.disks','logging.channels','auth.providers','queue.connections','jwt','media-library'];
 
     public function register()
     {

@@ -3,10 +3,13 @@
 namespace Milestone\SmartKitchen\Models;
 
 use App\Models\User as BaseUser;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class User extends BaseUser implements JWTSubject
+class User extends BaseUser implements JWTSubject, HasMedia
 {
+    use InteractsWithMedia;
 
     protected $fillable = ['name','email','login','password','role'];
     protected $hidden = ['created_at','updated_at','password', 'remember_token','email_verified_at','email'];
@@ -17,5 +20,7 @@ class User extends BaseUser implements JWTSubject
 
     public function getJWTIdentifier(){ return $this->getKey(); }
     public function getJWTCustomClaims(){ return []; }
+
+    public function registerMediaCollections(): void { $this->addMediaCollection('main-image')->singleFile(); }
 
 }

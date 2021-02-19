@@ -12,3 +12,4 @@
 1. modify setting in `sk.php` if necessary
 1. php artisan migrate
 1. php artisan jwt:secret
+1. add line `MEDIA_DISK=media` to .env file

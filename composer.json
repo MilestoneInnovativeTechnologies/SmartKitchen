@@ -11,9 +11,10 @@
     ],
     "minimum-stability": "dev",
     "require": {
-        "spatie/laravel-medialibrary": "^8.0.0",
+        "spatie/laravel-medialibrary": "^9.0.0",
         "doctrine/dbal": "^2.12",
-        "tymon/jwt-auth": "^1.0"
+        "tymon/jwt-auth": "^1.0",
+        "guzzlehttp/guzzle": "^7.0.1"
     },
     "extra": {
         "laravel": {

@@ -2,7 +2,9 @@
 
 namespace Milestone\SmartKitchen\Models;
 
-class Item extends Model
+use Spatie\MediaLibrary\HasMedia;
+
+class Item extends Model implements HasMedia
 {
 
     protected $hidden = ['created_at','updated_at'];
