@@ -8,9 +8,21 @@ const aInstance = axios.create({
   baseURL: BASE_URL
 })
 
+const maxData = 1024
+
 aInstance.interceptors.request.use(function(config){
-  config.headers.Authorization = `Bearer ` + jwt.sign(jwt_payload(config.data),jwt_secret())
-  config.data = null;
+  if(_.size(JSON.stringify(config.data)) > maxData){
+    let bearer = {};
+    _.forEach(config.data,(val,key) => {
+      if(_.size(JSON.stringify(val)) < maxData) {
+        bearer[key] = val; delete config.data[key];
+      }
+    })
+    config.headers.Authorization = `Bearer ` + jwt.sign(jwt_payload(bearer),jwt_secret())
+  } else {
+    config.headers.Authorization = `Bearer ` + jwt.sign(jwt_payload(config.data),jwt_secret())
+    config.data = null;
+  }
   return config;
 })
 
