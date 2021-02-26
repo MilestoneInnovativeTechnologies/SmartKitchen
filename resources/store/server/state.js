@@ -11,7 +11,7 @@ export default function () {
       menus: 'menus',
       payments: 'payments',
       prices: 'prices',
-      price_lists: 'price_lists',
+      price_lists: ['prices','list'],
       seating: 'seating',
       tokens: 'tokens',
       token_items: ['tokens','items'],
