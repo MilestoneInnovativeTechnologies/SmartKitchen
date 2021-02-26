@@ -6,6 +6,11 @@ use Spatie\MediaLibrary\HasMedia;
 
 class Item extends Model implements HasMedia
 {
+    protected static function booted(){
+        static::created(function ($Item){
+            $Item->Price()->createMany(array_map(function($price_list){ return compact('price_list'); },PriceList::pluck('id')->toArray()));
+        });
+    }
 
     protected $hidden = ['created_at','updated_at'];
 
