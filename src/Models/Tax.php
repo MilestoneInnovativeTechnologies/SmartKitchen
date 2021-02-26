@@ -7,7 +7,7 @@ use Milestone\SmartKitchen\Scopes\ActiveOnlyScope;
 class Tax extends Model
 {
 
-    protected static function booted(){ static::addGlobalScope(new ActiveOnlyScope); }
+//    protected static function booted(){ static::addGlobalScope(new ActiveOnlyScope); }
 
     protected $casts = [
         'contents'  =>  'array',
