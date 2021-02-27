@@ -63,4 +63,43 @@ class KitchenController extends Controller
         $kitchen = Kitchen::find($id); if($kitchen) $kitchen->update(compact('auto_accept'));
         return Arr::get($kitchen,'auto_accept','No');
     }
+
+    public static function data(){
+        return request(['name','detail','auto_accept','cloud','location','ref','server','status']);
+    }
+
+    public static function create(){
+        $item = new Kitchen(self::data()); $item->save();
+        return $item;
+    }
+
+    public function manage(){
+        if(!request()->has('id') || !request()->filled('id')) return self::create();
+        $item = Kitchen::find(request()->input('id'));
+        $item->update(self::data());
+        return $item->fresh();
+    }
+
+    public function items(){
+        $now = now()->toDateTimeString();
+        if(!request()->has('kitchen') || !request()->filled('kitchen')) return ['removes' => [],'updates' => []];
+        $kitchen = request()->input('kitchen');
+        $remove = request()->input('removes');
+        if($remove) KitchenItem::where('kitchen',$kitchen)->whereIn('item',$remove)->delete();
+        $items = request()->input('updates');
+        if($items) {
+            KitchenItem::where('kitchen',$kitchen)->get()->each(function($ki) use(&$items){
+                if(array_key_exists($ki->item,$items)){
+                    $ki->update($items[$ki->item]);
+                    unset($items[$ki->item]);
+                }
+            });
+        }
+        if($items){
+            $Kitchen = Kitchen::find($kitchen);
+            foreach ($items as $item => $details)
+                $Kitchen->Items()->create($details);
+        }
+        return ['removes' => $remove,'updates' => KitchenItem::where('updated_at','>=',$now)->get()->toArray()];
+    }
 }

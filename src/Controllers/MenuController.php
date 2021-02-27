@@ -3,6 +3,7 @@
 namespace Milestone\SmartKitchen\Controllers;
 
 use Illuminate\Http\Request;
+use Milestone\SmartKitchen\Models\Menu;
 use Milestone\SmartKitchen\Models\UserLogin;
 
 class MenuController extends Controller
@@ -28,4 +29,21 @@ class MenuController extends Controller
         });
         return array_values(array_unique($menus));
     }
+
+    public static function data(){
+        return request(['name','detail','groups','status']);
+    }
+
+    public static function create(){
+        $item = new Menu(self::data()); $item->save();
+        return $item;
+    }
+
+    public function manage(){
+        if(!request()->has('id') || !request()->filled('id')) return self::create();
+        $item = Menu::find(request()->input('id'));
+        $item->update(self::data());
+        return $item->fresh();
+    }
+
 }

@@ -42,6 +42,15 @@ export function item_remove(state,{ kitchen,id }){
   state.items[k].splice(idx,1);
 }
 
+export function items_remove(state,{ kitchen,items }){
+  if(!items || !_.isArray(items) || !items.length) return;
+  let k = _.toInteger(kitchen); _.forEach(items,item => {
+    let idx = _.findIndex(state.items[k],['item',_.toInteger(item)]);
+    if(idx > -1) state.items[k].splice(idx,1);
+  })
+
+}
+
 export function status (state,records) {
   if(!records) return;
   if(!_.isArray(records)) records = [records];
