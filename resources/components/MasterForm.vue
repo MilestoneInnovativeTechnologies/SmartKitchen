@@ -26,16 +26,13 @@ import ItemsChoose from "components/Item/ItemsChoose";
 import AdministratorMasterPriceListPriceSet from "components/Administrator/AdministratorMasterPriceListPriceSet";
 import KitchenSelectDropDown from "components/Kitchen/KitchenSelectDropDown";
 import UserLoginPin from "components/Users/UserLoginPin";
-import GetRoleUserLogin from "components/Users/GetRoleUserLogin";
 import UserLoginUserName from "components/Users/UserLoginUserName";
-import UserLoginEmail from "components/Users/UserLoginEmail";
 const defs = {
   status: 'Active', yesno: 'Yes', noyes: 'No',
 }
 export default {
   name: "MasterForm",
   components: {
-    UserLoginEmail,
     UserLoginUserName,
     UserLoginPin,
     KitchenSelectDropDown, AdministratorMasterPriceListPriceSet,
