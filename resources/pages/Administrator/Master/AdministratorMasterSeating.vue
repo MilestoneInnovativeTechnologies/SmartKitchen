@@ -12,7 +12,7 @@ export default {
   components: {AdministratorMasterCommon},
   data(){ return {
     fields: { name:'text',detail:'textarea',price_list:'PL',seats:'seats_input',status:'status' },
-    filter: ['name','detail'], validate: ['name']
+    filter: ['name','detail'], validate: ['name','price_list']
   } },
   computed: mapState('seating',{ seating:'data' })
 }
