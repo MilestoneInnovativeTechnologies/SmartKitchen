@@ -13,7 +13,7 @@ const layout_child = {
   Waiter: ['waiter_index','waiter_menu','orders','order_new'],
   Chef: ['chef_index','chef_kitchens','kitchen_items','kitchen_stocks','tokens'],
   Receptionist: ['receptionist_index','seat_status','receptionist_tokens','bills','seat_status_order','receptionist_orders','receptionist_order_new','receptionist_order_new_items'],
-  Administrator: ['administrator_index','master_customer','master_item','master_group','master_kitchen','master_kitchen_items','master_menu','master_price_list','master_seating','master_tax'],
+  Administrator: ['administrator_index','master_customer','master_item','master_group','master_kitchen','master_kitchen_items','master_menu','master_price_list','master_seating','master_tax','image_customer','image_item','image_kitchen','image_seating','image_user'],
 }
 
 const route_master = {
@@ -45,6 +45,11 @@ const route_master = {
   master_price_list: { name:'master_price_list', path:'/master/price_lists', component: () => import('pages/Administrator/Master/AdministratorMasterPriceList'), meta:{ title:'Price Lists' } },
   master_seating: { name:'master_seating', path:'/master/seating', component: () => import('pages/Administrator/Master/AdministratorMasterSeating'), meta:{ title:'Seating' } },
   master_tax: { name:'master_tax', path:'/master/taxes', component: () => import('pages/Administrator/Master/AdministratorMasterTax'), meta:{ title:'Taxes' } },
+  image_customer: { name:'image_customer', path:'/image/customers', component: () => import('pages/Administrator/Image/AdministratorImageCustomer'), meta:{ title:'Customers' } },
+  image_item: { name:'image_item', path:'/image/items', component: () => import('pages/Administrator/Image/AdministratorImageItem'), meta:{ title:'Items' } },
+  image_kitchen: { name:'image_kitchen', path:'/image/kitchens', component: () => import('pages/Administrator/Image/AdministratorImageKitchen'), meta:{ title:'Kitchens' } },
+  image_seating: { name:'image_seating', path:'/image/seating', component: () => import('pages/Administrator/Image/AdministratorImageSeating'), meta:{ title:'Seating' } },
+  image_user: { name:'image_user', path:'/image/users', component: () => import('pages/Administrator/Image/AdministratorImageUser'), meta:{ title:'Users' } },
 }
 
 function getRoutes(page) {

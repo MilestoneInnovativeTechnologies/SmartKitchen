@@ -13,6 +13,7 @@ class Item extends Model implements HasMedia
     }
 
     protected $hidden = ['created_at','updated_at'];
+    protected $appends = ['image'];
 
     public function Price(){ return $this->hasMany(Price::class,'item'); }
     public function Token(){ return $this->hasMany(TokenItem::class,'item'); }

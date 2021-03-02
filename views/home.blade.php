@@ -33,7 +33,7 @@
     @include('SK::inc.styles',['dev' => $dev])
 
     <script>
-        const DATA = [], BASE_URL = '{{ route('base_url') }}', _ROLE = '{{ auth()->user()->role }}', LOGOUT = '{!! route('logout') !!}', LOGIN = '{!! route('login') !!}';
+        const DATA = [], BASE_URL = '{{ route('base_url') }}', MEDIA_ROOT = '{{ route('media_root') }}', _ROLE = '{{ auth()->user()->role }}', LOGOUT = '{!! route('logout') !!}', LOGIN = '{!! route('login') !!}';
         const _USER = @json(auth()->user()), _SECTION = @json(auth()->user()->Log->section);
     </script>
 </head>

@@ -4,7 +4,11 @@ namespace Milestone\SmartKitchen\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model as BaseModel;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\MediaLibrary\MediaCollections\File;
 
 class Model extends BaseModel
 {
@@ -18,5 +22,21 @@ class Model extends BaseModel
         });
     }
 
-    public function registerMediaCollections(): void { $this->addMediaCollection('main-image')->singleFile(); }
+    public function registerMediaCollections(): void {
+        $item = Str::of(get_called_class())->afterLast('\\')->lower()->__toString();
+        $this->addMediaCollection($item)
+            ->singleFile()
+            ->useFallbackPath('/media/' . $item . '.jpg')
+        ;
+    }
+
+    private static $mCache = [];
+    function getImageAttribute(){
+        if(empty(self::$mCache)) self::$mCache = DB::table('media')
+            ->where('model_type',get_called_class())
+            ->get()
+            ->mapWithKeys(function($item){ return [$item->model_id => implode('/',[$item->id,$item->file_name])]; });
+        $item = Str::of(get_called_class())->afterLast('\\')->lower()->__toString();
+        return Arr::get(self::$mCache,$this->attributes['id'],$item . '.jpg');
+    }
 }

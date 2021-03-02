@@ -23,7 +23,7 @@ class SmartKitchenAction
     {
         $item = $request->route('item');
         $action = $request->route('action');
-        $class = Str::of(self::class)->replace('Middlewares','Controllers')->replaceLast('SmartKitchenAction',Str::of($item)->title()->append('Controller')->__toString())->__toString();
+        $class = Str::of(self::class)->replace('Middlewares','Controllers')->replaceLast('SmartKitchenAction',Str::of($item)->ucfirst()->append('Controller')->__toString())->__toString();
         $call = "$class@$action";
         $result = app()->call($call);//call_user_func([new $class,$action],$request);
         $response = $next($request);

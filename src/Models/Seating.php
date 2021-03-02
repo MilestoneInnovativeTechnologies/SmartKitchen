@@ -8,6 +8,7 @@ class Seating extends Model implements HasMedia
 {
     protected $table = 'seating';
     protected $hidden = ['created_at','updated_at'];
+    protected $appends = ['image'];
 
     protected $casts = ['seats' => 'array'];
 
