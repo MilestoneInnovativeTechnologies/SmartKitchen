@@ -13,15 +13,15 @@
 </template>
 
 <script>
-import {images} from "src/assets/default_images";
 import {TokenItemProgressColor} from "assets/assets";
+import {image} from "assets/helpers";
 
 export default {
   name: "KitchenTokenBundleItem",
   data(){ return {
     wait: _.toInteger(this.$attrs.wait),
-    src:images.item,
-    interval: 0, color: TokenItemProgressColor[this.$attrs.progress]
+    interval: 0, color: TokenItemProgressColor[this.$attrs.progress],
+    src: image(this.$attrs.image)
   } },
   created() {
     if(!this.wait) return;

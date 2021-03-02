@@ -2,19 +2,18 @@
   <q-card>
     <q-card-section class="text-weight-bold bg-grey-1">{{ label || 'Choose Items' }}</q-card-section>
     <q-card-section>
-      <q-chip color="secondary" :outline="!chosen.includes(item.id)" clickable @click="toggle(item)" v-for="item in items" :key="'tic-' + item.id"><q-avatar><q-img :src="src" /></q-avatar>{{ item.name }}</q-chip>
+      <q-chip color="secondary" :outline="!chosen.includes(item.id)" clickable @click="toggle(item)" v-for="item in items" :key="'tic-' + item.id"><q-avatar><q-img :src="image(item)" /></q-avatar>{{ item.name }}</q-chip>
     </q-card-section>
   </q-card>
 </template>
 
 <script>
-import {images} from "assets/default_images";
 import {mapState} from "vuex";
+import {image} from "assets/helpers";
 
 export default {
   name: "ItemsChoose",
   data(){ return {
-    src: images.item,
     chosen: [],
   } },
   props: ['label','value'],
@@ -27,7 +26,8 @@ export default {
       if(idx > -1) this.chosen.splice(idx,1)
       else this.chosen.push(id);
       this.$emit('input',this.chosen)
-    }
+    },
+    image(item){ return image(item.image) }
   },
   watch: {
     value: {

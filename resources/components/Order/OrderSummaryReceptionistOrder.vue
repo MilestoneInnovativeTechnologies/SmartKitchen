@@ -15,6 +15,7 @@ import CardImageTitle from "components/CardImageTitle";
 import { mapState } from 'vuex'
 import {images} from "assets/default_images";
 import {DiningTypeColor} from "assets/assets";
+import {image} from "assets/helpers";
 export default {
   components: {CardImageTitle, OrderSummaryItemAdd, OrderSummaryWaiterOrderItemsList},
   data(){ return {
@@ -31,7 +32,8 @@ export default {
           { customer:customers.data[_.toInteger(token.customer)] }
         )
       }}),
-    src(){ let type = this.token.type; return type === 'Dining' ? images.seating : (type === 'Take Away' ? images.takeaway : images.homedelivery) },
+    image(){ let type = this.token.type; return type === 'Dining' ? this.token.seating.image : (type === 'Take Away' ? images.takeaway : images.homedelivery) },
+    src(){ return image(this.image) },
     cColor(){ return 'bg-' + DiningTypeColor[this.token.type] }
   }
 }

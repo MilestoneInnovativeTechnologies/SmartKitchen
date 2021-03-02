@@ -33,7 +33,6 @@
 
 <script>
 import CardImageTitle from "components/CardImageTitle";
-import {images} from "assets/default_images";
 import Tokens from "assets/mixins/Tokens";
 import {h_key, time} from "assets/helpers";
 
@@ -41,7 +40,6 @@ export default {
   name: "KitchenTokenItemAction",
   components: {CardImageTitle},
   data(){ return {
-    image:images.item,
     selected: [],
   } },
   mixins: [Tokens],

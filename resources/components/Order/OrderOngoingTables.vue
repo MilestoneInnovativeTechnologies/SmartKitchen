@@ -11,7 +11,7 @@
               <q-badge :color="bColor[props.row.progress]" :label="props.row.progress" class="q-ml-xs" />
             </div>
           </q-card-section>
-          <q-list v-if="props.row.items.length" bordered>
+          <q-list v-if="props.row.items.length" bordered separator>
             <q-item v-for="(item,idx) in props.row.items" :key="hKey(props.row.id,idx,item.id)">
               <q-item-section>
                 <q-item-label class="text-bold">{{ item.quantity }} X {{ item.name }}</q-item-label>

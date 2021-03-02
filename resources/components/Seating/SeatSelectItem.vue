@@ -9,12 +9,14 @@
 </template>
 
 <script>
+import {image} from "assets/helpers";
+
 export default {
   name: "SeatSelectItem",
   props: ['id'],
   computed: {
     seat(){ return _.get(this.$store.state.seating.data,_.toSafeInteger(this.id)) },
-    src(){ return 'img/defaults/seating.jpg'; }
+    src(){ return image(this.seat.image); }
   }
 }
 </script>

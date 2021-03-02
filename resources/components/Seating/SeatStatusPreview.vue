@@ -18,13 +18,13 @@
 
 <script>
 import CardImageTitle from "components/CardImageTitle";
-import {images} from "assets/default_images";
 import {SeatStatusCardColor} from "assets/assets";
 import SeatStatusPreviewTokenDetailItem from "components/Seating/SeatStatusPreviewTokenDetailItem";
+import {image} from "assets/helpers";
 export default {
   name: "SeatStatusPreview",
   components: {SeatStatusPreviewTokenDetailItem, CardImageTitle},
-  data(){ return { img:images.seating } },
+  data(){ return { img:image(this.$attrs.image) } },
   computed: {
     clrCls(){ return 'bg-' + SeatStatusCardColor[this.p('status')] }
   },

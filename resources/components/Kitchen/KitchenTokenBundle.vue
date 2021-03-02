@@ -46,7 +46,7 @@ export default {
     isAct({ item,progress,kitchen }){ return (!kitchen && progress === 'New' && this.type === 'New' && _.some(this.kItems,['item',item.id])) || (kitchen && kitchen.id === _.toInteger(this.kitchen) && this.type === progress) },
     itmObj(itmAry){ let itm = itmAry[0]; return Object.assign({},this.pure(itm),{ total: _.sumBy(itmAry,'quantity'),token: _(itmAry).keyBy('token').mapValues(({ token,id,user,quantity }) => new Object({ token,id,user,quantity })).value() }) },
     crypt({ delay,item:{ id },narration }){ return crypt([id,this.getWait(delay),narration].join('|')) + '' },
-    pure({ item:{ id,name },delay,narration }){ return { wait:this.getWait(delay),narration,name,item:id,stock:_.get(_.find(this.kItems,['item',id]),'stock') } },
+    pure({ item:{ id,name,image },delay,narration }){ return { wait:this.getWait(delay),narration,name,image,item:id,stock:_.get(_.find(this.kItems,['item',id]),'stock') } },
     getWait(delay){ let wait = _.toInteger(delay) - now(); if(wait < 0) return 0; if(!this.waits.includes(wait)) this.waits.push(wait); return wait; },
     progress(selected){
       let item = this.item; if(selected.length) this.processing.push(item); this.dialog = false;

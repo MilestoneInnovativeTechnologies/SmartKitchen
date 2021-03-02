@@ -20,7 +20,7 @@ export default {
   props: ['item','id','name','image'],
   data(){ return { processing: false, temp: null } },
   computed: {
-    src(){ return this.image ? image(this.image) : images.no },
+    src(){ return this.image ? image(this.image) : image(images.no) },
     media: {
       get(){ return null },
       set(file){ if(!file) return; this.processing = true; upload(this.item,this.id,file).then(({ data }) => this.processing = !(this.temp = image(data.image))) }

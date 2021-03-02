@@ -1,6 +1,6 @@
 <template>
   <q-card v-if="item" @click="$emit('selected',item)" style="cursor: pointer">
-    <CardImageTitle :title="item.name" :image="src" info="true" @info="info = !info" />
+    <CardImageTitle :title="item.name" :image="image" info="true" @info="info = !info" />
     <q-card-section class="q-pa-none q-ma-none" v-if="info">
       <q-card-actions align="right" class="q-pb-none"><q-badge color="positive" :label="price" class="q-py-sm q-px-md text-weight-bolder" /></q-card-actions>
       <q-list v-if="kitchens.length" style="font-size: 0.75rem">
@@ -25,20 +25,19 @@
 <script>
 import CardImageTitle from "components/CardImageTitle";
 import { mapState } from "vuex";
-import {h_key} from "assets/helpers";
+import {h_key, image} from "assets/helpers";
 export default {
   name: "ItemSelectCard",
   components: {CardImageTitle},
   props: ['id','price_list'],
   data(){ return {
-    info:false,processing_status: ['Accepted','Processing'],
-    src: 'img/defaults/item.png'
+    info:false,processing_status: ['Accepted','Processing']
   } },
   computed: {
     ...mapState({ items: state => state.items.data, s_kitchens: state => state.kitchens.data, prices: state => state.prices.data,
       k_items: state => state.kitchens.items, t_items: state => _(state.tokens.items).flatMap().value() }),
     intID(){ return _.toInteger(this.id) }, intPL(){ return _.toInteger(this.price_list) },
-    item(){ return _.get(this.items,this.intID) },
+    item(){ return _.get(this.items,this.intID) }, image(){ return image(this.item.image) },
     price(){ return this.price_list ? _.toNumber(_.get(_.find(this.prices,this.matchItemPriceList),'price',0)) : 0 },
     kitchens(){ return _(this.k_items).flatMap().filter(['item',this.intID]).value() },
     processing(){ return _(this.t_items).filter(({ item,progress }) => item === this.intID && this.processing_status.includes(progress)).value() }

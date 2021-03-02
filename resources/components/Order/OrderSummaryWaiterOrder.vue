@@ -11,17 +11,18 @@
 import OrderSummaryWaiterOrderItemsList from "components/Order/OrderSummaryWaiterOrderItemsList";
 import OrderSummaryItemAdd from "components/Order/OrderSummaryItemAdd";
 import CardImageTitle from "components/CardImageTitle";
+import {image} from "assets/helpers";
 export default {
   components: {CardImageTitle, OrderSummaryItemAdd, OrderSummaryWaiterOrderItemsList},
   data(){ return {
-    src: 'img/defaults/seating.jpg',
     add_mode: false
   } },
   props: ['id'],
   name: "OrderSummaryWaiterOrder",
   computed: {
     token(){ return _.get(this.$store.state.tokens.data,_.toSafeInteger(this.id)) },
-    seat(){ return _.get(this.$store.state.seating.data,_.toSafeInteger(this.token.seating)) }
+    seat(){ return _.get(this.$store.state.seating.data,_.toSafeInteger(this.token.seating)) },
+    src(){ return image(this.seat.image) }
   }
 }
 </script>

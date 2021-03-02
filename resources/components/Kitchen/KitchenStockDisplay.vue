@@ -9,13 +9,17 @@
       </q-item>
       <q-item><q-item-section><FilterInputText label="Filter" @text="filter = $event" /></q-item-section></q-item>
       <q-item class="bg-grey-1" dense><div class="text-bold">Zero Stock Items</div></q-item>
-      <KitchenStockDisplayItemRow v-for="(detail,idx) in zero" :key="hKey('zero',detail)" :no="idx+1" :id="detail.id" :stock="detail.stock" :name="detail.item.name" />
+      <q-item v-if="zero.length === 0" dense><div class="text-italic">No Items</div></q-item>
+      <KitchenStockDisplayItemRow v-else v-for="(detail,idx) in zero" :key="hKey('zero',detail)" :no="idx+1" :id="detail.id" :stock="detail.stock" :name="detail.item.name" />
       <q-item class="bg-grey-1" dense><div class="text-bold">Negative Stock Items</div></q-item>
-      <KitchenStockDisplayItemRow v-for="(detail,idx) in negative" :key="hKey('negative',detail)" :no="idx+1" :id="detail.id" :stock="detail.stock" :name="detail.item.name" />
+      <q-item v-if="negative.length === 0" dense><div class="text-italic">No Items</div></q-item>
+      <KitchenStockDisplayItemRow v-else v-for="(detail,idx) in negative" :key="hKey('negative',detail)" :no="idx+1" :id="detail.id" :stock="detail.stock" :name="detail.item.name" />
       <q-item class="bg-grey-1" dense><div class="text-bold">Least Stock Items</div></q-item>
-      <KitchenStockDisplayItemRow v-for="(detail,idx) in least" :key="hKey('least',detail)" :no="idx+1" :id="detail.id" :stock="detail.stock" :name="detail.item.name" />
+      <q-item v-if="least.length === 0" dense><div class="text-italic">No Items</div></q-item>
+      <KitchenStockDisplayItemRow v-else v-for="(detail,idx) in least" :key="hKey('least',detail)" :no="idx+1" :id="detail.id" :stock="detail.stock" :name="detail.item.name" />
       <q-item class="bg-grey-1" dense><div class="text-bold">Other Items</div></q-item>
-      <KitchenStockDisplayItemRow v-for="(detail,idx) in other" :key="hKey('other',detail)" :no="idx+1" :id="detail.id" :stock="detail.stock" :name="detail.item.name" />
+      <q-item v-if="other.length === 0" dense><div class="text-italic">No Items</div></q-item>
+      <KitchenStockDisplayItemRow v-else v-for="(detail,idx) in other" :key="hKey('other',detail)" :no="idx+1" :id="detail.id" :stock="detail.stock" :name="detail.item.name" />
     </q-list>
   </q-card>
 </template>

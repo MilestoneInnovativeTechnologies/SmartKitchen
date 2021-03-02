@@ -22,8 +22,7 @@
 
 <script>
 import CardImageTitle from "components/CardImageTitle";
-import {images} from "assets/default_images";
-import {crypt, h_key, now} from "assets/helpers";
+import {crypt, h_key, image, now} from "assets/helpers";
 import KitchenTokenItemLine from "components/Kitchen/KitchenTokenItemLine";
 import {TokenItemProgressColor} from "assets/assets";
 import KitchenTokenItemAction from "components/Kitchen/KitchenTokenItemAction";
@@ -33,7 +32,7 @@ export default {
   name: "KitchenTokenItem",
   components: {KitchenTokenItemAction, KitchenTokenItemLine, CardImageTitle},
   data(){ return {
-    src: images.item, selected: [],
+    src: image(this.item.image), selected: [],
     waits: [], showing: true,
     status: { New:'accept', Accepted:'process', Processing:'complete' },
   } },

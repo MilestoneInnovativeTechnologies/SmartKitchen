@@ -44,7 +44,7 @@ export default {
     ...mapState('kitchens',{
       name: function({ data }){ return _.get(data,[this.kid,'name']) },
       k_items: function({ items }){ return _.get(items,this.kid) },
-      users: function({ status }){ return _.get(status,[this.kid,'users']) },
+      users: function({ status }){ return _.get(status,[this.kid,'users'],[]) },
     }),
     ...mapState('items',{ items:'data' }),
     filtered(){ return this.filter ? _.filter(this.k_items,this.match) : this.k_items }

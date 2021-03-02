@@ -3,7 +3,6 @@
     <q-list>
       <q-expansion-item switch-toggle-side expand-icon-toggle dense-toggle v-for="menu in menus" :key="hKey(menu)" @before-show="populate(menu)">
         <template v-slot:header>
-          <q-item-section avatar><q-avatar><img src="https://cdn.quasar.dev/img/boy-avatar.png"></q-avatar></q-item-section>
           <q-item-section>
             <q-item-label>{{ menu.name }}</q-item-label>
             <q-item-label caption>{{ menu.detail }}</q-item-label>

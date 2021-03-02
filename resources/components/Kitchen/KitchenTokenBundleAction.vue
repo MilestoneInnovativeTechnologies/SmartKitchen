@@ -34,16 +34,15 @@
 
 <script>
 import CardImageTitle from "components/CardImageTitle";
-import {images} from "assets/default_images";
 import Tokens from "assets/mixins/Tokens";
-import {h_key, time} from "assets/helpers";
+import {h_key, image, time} from "assets/helpers";
 import {TokenItemProgressColor} from "assets/assets";
 
 export default {
   name: "KitchenTokenBundleAction",
   components: {CardImageTitle},
   data(){ return {
-    image:images.item,
+    image:image(this.$attrs.image),
     selected: [], color: TokenItemProgressColor[this.$attrs.progress]
   } },
   mixins: [Tokens],

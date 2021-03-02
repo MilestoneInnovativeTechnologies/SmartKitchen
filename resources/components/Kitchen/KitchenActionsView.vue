@@ -5,7 +5,7 @@
       <q-icon size="lg" :name="'toggle_' + (is_in(kitchen) ? 'on' : 'off')" :color="is_in(kitchen) ? 'positive' : 'grey'" @click="toggle(kitchen)" class="cursor-pointer" />
     </q-card-section>
     <q-card-section horizontal>
-      <CardImageTitle :image="'img/defaults/kitchen.png'" class="col" />
+      <CardImageTitle :image="image" class="col" />
       <q-card-actions vertical class="flex-center q-gutter-y-sm">
         <q-btn align="left" dense color="red" icon="insights" label="Manage Items" :to="{ name:'kitchen_items',params: { id }  }" />
         <q-btn align="left" dense color="accent" icon="device_hub"  label="View Stock" :to="{ name:'kitchen_stocks',params: { id }  }" />
@@ -23,6 +23,7 @@
 <script>
 import CardImageTitle from "components/CardImageTitle";
 import { mapState } from 'vuex'
+import {image} from "assets/helpers";
 export default {
   name: "KitchenActionsView",
   components: {CardImageTitle},
@@ -32,12 +33,13 @@ export default {
     ...mapState('kitchens',{ kitchens:'data',status:'status',assign:'assign' }),
     intID(){ return _.toInteger(this.id) },
     kitchen(){ return this.kitchens[this.intID] },
+    image() { return image(this.kitchen.image) },
     chefs(){ return _.get(this.status,[this.intID,'users'],[]) }
   },
   methods: {
     is_in({ id }){ return this.assign.includes(_.toInteger(id)) },
     toggle({ id }){ this.loading = true; this.$store.dispatch('kitchens/chef',{ kitchen:id }).then(() => this.loading = false) },
-    auto(auto_accept){ this.loading = true; this.$store.dispatch('kitchens/auto',{ id: this.intID, auto_accept }).then(() => this.loading = false) }
+    auto(auto_accept){ this.loading = true; this.$store.dispatch('kitchens/auto',{ id: this.intID, auto_accept }).then(() => this.loading = false) },
   }
 }
 </script>
