@@ -14,7 +14,7 @@ class User extends BaseUser implements JWTSubject, HasMedia
 {
     use InteractsWithMedia;
 
-    protected $fillable = ['name','email','login','password','role'];
+    protected $fillable = ['name','pin','email','login','password','role'];
     protected $hidden = ['created_at','updated_at','password', 'remember_token','email_verified_at','email'];
     protected $appends = ['image'];
 
@@ -24,6 +24,14 @@ class User extends BaseUser implements JWTSubject, HasMedia
 
     public function getJWTIdentifier(){ return $this->getKey(); }
     public function getJWTCustomClaims(){ return []; }
+
+    public function scopeSync($Query, $after, $before, $id = 0){
+        return $Query->where(function($Q)use($after,$before,$id){
+            return $Q
+                ->where(function($QQ)use($after,$before,$id){ return $id ? $QQ->where('id','>',$id) : $QQ->where('created_at','>',$after)->where('created_at','<=',$before); })
+                ->orWhere(function($QQ)use($after,$before,$id){ return $id ? $QQ->where('id','<=',$id)->where('updated_at','>=',$after) : $QQ->where('updated_at','>=',$after)->where('created_at','<=',$after); });
+        });
+    }
 
     public function registerMediaCollections(): void { $this->addMediaCollection('user')->singleFile(); }
     private static $mCache = [];

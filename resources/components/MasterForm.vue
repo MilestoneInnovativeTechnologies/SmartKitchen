@@ -9,6 +9,8 @@
       <SeatInputSeats v-else-if="type === 'seats_input'" v-model="params[field]" :label="title(field)" outlined />
       <TaxContentManage v-else-if="type === 'tax_contents'" v-model="params[field]" :label="title(field)" />
       <ItemsChoose v-else-if="type === 'items_choose'" v-model="params[field]" :label="title(field)" />
+      <UserLoginPin v-else-if="type === 'login_pin'" v-model="params[field]" :label="title(field)" outlined :update="data ? data[field] : null" />
+      <UserLoginUserName v-else-if="type === 'login_user'" v-model="params[field]" :label="title(field)" outlined :update="data ? data[field] : null" />
       <q-input v-else :type="type" v-model="params[field]" :label="title(field)" outlined />
     </template>
     <slot></slot>
@@ -23,12 +25,19 @@ import TaxContentManage from "components/Tax/TaxContentManage";
 import ItemsChoose from "components/Item/ItemsChoose";
 import AdministratorMasterPriceListPriceSet from "components/Administrator/AdministratorMasterPriceListPriceSet";
 import KitchenSelectDropDown from "components/Kitchen/KitchenSelectDropDown";
+import UserLoginPin from "components/Users/UserLoginPin";
+import GetRoleUserLogin from "components/Users/GetRoleUserLogin";
+import UserLoginUserName from "components/Users/UserLoginUserName";
+import UserLoginEmail from "components/Users/UserLoginEmail";
 const defs = {
   status: 'Active', yesno: 'Yes', noyes: 'No',
 }
 export default {
   name: "MasterForm",
   components: {
+    UserLoginEmail,
+    UserLoginUserName,
+    UserLoginPin,
     KitchenSelectDropDown, AdministratorMasterPriceListPriceSet,
     ItemsChoose, TaxContentManage, SeatInputSeats, PriceListSelectDropDown},
   props: ['fields','data','loading'],
