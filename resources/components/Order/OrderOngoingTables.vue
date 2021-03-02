@@ -3,14 +3,16 @@
     <template v-slot:item="props">
       <div class="q-pa-xs col-xs-6 col-sm-4 col-md-3 col-lg-2 col-xl-1">
         <q-card :class="'bg-' + cColor[props.row.progress]">
-          <q-card-section class="text-center">
-            <div class="text-h6">{{ props.row.seating.name }}</div>
-            <div class="text-subtitle2" v-if="props.row.customer">{{ props.row.customer.name }}</div>
-            <div>
-              <component :is="spinners[props.row.progress]" :color="bColor[props.row.progress]" size="sm" />
-              <q-badge :color="bColor[props.row.progress]" :label="props.row.progress" class="q-ml-xs" />
+          <q-img basic :src="media(props.row.seating.image)">
+            <div class="absolute-bottom text-subtitle2 text-center">
+              <div class="text-h6">{{ props.row.seating.name }}</div>
+              <div class="text-subtitle2" v-if="props.row.customer">{{ props.row.customer.name }}</div>
+              <div>
+                <component :is="spinners[props.row.progress]" :color="bColor[props.row.progress]" size="sm" />
+                <q-badge :color="bColor[props.row.progress]" :label="props.row.progress" class="q-ml-xs" />
+              </div>
             </div>
-          </q-card-section>
+          </q-img>
           <q-list v-if="props.row.items.length" bordered separator>
             <q-item v-for="(item,idx) in props.row.items" :key="hKey(props.row.id,idx,item.id)">
               <q-item-section>
@@ -31,11 +33,13 @@
 
 <script>
 import { mapState } from 'vuex'
-import {h_key} from "assets/helpers";
+import {h_key, image} from "assets/helpers";
 import {TokenProgressColor} from "assets/assets";
+import CardImageTitle from "components/CardImageTitle";
 
 export default {
   name: "OrderOngoingTables",
+  components: {CardImageTitle},
   data(){ return {
     cColor: { New:'cyan-2',Processing:'orange-2',Completed:'green-2' },
     bColor: TokenProgressColor,
@@ -58,6 +62,7 @@ export default {
   methods: {
     iNameAttach(items){ return _(items).map(item => Object.assign({},item,{ name: _.get(this.items,[item.item]),kitchen: _.get(this.kitchens,[item.kitchen],null) })).value() },
     hKey(token,idx,item){ return h_key('order','ongoing','tables','order',token,'item','index',idx,'item',item) },
+    media(link){ return image(link) }
   },
 }
 </script>
