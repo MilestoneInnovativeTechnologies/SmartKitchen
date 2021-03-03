@@ -61,7 +61,7 @@ export default {
   },
   methods: {
     hKey({ id },item){ return h_key('kitchen',this.id,item,'detail',id) },
-    isAct({ item:{ id },progress,kitchen }){ return (progress === 'New' && _.includes(this.kItems,id)) || (kitchen.id === this.kitchen.id && this.processing.includes(progress)) },
+    isAct({ item:{ id },progress,kitchen }){ return (progress === 'New' && _.includes(this.kItems,id)) || (kitchen && kitchen.id === this.kitchen.id && this.processing.includes(progress)) },
     doReset(selected){ if(selected.length) this.cancelling = true; this.post(0,selected,this.id) },
     getItem(Ary){ return _.get(Ary,[0,'item']) },
     getStock(Ary){ return _.get(this.stock,this.getItem(Ary)['id']) },
