@@ -18,7 +18,7 @@ export default {
   } },
   props: ['label','value'],
   computed: {
-    ...mapState('items',{ items({ data }){ return _.map(data,({ id,name }) => _.zipObject(['id','name'],[id,name])) } }),
+    ...mapState('items',{ items({ data }){ return _.map(data,({ id,name,image }) => _.zipObject(['id','name','image'],[id,name,image])) } }),
   },
   methods: {
     toggle({ id }){
