@@ -30,7 +30,7 @@
 
     @php cache()->put(ck(),'2000-01-01 00:00:01',now()->addDays(7)) @endphp
     <script>
-        const DATA = [], BASE_URL = '{{ route('base_url') }}', MEDIA_ROOT = '{{ route('media_root') }}', _ROLE = '{{ auth()->user()->role }}', LOGOUT = '{!! route('logout') !!}', LOGIN = '{!! route('login') !!}';
+        const DATA = [], BASE_URL = '{{ route('base_url',CLIENT) }}', MEDIA_ROOT = '{{ route('media_root',CLIENT) }}', _ROLE = '{{ auth()->user()->role }}', LOGOUT = '{!! route('logout',CLIENT) !!}', LOGIN = '{!! route('login',CLIENT) !!}';
         const _USER = @json(auth()->user()), _SECTION = @json(auth()->user()->Log->section);
     </script>
 </head>

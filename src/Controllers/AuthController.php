@@ -30,11 +30,13 @@ class AuthController extends Controller
             $credentials = request(['id', 'password']);
             $token = auth()->attempt($credentials);
         }
-        if (!$token) return redirect()->route('login',['msg' => 'Unauthorized Access!!']);
+//        if (!$token) return redirect()->route('login',['msg' => 'Unauthorized Access!!']);
+        if (!$token) return redirect()->route('login',['msg' => 'Unauthorized Access!!','client' => CLIENT]);
         $lsk = config("sk.login_log_section_role_key"); $section = null;
         if($lsk && array_key_exists(auth()->user()->role,$lsk)) $section = request()->input($lsk[auth()->user()->role]);
         LoggedIn::dispatch(auth()->user(),$section);
-        return redirect()->route('pre_home',compact('token'))->withCookie(cookie()->forever('token',$token));
+//        return redirect()->route('pre_home',compact('token'))->withCookie(cookie()->forever('token',$token));
+        return redirect()->route('pre_home',['token' => $token, 'client' => CLIENT])->withCookie(cookie()->forever('token',$token));
     }
 
     /**
@@ -52,7 +54,8 @@ class AuthController extends Controller
     public function logout() {
         $key = cache()->forget(ck());
         auth()->logout();
-        return redirect()->route('login');
+//        return redirect()->route('login');
+        return redirect()->route('login',CLIENT);
     }
 
     /**

@@ -13,10 +13,12 @@ class AssetController extends Controller
     public static function AssetRoute($model){
         $class = Str::of(Model::class)->replaceLast('Model',ucfirst($model))->__toString();
         $time = Carbon::parse($class::max('updated_at') ?? '2000-01-01 00:00:01')->unix();
-        return route('asset',compact('time','model'));
+//        return route('asset',compact('time','model'));
+        return route('asset',['client' => CLIENT,'time' => $time, 'model' => $model]);
     }
 
-    public static function JSAsset($time,$model){
+//    public static function JSAsset($time,$model){
+    public static function JSAsset($client,$time,$model){
         $class = Str::of(Model::class)->replaceLast('Model',ucfirst($model))->__toString();
         return response('const _ASSET_' . ucfirst($model) . ' = ' . $class::all()->toJson())->withHeaders(['Content-Type' => 'text/javascript']);
     }
