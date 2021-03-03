@@ -17,6 +17,7 @@ $Domain = implode(".",array_slice(explode('.', request()->getHost()),1));
 $clientDBs = [
     'demo'   => ['u752305367_smartkitchen','u752305367_smartkitchen','u752305367_SmartKitchen'],
     'bbq'   => ['u752305367_smartkitchen','u752305367_smartkitchen','u752305367_SmartKitchen'],
+    'bt'   => ['u752305367_brandtalkies','u752305367_brandtalkies','u752305367_BrandTalkies'],
     'client1'   => ['smartkitchen','root','metalic'],
 ];
 
