@@ -17,7 +17,8 @@ class TryDistributingTokenItems
     {
         $tokenItems = $event->tokenItems; $user = $event->user;
         $tokenItems->each(function($tokenItem) use($user){
-            AssignTokenItemToKitchen::dispatch($tokenItem->id,$user);
+            if(!$tokenItem->kitchen || $tokenItem->progress === 'New')
+                AssignTokenItemToKitchen::dispatch($tokenItem->id,$user);
         });
     }
 }

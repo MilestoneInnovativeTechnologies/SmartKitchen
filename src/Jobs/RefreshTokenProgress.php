@@ -30,12 +30,16 @@ class RefreshTokenProgress
             Log::critical('Items are empty');
             $this->makeProgress('New');
         } elseif($this->token->Bill) {
+            Log::info('Token has bill, Billed');
             $this->makeProgress('Billed');
         } elseif($items->every(function($item){ return in_array($item->progress,['Served','Cancelled']); })) {
+            Log::info('Every items are of Served or Cancelled');
             $this->makeProgress('Completed');
         } elseif($items->every(function($item){ return in_array($item->progress,['New','Accepted','Cancelled']); })) {
+            Log::info('Every items are of New, Accepted or Cancelled');
             $this->makeProgress('New');
         } else {
+            Log::info('Have items in Processing');
             $this->makeProgress('Processing');
         }
     }
