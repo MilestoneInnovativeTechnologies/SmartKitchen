@@ -1,4 +1,7 @@
 [route.php]
+- Initially variable $Domain
+- Variable $clientDBs
+- The main/root route group
 - for route named home
 - for route named base_url
 

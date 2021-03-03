@@ -12,14 +12,15 @@ use \Milestone\SmartKitchen\Middlewares\SmartKitchenAuth;
 use \Milestone\SmartKitchen\Middlewares\APIRequest;
 use \Illuminate\Http\Request;
 
+$Domain = implode(".",array_slice(explode('.', request()->getHost()),1));
 
 $clientDBs = [
-    'demo'   => ['u752305367_smartkitchen','u752305367_smartkitchen','u752305367_Smartkitchen'],
-    'bbq'   => ['u752305367_smartkitchen','u752305367_smartkitchen','u752305367_Smartkitchen'],
+    'demo'   => ['u752305367_smartkitchen','u752305367_smartkitchen','u752305367_SmartKitchen'],
+    'bbq'   => ['u752305367_smartkitchen','u752305367_smartkitchen','u752305367_SmartKitchen'],
     'client1'   => ['smartkitchen','root','metalic'],
 ];
 
-Route::domain('{client}.sk')->group(function() use($clientDBs) {
+Route::domain('{client}.' . $Domain)->group(function() use($clientDBs) {
     $client = explode('.', request()->getHost())[0];
     define('CLIENT',$client);
     if (array_key_exists($client, $clientDBs)) {
