@@ -20,17 +20,14 @@
     <script src="{!! \Milestone\SmartKitchen\Controllers\AssetController::AssetRoute('Kitchen') !!}"></script>
     <script src="{!! \Milestone\SmartKitchen\Controllers\AssetController::AssetRoute('User') !!}"></script>
 
-    @php $dev = true @endphp
-    @include('SK::inc.styles',['dev' => $dev])
     <script type="text/javascript">
         const DATA = [], BASE_URL = '{{ route('base_url') }}', MEDIA_ROOT = '{{ route('media_root') }}', _ROLE = 'Login', LOGOUT = '{!! route('logout') !!}', LOGIN = '{!! route('login') !!}';
         const LoginSelect = @json(config('sk.login_log_section_role_key'));
-        {{--DATA['USERS'] = @json(\Milestone\SmartKitchen\Models\User::select('id','name','role')->get());--}}
         window.onload = function(){ localStorage.removeItem('jwt_TOKEN'); localStorage.removeItem('jwt_SECRET'); }
     </script>
 </head>
 <body>
 @if(request('msg')) <div style="margin-top: 20px; color: darkred; text-align: center; font-weight: bold">{{ request('msg') }}</div>  @endif
 <div id="q-app"></div>
-@include('SK::inc.scripts',['div' => $dev])
+@include('SK::inc.includes')
 </html>

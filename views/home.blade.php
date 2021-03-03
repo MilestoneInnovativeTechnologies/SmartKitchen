@@ -29,9 +29,6 @@
     <script src="{!! \Milestone\SmartKitchen\Controllers\AssetController::AssetRoute('User') !!}"></script>
 
     @php cache()->put(ck(),'2000-01-01 00:00:01',now()->addDays(7)) @endphp
-    @php $dev = true @endphp
-    @include('SK::inc.styles',['dev' => $dev])
-
     <script>
         const DATA = [], BASE_URL = '{{ route('base_url') }}', MEDIA_ROOT = '{{ route('media_root') }}', _ROLE = '{{ auth()->user()->role }}', LOGOUT = '{!! route('logout') !!}', LOGIN = '{!! route('login') !!}';
         const _USER = @json(auth()->user()), _SECTION = @json(auth()->user()->Log->section);
@@ -39,5 +36,5 @@
 </head>
 <body>
 <div id="q-app"></div>
-@include('SK::inc.scripts',['div' => $dev])
+@include('SK::inc.includes')
 </html>
