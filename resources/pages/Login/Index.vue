@@ -6,9 +6,12 @@
           <component :is="component" :style="secs[component][2]" />
         </transition>
       </q-card-section>
-      <q-card-actions>
+      <q-card-actions v-if="$q.screen.gt.sm">
         <q-btn :loading="loading" color="primary" flat :label="secs[component][0]" dense @click="left" icon="keyboard_arrow_left" /><q-space />
         <q-btn :loading="loading" color="primary" flat :label="secs[component][1]" dense @click="right" icon-right="keyboard_arrow_right" />
+      </q-card-actions>
+      <q-card-actions v-else align="center">
+        <q-btn :loading="loading" color="primary" flat :label="this.page === 'LoginPassword' ? 'PIN' : 'Password'" dense @click="page = page === 'LoginPassword' ? 'LoginPin' : 'LoginPassword'" />
       </q-card-actions>
     </q-card>
   </q-page>
