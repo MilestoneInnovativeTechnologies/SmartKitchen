@@ -2,11 +2,11 @@
   <q-page padding class="q-gutter-y-sm">
     <MenuGroupScroll v-model="group" />
     <FilterInputText @text="filter = $event" />
-    <div class="row q-col-gutter-xs">
-      <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2 col-xl-1" v-for="item in filterKeys" :key="hKey(item)">
-        <ItemSelectCard @selected="addItem" :id="item" :price_list="params.price_list" />
-      </div>
-    </div>
+    <Masonry :items="filterKeys" >
+      <template #item="item">
+        <ItemSelectCard @selected="addItem" :id="item.item" :price_list="params.price_list" />
+      </template>
+    </Masonry>
     <div :class="horizontal ? 'fixed-bottom' : 'fixed-right'" class="bg-white q-py-sm shadow-2 q-gutter-y-sm q-px-md" style="overflow: scroll" :style="horizontal ? { 'max-height':'60vh' } : { 'width':'400px',top:'2.5rem' }" v-if="!hide">
       <OrderSeatingInfo :seating="params.seating" />
       <OrderCustomer v-model="params.customer" get="id" />
@@ -29,10 +29,13 @@ import {h_key, matches} from "assets/helpers";
 import OrderSeatingInfo from "components/Order/OrderSeatingInfo";
 import OrderCustomer from "components/Order/OrderCustomer";
 import OrderItemsSummary from "components/Order/OrderItemsSummary";
+import Masonry from "components/Masonry";
 
 export default {
   name: "PageOrderCommonNew",
-  components: {OrderItemsSummary, OrderCustomer, OrderSeatingInfo, ItemSelectCard, FilterInputText, MenuGroupScroll},
+  components: {
+    Masonry,
+    OrderItemsSummary, OrderCustomer, OrderSeatingInfo, ItemSelectCard, FilterInputText, MenuGroupScroll},
   props: ['type','customer','seating','price_list','user'],
   data(){ return {
     params: { type:'Dining',customer:null,seating:null,price_list:null,user:null,items:[] },

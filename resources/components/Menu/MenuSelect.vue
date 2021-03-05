@@ -6,7 +6,6 @@
     </q-card-section>
     <q-list separator bordered>
       <q-item v-for="menu in menus" :key="hKey(menu)" clickable @click="selected = menu" v-ripple>
-        <q-item-section avatar><q-avatar><img src="https://cdn.quasar.dev/img/boy-avatar.png"></q-avatar></q-item-section>
         <q-item-section>
           <q-item-label>{{ menu.name }}</q-item-label>
         </q-item-section>

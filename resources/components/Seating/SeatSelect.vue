@@ -1,9 +1,11 @@
 <template>
-  <div class="row q-col-gutter-xs">
-    <div class="col-12"><FilterInputText label="Filter Seats" @text="filter = $event" /></div>
-    <div class="col-xs-6 col-sm-4 col-md-3 col-2" v-for="seat in seats" :key="hKey(seat)" style="cursor: pointer">
-      <SeatSelectItem :id="seat.id" @selected="$emit('selected',seat)" />
-    </div>
+  <div class="q-col-gutter-xs">
+    <FilterInputText label="Filter Seats" @text="filter = $event" />
+    <Masonry :items="seats" width="180">
+      <template #item="seat">
+        <SeatSelectItem :id="seat.id" @selected="$emit('selected',seat)" class="cursor-pointer" />
+      </template>
+    </Masonry>
   </div>
 </template>
 
@@ -11,9 +13,11 @@
 import SeatSelectItem from "components/Seating/SeatSelectItem";
 import {h_key} from "assets/helpers";
 import FilterInputText from "components/FilterInputText";
+import Masonry from "components/Masonry";
+
 export default {
   name: "SeatSelect",
-  components: {FilterInputText, SeatSelectItem},
+  components: {Masonry, FilterInputText, SeatSelectItem},
   data(){ return { filter:'' } },
   computed: {
     s_seats(){ return this.$store.state.seating.data },

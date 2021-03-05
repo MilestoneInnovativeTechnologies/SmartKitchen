@@ -1,27 +1,30 @@
 <template>
-  <q-scroll-area>
-    <q-tab-panels v-model="value" animated transition-prev="slide-down" transition-next="slide-up">
-      <q-tab-panel name="group-all" class="row q-col-gutter-xs">
-        <div v-for="item in all_items" :key="hKey({ id:item },'all-item')" :class="card_class">
-          <ItemSelectCard @selected="$emit('item',$event)" :id="item" :price_list="price_list" />
-        </div>
-      </q-tab-panel>
-      <q-tab-panel v-for="group in m_groups" :name="'group-' + group" :key="hKey({ id:group},'group')" class="row q-col-gutter-xs">
-        <div v-for="item in groupItems(group)" :key="hKey({ id:item },group + '-item')" :class="card_class">
-          <ItemSelectCard @selected="$emit('item',$event)" :id="item" :price_list="price_list" />
-        </div>
-      </q-tab-panel>
-    </q-tab-panels>
-  </q-scroll-area>
+  <q-tab-panels v-model="value" animated transition-prev="slide-down" transition-next="slide-up">
+    <q-tab-panel name="group-all" class="row q-col-gutter-xs">
+      <Masonry :items="all_items" width="180">
+        <template #item="item">
+          <ItemSelectCard @selected="$emit('item',$event)" :id="item.item" :price_list="price_list" />
+        </template>
+      </Masonry>
+    </q-tab-panel>
+    <q-tab-panel v-for="group in m_groups" :name="'group-' + group" :key="hKey({ id:group},'group')" class="row q-col-gutter-xs">
+      <Masonry :items="groupItems(group)" width="180">
+        <template #item="item">
+          <ItemSelectCard @selected="$emit('item',$event)" :id="item.item" :price_list="price_list" />
+        </template>
+      </Masonry>
+    </q-tab-panel>
+  </q-tab-panels>
 </template>
 
 <script>
 import {h_key} from "assets/helpers";
 import ItemSelectCard from "components/Item/ItemSelectCard";
+import Masonry from "components/Masonry";
 
 export default {
   name: "GroupItemsPanel",
-  components: {ItemSelectCard},
+  components: {Masonry, ItemSelectCard},
   props: ['selected','filter','price_list'],
   data(){ return {
     card_class: 'col-xs-6 col-sm-4 col-md-3 col-2'

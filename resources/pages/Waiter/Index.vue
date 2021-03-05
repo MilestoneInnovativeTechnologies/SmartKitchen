@@ -1,8 +1,8 @@
 <template>
   <q-page padding class="q-gutter-y-sm" v-scroll="scrolled">
-    <OrderWaiterSummary />
-    <OrderWaiterServable />
-    <OrderOngoingTables />
+    <OrderWaiterSummary class="q-mt-md" />
+    <OrderWaiterServable class="q-mt-md" />
+    <OrderOngoingTables class="q-mt-md" />
     <transition appear enter-active-class="animated fadeIn" leave-active-class="animated fadeOut">
       <q-page-sticky v-show="fab" position="bottom-right" :offset="offset">
         <q-fab icon="add" color="primary" glossy :to="{ name: 'order_new' }" v-touch-pan.prevent.mouse="move" />

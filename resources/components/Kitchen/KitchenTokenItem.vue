@@ -1,5 +1,6 @@
 <template>
   <q-card>
+    <q-card-section class="q-py-xs bg-teal"></q-card-section>
     <CardImageTitle :title="item.name" :image="src" />
     <q-card-section class="row items-center q-py-sm">
       <div class="text-primary text-bold">Stock</div><q-space /><q-avatar size="md" text-color="white" rounded color="primary">{{ iStock }}</q-avatar>

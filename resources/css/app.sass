@@ -1,0 +1,8 @@
+@for $x from 1 through 12
+  @for $y from 0 through ($x - 1)
+    @if($y == 0)
+      .masonry-container.masonry#{$x} > div:nth-child(#{$x}n)
+        order: #{$x}
+    @else
+      .masonry-container.masonry#{$x} > div:nth-child(#{$x}n + #{$y})
+        order: #{$y}

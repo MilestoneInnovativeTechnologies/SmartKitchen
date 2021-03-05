@@ -12,11 +12,11 @@
         <q-btn rounded glossy push size="sm" :color="(filter == 'Billed') ? 'positive' : 'grey'" @click="filter = (filter == 'Billed') ? '' : 'Billed'" label="Billed" />
       </div>
     </div>
-    <div class="row q-col-gutter-sm">
-      <div class="col-xs-12 col-sm-6 col-md-3 col-lg-2 col-xl-1" v-for="seat in filtered" :key="hKey(seat)">
+    <Masonry :items="filtered">
+      <template #item="seat">
         <SeatStatusPreview v-bind="seat" />
-      </div>
-    </div>
+      </template>
+    </Masonry>
   </q-page>
 </template>
 
@@ -26,10 +26,11 @@ import FilterInputText from "components/FilterInputText";
 import {h_key, matches} from "assets/helpers";
 import SeatStatusPreview from "components/Seating/SeatStatusPreview";
 import Seats from "assets/mixins/Seats";
+import Masonry from "components/Masonry";
 
 export default {
   name: "PageSeatingStatus",
-  components: {SeatStatusPreview, FilterInputText},
+  components: {Masonry, SeatStatusPreview, FilterInputText},
   data(){ return {
     filter: '',
   } },

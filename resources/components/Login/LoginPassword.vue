@@ -1,13 +1,15 @@
 <template>
-  <div>
-    <GetRoleUserLogin v-if="role" :role="role" @clear="role = ''" @user="user = $event" @login="login" style="width: 90vw; max-width: 65vh" :loading="loading" />
-    <RolesSelect v-else @role="role = $event" style="width: 90vw; max-width: 65vh" class="q-mx-auto" />
-    <form ref="login_form" :action="LOGIN" method="post" style="position: absolute">
-      <q-input type="hidden" name="id" :value="id" />
-      <q-input type="hidden" name="password" :value="password" />
-      <q-input type="hidden" :name="select" :value="selected" />
-    </form>
-  </div>
+  <q-card style="width: 300px; max-width: 65vh" flat>
+    <q-card-section>
+      <GetRoleUserLogin v-if="role" :role="role" @clear="role = ''" @user="user = $event" @login="login" :loading="loading" />
+      <RolesSelect v-else @role="role = $event" class="q-mx-auto" />
+      <form ref="login_form" :action="LOGIN" method="post" style="position: absolute">
+        <q-input type="hidden" name="id" :value="id" />
+        <q-input type="hidden" name="password" :value="password" />
+        <q-input type="hidden" :name="select" :value="selected" />
+      </form>
+    </q-card-section>
+  </q-card>
 </template>
 
 <script>

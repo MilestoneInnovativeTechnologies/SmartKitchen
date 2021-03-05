@@ -40,6 +40,7 @@
       <q-btn v-if="horizontal" fab glossy color="accent" :icon="'vertical_align_' + (hide ? 'top' : 'bottom')" @click="hide = !hide" />
       <q-btn v-else fab glossy color="accent" icon="keyboard_tab" @click="hide = !hide" :style="{ transform: hide ? 'rotateY(180deg)' : null }" />
     </q-page-sticky>
+    <q-dialog v-model="m_show" persistent><MenuSelect style="width: 75vw; max-width: 330px" /></q-dialog>
   </q-page>
 </template>
 
@@ -51,10 +52,12 @@ import OrderCustomer from "components/Order/OrderCustomer";
 import OrderItemsSummary from "components/Order/OrderItemsSummary";
 import OrderSeatingInfo from "components/Order/OrderSeatingInfo";
 import FilterInputText from "components/FilterInputText";
+import MenuSelect from "components/Menu/MenuSelect";
 
 export default {
   name: "PageOrderNew",
   components: {
+    MenuSelect,
     FilterInputText,
     OrderSeatingInfo, OrderItemsSummary, OrderCustomer, GroupItemsPanel, MenuGroupTabs, SeatSelect},
   data() {
@@ -62,6 +65,7 @@ export default {
       tab: 'seating', m_split: 60, iSplit: 20,
       pos: null, group: null, loading: false,
       item_filter: '', hide: false,
+      r_menu: false,
       params: {
         seating: null,
         price_list: null,
@@ -79,6 +83,10 @@ export default {
     horizontal() {
       let {height, width} = this.$q.screen;
       return this.pos === null ? (width <= height) : this.pos
+    },
+    m_show: {
+      get(){ return !this.$store.state.menus.s_items.length || this.r_menu },
+      set(s){ this.r_menu = !!s }
     }
   },
   methods: {
@@ -116,6 +124,9 @@ export default {
         this.tab = "seating"; this.item_filter = "";
       })
     }
+  },
+  created() {
+    this.r_menu = this.m_show;
   }
 }
 </script>

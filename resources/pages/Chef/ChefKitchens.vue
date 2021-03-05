@@ -1,10 +1,10 @@
 <template>
   <q-page padding>
-    <div class="row q-col-gutter-sm">
-      <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3" v-for="kitchen in kitchens" :key="hKey(kitchen,'all')">
+    <Masonry width="400" :items="kitchens">
+      <template #item="kitchen">
         <KitchenActionsView :id="kitchen.id" />
-      </div>
-    </div>
+      </template>
+    </Masonry>
   </q-page>
 </template>
 
@@ -12,9 +12,10 @@
 import { mapState } from 'vuex'
 import {h_key} from "assets/helpers";
 import KitchenActionsView from "components/Kitchen/KitchenActionsView";
+import Masonry from "components/Masonry";
 export default {
   name: "PageChefKitchens",
-  components: {KitchenActionsView},
+  components: {Masonry, KitchenActionsView},
   data(){ return {
     split: 70, height: 75
   } },

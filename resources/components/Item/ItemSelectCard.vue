@@ -1,5 +1,6 @@
 <template>
   <q-card v-if="item" @click="$emit('selected',item)" style="cursor: pointer">
+    <q-card-section class="q-py-xs bg-teal"></q-card-section>
     <CardImageTitle :title="item.name" :image="image" info="true" @info="info = !info" />
     <q-card-section class="q-pa-none q-ma-none" v-if="info">
       <q-card-actions align="right" class="q-pb-none"><q-badge color="positive" :label="price" class="q-py-sm q-px-md text-weight-bolder" /></q-card-actions>

@@ -6,9 +6,11 @@
     <q-card-section v-show="Tokens.length === 0" class="text-center">NO TOKENS</q-card-section>
     <q-card-section v-show="Tokens.length !== 0" class="q-pa-none q-ma-none">
       <q-card-section class="row q-col-gutter-sm" v-show="mode === 'Item'">
-        <div class="col-xs-12 col-sm-4 col-md-3 col-lg-2 col-xl-1" v-for="(iArray,itemId) in items" :key="hKey({ id:itemId },'item')">
-          <KitchenTokenItem :kitchen="id" :details="iArray" :item="getItem(iArray)" :stock="getStock(iArray)" />
-        </div>
+        <Masonry width="250" :items="items">
+          <template #item="item">
+            <KitchenTokenItem :kitchen="id" :details="item.item" :item="getItem(item.item)" :stock="getStock(item.item)" />
+          </template>
+        </Masonry>
       </q-card-section>
       <q-card-section class="row q-col-gutter-sm" v-show="mode === 'Progress'">
         <div class="col-xs-12 col-sm-4"><KitchenTokenBundle :kitchen="id" type="New" stock="true" action="true" /></div>
@@ -16,9 +18,11 @@
         <div class="col-xs-12 col-sm-4"><KitchenTokenBundle :kitchen="id" type="Processing" action="true" /></div>
       </q-card-section>
       <q-card-section class="row q-col-gutter-sm" v-show="mode === 'Token'">
-        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 col-xl-2" v-for="token in Tokens" :key="hKey(token,'token')">
-          <TokenDetailCard :id="token.id" :kitchen="kitchen.id" :multiple="card" />
-        </div>
+        <Masonry width="320" gutter="xs" :items="Tokens">
+          <template #item="token">
+            <TokenDetailCard :id="token.id" :kitchen="kitchen.id" :multiple="card" />
+          </template>
+        </Masonry>
       </q-card-section>
     </q-card-section>
     <q-dialog persistent v-model="reset"><KitchenItemCancel :kitchen="id"  style="width: 80vw; max-width: 330px" @cancel="doReset" :cancelling="cancelling" /></q-dialog>
@@ -34,11 +38,14 @@ import KitchenTokenDisplayMode from "components/Kitchen/KitchenTokenDisplayMode"
 import KitchenItemCancel from "components/Kitchen/KitchenItemCancel";
 import Tokens from "assets/mixins/Tokens";
 import KitchenTokenItem from "components/Kitchen/KitchenTokenItem";
+import Masonry from "components/Masonry";
 
 export default {
   name: "KitchenTokens",
   mixins: [Tokens],
-  components: {KitchenTokenItem, KitchenItemCancel, KitchenTokenDisplayMode, KitchenTokenBundle, TokenDetailCard},
+  components: {
+    Masonry,
+    KitchenTokenItem, KitchenItemCancel, KitchenTokenDisplayMode, KitchenTokenBundle, TokenDetailCard},
   props: ['id','card'],
   data(){ return {
     processing: ['Accepted','Processing'],
