@@ -14,6 +14,9 @@
     <q-item-section side v-if="eligible && action.hasOwnProperty(item.progress)">
       <q-btn icon="reply_all" class="flip-horizontal" color="primary" @click="progress" round size="sm" />
     </q-item-section>
+    <q-item-section side v-else>
+      <q-btn class="bg-transparent" flat round size="sm" />
+    </q-item-section>
     <q-inner-loading v-if="eligible && (wait || loading)" :showing="true"><q-spinner-facebook color="primary" size="2em" /></q-inner-loading>
   </q-item>
 </template>
