@@ -64,7 +64,7 @@ export default {
     ...mapGetters('kitchens',['stock']),
     pView(){ return this.$q.screen.width > 799 },
     Tokens(){ return _(this.tokens).filter(({ progress,items }) => ['New','Processing'].includes(progress) && _.some(items,this.isAct)).value() },
-    items(){ return _(this.Tokens).flatMap(({ items }) => _(items).filter(this.isAct).value()).groupBy('item.id').value() },
+    items(){ return _(this.Tokens).flatMap(({ items,type }) => _(items).filter(this.isAct).map(item => Object.assign({},item,{ type })).value()).groupBy('item.id').value() },
   },
   methods: {
     hKey({ id },item){ return h_key('kitchen',this.id,item,'detail',id) },

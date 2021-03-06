@@ -11,16 +11,17 @@
         <q-item v-for="obj in $attrs.token" :key="hKey(obj)" clickable @click="clicked(obj)" :class="{ 'bg-grey-4':selected.includes(obj.id) }">
           <q-item-section avatar>
             <transition mode="out-in" appear enter-active-class="animated bounceIn" leave-active-class="animated bounceOut">
-              <q-avatar v-if="selected.includes(obj.id)" icon="done_all" color="green" text-color="grey-2" />
+              <q-avatar :key="'trg-' + obj.token + obj.id + 'uns'" v-if="selected.includes(obj.id)" icon="done_all" color="indigo-7" text-color="grey-2" />
+<!--            <q-avatar :key="'trg-' + obj.token + obj.id + 'sel'" v-else :color="typeColor[obj.type]" text-color="grey-2">{{ obj.token }}</q-avatar>-->
             </transition>
           </q-item-section>
           <q-item-section>
             <q-item-label>Token: {{ obj.token }} - ({{ time(Tokens[obj.token].date) }})</q-item-label>
-            <q-item-label caption>Type: {{ Tokens[obj.token].type }}</q-item-label>
+            <q-item-label caption>Type: {{ obj.type }}</q-item-label>
             <q-item-label caption v-if="Tokens[obj.token].waiter">Waiter: {{ Tokens[obj.token].waiter.name }}</q-item-label>
             <q-item-label caption v-if="Tokens[obj.token].seating">Seat: {{ Tokens[obj.token].seating.name }}</q-item-label>
           </q-item-section>
-          <q-item-section side><q-avatar rounded text-color="white" color="purple">{{ obj.quantity }}</q-avatar></q-item-section>
+          <q-item-section side><q-avatar rounded text-color="white" :color="typeColor[obj.type]">{{ obj.quantity }}</q-avatar></q-item-section>
         </q-item>
       </q-list>
       <q-card-actions align="left" class="bg-white text-teal">
@@ -35,12 +36,14 @@
 import CardImageTitle from "components/CardImageTitle";
 import Tokens from "assets/mixins/Tokens";
 import {h_key, time} from "assets/helpers";
+import {DiningTypeColor} from "assets/assets";
 
 export default {
   name: "KitchenTokenItemAction",
   components: {CardImageTitle},
   data(){ return {
     selected: [],
+    typeColor: DiningTypeColor
   } },
   mixins: [Tokens],
   computed: {
