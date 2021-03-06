@@ -13,6 +13,7 @@
                 <div>
                   <component :is="spinners[row.progress]" :color="bColor[row.progress]" size="sm" />
                   <q-badge :color="bColor[row.progress]" :label="row.progress" class="q-ml-xs q-py-xs" />
+                  <q-badge :color="bColor[row.progress]" :label="row.id" class="q-ml-xs q-py-xs" />
                 </div>
               </div>
             </q-img>
@@ -46,7 +47,7 @@ export default {
   name: "OrderOngoingTables",
   components: {Masonry, CardImageTitle},
   data(){ return {
-    cColor: { New:'cyan-2',Processing:'orange-2',Completed:'green-2' },
+    cColor: { New:'red-2',Processing:'purple-2',Completed:'green-2' },
     bColor: TokenProgressColor,
     spinners: { New:'q-spinner-ball', Processing: 'q-spinner-rings', Completed: null }
   } },
