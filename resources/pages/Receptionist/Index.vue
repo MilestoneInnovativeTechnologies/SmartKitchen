@@ -1,8 +1,8 @@
 <template>
   <q-page padding class="q-gutter-y-sm">
     <ReceptionistBillSummary />
-    <ReceptionistNonDiningTokens />
     <ReceptionistServableItems />
+    <ReceptionistNonDiningTokens />
   </q-page>
 </template>
 
