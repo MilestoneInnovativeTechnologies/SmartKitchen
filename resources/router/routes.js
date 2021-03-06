@@ -6,6 +6,7 @@ const layout_master = {
   Chef: { path:'/', component: () => import('layouts/ChefLayout.vue')  },
   Receptionist: { path:'/', component: () => import('layouts/ReceptionistLayout.vue')  },
   Administrator: { path:'/', component: () => import('layouts/AdministratorLayout.vue')  },
+  Management: { path:'/', component: () => import('layouts/ManagementLayout.vue')  },
 }
 
 const layout_child = {
@@ -14,6 +15,7 @@ const layout_child = {
   Chef: ['chef_index','chef_kitchens','kitchen_items','kitchen_stocks','tokens'],
   Receptionist: ['receptionist_index','seat_status','receptionist_tokens','bills','seat_status_order','receptionist_orders','receptionist_order_new','receptionist_order_new_items'],
   Administrator: ['administrator_index','master_customer','master_item','master_group','master_kitchen','master_kitchen_items','master_menu','master_price_list','master_seating','master_tax','image_customer','image_item','image_kitchen','image_seating','image_user','master_user'],
+  Management: ['management_index'],
 }
 
 const route_master = {
@@ -51,6 +53,7 @@ const route_master = {
   image_kitchen: { name:'image_kitchen', path:'/image/kitchens', component: () => import('pages/Administrator/Image/AdministratorImageKitchen'), meta:{ title:'Kitchens' } },
   image_seating: { name:'image_seating', path:'/image/seating', component: () => import('pages/Administrator/Image/AdministratorImageSeating'), meta:{ title:'Seating' } },
   image_user: { name:'image_user', path:'/image/users', component: () => import('pages/Administrator/Image/AdministratorImageUser'), meta:{ title:'Users' } },
+  management_index: { name:'management_index', path:'/', component: () => import('pages/Management/ManagementIndex'), meta:{ title:null } },
 }
 
 function getRoutes(page) {
