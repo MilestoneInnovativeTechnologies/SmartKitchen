@@ -5,7 +5,7 @@
 
       <q-toolbar v-if="special">
 
-        <q-toolbar-title class="row">
+        <q-toolbar-title>
           <div class="row items-center">
             <q-btn :to="{ name:'chef_index' }" flat round dense icon="arrow_back_ios" />
             <KitchenSelectElement v-model="kitchen" dark borderless />
@@ -16,9 +16,13 @@
           <span class="text-white text-subtitle2">{{ time }}</span>
         </q-toolbar-title>
 
-        <KitchenTokenDisplayMode v-model="mode" dark borderless />
-        <q-btn rounded color="white" icon="undo" text-color="red" @click="reset = true" class="q-mx-sm" />
-        <ManualSync />
+        <q-toolbar-title class="row">
+          <q-space />
+          <KitchenTokenDisplayMode v-model="mode" dark borderless />
+          <q-btn rounded color="white" icon="undo" text-color="red" @click="reset = true" class="q-mx-sm self-center" />
+          <ManualSync />
+        </q-toolbar-title>
+
       </q-toolbar>
 
       <q-toolbar v-else>
