@@ -18,7 +18,7 @@ export default {
   components: {Jumbotron},
   props: ['value','groups'],
   computed: mapState({
-    dGroups({ groups:{ data },items }){ return this.groups || _.concat([{ id:0,name:'All',items:_.map(items.data,({ id }) => _.toInteger(id)) }],_.map(data)) },
+    dGroups({ groups:{ data },items }){ return this.groups || _.concat([{ id:0,name:'All',items:_.map(items.data,({ id }) => _.toInteger(id)) }],_.filter(data,['status','Active'])) },
   }),
   methods: {
     hKey({ id }){ return h_key('menu','group','select',id) },
