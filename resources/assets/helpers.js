@@ -16,8 +16,22 @@ export function options(ary,nAry,sep){ return _.map(ary,data => option(data,nAry
 export function matches(obj,keys,text){ return _.includes(_.values(_.pick(obj,keys)).join(' ').toLowerCase(),text.toString().toLowerCase()) }
 
 export function now(){ return _.toInteger(new Date().getTime()/1000) }
-export function time(datetime,format){ format = format || 'YYYY-MM-DD HH:mm:ss'; return formatDate(extractDate(datetime,format),'hh:mm A') }
-export function is_today(datetime,format){ format = format || 'YYYY-MM-DD HH:mm:ss'; return isSameDate(extractDate(datetime,format),new Date(),'day') }
+export function common_format(format){ return format || 'YYYY-MM-DD HH:mm:ss' }
+export function extract_date(datetime,format){ format = common_format(format); return extractDate(datetime,format) }
+export function time(datetime,format){ format = common_format(format); return formatDate(extractDate(datetime,format),'hh:mm A') }
+export function is_today(datetime,format){ format = common_format(format); return isSameDate(extractDate(datetime,format),new Date(),'day') }
+export function is_date_same(d1,d2,unit,format){ format = common_format(format); return isSameDate(extractDate(d1,format),extractDate(d2,format),(unit || 'day')) }
+export function to_format(format,date){ format = common_format(format); return formatDate(date || new Date(),format) }
+export function range(from,to) {
+  if (_.has(from, 'from')) {
+    to = _.get(from, 'to', to_format('YYYY-MM-DD')) + ' 11:59:59';
+    from = _.get(from, 'from', to_format('YYYY-MM-DD')) + ' 11:59:59'
+  }
+  from = startOfDate(from || to_format(), 'day');
+  to = subtractFromDate(startOfDate(to || addToDate(to_format(), {days: 1}), 'day'), {seconds: 1})
+  return { from: to_format('YYYY-MM-DD HH:mm:ss',from),to: to_format('YYYY-MM-DD HH:mm:ss',to) }
+}
+export function is_between(date,from,to){ return isBetweenDates(extract_date(date),extract_date(from),extract_date(to),{ inclusiveFrom:true,inclusiveTo:true,onlyDate:true }) }
 
 export function crypt(str, seed = 0) {
   let h1 = 0xdeadbeef ^ seed, h2 = 0x41c6ce57 ^ seed;

@@ -38,5 +38,6 @@ import Jumbotron from "components/Jumbotron";
 export default {
   name: 'PageAdministratorIndex',
   components: {Jumbotron, AdministratorDashboardMetricsMain},
+  created(){ this.$store.commit('public',{ mode:'administration' }) }
 }
 </script>
