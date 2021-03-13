@@ -8,7 +8,7 @@
       </q-item>
       <q-item>
         <q-item-section>Customer</q-item-section>
-        <q-item-section side>{{ customer }}</q-item-section>
+        <q-item-section side>{{ attrs('customer.name') }}</q-item-section>
       </q-item>
     </q-list>
     <q-list bordered>
@@ -49,7 +49,8 @@
       </q-item>
     </q-list>
     <q-card-actions vertical align="center" class="q-gutter-y-xs">
-      <q-input dense outlined type="number" v-model.number="amount" label="Amount" class="full-width" />
+      <q-select outlined v-model="type" :options="options" label="Type" class="full-width" />
+      <q-input outlined type="number" v-model.number="balance" label="Amount" class="full-width" />
       <q-btn label="Make Payment" class="full-width" color="primary" @click="pay" :loading="loading" />
     </q-card-actions>
     <q-inner-loading :showing="loading"><q-spinner-facebook color="primary" size="2em" /></q-inner-loading>
@@ -58,37 +59,39 @@
 
 <script>
 import {h_key, precision} from "assets/helpers";
-import {DiningTypeColor} from "assets/assets";
+import {DiningTypeColor, PaymentsTypes} from "assets/assets";
 
 export default {
   name: "BillDetailCard",
   data(){ return {
     header:{ 'Bill ID':'id','Token':'token.id','Type':'token.type','Date':'date' },
-    amount: 0, loading: false,
+    v_amount: 0, loading: false,
+    options: PaymentsTypes, type: PaymentsTypes[0]
   } },
   computed: {
-    type(){ return _.get(this.$attrs,['token','type'],'') },
-    customer(){ return _.get(this.$attrs,['customer','name'],'') },
-    bgCls(){ return 'bg-' + DiningTypeColor[this.type] },
-    contents(){ return _.get(this.$attrs,'contents',[]) },
+    bgCls(){ return 'bg-' + DiningTypeColor[this.attrs('token.type')] },
+    contents(){ return this.attrs('contents',[]) },
     total(){ return _.sum(_.map(this.contents,this.getTotal)) },
     discount(){ return _.sum(_.map(this.contents,({ discount }) => _.toNumber(discount))) },
-    paid(){ return _.toNumber(_.get(this.$attrs,'paid')) },
-    balance(){ return this.total - this.discount - this.paid },
+    paid(){ return _.toNumber(this.attrs('paid',0)) },
+    balance:{
+      get(){ return this.v_amount || (this.total - this.discount - this.paid) },
+      set(amt){ this.v_amount = _.toNumber(amt) }
+    },
   },
   methods: {
     hKey(item,key){ return h_key('bill',this.attrs('id'),'details',item,key) },
-    attrs(key){ return _.get(this.$attrs,key); return _.isObject(itm) ? _.get(itm,'id') : itm },
+    attrs(key,def){ return _.get(this.$attrs,key,def) },
     precision(n){ return precision(n) },
     getTotal({ price,quantity }){ return _.toNumber(price) * _.toNumber(quantity) },
     pay(){
-      this.loading = true; if(!this.attrs('id') || !this.amount) return this.loading = false;
-      let params = { bill:this.attrs('id'), amount:this.amount }
+      this.loading = true; if(!this.attrs('id') || !this.balance) return this.loading = false;
+      let params = { bill:this.attrs('id'), amount:this.balance, type:this.type }
       post('payment','create',params).then().catch().then(() => this.loading = false)
     }
-  },
+  }/*,
   created() {
     this.amount = _.toNumber(this.balance)
-  }
+  }*/
 }
 </script>
