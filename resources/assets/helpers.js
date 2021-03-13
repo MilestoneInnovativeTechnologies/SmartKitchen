@@ -1,4 +1,7 @@
-const { formatDate,extractDate,isSameDate } = require('quasar').date
+const { formatDate,extractDate,isSameDate,startOfDate,subtractFromDate,addToDate,isBetweenDates } = require('quasar').date
+const AttentionAudio = new Audio(MEDIA_ROOT + '/attention.mp3')
+
+export function attention(){ AttentionAudio.play() }
 
 export function h_key(){ return Array.from(arguments).join('-') }
 
