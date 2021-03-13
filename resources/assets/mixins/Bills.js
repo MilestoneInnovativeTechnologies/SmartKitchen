@@ -1,11 +1,12 @@
 import {mapState} from "vuex";
 import Tokens from "assets/mixins/Tokens";
+import {bill_payable} from "assets/module_helpers";
 
 export default {
   mixins: [Tokens],
   computed: mapState({
     bills({ bills:{ data },customers,users,payments }){ return _(data).map(bill => Object.assign({},bill,
-      { payable: _.toNumber(bill.amount) - _.toNumber(bill.discount) - _.toNumber(bill.round) },
+      { payable: bill_payable(bill) },
       { token:_.find(this.tokens,['id',bill.token]) },
       { customer:_.get(customers['data'],bill.customer) },
       { user:_.get(users['data'],bill.user) },
