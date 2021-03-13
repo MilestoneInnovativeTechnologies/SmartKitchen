@@ -1,7 +1,8 @@
 <template>
     <q-card>
       <q-card-section class="bg-teal text-white">
-        <div class="text-h6" v-if="$attrs.narration">{{ $attrs.narration }}</div>
+        <div class="text-h6 text-center" v-if="$attrs.narration">{{ $attrs.narration }}</div>
+        <div class="text-h6 text-center" v-else>{{ $attrs.name }}</div>
       </q-card-section>
       <q-card-actions>
         <q-btn icon="done_all" glossy push color="positive" label="All" @click="all" /> <q-space />
