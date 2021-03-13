@@ -18,6 +18,7 @@ $clientDBs = [
     'demo'   => ['u752305367_smartkitchen','u752305367_smartkitchen','u752305367_SmartKitchen'],
     'bbq'   => ['u752305367_smartkitchen','u752305367_smartkitchen','u752305367_SmartKitchen'],
     'bt'   => ['u752305367_brandtalkies','u752305367_brandtalkies','u752305367_BrandTalkies'],
+    'grand'   => ['u752305367_grand','u752305367_grand','u752305367_Grand'],
     'client1'   => ['smartkitchen','root','metalic'],
 ];
 
