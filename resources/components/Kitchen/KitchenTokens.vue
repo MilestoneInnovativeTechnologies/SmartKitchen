@@ -32,7 +32,7 @@
 <script>
 import TokenDetailCard from "components/Tokens/TokenDetailCard";
 import {mapState,mapGetters} from "vuex";
-import {h_key} from "assets/helpers";
+import {attention, h_key} from "assets/helpers";
 import KitchenTokenBundle from "components/Kitchen/KitchenTokenBundle";
 import KitchenTokenDisplayMode from "components/Kitchen/KitchenTokenDisplayMode";
 import KitchenItemCancel from "components/Kitchen/KitchenItemCancel";
@@ -76,6 +76,9 @@ export default {
       if(!ids || ids.length === 0 || ids.length <= idx) return this.reset = this.cancelling = false;
       post('token','reset',{ id:ids[idx],kitchen }).then(() => setTimeout(this.post,300,idx+1,ids,kitchen))
     }
+  },
+  watch: {
+    Tokens(Nw,Ol){ if(!Ol || Nw.length > Ol.length) attention() }
   }
 }
 </script>

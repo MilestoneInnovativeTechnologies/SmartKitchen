@@ -19,7 +19,7 @@
 
 <script>
 import { mapState } from 'vuex'
-import {h_key} from "assets/helpers";
+import {attention, h_key} from "assets/helpers";
 import OrderSummaryItemUpdate from "components/Order/OrderSummaryItemUpdate";
 
 export default {
@@ -30,6 +30,7 @@ export default {
     edit_mode: false,
     edit_obj: null,
     processing: [],
+    completed: []
   } },
   computed: {
     rows(){ return _.get(this.$store.state.tokens.items,_.toInteger(this.order),[]) },
@@ -46,6 +47,13 @@ export default {
       this.edit_mode = true;
     },
     served({ id }){ this.processing.push(id); post('token','served',{ id }).then(() => this.processing = _.difference(this.processing,[id])); },
+  },
+  created(){ this.completed = _(this.rows).filter(['progress','Completed']).map('id').value() },
+  watch: {
+    rows: {
+      deep: true,
+      handler(rows){ _.forEach(rows,({ progress,id }) => (progress === 'Completed' && !this.completed.includes(id)) ? attention(this.completed.push(id)) : null) }
+    }
   }
 }
 </script>

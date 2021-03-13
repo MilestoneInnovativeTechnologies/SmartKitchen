@@ -20,7 +20,7 @@
       <q-tabs align="left">
         <q-route-tab exact :to="{ name:'receptionist_index' }" label="Home" icon="home" />
         <q-route-tab :to="{ name:'seat_status' }" label="Seating" icon="batch_prediction" />
-        <q-route-tab :to="{ name:'receptionist_tokens' }" label="Tokens" icon="receipt" />
+        <q-route-tab :to="{ name:'receptionist_tokens' }" label="Tokens" icon="receipt" :alert="alert || completed.length>0" alert-icon="new_releases" />
         <q-route-tab :to="{ name:'bills' }" label="Bills" icon="pending_actions" />
         <q-route-tab :to="{ name:'orders' }" label="Orders" icon="add_task" />
       </q-tabs>
@@ -31,9 +31,17 @@
 
 <script>
 import ManualSync from "components/ManualSync";
+import {mapState} from "vuex";
+import {attention} from "assets/helpers";
 export default {
   name: 'ReceptionistLayout',
   components: {ManualSync},
-  data(){ return { receptionist:_USER.name, logout: LOGOUT } },
+  data(){ return { receptionist:_USER.name, logout: LOGOUT, alert:false } },
+  computed: mapState('tokens',{ completed({ data }){ return _.filter(data,['progress','Completed']) } }),
+  watch: {
+    completed(Nw,Ol){ if(!Ol || Nw.length > Ol.length) {
+      attention(); this.alert = 'amber'; setTimeout(vm => vm.alert = false,15000,this)
+    } }
+  }
 }
 </script>

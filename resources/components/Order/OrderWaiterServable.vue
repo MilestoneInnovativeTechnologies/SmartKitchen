@@ -22,6 +22,8 @@
 </template>
 
 <script>
+import {attention} from "assets/helpers";
+
 export default {
   name: "OrderWaiterServable",
   data(){ return {
@@ -40,6 +42,9 @@ export default {
     since(timings){ let s_time = _.get(_.last(timings),'time'), n_time = _.toInteger(new Date().getTime()/1000); return n_time - s_time; },
     itemTiming(timings){ let s = this.since(timings); return (s < 60) ? (s + ' seconds') : ((s < 3600) ? (_.toInteger(s/60) + ' minutes') : (_.toInteger(s/3600) + ' hours')) },
     served({ id }){ this.serving.push(id); post('token','served',{ id }).then(() => this.serving = _.difference(this.serving,[id])) },
+  },
+  watch: {
+    servable(Nw,Ol){ if(!Ol || Nw.length > Ol.length) attention() }
   }
 }
 </script>

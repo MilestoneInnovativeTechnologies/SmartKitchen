@@ -24,6 +24,7 @@
 
 <script>
 import Tokens from "assets/mixins/Tokens";
+import {attention} from "assets/helpers";
 
 export default {
   name: "ReceptionistServableItems",
@@ -45,6 +46,9 @@ export default {
   },
   created() {
     setInterval(vm => vm.now = _.toInteger(new Date().getTime()/1000),1000,this)
+  },
+  watch: {
+    items(Nw,Ol){ if(!Ol || Ol.length < Nw.length) attention() }
   }
 }
 </script>

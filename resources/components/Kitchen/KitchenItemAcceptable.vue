@@ -19,7 +19,7 @@
 
 <script>
 import {mapState} from "vuex";
-import {h_key} from "assets/helpers";
+import {attention, h_key} from "assets/helpers";
 
 export default {
   name: "KitchenItemAcceptable",
@@ -40,6 +40,9 @@ export default {
     hKey({ item,kitchen },idx){ return h_key('kitchen','item','acceptable',idx,'kitchen',kitchen,'item',item) },
     kColor({ kitchen }){ return this.kitchens.includes(kitchen) ? ('text-'+this.Colors[this.kitchens.indexOf(kitchen)]) : this.kColor({ kitchen,add:this.kitchens.push(kitchen) }) },
     accept({ id,kitchen }){ this.loading = true; post('token','accept',{ id,kitchen }).then(() => this.loading = false) },
+  },
+  watch: {
+    items(Nw,Ol){ if(!Ol || Nw.length > Ol.length) attention() }
   }
 }
 </script>
