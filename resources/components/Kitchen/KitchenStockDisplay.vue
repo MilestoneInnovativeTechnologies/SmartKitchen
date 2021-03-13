@@ -27,7 +27,6 @@
 <script>
 import { mapState } from 'vuex'
 import {h_key, matches} from "assets/helpers";
-import KitchenItemsDisplayItemRow from "components/Kitchen/KitchenItemsDisplayItemRow";
 import KitchenStockDisplayItemRow from "components/Kitchen/KitchenStockDisplayItemRow";
 import FilterInputText from "components/FilterInputText";
 export default {
@@ -35,28 +34,31 @@ export default {
   props: ['kitchen'],
   data(){ return {
     filter: '',
-    negative: [],
-    least: [],
-    other: []
+    neg: [],
+    les: [],
+    oth: []
   } },
-  components: {FilterInputText, KitchenStockDisplayItemRow, KitchenItemsDisplayItemRow},
+  components: {FilterInputText, KitchenStockDisplayItemRow},
   computed: {
     kid(){ return _.toInteger(this.kitchen) },
     ...mapState({
       name: function({ kitchens:{ data } }){ return _.get(data,[this.kid,'name']) },
       stock: function({ kitchens:{ items },items:{ data } }){ return this.filtered(_.map(_.get(items,[this.kid]),item => Object.assign({},item,{ item:data[item.item] }))) },
+      negative(){ return _.sortBy(this.neg,'stock') },
+      least(){ return _.sortBy(this.les,'stock') },
+      other(){ return _.sortBy(this.oth,'stock') },
     }),
     zero(){
       this.negative.splice(0,this.negative.length);
       this.least.splice(0,this.least.length);
       this.other.splice(0,this.other.length);
-      return _.filter(this.stock,(detail) => {
+      return _(this.stock).filter((detail) => {
         if(_.toNumber(detail.stock) === 0) return true;
-        if(_.toNumber(detail.stock) > 6) return !this.other.push(detail);
-        if(_.toNumber(detail.stock) < 0) return !this.negative.push(detail);
-        if(_.toNumber(detail.stock) > 0) return !this.least.push(detail);
+        if(_.toNumber(detail.stock) > 6) return !this.oth.push(detail);
+        if(_.toNumber(detail.stock) < 0) return !this.neg.push(detail);
+        if(_.toNumber(detail.stock) > 0) return !this.les.push(detail);
         return false;
-      })
+      }).sortBy('stock').value()
     }
   },
   methods: {
