@@ -56,6 +56,12 @@ class Subscribers
             \Milestone\SmartKitchen\Events\TokenItemAdded::class =>  [
                 TryRefreshingTokenProgress::class,
             ],
+            \Milestone\SmartKitchen\Events\TokenItemUpdating::class =>  [],
+            \Milestone\SmartKitchen\Events\TokenItemUpdated::class =>  [
+                AcceptedTokenItemStockAdjust::class
+            ],
+
+
             \Milestone\SmartKitchen\Events\TokenProgressMakingAsProcessing::class =>  [],
             \Milestone\SmartKitchen\Events\TokenProgressMadeAsProcessing::class =>  [],
             \Milestone\SmartKitchen\Events\TokenProgressMakingAsNew::class =>  [],

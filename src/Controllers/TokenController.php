@@ -10,6 +10,8 @@ use Milestone\SmartKitchen\Events\TokenItemAdding;
 use Milestone\SmartKitchen\Events\TokenItemPrepared;
 use Milestone\SmartKitchen\Events\TokenItemsSaved;
 use Milestone\SmartKitchen\Events\TokenItemsSaving;
+use Milestone\SmartKitchen\Events\TokenItemUpdated;
+use Milestone\SmartKitchen\Events\TokenItemUpdating;
 use Milestone\SmartKitchen\Models\Tax;
 use Milestone\SmartKitchen\Models\Token;
 use Milestone\SmartKitchen\Models\TokenItem;
@@ -114,8 +116,11 @@ class TokenController extends Controller
             return TokenItem::where(['token' => $token_id, 'item' => $ti_data['item'], 'progress' => 'New'])->first();
         }
         elseif($request->has('id')){
-            $token_item = TokenItem::find($request->input('id'));
+            $id = $request->input('id');
+            $token_item = TokenItem::find($id); $old = $token_item->toArray();
+            TokenItemUpdating::dispatch($id,$ti_data,$old);
             $token_item->update($ti_data);
+            TokenItemUpdated::dispatch($id,$ti_data,$old);
             return $token_item;
         }
         return [];
