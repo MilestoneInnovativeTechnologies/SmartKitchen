@@ -20,6 +20,7 @@ $clientDBs = [
     'bt'   => ['u752305367_brandtalkies','u752305367_brandtalkies','u752305367_BrandTalkies'],
     'grand'   => ['u752305367_grand','u752305367_grand','u752305367_Grand'],
     'client1'   => ['smartkitchen','root','metalic'],
+    'dolphin'   => ['u752305367_dolphin','u752305367_dolphin','u752305367_Dolphin'],
 ];
 
 Route::domain('{client}.' . $Domain)->group(function() use($clientDBs) {
