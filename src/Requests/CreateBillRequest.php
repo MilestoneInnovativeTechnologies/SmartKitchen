@@ -37,11 +37,13 @@ class CreateBillRequest extends FormRequest
 
     protected function prepareForValidation(){
         $nature = $this->input('nature',null);
+        $user = $this->input('user',Auth::id());
         $discount = doubleval($this->input('discount') ?: 0);
         $this->merge([
-            'date' => now()->toDateTimeString(),
+            'date'      => now()->toDateTimeString(),
             'nature'    => $nature,
             'discount'  => $discount,
+            'user'      => $user,
             'amount'    => TokenController::Amount($this->input('token')),
             'contents'  => BillController::Contents($this->input('token'),$nature,$discount),
         ]);

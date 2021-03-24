@@ -12,6 +12,9 @@ class Token extends Model
     public static $summableProgress = ['New','Accepted','Processing','Completed','Served'];
     public static $fetchMethods = ['Waiter' => 'waiter'];
 
+    public $printer_name = 'token_printer';
+    public $print_template = 'token_print_template';
+
 
     protected static function booted(){
         static::addGlobalScope(new NotCancelledScope);
@@ -63,4 +66,14 @@ class Token extends Model
             ? self::own()->recent()->active()->sync($after,$before,$lid)->get()
             : self::recent()->active()->sync($after,$before,$lid)->get();
     }
+
+    public function print_data($data){
+        $data->load(['Items' => function($Q){ $Q->withoutGlobalScopes()->with(['Item','User','Kitchen']); },'User','Seating','Customer']);
+        $this->setAttribute('total_items',$data->Items->count());
+        $this->setAttribute('total_quantities',$data->Items->sum->quantity);
+        $this->setAttribute('date_human',human_date($data->date));
+        $this->setAttribute('time_human',human_time($data->date));
+        return $data;
+    }
+
 }

@@ -25,7 +25,8 @@ class Subscribers
             \Milestone\SmartKitchen\Events\TokenItemPrepared::class =>  [],
             \Milestone\SmartKitchen\Events\TokenItemsSaving::class =>  [],
             \Milestone\SmartKitchen\Events\TokenItemsSaved::class =>  [
-                TryDistributingTokenItems::class
+                TryDistributingTokenItems::class,
+                PrintAcceptedItemsToken::class,
             ],
             \Milestone\SmartKitchen\Events\TokenItemAccepting::class =>  [],
             \Milestone\SmartKitchen\Events\TokenItemAccepted::class =>  [

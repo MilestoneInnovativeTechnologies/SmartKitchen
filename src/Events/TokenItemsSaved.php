@@ -14,12 +14,13 @@ class TokenItemsSaved
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $tokenItems, $user;
+    public $tokenItems, $user, $token;
 
-    public function __construct($tokenItems, $user)
+    public function __construct($tokenItems, $user, $token)
     {
         $this->tokenItems = $tokenItems;
         $this->user = $user;
+        $this->token = $token;
     }
 
 }

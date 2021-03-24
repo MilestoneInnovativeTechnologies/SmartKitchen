@@ -11,6 +11,7 @@ use \Milestone\SmartKitchen\Middlewares\SmartKitchenGuest;
 use \Milestone\SmartKitchen\Middlewares\SmartKitchenAuth;
 use \Milestone\SmartKitchen\Middlewares\APIRequest;
 use \Illuminate\Http\Request;
+use Milestone\SmartKitchen\Models\Kitchen;
 
 $Domain = implode(".",array_slice(explode('.', request()->getHost()),1));
 
@@ -100,7 +101,7 @@ Route::domain('{client}.' . $Domain)->group(function() use($clientDBs) {
     });
 
     Route::get('test', function (Request $request) {
-        return \Illuminate\Support\Str::of('priceList')->ucfirst()->__toString();
+        Kitchen::find(2)->print(89);
     });
 
 });

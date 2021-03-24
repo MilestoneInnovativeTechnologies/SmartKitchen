@@ -16,7 +16,7 @@ class CreateMastersTable extends Migration
         Schema::create('masters', function (Blueprint $table) {
             $table->id();
             $table->string('name',64)->index();
-            $table->string('value',256)->index();
+            $table->string('value',2048)->nullable();
             $table->timestamps();
         });
     }

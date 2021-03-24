@@ -35,7 +35,7 @@ class TokenController extends Controller
         }
         TokenItemsSaving::dispatch($Items);
         $Token->Items()->saveMany($Items);
-        TokenItemsSaved::dispatch($Token->fresh()->Items,$user);
+        TokenItemsSaved::dispatch($Token->fresh()->Items,$user,$Token->id);
         return $Token;
     }
 
@@ -111,7 +111,7 @@ class TokenController extends Controller
             $token_item->token = $token_id;
             TokenItemAdding::dispatch($token_id,$ti_data['item'],$ti_data['quantity'],$request->input('user'),$ti_data);
             $token_item->save();
-            TokenItemsSaved::dispatch(Token::find($token_id)->Items,$request->input('user'));
+            TokenItemsSaved::dispatch(Token::find($token_id)->Items,$request->input('user'),$token_id);
             TokenItemAdded::dispatch($token_item->fresh(),$request->input('user'),$ti_data);
             return TokenItem::where(['token' => $token_id, 'item' => $ti_data['item'], 'progress' => 'New'])->first();
         }
