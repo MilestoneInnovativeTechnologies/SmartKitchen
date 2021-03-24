@@ -70,21 +70,6 @@ class Model extends BaseModel
         if($data instanceof Collection || $data instanceof Model) $data = $data->toArray();
         if(!$data) return Log::critical('Print Called from empty data');
 
-/*        $template_name = $template_name ?: $this->print_template;
-        $templateDataModifier = $template_name . 'modify';
-
-        $data = method_exists($this,$templateDataModifier) ? call_user_func([$this,$templateDataModifier],$this) : (method_exists($this,'modify') ? $this->modify($this) : $this);
-        if($data instanceof Collection || $data instanceof Model) $data = $data->toArray();
-        if(!$data) return Log::critical('Print Called from empty data');
-
-        $template = Arr::get(Master::where('name',$template_name)->first(),'value',null);
-        if(!$template) return Log::critical('Print Called with no template. Requested Template Name: ' . $template_name);
-        $template = json_decode($template,true);
-        if(!$template) return Log::critical('Error in template: ' . $template_name);
-
-        $printer = $printer ?: Arr::get(Master::where('name',$this->printer_name)->first(),'value',null);
-        if(!$printer) return;*/
-
         return Printer::do($printer,$template,$data);
     }
 }
