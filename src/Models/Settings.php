@@ -2,7 +2,7 @@
 
 namespace Milestone\SmartKitchen\Models;
 
-class Master extends Model
+class Settings extends Model
 {
 
 }

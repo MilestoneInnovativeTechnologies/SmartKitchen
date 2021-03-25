@@ -20,6 +20,8 @@ class UpdateUsersTable extends Migration
             $table->enum('role',array_keys(config('sk.role_names')))->index()->default('Waiter')->after('password');
             $table->dropUnique(['email']);
         });
+
+        \Milestone\SmartKitchen\Models\User::create(['name' => 'Administrator','pin' => '0000','login' => 'admin','email' => 'admin@' . config('sk.domain'),'password' => 'password', 'role' => 'Administrator', 'email_verified_at' => now()->toDateTimeString()]);
     }
 
     /**
