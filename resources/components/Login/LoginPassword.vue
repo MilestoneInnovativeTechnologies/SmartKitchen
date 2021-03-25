@@ -20,7 +20,7 @@ export default {
   name: "LoginPassword",
   components: {GetRoleUserLogin, RolesSelect},
   data() {
-    return { role:'', user: null, loading: false, LOGIN, id:'', password:'password', select:'', selected: [] }
+    return { role:'', user: null, loading: false, LOGIN, id:'', password:'', select:'', selected: [] }
   },
   methods: {
     login({ user:{ id },password,menu,kitchen }){
