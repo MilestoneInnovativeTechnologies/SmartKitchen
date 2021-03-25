@@ -18,7 +18,7 @@ class UserController extends Controller
             LoggingOut::dispatch($user);
             auth()->logout(); LoggedOut::dispatch($user);
         }
-        return redirect()->route('login',CLIENT)->withCookie(cookie()->forget('token'));
+        return redirect()->route('login')->withCookie(cookie()->forget('token'));
     }
 
     public static function data(){

@@ -13,8 +13,6 @@ use \Milestone\SmartKitchen\Middlewares\APIRequest;
 use \Illuminate\Http\Request;
 use Milestone\SmartKitchen\Models\Kitchen;
 
-$Domain = implode(".",array_slice(explode('.', request()->getHost()),1));
-
 $clientDBs = [
     'demo'   => ['u752305367_smartkitchen','u752305367_smartkitchen','u752305367_SmartKitchen'],
     'bbq'   => ['u752305367_smartkitchen','u752305367_smartkitchen','u752305367_SmartKitchen'],
@@ -24,84 +22,72 @@ $clientDBs = [
     'dolphin'   => ['u752305367_dolphin','u752305367_dolphin','u752305367_Dolphin'],
 ];
 
-Route::domain('{client}.' . $Domain)->group(function() use($clientDBs) {
-    $client = explode('.', request()->getHost())[0];
-    define('CLIENT',$client);
-    if (array_key_exists($client, $clientDBs)) {
-        foreach (['database', 'username', 'password'] as $idx => $key) {
-            config()->set("database.connections.mysql.$key", $clientDBs[$client][$idx]);
-        }
-    }
+
+if(CLIENT && array_key_exists(CLIENT,$clientDBs)) foreach (['database', 'username', 'password'] as $idx => $key) config()->set("database.connections.mysql.$key", $clientDBs[CLIENT][$idx]);
+
+Route::group([
+    'middleware' => 'cache.headers:public;max_age=2628000;etag',
+], function () {
+    Route::get('assets/{time}/{model}.js', [AssetController::class, 'JSAsset'])->name('asset');
+});
+
+Route::group([
+    'middleware' => ['api'],
+], function () {
 
     Route::group([
-        'middleware' => 'cache.headers:public;max_age=2628000;etag',
+        'middleware' => [SmartKitchenGuest::class],
     ], function () {
-        Route::get('assets/{time}/{model}.js', [AssetController::class, 'JSAsset'])->name('asset');
+        Route::view('login', 'SK::login')->name('login');
+        Route::post('login', [AuthController::class, 'login']);
     });
 
+    Route::get('/', function (Request $request) {
+        if ($request->cookie('token')) return view('SK::home');
+            return redirect()->route('login')->withCookie(cookie()->forget('token'));
+    })->name('home');
+
     Route::group([
-        'middleware' => ['api'],
+        'middleware' => [SmartKitchenAuth::class],
     ], function () {
 
-        Route::group([
-            'middleware' => [SmartKitchenGuest::class],
-        ], function () {
-            Route::view('login', 'SK::login')->name('login');
-            Route::post('login', [AuthController::class, 'login']);
-        });
-
-        Route::get('/', function (Request $request) {
-            if ($request->cookie('token')) return view('SK::home');
-//            return redirect()->route('login')->withCookie(cookie()->forget('token'));
-//REMOVE ROUTE PARAMS FROM PRODUCTION - for removing subdomain routing
-            return redirect()->route('login',CLIENT)->withCookie(cookie()->forget('token'));
-        })->name('home');
+        Route::get('logout', [UserController::class, 'logout'])->name('logout');
+        Route::get('refresh', [AuthController::class, 'refresh']);
+        Route::view('pre_home', 'SK::pre_home')->name('pre_home');
 
         Route::group([
-            'middleware' => [SmartKitchenAuth::class],
+            'prefix' => 'api/v1'
         ], function () {
-
-            Route::get('logout', [UserController::class, 'logout'])->name('logout');
-            Route::get('refresh', [AuthController::class, 'refresh']);
-            Route::view('pre_home', 'SK::pre_home')->name('pre_home');
-
-            Route::group([
-                'prefix' => 'api/v1'
-            ], function () {
-                Route::get('/', function () {
-//                    return route('base_url');
-//REMOVE ROUTE PARAMS FROM PRODUCTION - for removing subdomain routing
-                    return route('base_url',CLIENT);
-                })->name('base_url');
-                Route::post('ping', [APIController::class, 'ping']);
-                Route::post('me', function () {
-                    return ck();
-                });
-
-                Route::group([
-                    'middleware' => [APIRequest::class, SmartKitchenAction::class],
-                ], function () {
-                    Route::post('{item}/{action}', [APIController::class, 'ping']);
-                });
-
+            Route::get('/', function () {
+                return route('base_url');
+            })->name('base_url');
+            Route::post('ping', [APIController::class, 'ping']);
+            Route::post('me', function () {
+                return ck();
             });
 
             Route::group([
-                'prefix' => 'media'
+                'middleware' => [APIRequest::class, SmartKitchenAction::class],
             ], function () {
-                Route::get('/', function () {
-                    return '';
-                })->name('media_root');
-                Route::post('remove', [MediaController::class, 'remove']);
-                Route::post('upload', [MediaController::class, 'upload']);
-
+                Route::post('{item}/{action}', [APIController::class, 'ping']);
             });
 
         });
-    });
 
-    Route::get('test', function (Request $request) {
-        Kitchen::find(2)->print(89);
-    });
+        Route::group([
+            'prefix' => 'media'
+        ], function () {
+            Route::get('/', function () {
+                return '';
+            })->name('media_root');
+            Route::post('remove', [MediaController::class, 'remove']);
+            Route::post('upload', [MediaController::class, 'upload']);
 
+        });
+
+    });
+});
+
+Route::get('test', function (Request $request) {
+    Kitchen::find(2)->print(89);
 });
