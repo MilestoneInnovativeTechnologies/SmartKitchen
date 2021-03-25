@@ -17,7 +17,7 @@ export default function () {
       token_items: ['tokens','items'],
       users: 'users',
       taxes: 'tax',
-      masters: 'settings',
+      settings: 'settings',
     },
     interval: 15 * 1000,
     timeOut: null,
