@@ -10,6 +10,7 @@ use Milestone\SmartKitchen\Models\ItemGroup;
 use Milestone\SmartKitchen\Models\Kitchen;
 use Milestone\SmartKitchen\Models\KitchenItem;
 use Milestone\SmartKitchen\Models\KitchenStatus;
+use Milestone\SmartKitchen\Models\Master;
 use Milestone\SmartKitchen\Models\Menu;
 use Milestone\SmartKitchen\Models\Payment;
 use Milestone\SmartKitchen\Models\Price;
@@ -40,6 +41,7 @@ class APIController extends Controller
         Token::class,
         TokenItem::class,
         User::class,
+        Master::class,
     ];
 
     public static $Assets = [
@@ -53,6 +55,7 @@ class APIController extends Controller
         PriceList::class,
         Seating::class,
         Tax::class,
+        Master::class,
     ];
 
     public function done(){ return []; }

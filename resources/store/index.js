@@ -16,13 +16,14 @@ import tax from './tax'
 import seating from './seating'
 import bills from './bills'
 import payments from './payments'
+import settings from './settings'
 
 
 export default new Vuex.Store({
   modules: {
     server,
     users, customers, items, groups, menus, prices, kitchens, tax, seating,
-    tokens, bills, payments
+    tokens, bills, payments, settings
   },
   state: {
     title: '',

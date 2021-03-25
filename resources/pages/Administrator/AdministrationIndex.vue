@@ -12,6 +12,7 @@
       <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2 col-xl-1 cursor-pointer"><Jumbotron :dark="true" color="accent" style="text-align: center" @click.native="$router.push({ name:'master_price_list' })" icon="money" text="Price Lists" /></div>
       <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2 col-xl-1 cursor-pointer"><Jumbotron :dark="true" color="accent" style="text-align: center" @click.native="$router.push({ name:'master_seating' })" icon="event_seat" text="Seating" /></div>
       <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2 col-xl-1 cursor-pointer"><Jumbotron :dark="true" color="accent" style="text-align: center" @click.native="$router.push({ name:'master_tax' })" icon="legend_toggle" text="Tax" /></div>
+      <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2 col-xl-1 cursor-pointer"><Jumbotron :dark="true" color="accent" style="text-align: center" @click.native="$router.push({ name:'master_settings' })" icon="settings_applications" text="Settings" /></div>
     </div>
     <div class="col-12 text-bold q-mt-md">Images</div>
     <div class="row q-col-gutter-xs q-mt-xs">
