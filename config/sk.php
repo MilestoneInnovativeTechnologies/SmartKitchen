@@ -2,6 +2,8 @@
 
 return [
 
+    'domain' => 'sk',
+
     'role_names' => [
         'Administrator' => 'Administrator',
         'Management' => 'Management',
