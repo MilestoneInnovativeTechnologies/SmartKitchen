@@ -239,8 +239,8 @@ class Printer
 }
 
 /*
- * Inorder to have this work, master should have a value like '//localhost/EPSON' under any name (printer name).. Ex: PRINTER001 This name is referred while calling the class Printer
- * Every settings related to this printer should provide in master as <printer_name>_<settings name>.. Ex: PRINTER001_width
+ * Inorder to have this work, settings should have a value like '//localhost/EPSON' under any name (printer name).. Ex: PRINTER001 This name is referred while calling the class Printer
+ * Every settings related to this printer should provide in settings as <printer_name>_<settings name>.. Ex: PRINTER001_width
  * Required settings are connector -> windows shared printers => FilePrintConnector, widows printer => WindowsPrintConnector, more details @ https://github.com/mike42/escpos-php
  * capability -> more details @ https://github.com/mike42/escpos-php
  * width -> width in no of characters a line can include.. In thermal printer it may line 32,48 etc. Default is 48
@@ -274,6 +274,6 @@ class Printer
  * An optional 4th argument can be given if there is any column to be aligned right
  * In props, index can be added for having sequence no as output
  * upi -> this is to print payment upi qr code. text should be like '[id]|[amount]', where ID and amount should be separated by "|". Other props are also supported.
- * Inorder to have this work, master should contain upi_address and upi_name
+ * Inorder to have this work, settings should contain upi_address and upi_name
  *
  */
