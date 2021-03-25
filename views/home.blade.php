@@ -27,7 +27,7 @@
     <script src="{!! \Milestone\SmartKitchen\Controllers\AssetController::AssetRoute('Seating') !!}"></script>
     <script src="{!! \Milestone\SmartKitchen\Controllers\AssetController::AssetRoute('Tax') !!}"></script>
     <script src="{!! \Milestone\SmartKitchen\Controllers\AssetController::AssetRoute('User') !!}"></script>
-    <script src="{!! \Milestone\SmartKitchen\Controllers\AssetController::AssetRoute('Master') !!}"></script>
+    <script src="{!! \Milestone\SmartKitchen\Controllers\AssetController::AssetRoute('Settings') !!}"></script>
 
     @php cache()->put(ck(),'2000-01-01 00:00:01',now()->addDays(7)) @endphp
     <script>
