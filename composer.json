@@ -14,7 +14,8 @@
         "spatie/laravel-medialibrary": "^9.0.0",
         "doctrine/dbal": "^2.12",
         "tymon/jwt-auth": "^1.0",
-        "guzzlehttp/guzzle": "^7.0.1"
+        "guzzlehttp/guzzle": "^7.0.1",
+        "mike42/escpos-php": "^3.0"
     },
     "extra": {
         "laravel": {
