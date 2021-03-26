@@ -14,7 +14,7 @@ export default {
   components: {AdministratorMasterCommon},
   data(){ return {
     fields: { name:'text',pin:'login_pin',login:'login_user',password:'text' },
-    filter: ['name'], validate: ['name','pin','login','password']
+    filter: ['name'], validate: ['name','pin','login']
   } },
   computed: {
     ...mapState('users',{ items({ data }){ return _.filter(data,['role',this.role]) } }),
