@@ -36,6 +36,7 @@ export default {
   methods: {
     left(){ this.loading = true; this.page = this.comps[this.secs[this.component][0]]; this.$nextTick(function(){ this.loading = false }) },
     right(){ this.loading = true; this.page = this.comps[this.secs[this.component][1]]; this.$nextTick(function(){ this.loading = false }) },
-  }
+  },
+  mounted(){ this.page = this.component }
 }
 </script>
