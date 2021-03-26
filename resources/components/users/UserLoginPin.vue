@@ -29,7 +29,8 @@ export default {
       let status = this.$refs.input.validate(pin);
       if(_.isBoolean(status)) return this.$emit('input',status ? pin : '')
       if(_.isObject(status)) return status.then(outcome => this.$emit('input',outcome ? pin : ''));
-    }
+    },
+    value(val){ this.v_pin = val }
   }
 }
 </script>

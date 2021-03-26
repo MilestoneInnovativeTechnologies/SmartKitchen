@@ -28,7 +28,8 @@ export default {
       let status = this.$refs.input.validate(login);
       if(_.isBoolean(status)) return this.$emit('input',status ? login : '')
       if(_.isObject(status)) return status.then(outcome => this.$emit('input',outcome ? login : ''));
-    }
+    },
+    value(val){ this.v_login = val }
   }
 }
 </script>
