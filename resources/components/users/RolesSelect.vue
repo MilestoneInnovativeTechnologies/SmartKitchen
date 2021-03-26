@@ -1,6 +1,6 @@
 <template>
   <div class="q-gutter-y-xs">
-    <q-card style="cursor: pointer; width: 20rem" v-for="role in roles" :key="'role-'+role" class="bg-primary q-mx-auto" dark @click="$emit('role',role)">
+    <q-card style="cursor: pointer; width: 16rem; max-width: 65vh" v-for="role in roles" :key="'role-'+role" class="bg-primary q-mx-auto" dark @click="$emit('role',role)">
       <q-card-section class="text-center">
         <div class="text-h6">{{ role }}</div>
       </q-card-section>

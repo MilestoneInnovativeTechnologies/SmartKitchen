@@ -1,5 +1,5 @@
 <template>
-  <q-card>
+  <q-card style="width: 90vw; max-width: 20rem" class="q-mx-auto">
     <q-card-section class="bg-primary">
       <div class=" text-white items-start">
         <q-icon name="arrow_back_ios" size="xs" style="margin-top: -0.2rem; cursor: pointer" @click="$emit('clear')" />
@@ -34,7 +34,7 @@ export default {
   components: {LoginKitchenSelect, LoginMenuSelect},
   props: ['role','loading'],
   data(){ return {
-    s_user: null, password: 'password', s_selected: null,
+    s_user: null, password: '', s_selected: null,
     defaults: LoginSelect,
   } },
   computed: {
