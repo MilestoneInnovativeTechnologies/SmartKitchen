@@ -5,6 +5,7 @@ namespace Milestone\SmartKitchen\Models;
 use App\Models\User as BaseUser;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
@@ -17,6 +18,8 @@ class User extends BaseUser implements JWTSubject, HasMedia
     protected $fillable = ['name','pin','email','login','password','role'];
     protected $hidden = ['created_at','updated_at','password', 'remember_token','email_verified_at','email'];
     protected $appends = ['image'];
+
+    public function setPasswordAttribute($password){ if($password) $this->attributes['password'] = Hash::make($password); }
 
     public function Logs(){ return $this->hasMany(UserLogin::class,'user','id'); }
     public function Tokens(){ return $this->hasMany(Token::class,'user','id'); }

@@ -3,8 +3,6 @@
 namespace Milestone\SmartKitchen\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Milestone\SmartKitchen\Events\LoggingOut;
 use Milestone\SmartKitchen\Events\LoggedOut;
@@ -23,7 +21,7 @@ class UserController extends Controller
 
     public static function data(){
         $data = request(['name','pin','login','password','role']);
-        if(isset($data['password'])) $data['password'] = Hash::make($data['password']);
+        //if(isset($data['password'])) $data['password'] = Hash::make($data['password']);
         $data = array_merge($data,['email_verified_at' => now()->toDateTimeString(),'remember_token' => Str::random(10)]);
         return $data;
     }
