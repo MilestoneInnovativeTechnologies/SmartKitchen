@@ -15,7 +15,7 @@ const layout_child = {
   Chef: ['chef_index','chef_kitchens','kitchen_items','kitchen_stocks','tokens'],
   Receptionist: ['receptionist_index','seat_status','receptionist_tokens','bills','seat_status_order','receptionist_orders','receptionist_order_new','receptionist_order_new_items'],
   Administrator: ['report_index','administration_index',
-    'master_customer','master_item','master_group','master_kitchen','master_kitchen_items','master_menu','master_price_list','master_seating','master_tax','image_customer','image_item','image_kitchen','image_seating','image_user','master_user','master_settings',
+    'master_customer','master_prop','master_item','master_group','master_kitchen','master_kitchen_items','master_menu','master_price_list','master_seating','master_tax','image_customer','image_item','image_kitchen','image_seating','image_user','master_user','master_settings',
     'day_token_summary','day_sale_summary','sales_by_type','sales_summary_by_type','sales_count_by_item','item_wise_sale_summary','kitchen_stock','bill_summary','payments','payments_by_type',
     'bill_summary_tax','bill_summary_tax_nature','tax_bill_detail','tax_details',
     'orders_by_waiter','waiter_orders', 'kitchen_processing','item_processing','chef_performance'
@@ -44,6 +44,7 @@ const route_master = {
   receptionist_order_new_items: { name:'receptionist_order_new_items', path:'/orders/new/items', component: () => import('pages/Order/CommonNew'), props:true, meta:{ title:'Select Items',back:true,footer:false } },
   administration_index: { name:'administration_index', path:'/administration', component: () => import('pages/Administrator/AdministrationIndex'), meta:{ title:null } },
   master_customer: { name:'master_customer', path:'/settings/customers', component: () => import('pages/Administrator/Master/AdministratorMasterCustomer'), meta:{ title:'Customers' } },
+  master_prop: { name:'master_prop', path:'/settings/items/props', component: () => import('pages/Administrator/Master/AdministratorMasterProp'), meta:{ title:'Item Props' } },
   master_item: { name:'master_item', path:'/settings/items', component: () => import('pages/Administrator/Master/AdministratorMasterItem'), meta:{ title:'Items' } },
   master_group: { name:'master_group', path:'/settings/groups', component: () => import('pages/Administrator/Master/AdministratorMasterGroup'), meta:{ title:'Item Groups' } },
   master_kitchen: { name:'master_kitchen', path:'/settings/kitchens', component: () => import('pages/Administrator/Master/AdministratorMasterKitchen'), meta:{ title:'Kitchens' } },

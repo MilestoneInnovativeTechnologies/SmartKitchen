@@ -84,7 +84,7 @@ class TokenController extends Controller
         $taxes = Tax::all(); $Items = $Token->Items;
         return collect($Items
             ->filter(function($item) use($progress){ return in_array($item->progress,$progress); })
-            ->map(function($item) use($prices){ return collect($item)->merge(['item' => $item->Item->id, 'name' => $item->Item->name,'price' => $prices[$item->Item->id]])->all(); })
+            ->map(function($item) use($prices){ return collect($item)->merge(['item' => $item->Item->id, 'name' => $item->Item->name,'price' => $prices[$item->Item->id]])->merge($item->Item->props)->all(); })
             ->map(function($item) use($taxes){
                 $tax = $taxes->first(function($tax)use($item){ return in_array($item['item'],$tax->items); });
                 return collect($item)->merge([ 'tax' => $tax ? Arr::only($tax->toArray(),['id','name','contents']) : null])->all();

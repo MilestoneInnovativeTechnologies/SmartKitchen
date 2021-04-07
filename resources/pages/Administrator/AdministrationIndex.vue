@@ -4,6 +4,7 @@
     <div class="col-12 text-bold q-mt-md">Masters</div>
     <div class="row q-col-gutter-xs q-mt-xs">
       <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2 col-xl-1 cursor-pointer"><Jumbotron :dark="true" color="accent" style="text-align: center" @click.native="$router.push({ name:'master_customer' })" icon="groups" text="Customers" /></div>
+      <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2 col-xl-1 cursor-pointer"><Jumbotron :dark="true" color="accent" style="text-align: center" @click.native="$router.push({ name:'master_prop' })" icon="speaker_notes" text="Item Props" /></div>
       <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2 col-xl-1 cursor-pointer"><Jumbotron :dark="true" color="accent" style="text-align: center" @click.native="$router.push({ name:'master_item' })" icon="category" text="Items" /></div>
       <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2 col-xl-1 cursor-pointer"><Jumbotron :dark="true" color="accent" style="text-align: center" @click.native="$router.push({ name:'master_group' })" icon="attractions" text="Item Groups" /></div>
       <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2 col-xl-1 cursor-pointer"><Jumbotron :dark="true" color="accent" style="text-align: center" @click.native="$router.push({ name:'master_kitchen' })" icon="countertops" text="Kitchens" /></div>

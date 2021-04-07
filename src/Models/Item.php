@@ -13,10 +13,18 @@ class Item extends Model implements HasMedia
     }
 
     protected $hidden = ['created_at','updated_at'];
-    protected $appends = ['image'];
+    protected $appends = ['image','props'];
 
     public function Price(){ return $this->hasMany(Price::class,'item'); }
     public function Token(){ return $this->hasMany(TokenItem::class,'item'); }
     public function Kitchens(){ return $this->hasMany(KitchenItem::class,'item'); }
+
+    private static $props = null;
+    public function getPropsAttribute(){
+        $props = [];
+        if(is_null(self::$props)) self::$props = ItemProp::all()->mapWithKeys(function($itemProp){ return ['prop' . $itemProp->id => $itemProp->name]; })->toArray();
+        foreach (self::$props as $prop => $name) $props[$name] = $this->$prop;
+        return $props;
+    }
 
 }

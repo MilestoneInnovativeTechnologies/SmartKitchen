@@ -7,6 +7,7 @@ use Milestone\SmartKitchen\Models\Bill;
 use Milestone\SmartKitchen\Models\Customer;
 use Milestone\SmartKitchen\Models\Item;
 use Milestone\SmartKitchen\Models\ItemGroup;
+use Milestone\SmartKitchen\Models\ItemProp;
 use Milestone\SmartKitchen\Models\Kitchen;
 use Milestone\SmartKitchen\Models\KitchenItem;
 use Milestone\SmartKitchen\Models\KitchenStatus;
@@ -27,6 +28,7 @@ class APIController extends Controller
     public static $Models = [
         Customer::class,
         Bill::class,
+        ItemProp::class,
         Item::class,
         ItemGroup::class,
         Kitchen::class,
@@ -46,6 +48,7 @@ class APIController extends Controller
 
     public static $Assets = [
         Customer::class,
+        ItemProp::class,
         Item::class,
         ItemGroup::class,
         Kitchen::class,

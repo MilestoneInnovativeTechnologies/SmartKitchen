@@ -1,5 +1,7 @@
 export default function () {
   return {
-    data: {}
+    prop: {},
+    data: {},
+    rFun: null,
   }
 }

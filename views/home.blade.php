@@ -17,6 +17,7 @@
     <link rel="icon" type="image/ico" href="favicon.ico">
 
     <script src="{!! \Milestone\SmartKitchen\Controllers\AssetController::AssetRoute('Customer') !!}"></script>
+    <script src="{!! \Milestone\SmartKitchen\Controllers\AssetController::AssetRoute('ItemProp') !!}"></script>
     <script src="{!! \Milestone\SmartKitchen\Controllers\AssetController::AssetRoute('Item') !!}"></script>
     <script src="{!! \Milestone\SmartKitchen\Controllers\AssetController::AssetRoute('ItemGroup') !!}"></script>
     <script src="{!! \Milestone\SmartKitchen\Controllers\AssetController::AssetRoute('Menu') !!}"></script>

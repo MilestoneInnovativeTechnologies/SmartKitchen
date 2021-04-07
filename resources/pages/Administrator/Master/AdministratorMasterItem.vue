@@ -13,10 +13,13 @@ export default {
   name: "PageAdministratorMasterItem",
   components: {AdministratorMasterCommon},
   data(){ return {
-    fields: { name:'text',detail:'textarea',status:'status' },
     validate: ['name'],
     filter: ['name'],
   } },
-  computed: mapState('items',{ items:'data' }),
+  computed: {
+    ...mapState('items',{ items:'data',props:'prop' }),
+    prop_fields(){ return _(this.props).mapKeys('name').mapValues(() => 'text').value() },
+    fields(){ return Object.assign({},{ name:'text',detail:'textarea' },this.prop_fields,{ status:'status' })}
+  },
 }
 </script>

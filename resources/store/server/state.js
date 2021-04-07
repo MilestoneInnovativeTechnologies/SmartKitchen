@@ -5,6 +5,7 @@ export default function () {
       bills: 'bills',
       items: 'items',
       item_groups: 'groups',
+      item_props: ['items','prop'],
       kitchens: 'kitchens',
       kitchen_items: ['kitchens','items'],
       kitchen_statuses: ['kitchens','status'],
