@@ -15,8 +15,9 @@ class SmartKitchenDummyDataSeeder extends Seeder
     {
         $this->call([
             User::class,
-            Master::class,
+            Settings::class,
             UserLogin::class,
+            ItemProp::class,
             Item::class,
             ItemGroup::class,
             Menu::class,

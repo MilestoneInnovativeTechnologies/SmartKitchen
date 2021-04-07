@@ -3,9 +3,9 @@
 namespace Milestone\SmartKitchen\Seeders;
 
 use Illuminate\Database\Seeder;
-use Milestone\SmartKitchen\Factories\MasterFactory;
+use Milestone\SmartKitchen\Factories\SettingsFactory;
 
-class Master extends Seeder
+class Settings extends Seeder
 {
     /**
      * Run the database seeds.
@@ -21,6 +21,6 @@ class Master extends Seeder
     public function run()
     {
         foreach (self::$data as $name => $value)
-            MasterFactory::times(self::$times)->state(compact('name','value'))->create();
+            SettingsFactory::times(self::$times)->state(compact('name','value'))->create();
     }
 }

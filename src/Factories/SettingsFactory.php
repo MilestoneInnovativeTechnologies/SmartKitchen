@@ -3,16 +3,16 @@
 namespace Milestone\SmartKitchen\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Milestone\SmartKitchen\Models\Master;
+use Milestone\SmartKitchen\Models\Settings;
 
-class MasterFactory extends Factory
+class SettingsFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
      *
      * @var string
      */
-    protected $model = Master::class;
+    protected $model = Settings::class;
 
     /**
      * Define the model's default state.
