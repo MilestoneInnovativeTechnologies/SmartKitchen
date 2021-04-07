@@ -8,7 +8,7 @@ use Mike42\Escpos\Printer as P;
 use Mike42\Escpos\CapabilityProfile;
 use Mike42\Escpos\EscposImage;
 use Milestone\SmartKitchen\Logging\Log;
-use Milestone\SmartKitchen\Models\Master;
+use Milestone\SmartKitchen\Models\Settings;
 
 class Printer
 {
@@ -28,7 +28,7 @@ class Printer
     public function __construct($printer,$template = null,$data = null)
     {
         $this->_printer = $printer; $this->_template = $template; $this->_data = $data;
-        $master = Master::where('name','like',$printer . '%')->get()->mapWithKeys(function($item) use($printer){
+        $master = Settings::where('name','like',$printer . '%')->get()->mapWithKeys(function($item) use($printer){
             $key = strpos($item->name,'_') === false ? 'printer' : str_replace($printer . '_','',$item->name);
             return [$key => $item->value];
         })->toArray();
@@ -232,7 +232,7 @@ class Printer
     }
     private static function upiUrl($content,$data){
         list($id,$amount) = array_map(function($template)use($data){ return self::exec_template($template,$data); },explode("|",$content));
-        $data = array_merge(Master::where('name','like','upi_%')->get()->mapWithKeys(function($item){ return [str_replace('upi_','',$item->name) => $item->value]; })->toArray(),compact('id','amount'));
+        $data = array_merge(Settings::where('name','like','upi_%')->get()->mapWithKeys(function($item){ return [str_replace('upi_','',$item->name) => $item->value]; })->toArray(),compact('id','amount'));
         return self::exec_template(self::$upi_addr,$data);
     }
 
