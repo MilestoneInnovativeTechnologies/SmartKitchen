@@ -2,7 +2,7 @@
 
 namespace Milestone\SmartKitchen\Models;
 
-class RemoteItem extends Model
+class Remote extends Model
 {
 
 }

@@ -33,7 +33,7 @@ class SmartKitchenDummyDataSeeder extends Seeder
             TokenItem::class,
             Bill::class,
             Payment::class,
-            RemoteItem::class,
+            Remote::class,
         ]);
     }
 }

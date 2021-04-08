@@ -3,9 +3,9 @@
 namespace Milestone\SmartKitchen\Seeders;
 
 use Illuminate\Database\Seeder;
-use Milestone\SmartKitchen\Factories\RemoteItemFactory;
+use Milestone\SmartKitchen\Factories\RemoteFactory;
 
-class RemoteItem extends Seeder
+class Remote extends Seeder
 {
     /**
      * Run the database seeds.
@@ -15,6 +15,6 @@ class RemoteItem extends Seeder
     public static $times = 0;
     public function run()
     {
-        RemoteItemFactory::times(self::$times)->create();
+        RemoteFactory::times(self::$times)->create();
     }
 }
