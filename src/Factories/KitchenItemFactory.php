@@ -3,8 +3,6 @@
 namespace Milestone\SmartKitchen\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Milestone\SmartKitchen\Models\Item;
-use Milestone\SmartKitchen\Models\Kitchen;
 use Milestone\SmartKitchen\Models\KitchenItem;
 
 class KitchenItemFactory extends Factory
@@ -23,8 +21,6 @@ class KitchenItemFactory extends Factory
      */
     public function definition()
     {
-        $items = Item::pluck('id');
-
         return [
             'duration'  =>  rand(0,5) * 60,
             'stock'     =>  rand(0,35)

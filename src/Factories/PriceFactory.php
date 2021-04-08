@@ -3,9 +3,7 @@
 namespace Milestone\SmartKitchen\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Milestone\SmartKitchen\Models\Item;
 use Milestone\SmartKitchen\Models\Price;
-use Milestone\SmartKitchen\Models\PriceList;
 
 class PriceFactory extends Factory
 {

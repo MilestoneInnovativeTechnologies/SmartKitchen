@@ -3,7 +3,6 @@
 namespace Milestone\SmartKitchen\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Milestone\SmartKitchen\Models\ItemGroup;
 use Milestone\SmartKitchen\Models\Menu;
 
 class MenuFactory extends Factory

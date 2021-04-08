@@ -3,7 +3,6 @@
 namespace Milestone\SmartKitchen\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Milestone\SmartKitchen\Models\Item;
 use Milestone\SmartKitchen\Models\ItemProp;
 
 class ItemPropFactory extends Factory
