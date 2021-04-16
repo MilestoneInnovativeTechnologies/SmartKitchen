@@ -49,7 +49,8 @@ class SmartKitchenServiceProvider extends ServiceProvider
         foreach (self::$configs as $config)
             $this->mergeConfigFrom(self::path('config',"$config.php"), $config);
         config([
-            'auth.guards.web.provider'  => 'smart_kitchen',
+            'app.timezone'              =>  sk('timezone'),
+            'auth.guards.web.provider'  =>  'smart_kitchen',
             'queue.default'             =>  'sk',
             'auth.defaults.guard'       =>  'api',
             'auth.guards.api.driver'    =>  'jwt',
