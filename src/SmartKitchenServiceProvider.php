@@ -56,6 +56,7 @@ class SmartKitchenServiceProvider extends ServiceProvider
             'auth.guards.api.driver'    =>  'jwt',
             'auth.guards.api.provider'  =>  'smart_kitchen',
         ]);
+        date_default_timezone_set(sk('timezone'));
     }
 
     private function publishConfigs(){ $this->publishes([self::path('config','sk.php') => config_path('sk.php')]); }
