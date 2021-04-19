@@ -3,9 +3,12 @@
 namespace Milestone\SmartKitchen\Models;
 
 use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 
 class Kitchen extends Model implements HasMedia
 {
+    use InteractsWithMedia;
+
     protected $hidden = ['created_at','updated_at'];
     protected $appends = ['image'];
 

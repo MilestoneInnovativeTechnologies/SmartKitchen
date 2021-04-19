@@ -9,12 +9,11 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Milestone\SmartKitchen\Printer;
-use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\File;
 
 class Model extends BaseModel
 {
-    use HasFactory, InteractsWithMedia;
+    use HasFactory;
 
     public $printer_name = null;
     public $print_template = null;

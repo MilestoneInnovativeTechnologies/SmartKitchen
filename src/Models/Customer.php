@@ -2,13 +2,12 @@
 
 namespace Milestone\SmartKitchen\Models;
 
-use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
 use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 
 class Customer extends Model implements HasMedia
 {
+    use InteractsWithMedia;
 
     protected $hidden = ['created_at','updated_at'];
     protected $appends = ['image'];

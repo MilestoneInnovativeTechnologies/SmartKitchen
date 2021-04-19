@@ -2,9 +2,7 @@
 
 namespace Milestone\SmartKitchen\Models;
 
-use Spatie\MediaLibrary\HasMedia;
-
-class PriceList extends Model implements HasMedia
+class PriceList extends Model
 {
 
     protected static function booted(){

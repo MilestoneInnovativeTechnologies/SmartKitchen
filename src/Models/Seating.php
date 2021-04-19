@@ -3,9 +3,12 @@
 namespace Milestone\SmartKitchen\Models;
 
 use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 
 class Seating extends Model implements HasMedia
 {
+    use InteractsWithMedia;
+
     protected $table = 'seating';
     protected $hidden = ['created_at','updated_at'];
     protected $appends = ['image'];
