@@ -5,6 +5,9 @@ use Illuminate\Support\Carbon;
 function ck(){
     return '_' . auth()->payload()->get('jti') . '_';
 }
+
+function sk($key){ return trim(config('sk.' . $key)); }
+
 function tc($table,$id = null){
     $ck = ck() . $table . '_';
     $lid = intval(cache()->get($ck,0));
