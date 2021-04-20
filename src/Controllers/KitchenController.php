@@ -85,7 +85,7 @@ class KitchenController extends Controller
         if(!request()->has('kitchen') || !request()->filled('kitchen')) return ['removes' => [],'updates' => []];
         $kitchen = request()->input('kitchen');
         $remove = request()->input('removes');
-        if($remove) KitchenItem::where('kitchen',$kitchen)->whereIn('item',$remove)->delete();
+        if($remove) KitchenItem::where('kitchen',$kitchen)->whereIn('item',$remove)->get()->each->delete();
         $items = request()->input('updates');
         if($items) {
             KitchenItem::where('kitchen',$kitchen)->get()->each(function($ki) use(&$items){
