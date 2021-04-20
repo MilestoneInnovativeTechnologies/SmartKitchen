@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Http;
 
 function ck(){
     return '_' . auth()->payload()->get('jti') . '_';
@@ -27,4 +28,10 @@ function precise($number,$precision = 2,$separator = ","){ return number_format(
 function truncate($string,$length) {
     if(strlen($string) <= $length) return str_pad($string,$length,' ',STR_PAD_RIGHT);
     return substr($string,0,$length-2) . '..';
+}
+function internet(){
+    try {
+        Http::timeout(1)->get('http://example.org');
+    } catch(Exception $exception) { return false; }
+    return true;
 }

@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use \Illuminate\Http\Request;
 use \Milestone\SmartKitchen\Controllers\AuthController;
 use \Milestone\SmartKitchen\Controllers\UserController;
 use \Milestone\SmartKitchen\Controllers\APIController;
@@ -10,8 +11,11 @@ use \Milestone\SmartKitchen\Middlewares\SmartKitchenAction;
 use \Milestone\SmartKitchen\Middlewares\SmartKitchenGuest;
 use \Milestone\SmartKitchen\Middlewares\SmartKitchenAuth;
 use \Milestone\SmartKitchen\Middlewares\APIRequest;
-use \Illuminate\Http\Request;
-use Milestone\SmartKitchen\Models\Kitchen;
+use \Milestone\SmartKitchen\Middlewares\SmartKitchenServer;
+use \Milestone\SmartKitchen\Middlewares\SmartKitchenSync;
+use Milestone\SmartKitchen\Models\Remote;
+use Milestone\SmartKitchen\Models\Sync;
+use \Milestone\SmartKitchen\Server\ServerController;
 
 $clientDBs = [
     'demo'   => ['u752305367_smartkitchen','u752305367_smartkitchen','u752305367_SmartKitchen'],
@@ -19,6 +23,7 @@ $clientDBs = [
     'bt'   => ['u752305367_brandtalkies','u752305367_brandtalkies','u752305367_BrandTalkies'],
     'grand'   => ['u752305367_grand','u752305367_grand','u752305367_Grand'],
     'client1'   => ['smartkitchen','root','metalic'],
+    'server'   => ['skdep','root','metalic'],
     'dolphin'   => ['u752305367_dolphin','u752305367_dolphin','u752305367_Dolphin'],
 ];
 
@@ -58,13 +63,9 @@ Route::group([
         Route::group([
             'prefix' => 'api/v1'
         ], function () {
-            Route::get('/', function () {
-                return route('base_url');
-            })->name('base_url');
-            Route::post('ping', [APIController::class, 'ping']);
-            Route::post('me', function () {
-                return ck();
-            });
+            Route::get('/', function () { return route('base_url'); })->name('base_url');
+            Route::post('me', function () { return ck(); });
+            Route::post('ping', [APIController::class, 'ping'])->middleware(SmartKitchenSync::class);
 
             Route::group([
                 'middleware' => [APIRequest::class, SmartKitchenAction::class],
@@ -88,6 +89,18 @@ Route::group([
     });
 });
 
+Route::group([
+    'prefix' => 'server',
+    'middleware' => [SmartKitchenServer::class],
+],function(){
+    Route::get('/',[ServerController::class,'index'])->name('server');
+    Route::get('{location}/{item}/all/watch',[ServerController::class,'watch']);
+    Route::post('{location}/{item}/{id}/{method}',[ServerController::class,'process']);
+});
+
 Route::get('test', function (Request $request) {
-    Kitchen::find(2)->print(89);
+    dd(\Milestone\SmartKitchen\Models\Kitchen::getClouds());
+//    Sync::where('progress','Completed')->get()->each(function($sync){ $sync->progress = 'New'; $sync->status = 'New'; $sync->save(); });
+//    dd(Sync::pending());
+//    return ServerController::response('kitchen','7','item_details');
 });

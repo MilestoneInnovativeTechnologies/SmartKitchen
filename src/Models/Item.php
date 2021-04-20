@@ -13,6 +13,10 @@ class Item extends Model implements HasMedia
         static::created(function ($Item){
             $Item->Price()->createMany(array_map(function($price_list){ return compact('price_list'); },PriceList::pluck('id')->toArray()));
         });
+        static::updated(function ($Item){
+            $item = $Item->id;
+            if(!empty(Kitchen::getClouds()) && KitchenItem::where(['item' => $item])->whereIn('kitchen',Kitchen::getClouds())->exists()){ Sync::add('item',$item,'create'); }
+        });
     }
 
     protected $hidden = ['created_at','updated_at'];

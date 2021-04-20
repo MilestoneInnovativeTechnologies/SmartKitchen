@@ -2,6 +2,7 @@
 
 namespace Milestone\SmartKitchen\Models;
 
+use Illuminate\Support\Facades\Cache;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
@@ -15,8 +16,25 @@ class Kitchen extends Model implements HasMedia
     public $printer_name = 'kot_printer';
     public $print_template = 'kot_print_template';
 
+    private static $cloudKitchensCacheKey = 'cloud_kitchens';
+
+    protected static function booted(){
+        static::saved(function ($Kitchen){
+            $isCloud = ($Kitchen->cloud === 'Yes' && $Kitchen->status === 'Active' && !$Kitchen->location); $clouds = self::getClouds();
+            if(!$isCloud && !in_array($Kitchen->id,$clouds)) return null;
+            if($isCloud && in_array($Kitchen->id,$clouds)) return Sync::add('kitchen',$Kitchen->id,'awake');
+            if($isCloud && !in_array($Kitchen->id,$clouds)) self::cacheCloud($Kitchen->id);
+            if(!$isCloud && in_array($Kitchen->id,$clouds)) self::removeCloud($Kitchen->id);
+            return Sync::add('kitchen',$Kitchen->id,'awake');
+        });
+    }
+
     public function Items(){ return $this->hasMany(KitchenItem::class,'kitchen','id'); }
     public function Active(){ return $this->hasOne(KitchenStatus::class,'kitchen','id')->where('status','Active'); }
+
+    public static function getClouds(){ $cacheKey = self::$cloudKitchensCacheKey; return Cache::get($cacheKey,[]); }
+    private static function cacheCloud($id){ $kitchens = self::getClouds(); $kitchens[] = $id; $kitchens = array_unique($kitchens); Cache::put(self::$cloudKitchensCacheKey,$kitchens); }
+    private static function removeCloud($id){ $kitchens = self::getClouds(); $kitchens = array_values(array_diff($kitchens,[$id])); Cache::put(self::$cloudKitchensCacheKey,$kitchens); }
 
     public function kot_print_template_data($kitchen,$token_id = null){
         if(!$token_id) return null;

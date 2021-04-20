@@ -29,7 +29,7 @@ return [
      * Server url. If this branch belongs to a network of companies having cloud kitchen facility,
      * then there will be a centralized server somewhere. That server address need to be given here
      */
-    'server' => 'http://sk',
+    'server' => 'http://server.sk',
 
     /*
      * A string of maximum 12 chars, which indicates the location of this branch.. It should be unique among the entire company
