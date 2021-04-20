@@ -4,11 +4,7 @@ namespace Milestone\SmartKitchen\Middlewares;
 
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Route;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
-use Milestone\SmartKitchen\Controllers\FetchController;
 
 class SmartKitchenAction
 {
