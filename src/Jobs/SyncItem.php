@@ -19,6 +19,7 @@ class SyncItem implements ShouldQueue
 
     public function __construct($id){
         $this->id = $id;
+        Sync::prepare($id);
     }
 
     public function handle(){

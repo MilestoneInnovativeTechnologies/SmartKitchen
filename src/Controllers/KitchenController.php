@@ -65,7 +65,7 @@ class KitchenController extends Controller
     }
 
     public static function data(){
-        return request(['name','detail','auto_accept','cloud','location','ref','server','status']);
+        return request(['name','detail','auto_accept','status']);
     }
 
     public static function create(){

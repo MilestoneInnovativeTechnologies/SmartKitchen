@@ -9,10 +9,6 @@ class KitchenStatus extends Model
         static::saving(function($KitchenStatus){
             $KitchenStatus->status = empty($KitchenStatus->users) ? 'Inactive' : 'Active';
         });
-        static::saved(function($KitchenStatus){
-            $kitchen = $KitchenStatus->kitchen;
-            if(in_array($kitchen,Kitchen::getClouds())) Sync::add('kitchen',$kitchen,'status');
-        });
     }
 
     protected $casts = [

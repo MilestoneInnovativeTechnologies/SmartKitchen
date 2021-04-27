@@ -16,16 +16,9 @@ class Kitchen extends Model implements HasMedia
     public $printer_name = 'kot_printer';
     public $print_template = 'kot_print_template';
 
-    private static $cloudKitchensCacheKey = 'cloud_kitchens';
-
     protected static function booted(){
-        static::saved(function ($Kitchen){
-            $isCloud = ($Kitchen->cloud === 'Yes' && $Kitchen->status === 'Active' && !$Kitchen->location); $clouds = self::getClouds();
-            if(!$isCloud && !in_array($Kitchen->id,$clouds)) return null;
-            if($isCloud && in_array($Kitchen->id,$clouds)) return Sync::add('kitchen',$Kitchen->id,'awake');
-            if($isCloud && !in_array($Kitchen->id,$clouds)) self::cacheCloud($Kitchen->id);
-            if(!$isCloud && in_array($Kitchen->id,$clouds)) self::removeCloud($Kitchen->id);
-            return Sync::add('kitchen',$Kitchen->id,'awake');
+        static::created(function($Kitchen){
+            KitchenStatus::create(['kitchen' => $Kitchen->id, 'users' => []]);
         });
     }
 

@@ -33,6 +33,7 @@ class AddKitchenUser
         $kitchens = $this->kitchens; $chef = $this->chef;
         if($kitchens && $chef){
             foreach ($kitchens as $kitchen){
+                if(!$kitchen) continue;
                 if(!KitchenStatus::where(compact('kitchen'))->exists()) {
                     KitchenStatusCreating::dispatch($kitchen,$chef);
                     KitchenStatus::create(['kitchen' => $kitchen, 'users' => $chef]);
