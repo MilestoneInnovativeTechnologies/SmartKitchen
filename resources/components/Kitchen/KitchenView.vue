@@ -6,13 +6,14 @@
 
 <script>
 import CardImageTitle from "components/CardImageTitle";
+import {image} from "assets/helpers";
 export default {
   name: "KitchenView",
   components: {CardImageTitle},
   props: ['id'],
-  data(){ return { src: 'img/defaults/kitchen.png' } },
   computed: {
-    kitchen(){ return this.$store.state.kitchens.data[_.toInteger(this.id)] }
+    kitchen(){ return this.$store.state.kitchens.data[_.toInteger(this.id)] },
+    src(){ return image(this.kitchen.image) }
   }
 }
 </script>

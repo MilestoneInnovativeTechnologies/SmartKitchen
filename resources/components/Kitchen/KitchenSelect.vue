@@ -6,7 +6,7 @@
     </q-card-section>
     <q-list separator bordered>
       <q-item v-for="kitchen in kitchens" :key="hKey(kitchen)" clickable @click="selected = kitchen" v-ripple>
-        <q-item-section avatar><q-avatar><img src="img/defaults/kitchen.png"></q-avatar></q-item-section>
+        <q-item-section avatar><q-avatar><img :src="image(kitchen.image)"></q-avatar></q-item-section>
         <q-item-section>
           <q-item-label>{{ kitchen.name }}</q-item-label>
         </q-item-section>
@@ -20,7 +20,7 @@
 
 <script>
 import {mapState} from "vuex";
-import {h_key} from "assets/helpers";
+import {h_key, image} from "assets/helpers";
 
 export default {
   name: "KitchenSelect",
@@ -37,6 +37,7 @@ export default {
   methods: {
     is_selected({ id }){ return this.selected.includes(id) },
     hKey({ id }){ return h_key('chef','kitchen','select',id) },
+    image(file){ return image(file) }
   },
   created(){
     if(!this.selected.length && _.size(this.kitchens) === 1) this.selected = _.first(_.values(this.kitchens))
