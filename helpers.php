@@ -29,13 +29,3 @@ function truncate($string,$length) {
     if(strlen($string) <= $length) return str_pad($string,$length,' ',STR_PAD_RIGHT);
     return substr($string,0,$length-2) . '..';
 }
-
-$GLOBALS['internetStatus'] = null;
-
-function internet(){
-    if(!is_null($GLOBALS['internetStatus'])) return $GLOBALS['internetStatus'];
-    try {
-        Http::timeout(1)->get('http://example.org');
-    } catch(Exception $exception) { return $GLOBALS['internetStatus'] = false; }
-    return $GLOBALS['internetStatus'] = true;
-}
