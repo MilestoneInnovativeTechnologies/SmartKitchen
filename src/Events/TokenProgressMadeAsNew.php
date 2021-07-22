@@ -17,7 +17,7 @@ class TokenProgressMadeAsNew
 
     public $token;
 
-    public function __construct(Token $token)
+    public function __construct($token)
     {
         $this->token = $token;
     }

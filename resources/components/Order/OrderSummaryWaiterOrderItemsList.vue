@@ -2,6 +2,7 @@
   <q-list separator bordered>
     <q-item v-for="row in rows" :key="hKey(row)" :disable="row.progress === 'Cancelled'">
       <q-item-section>
+        <q-item-label caption class="text-red text-bold" v-if="row.deliver">Delivery: {{ row.deliver_human }}</q-item-label>
         <q-item-label>{{ row.quantity }} x {{ itemName(row) }}<span v-if="row.narration"> ({{ row.narration }})</span></q-item-label>
         <q-item-label lines="1" caption v-if="delay(row)">Delay: {{ delay(row) }} seconds</q-item-label>
         <q-item-label lines="1" caption v-if="kitchen(row)">Kitchen: {{ kitchen(row) }}</q-item-label>

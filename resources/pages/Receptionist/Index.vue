@@ -3,6 +3,7 @@
     <ReceptionistBillSummary />
     <ReceptionistServableItems />
     <ReceptionistNonDiningTokens />
+    <ReceptionistRemoteTokens />
   </q-page>
 </template>
 
@@ -10,8 +11,10 @@
 import ReceptionistBillSummary from "components/Receptionist/ReceptionistBillSummary";
 import ReceptionistNonDiningTokens from "components/Receptionist/ReceptionistNonDiningTokens";
 import ReceptionistServableItems from "components/Receptionist/ReceptionistServableItems";
+import ReceptionistRemoteTokens from "components/Receptionist/ReceptionistRemoteTokens";
+
 export default {
   name: "PageReceptionistIndex",
-  components: {ReceptionistServableItems, ReceptionistNonDiningTokens, ReceptionistBillSummary},
+  components: {ReceptionistRemoteTokens, ReceptionistServableItems, ReceptionistNonDiningTokens, ReceptionistBillSummary},
 }
 </script>

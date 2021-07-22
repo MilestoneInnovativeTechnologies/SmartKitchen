@@ -8,7 +8,7 @@
           {{ $store.state.title || waiter }}
         </q-toolbar-title>
         <ManualSync />
-        <q-btn flat round dense icon="power_settings_new" type="a" :href="logout" />
+        <Logout />
       </q-toolbar>
     </q-header>
 
@@ -29,9 +29,10 @@
 
 <script>
 import ManualSync from "components/ManualSync";
+import Logout from "components/Logout";
 export default {
   name: 'WaiterLayout',
-  components: {ManualSync},
-  data () { return { waiter:_USER.name, logout: LOGOUT } },
+  components: {Logout, ManualSync},
+  data () { return { waiter:_USER.name } },
 }
 </script>

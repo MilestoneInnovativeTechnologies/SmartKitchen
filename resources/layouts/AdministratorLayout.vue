@@ -11,7 +11,7 @@
           <q-btn label="Print" color="teal" />
         </div>
         <q-btn flat round dense :icon="$store.state.public.mode === 'report' ? 'admin_panel_settings' : 'analytics'" :to="{ name:ops[$store.state.public.mode] }" />
-        <q-btn flat round dense icon="power_settings_new" type="a" :href="logout" />
+        <Logout />
       </q-toolbar>
     </q-header>
     <q-page-container>
@@ -24,11 +24,12 @@
 import ManualSync from "components/ManualSync";
 import {h_key} from "assets/helpers";
 import ReportControlElement from "components/Report/Control/ReportControlElement";
+import Logout from "components/Logout";
 export default {
   name: 'AdministratorLayout',
-  components: { ReportControlElement, ManualSync},
+  components: {Logout, ReportControlElement, ManualSync},
   data () { return {
-    admin:_USER.name, logout: LOGOUT,
+    admin:_USER.name,
     ops: { report:'administration_index',administration:'report_index' }
   } },
   computed: {

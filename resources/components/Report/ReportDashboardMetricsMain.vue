@@ -37,7 +37,7 @@ export default {
   } },
   computed: {
     ...mapState({ payments:({ payments:{ data }}) => data }),
-    Tokens(){ return _.filter(this.tokens,({ date,progress }) => is_today(date) && progress !== 'Cancelled') },
+    Tokens(){ return _.filter(this.tokens_own,({ date,progress }) => is_today(date) && progress !== 'Cancelled') },
     Payments(){ return _(this.payments).filter(({ status,date }) => status === 'Active' && is_today(date)).value() },
     total_payments(){ return _.sumBy(this.Payments,({ amount }) => _.toNumber(amount)) },
     sales_by_type(){

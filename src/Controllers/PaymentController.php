@@ -7,7 +7,7 @@ use Milestone\SmartKitchen\Requests\CreatePaymentRequest;
 
 class PaymentController extends Controller
 {
-    public function Create(CreatePaymentRequest $createPaymentRequest){
+    public function create(CreatePaymentRequest $createPaymentRequest){
         $createPaymentRequest->store();
     }
 }

@@ -1,5 +1,5 @@
 <template>
-  <q-select :options="options" v-bind="$attrs" :value="optValue" @input="doEmit" />
+  <q-select :options="options" v-bind="$attrs" :value="optValue" @input="doEmit" label="Select Tax Nature" />
 </template>
 
 <script>

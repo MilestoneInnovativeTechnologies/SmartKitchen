@@ -18,9 +18,9 @@
         <div class="col-xs-12 col-sm-4"><KitchenTokenBundle :kitchen="id" type="Processing" action="true" /></div>
       </q-card-section>
       <q-card-section class="row q-col-gutter-sm" v-show="mode === 'Token'">
-        <Masonry width="320" gutter="xs" :items="Tokens">
+        <Masonry width="320" gutter="xs" :items="cloud ? sTokens : Tokens">
           <template #item="token">
-            <TokenDetailCard :id="token.id" :kitchen="kitchen.id" :multiple="card" />
+            <component :is="cloud ? 'TokenDetailCardRemote' : 'TokenDetailCard'" :id="token.id" :kitchen="kitchen.id" :multiple="card" />
           </template>
         </Masonry>
       </q-card-section>
@@ -39,12 +39,14 @@ import KitchenItemCancel from "components/Kitchen/KitchenItemCancel";
 import Tokens from "assets/mixins/Tokens";
 import KitchenTokenItem from "components/Kitchen/KitchenTokenItem";
 import Masonry from "components/Masonry";
+import TokenDetailCardRemote from "components/Tokens/TokenDetailCardRemote";
+import {tokens_sort_item_delivery_fn} from "assets/module_helpers";
 
 export default {
   name: "KitchenTokens",
   mixins: [Tokens],
   components: {
-    Masonry,
+    TokenDetailCardRemote, Masonry,
     KitchenTokenItem, KitchenItemCancel, KitchenTokenDisplayMode, KitchenTokenBundle, TokenDetailCard},
   props: ['id','card'],
   data(){ return {
@@ -56,6 +58,7 @@ export default {
       kitchen({ kitchens:{ data } }){ return _.get(data,_.toInteger(this.id)) },
       kItems({ kitchens:{ items } }){ return _.map(items[this.kitchen.id],'item') },
     }),
+    cloud(){ return this.kitchen.cloud === 'Yes' },
     mode(){ return _.get(this.$store.state,['public','mode'],'Token') },
     reset: {
       get(){ return _.get(this.$store.state,['public','reset'],false) },
@@ -65,6 +68,7 @@ export default {
     pView(){ return this.$q.screen.width > 799 },
     Tokens(){ return _(this.tokens).filter(({ progress,items }) => ['New','Processing'].includes(progress) && _.some(items,this.isAct)).value() },
     items(){ return _(this.Tokens).flatMap(({ items,type }) => _(items).filter(this.isAct).map(item => Object.assign({},item,{ type })).value()).groupBy('item.id').value() },
+    sTokens(){ return _.sortBy(this.Tokens,({ items }) => tokens_sort_item_delivery_fn(items)) },
   },
   methods: {
     hKey({ id },item){ return h_key('kitchen',this.id,item,'detail',id) },

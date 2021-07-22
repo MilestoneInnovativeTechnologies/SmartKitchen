@@ -15,11 +15,12 @@ class TokenItemCancelled
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $tokenItem, $user;
+    public $token, $tokenItem, $user;
 
     public function __construct(TokenItem $tokenItem, $user)
     {
         $this->tokenItem = $tokenItem->id;
+        $this->token = $tokenItem->token;
         $this->user = $user;
     }
 

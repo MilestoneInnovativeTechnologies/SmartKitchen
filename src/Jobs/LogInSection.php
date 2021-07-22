@@ -11,7 +11,7 @@ use Illuminate\Support\Arr;
 use Milestone\SmartKitchen\Models\User;
 use Milestone\SmartKitchen\Models\UserLogin;
 
-class LogInSection implements ShouldQueue
+class LogInSection
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 

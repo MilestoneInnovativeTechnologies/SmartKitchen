@@ -1,6 +1,7 @@
 export default function () {
   return {
     map: {
+      remotes:'remote',
       customers:'customers',
       bills: 'bills',
       items: 'items',

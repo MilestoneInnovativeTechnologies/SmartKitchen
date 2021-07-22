@@ -28,7 +28,8 @@ class MakeTokenProgressAsBilled
         $cProgress = $this->token->progress;
         switch ($cProgress){
             case 'New':
-                Log::warning('The token is in new status. Terminating activity');
+                if($this->token->type === 'Remote') Log::info('Remote Order. Stays in status New');
+                else Log::warning('The token is in new status. Terminating activity');
                 break;
             case 'Processing':
                 Log::warning('The token is in processing status. Terminating activity');

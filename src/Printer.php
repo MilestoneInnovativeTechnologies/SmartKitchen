@@ -12,7 +12,7 @@ use Milestone\SmartKitchen\Models\Settings;
 
 class Printer
 {
-    private $_printer = null; private $_template = null; private $_data = null;
+    private $_template = null; private $_data = null;
     private $master_settings = ['connector','capability','width'];
     private $connector = 'FilePrintConnector';
     private $capability = null;
@@ -33,7 +33,7 @@ class Printer
             return [$key => $item->value];
         })->toArray();
         $this->setPrinter($master);
-        if($template && $data) $this->print();
+        if(!empty($master['printer']) && $template && $data) $this->print();
     }
 
     private function setPrinter($settings){
@@ -44,7 +44,7 @@ class Printer
                 $this->$key = Arr::get($settings,$key);
         }
         $ConnectType = '\\Mike42\\Escpos\\PrintConnectors\\' . $this->connector;
-        $connector = $connector = new $ConnectType($printer);
+        $connector = new $ConnectType($printer);
         $this->Printer = self::Printer($connector,$this->capability);
     }
 
@@ -241,7 +241,7 @@ class Printer
 /*
  * Inorder to have this work, settings should have a value like '//localhost/EPSON' under any name (printer name).. Ex: PRINTER001 This name is referred while calling the class Printer
  * Every settings related to this printer should provide in settings as <printer_name>_<settings name>.. Ex: PRINTER001_width
- * Required settings are connector -> windows shared printers => FilePrintConnector, widows printer => WindowsPrintConnector, more details @ https://github.com/mike42/escpos-php
+ * Required settings are connector -> windows shared printers => FilePrintConnector, windows printer => WindowsPrintConnector, more details @ https://github.com/mike42/escpos-php
  * capability -> more details @ https://github.com/mike42/escpos-php
  * width -> width in no of characters a line can include.. In thermal printer it may line 32,48 etc. Default is 48
  *

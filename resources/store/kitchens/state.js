@@ -2,7 +2,6 @@ export default function () {
   return {
     data: {},
     items: {},
-    status: {},
-    assign: [],
+    status: {}
   }
 }

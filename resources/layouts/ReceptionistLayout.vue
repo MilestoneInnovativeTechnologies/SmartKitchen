@@ -8,7 +8,10 @@
           {{ $store.state.title || receptionist }}
         </q-toolbar-title>
         <ManualSync />
-        <q-btn flat round dense icon="power_settings_new" type="a" :href="logout" />
+        <Logout />
+        <q-btn flat round dense label="---" :disable="true" class="lt-sm" color="primary" />
+        <q-btn flat round dense icon="batch_prediction" class="lt-sm" :to="{ name:'seat_status' }" />
+        <q-btn flat round dense icon="home" class="lt-sm" :to="{ name:'receptionist_index' }" />
       </q-toolbar>
     </q-header>
 
@@ -18,11 +21,13 @@
 
     <q-footer elevated class="bg-primary text-white" v-show="$store.state.footer">
       <q-tabs align="left">
-        <q-route-tab exact :to="{ name:'receptionist_index' }" label="Home" icon="home" />
-        <q-route-tab :to="{ name:'seat_status' }" label="Seating" icon="batch_prediction" />
+        <q-route-tab exact :to="{ name:'receptionist_index' }" label="Home" icon="home" class="gt-xs" />
+        <q-route-tab :to="{ name:'seat_status' }" label="Seating" icon="batch_prediction" class="gt-xs" />
+        <q-route-tab :to="{ name:'sale' }" label="Sale" icon="shopping_cart" />
         <q-route-tab :to="{ name:'receptionist_tokens' }" label="Tokens" icon="receipt" :alert="alert || completed.length>0" alert-icon="new_releases" />
         <q-route-tab :to="{ name:'bills' }" label="Bills" icon="pending_actions" />
         <q-route-tab :to="{ name:'orders' }" label="Orders" icon="add_task" />
+        <q-route-tab :to="{ name:'orders_remote' }" label="Remote" icon="online_prediction" />
       </q-tabs>
     </q-footer>
 
@@ -33,9 +38,10 @@
 import ManualSync from "components/ManualSync";
 import {mapState} from "vuex";
 import {attention} from "assets/helpers";
+import Logout from "components/Logout";
 export default {
   name: 'ReceptionistLayout',
-  components: {ManualSync},
+  components: {Logout, ManualSync},
   data(){ return { receptionist:_USER.name, logout: LOGOUT, alert:false } },
   computed: mapState('tokens',{ completed({ data }){ return _.filter(data,['progress','Completed']) } }),
   watch: {

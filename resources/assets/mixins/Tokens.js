@@ -12,6 +12,8 @@ export default {
         progress: this.tokenProgress(token)
       })).value()
     },
+    tokens_remote(){ return _.filter(this.tokens,({ type,id }) => type === 'Remote' && !this.$store.getters['remote/is']('tokens',parseInt(id))) },
+    tokens_own(){ return _.filter(this.tokens,({ type,id }) => type !== 'Remote' || !this.$store.getters['remote/is']('tokens',parseInt(id))) },
   }),
   methods: {
     tokenItemMap(item){ return Object.assign({},item,{

@@ -8,6 +8,7 @@ use Milestone\SmartKitchen\Jobs\AddKitchenUser;
 use Milestone\SmartKitchen\Jobs\ToggleKitchenUser;
 use Milestone\SmartKitchen\Models\Kitchen;
 use Milestone\SmartKitchen\Models\KitchenItem;
+use Milestone\SmartKitchen\Models\KitchenStatus;
 use Milestone\SmartKitchen\Models\UserLogin;
 
 class KitchenController extends Controller
@@ -36,25 +37,28 @@ class KitchenController extends Controller
     }
 
     public function toggle(Request $request){
-        $id = intval($request->input('kitchen')); $user = auth()->id();
+        $kitchen = intval($request->input('kitchen')); $user = auth()->id();
         if(!UserLogin::where(['user' => $user, 'out' => 0])->exists()) {
             Log::warning('Trying to set kitchen of chef which not exists in UserLogin.. User: ' . $user);
             return;
         }
-        $kitchens = [];
-        UserLogin::where(['user' => $user, 'out' => 0])->each(function($log) use($id,&$kitchens){
+        $kitchens = []; $full_time = KitchenStatus::where('full_timer',$user)->pluck('kitchen')->toArray();
+        UserLogin::where(['user' => $user, 'out' => 0])->each(function($log) use($kitchen,&$kitchens,$full_time){
             $section = $log->section; if(!array_key_exists('kitchen',$section)) $section['kitchen'] = [];
-            if(!in_array($id,$section['kitchen'])){
-                array_push($section['kitchen'],$id);
-                $log->section = $section; $log->save();
-                $kitchens = array_merge($kitchens,$section['kitchen']);
+            if(!empty($kitchens)){
+                $section['kitchen'] = $kitchens;
             } else {
-                $section['kitchen'] = array_values(array_diff($section['kitchen'],[$id]));
-                $log->section = $section; $log->save();
-                $kitchens = array_merge($kitchens,$section['kitchen']);
+                $section['kitchen'] = array_merge($section['kitchen'],$full_time);
+                if(!in_array($kitchen,$section['kitchen'])) array_push($section['kitchen'],$kitchen);
+                elseif(!in_array($kitchen,$full_time)){
+                    $section['kitchen'] = array_diff($section['kitchen'],[$kitchen]);
+                }
+                $section['kitchen'] = array_values(array_unique($section['kitchen']));
+                $kitchens = $section['kitchen'];
             }
+            $log->section = $section; $log->save();
         });
-        ToggleKitchenUser::dispatch($id,$user);
+        ToggleKitchenUser::dispatch($kitchen,$user);
         return array_values(array_unique($kitchens));
     }
 
@@ -65,7 +69,7 @@ class KitchenController extends Controller
     }
 
     public static function data(){
-        return request(['name','detail','auto_accept','status']);
+        return request(['name','detail','auto_accept','cloud','status']);
     }
 
     public static function create(){
@@ -77,6 +81,7 @@ class KitchenController extends Controller
         if(!request()->has('id') || !request()->filled('id')) return self::create();
         $item = Kitchen::find(request()->input('id'));
         $item->update(self::data());
+        if(request()->has('full_timer')) KitchenStatus::where('kitchen',request()->input('id'))->first()->update(request()->only('full_timer'));
         return $item->fresh();
     }
 
@@ -101,5 +106,16 @@ class KitchenController extends Controller
                 $Kitchen->Items()->create($details);
         }
         return ['removes' => $remove,'updates' => KitchenItem::where('updated_at','>=',$now)->get()->toArray()];
+    }
+
+    public function full_timer(Request $request){
+        $keys = ['user','kitchen','status'];
+        if(!$request->filled($keys)) return null;
+        $req = $request->only($keys); $full_timer = $req['status'] ? $req['user'] : null;
+        KitchenStatus::where(['kitchen' => $request->kitchen])->get()->each(function($status,$idx)use($full_timer){
+            if($idx) $status->delete();
+            else $status->update(compact('full_timer'));
+        });
+        return $req['status'] ? $req['kitchen'] : null;
     }
 }

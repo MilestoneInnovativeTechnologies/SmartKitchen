@@ -26,7 +26,9 @@ class Subscribers
             \Milestone\SmartKitchen\Events\TokenItemsSaving::class =>  [],
             \Milestone\SmartKitchen\Events\TokenItemsSaved::class =>  [
                 TryDistributingTokenItems::class,
-                PrintAcceptedItemsToken::class
+                PrintAcceptedItemsToken::class,
+                CheckAndDoFurtherIfRemoteOrder::class,
+                CheckAndDoFurtherIfHavePayment::class,
             ],
             \Milestone\SmartKitchen\Events\TokenItemAccepting::class =>  [],
             \Milestone\SmartKitchen\Events\TokenItemAccepted::class =>  [
@@ -68,7 +70,9 @@ class Subscribers
             \Milestone\SmartKitchen\Events\TokenProgressMakingAsNew::class =>  [],
             \Milestone\SmartKitchen\Events\TokenProgressMadeAsNew::class =>  [],
             \Milestone\SmartKitchen\Events\TokenProgressMakingAsCompleted::class =>  [],
-            \Milestone\SmartKitchen\Events\TokenProgressMadeAsCompleted::class =>  [],
+            \Milestone\SmartKitchen\Events\TokenProgressMadeAsCompleted::class =>  [
+                CheckForBillExistenceAndUpdate::class
+            ],
             \Milestone\SmartKitchen\Events\TokenProgressMakingAsBilled::class =>  [],
             \Milestone\SmartKitchen\Events\TokenProgressMadeAsBilled::class =>  [],
             \Milestone\SmartKitchen\Events\TokenProgressMakingAsCancelled::class =>  [],
@@ -81,7 +85,8 @@ class Subscribers
                 SetTokenCustomer::class
             ],
             \Milestone\SmartKitchen\Events\BillCreated::class =>  [
-                TryMakingTokenProgressAsBilled::class
+                TryMakingTokenProgressAsBilled::class,
+                CheckForAdvancePayments::class,
             ],
             \Milestone\SmartKitchen\Events\BillProgressMakingAsCancelled::class => [],
             \Milestone\SmartKitchen\Events\BillProgressMadeAsCancelled::class => [
@@ -108,6 +113,16 @@ class Subscribers
             \Milestone\SmartKitchen\Events\KitchenStatusCreated::class => [],
             \Milestone\SmartKitchen\Events\KitchenStatusUpdating::class => [],
             \Milestone\SmartKitchen\Events\KitchenStatusUpdated::class => [],
+
+            \Milestone\SmartKitchen\Events\KitchenSaved::class => [
+                CheckAndProcessRemoteKitchenAdd::class
+            ],
+            \Milestone\SmartKitchen\Events\KitchenItemSaved::class => [
+                CheckAndProcessRemoteKitchenItemAdd::class
+            ],
+            \Milestone\SmartKitchen\Events\KitchenItemDeleted::class => [
+                CheckAndProcessRemoteKitchenItemDelete::class
+            ],
 
         ];
     }

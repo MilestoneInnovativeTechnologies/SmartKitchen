@@ -17,6 +17,6 @@ class TryMakingTokenProgressAsBilled
 
     public function handle(BillCreated $event)
     {
-        return MakeTokenProgressAsBilled::dispatch($event->bill->token)->afterResponse();
+        return MakeTokenProgressAsBilled::dispatch($event->bill->token);
     }
 }

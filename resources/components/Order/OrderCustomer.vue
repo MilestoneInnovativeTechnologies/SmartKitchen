@@ -56,6 +56,9 @@ export default {
   },
   created(){
     this.options = this.customer_options;
+  },
+  watch: {
+    customer(customer){ if(customer && customer.id === 0) this.create_mode = true }
   }
 }
 </script>

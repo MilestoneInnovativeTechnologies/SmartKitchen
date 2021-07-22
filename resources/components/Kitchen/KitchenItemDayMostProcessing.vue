@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import { mapGetters,mapState } from 'vuex'
+import { mapGetters } from 'vuex'
 import Tokens from "assets/mixins/Tokens"
 
 export default {
@@ -22,11 +22,8 @@ export default {
     ]
   } },
   computed: {
-    ...mapGetters('tokens',['today']),
-    ...mapState({
-      kitchens: ({ kitchens:{ assign } }) => assign,
-    }),
-    items(){ let today = _.map(this.today,'id'); return _.map(_.groupBy(_.flatMap(this.tokens,({ items,id }) => today.includes(id) ? _.filter(items,({ kitchen,progress }) => kitchen && this.kitchens.includes(kitchen.id) && progress !== 'Cancelled') : []),'item.id'),(items,item) => _.zipObject(
+    ...mapGetters({ today:'tokens/today',kitchens:'kitchens/assign' }),
+    items(){ let today = _.map(this.today,'id'); return _.map(_.groupBy(_.flatMap(this.tokens,({ items,id }) => today.includes(id) ? _.filter(items,({ kitchen,progress }) => kitchen && this.kitchens[_USER.id].includes(kitchen.id) && progress !== 'Cancelled') : []),'item.id'),(items,item) => _.zipObject(
       ['item','quantity','time'],
       [_.get(items,[0,'item','name']),_.sumBy(items,'quantity'),this.pTime(items)]
     )) }

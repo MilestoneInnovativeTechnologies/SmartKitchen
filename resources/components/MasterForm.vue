@@ -11,6 +11,7 @@
       <ItemsChoose v-else-if="type === 'items_choose'" v-model="params[field]" :label="title(field)" />
       <UserLoginPin v-else-if="type === 'login_pin'" v-model="params[field]" :label="title(field)" outlined :update="data ? data[field] : null" />
       <UserLoginUserName v-else-if="type === 'login_user'" v-model="params[field]" :label="title(field)" outlined :update="data ? data[field] : null" />
+      <UserSelectDropDown v-else-if="type === 'chef'" v-model="params[field]" :label="title(field)" role="Chef" get="id" clearable outlined :update="data ? data[field] : null" />
       <q-input v-else :type="type" v-model="params[field]" :label="title(field)" outlined />
     </template>
     <slot></slot>
@@ -27,14 +28,14 @@ import AdministratorMasterPriceListPriceSet from "components/Administrator/Admin
 import KitchenSelectDropDown from "components/Kitchen/KitchenSelectDropDown";
 import UserLoginPin from "components/Users/UserLoginPin";
 import UserLoginUserName from "components/Users/UserLoginUserName";
+import UserSelectDropDown from "components/Users/UserSelectDropDown";
 const defs = {
   status: 'Active', yesno: 'Yes', noyes: 'No',
 }
 export default {
   name: "MasterForm",
   components: {
-    UserLoginUserName,
-    UserLoginPin,
+    UserSelectDropDown, UserLoginUserName, UserLoginPin,
     KitchenSelectDropDown, AdministratorMasterPriceListPriceSet,
     ItemsChoose, TaxContentManage, SeatInputSeats, PriceListSelectDropDown},
   props: ['fields','data','loading'],

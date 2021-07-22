@@ -18,7 +18,7 @@ export default {
   computed: {
     range(){ return range(this.$store.state.public.range) }, item(){ return this.$store.state.public.item },
     head(){ return _.zipObject(['Report','Item','Date Range','Unit'],['Item Processing',this.item.name,to_format('DD/MMM HH:mm',this.range.from) + ' - ' + to_format('DD/MMM HH:mm',this.range.to),'Minutes']) },
-    items(){ return _(this.tokens).filter(({ date,progress,items }) => progress !== 'Cancelled' && is_between(date,this.range.from,this.range.to) && _.some(items,({ item:{ id }}) => this.item.id === id)).flatMap('items').filter(['item.id',this.item.id]).groupBy('kitchen.name').value() },
+    items(){ return _(this.tokens_own).filter(({ date,progress,items }) => progress !== 'Cancelled' && is_between(date,this.range.from,this.range.to) && _.some(items,({ item:{ id }}) => this.item.id === id)).flatMap('items').filter(['item.id',this.item.id]).groupBy('kitchen.name').value() },
     table(){ return _(this.items).map((tis,Kitchen) => Object.assign(
       {}, { Kitchen }, this.properties(tis[0].kitchen),
       { Tokens:_.size(tis),Quantities:_.sumBy(tis,'quantity') },

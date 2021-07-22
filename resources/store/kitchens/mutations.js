@@ -20,20 +20,13 @@ export function items (state,records) {
       _.forEach(items,item => {
         let idx = _.findIndex(state.items[kitchen],['id',_.toSafeInteger(item.id)]);
         if(idx < 0) state.items[kitchen].push(kimap(item))
-        else Vue.set(state.items[kitchen],idx,kimap(item))
+        else {
+          let lItem = _.get(state.items,[kitchen,idx]); if(!lItem) return;
+          _.forEach(kimap(item),function(val,key){ if(!_.has(lItem,key) || lItem[key] !== val) state.items[kitchen][idx][key] = val  })
+        }
       })
     }
   })
-}
-
-export function assign(state,id){
-  if(_.isArray(id)) {
-    state.assign.splice(0,state.assign.length);
-    _.forEach(id,i => state.assign.push(_.toInteger(i)));
-  } else {
-    id = _.toInteger(id);
-    if(!state.assign.includes(id)) state.assign.push(id);
-  }
 }
 
 export function item_remove(state,{ kitchen,id }){
@@ -57,8 +50,11 @@ export function status (state,records) {
   let group = _.keyBy(records,'kitchen');
   _.forEach(group,(status,kitchen) => {
     kitchen = _.toSafeInteger(kitchen)
-    if(_.has(state.status,kitchen)) Vue.delete(state.status,kitchen);
-    Vue.set(state.status,kitchen,ksmap(status))
+    if(!_.has(state.status,kitchen)) Vue.set(state.status,kitchen,ksmap(status))
+    else {
+      let lStatus = _.get(state.status,[kitchen]); if(!lStatus) return;
+      _.forEach(ksmap(status),function(val,key){ if(!_.has(lStatus,key) || lStatus[key] !== val) state.status[kitchen][key] = val })
+    }
   })
 }
 
@@ -75,9 +71,9 @@ function kimap({ id,stock,item,kitchen,duration,auto_process,auto_complete,statu
   ])
 }
 
-function ksmap({ users,status,kitchen }){
+function ksmap({ users,status,kitchen,full_timer }){
   return _.zipObject(
-    ['kitchen','users','status'],
-    [_.toSafeInteger(kitchen),_.map(users,_.toSafeInteger),status]
+    ['kitchen','users','status','full_timer'],
+    [_.toSafeInteger(kitchen),_.map(users,_.toSafeInteger),status,full_timer ? _.toInteger(full_timer) : null]
   )
 }

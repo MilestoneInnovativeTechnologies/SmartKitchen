@@ -4,6 +4,7 @@ import Vuex from 'vuex'
 Vue.use(Vuex)
 
 import server from './server'
+import remote from './remote'
 import users from './users'
 import tokens from './tokens'
 import customers from './customers'
@@ -18,12 +19,17 @@ import bills from './bills'
 import payments from './payments'
 import settings from './settings'
 
+import research from './research'
+
 
 export default new Vuex.Store({
   modules: {
     server,
     users, customers, items, groups, menus, prices, kitchens, tax, seating,
-    tokens, bills, payments, settings
+    tokens, bills, payments, settings,
+    remote,
+
+    research
   },
   state: {
     title: '',

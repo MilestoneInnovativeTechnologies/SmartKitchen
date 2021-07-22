@@ -6,7 +6,7 @@ export function attention(){ AttentionAudio.play() }
 export function h_key(){ return Array.from(arguments).join('-') }
 
 export function o_customer(customer){ return _.assign({},customer,{ label:[customer.name,customer.phone].join(', ') }) }
-export function o_customers(customers){ return _(customers).map(o_customer).value() }
+export function o_customers(customers){ let o_customers = _(customers).map(o_customer).value(); o_customers.unshift(o_customer({ id:0,name:'New Customer',phone:'000' })); return o_customers; }
 
 export function precision(number,length){ return _.toNumber(number).toFixed(length || 2) }
 
@@ -16,12 +16,17 @@ export function options(ary,nAry,sep){ return _.map(ary,data => option(data,nAry
 export function matches(obj,keys,text){ return _.includes(_.values(_.pick(obj,keys)).join(' ').toLowerCase(),text.toString().toLowerCase()) }
 
 export function now(){ return _.toInteger(new Date().getTime()/1000) }
+export function tomorrow(){ return to_format('YYYY-MM-DD',addToDate(new Date(),{ days:1 })) }
 export function common_format(format){ return format || 'YYYY-MM-DD HH:mm:ss' }
 export function extract_date(datetime,format){ format = common_format(format); return extractDate(datetime,format) }
-export function time(datetime,format){ format = common_format(format); return formatDate(extractDate(datetime,format),'hh:mm A') }
+export function time(datetime,format,sec){ format = common_format(format); return formatDate(extractDate(datetime,format),sec ? 'hh:mm:ss A' : 'hh:mm A') }
 export function is_today(datetime,format){ format = common_format(format); return isSameDate(extractDate(datetime,format),new Date(),'day') }
+export function is_yesterday(datetime,format){ format = common_format(format); return isSameDate(extractDate(datetime,format),subtractFromDate(new Date,{ days:1 }),'day') }
+export function is_tomorrow(datetime,format){ format = common_format(format); return isSameDate(extractDate(datetime,format),addToDate(new Date,{ days:1 }),'day') }
+export function is_past_day(datetime,days){ return isBetweenDates(extract_date(datetime),subtractFromDate(new Date,{ days:days || 8 }),subtractFromDate(new Date,{ days:1 }),{ inclusiveFrom:true,inclusiveTo:true,onlyDate:true }) }
+export function is_future_day(datetime,days){ return isBetweenDates(extract_date(datetime),addToDate(new Date,{ days:1 }),addToDate(new Date,{ days:days || 8 }),{ inclusiveFrom:true,inclusiveTo:true,onlyDate:true }) }
 export function is_date_same(d1,d2,unit,format){ format = common_format(format); return isSameDate(extractDate(d1,format),extractDate(d2,format),(unit || 'day')) }
-export function to_format(format,date){ format = common_format(format); return formatDate(date || new Date(),format) }
+export function to_format(format,date){ format = common_format(format); return formatDate(date || new Date,format) }
 export function range(from,to) {
   if (_.has(from, 'from')) {
     to = _.get(from, 'to', to_format('YYYY-MM-DD')) + ' 11:59:59';

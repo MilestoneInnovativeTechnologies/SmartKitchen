@@ -12,9 +12,7 @@
           </div>
         </q-toolbar-title>
 
-        <q-toolbar-title class="gt-xs text-center">
-          <span class="text-white text-subtitle2">{{ time }}</span>
-        </q-toolbar-title>
+        <ToolBarTime />
 
         <q-toolbar-title class="row">
           <q-space />
@@ -31,7 +29,7 @@
           {{ $store.state.title || chef }}
         </q-toolbar-title>
         <ManualSync />
-        <q-btn flat round dense icon="power_settings_new" type="a" :href="logout" />
+        <Logout />
       </q-toolbar>
     </q-header>
 
@@ -57,17 +55,18 @@ import KitchenSelect from "components/Kitchen/KitchenSelect";
 import KitchenSelectElement from "components/Kitchen/KitchenSelectElement";
 import KitchenTokenDisplayMode from "components/Kitchen/KitchenTokenDisplayMode";
 import {time} from "assets/helpers";
+import ToolBarTime from "components/ToolBarTime";
+import Logout from "components/Logout";
 
 export default {
   name: 'ChefLayout',
-  components: {KitchenTokenDisplayMode, KitchenSelectElement, KitchenSelect, ManualSync},
+  components: {Logout, ToolBarTime, KitchenTokenDisplayMode, KitchenSelectElement, KitchenSelect, ManualSync},
   data(){ return {
-    chef:_USER.name, logout: LOGOUT, kitchens_route: 'chef_kitchens',
-    k: null, m: null, time: now()
+    chef:_USER.name, kitchens_route: 'chef_kitchens', time: now()
   } },
   computed: {
-    assigned(){ return this.$store.state.kitchens.assign },
-    k_show(){ return (!this.assigned.length && this.$route.name !== this.kitchens_route) || (this.assigned.length === 1 && this.assigned[0] === 0) },
+    assigned(){ return _.get(this.$store.getters["kitchens/assign"],parseInt(_USER.id),[]) },
+    k_show(){ return !this.assigned.length && this.$route.name !== this.kitchens_route },
     special(){ return this.$route.name === 'tokens' },
     kitchen: {
       get(){ return _.get(this.$store.state,['public','kitchen'],null) },
@@ -81,16 +80,6 @@ export default {
       get(){ return !!_.get(this.$store.state,['public','reset'],false) },
       set(reset){ this.$store.commit('public',{ reset: !!reset }) }
     },
-  },
-  watch:{
-    time: {
-      immediate: true,
-      handler(){ setTimeout(vm => vm.time = now(),(60 - new Date().getSeconds())*1000,this) }
-    }
-  },
-  created(){
-    let kitchens = _SECTION['kitchen'];
-    this.$store.commit('kitchens/assign',kitchens,{ root:true })
   }
 }
 

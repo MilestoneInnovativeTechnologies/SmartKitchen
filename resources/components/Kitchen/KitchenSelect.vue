@@ -2,7 +2,7 @@
   <q-card>
     <q-card-section class="bg-grey-2 row items-center">
       <div class="text-bold">Select Kitchen</div><q-space />
-      <q-btn round icon="clear" flat class="text-weight-bold" color="red-12" v-show="selected.length && selected[0] !== 0" v-close-popup />
+      <q-btn round icon="clear" flat class="text-weight-bold" color="red-12" v-show="selected.length" v-close-popup />
     </q-card-section>
     <q-list separator bordered>
       <q-item v-for="kitchen in kitchens" :key="hKey(kitchen)" clickable @click="selected = kitchen" v-ripple>
@@ -19,8 +19,9 @@
 </template>
 
 <script>
-import {mapState} from "vuex";
+import {mapGetters} from "vuex";
 import {h_key, image} from "assets/helpers";
+import {non_remote} from "src/store/kitchens/getters";
 
 export default {
   name: "KitchenSelect",
@@ -28,9 +29,9 @@ export default {
 
   } },
   computed: {
-    ...mapState('kitchens',{ kitchens:'data',assigned:'assign' }),
+    ...mapGetters('kitchens',{ kitchens:'non_remote',assigned:'assign' }),
     selected: {
-      get(){ return this.assigned },
+      get(){ return _.get(this.assigned,parseInt(_USER.id),[]) },
       set({ id }){ this.$store.dispatch('kitchens/chef',{ kitchen:id }) }
     }
   },
@@ -40,7 +41,7 @@ export default {
     image(file){ return image(file) }
   },
   created(){
-    if(!this.selected.length && _.size(this.kitchens) === 1) this.selected = _.first(_.values(this.kitchens))
+    if(this.selected.length === 0 && _.size(this.kitchens) === 1) this.selected = _.first(_.values(this.kitchens))
   }
 }
 </script>

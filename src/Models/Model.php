@@ -48,11 +48,14 @@ class Model extends BaseModel
     // template should be array, while template name should be from settings
     public function print($props = []){
 
-        $printer = Arr::get($props,'printer',Arr::get(Settings::where('name',$this->printer_name)->first(),'value',null));
+        $settings = Settings::pluck('value','name')->toArray();
+
+        $printer = Arr::get($props,'printer',Arr::get($settings,$this->printer_name,null));
+        if($printer || empty(Arr::get($settings,$printer))) return Log::info('Print called with no printer or printer defined!!');
 
         $template = Arr::get($props,'template',null); $template_name = null;
         if(!$template){
-            $template_name = Arr::get($props,'template_name',$this->print_template); if(!$template_name) return Log::info('Print called with no print name defined!!');
+            $template_name = Arr::get($props,'template_name',$this->print_template); if(!$template_name) return Log::info('Print called with no template or template_name defined!!');
             $template_string = Arr::get(Settings::where('name',$template_name)->first(),'value',null);
             if(!$template_string) return Log::info('Template, ' . $template_name . ', not defined in settings!!');
             $template = json_decode($template_string,true); if(!$template) return Log::critical('Error in template: ' . $template_name);

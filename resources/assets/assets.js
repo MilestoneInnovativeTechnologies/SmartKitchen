@@ -1,3 +1,4 @@
+import {is_future_day, is_today, is_tomorrow, is_yesterday} from "assets/helpers";
 
 export const OrderTypes = ['Dining','Home Delivery','Take Away','Other']
 export const PaymentsTypes = ['Cash','Card','Wallet','Credit']
@@ -7,5 +8,6 @@ export const OrderTypeRequiredFields = { Dining:['Seating','Waiter','Customer'],
 export const OrderTypeRequiredFieldsDB = { Dining:['type','seating','user','customer','price_list'],'Home Delivery':['type','customer','price_list'],'Take Away':['type','customer','price_list'],Other:[] }
 export const TokenItemProgressColor = { New:'red', Accepted:'green-6', Processing:'purple-9' }
 export const TokenProgressColor = { New:'red', Processing:'purple-9', Completed: 'green-6', Billed: 'positive', Cancelled: 'grey-2' }
-export const DiningTypeColor = { Dining:'purple', 'Home Delivery':'orange', 'Take Away':'green' }
+export const DiningTypeColor = { Dining:'purple', 'Home Delivery':'orange', 'Take Away':'green', Remote:'cyan' }
 export const KitchenTokensDisplayMode = ['Token','Progress','Item']
+export const TokenDeliveryReadableChecks = [[is_today,'Today','primary'],[is_tomorrow,'Tomorrow','info'],[is_future_day,'Within 2 Days','teal',2],[is_future_day,'Within 7 Days','purple-6',7],[is_future_day,'Within 30 Days','brown-6',30],[is_future_day,'After 1 month','brown-9',180],[is_yesterday,'Yesterday','pink-6'],[null,'Delayed','red-6']]

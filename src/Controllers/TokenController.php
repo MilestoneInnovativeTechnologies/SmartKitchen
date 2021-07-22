@@ -4,6 +4,7 @@ namespace Milestone\SmartKitchen\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Milestone\SmartKitchen\Events\TokenItemAdded;
 use Milestone\SmartKitchen\Events\TokenItemAdding;
@@ -29,7 +30,9 @@ class TokenController extends Controller
             $narration = $obj['narration'] ?? null;
             $delay = $obj['delay'] ?? 0; $delay = intval($delay) * 60;
             if($delay > 0) $delay += time();
-            $data = compact('user','item','quantity','delay','narration');
+            $deliver = array_key_exists('deliver',$obj) ? Carbon::parse($obj['deliver'])->toDateTimeString() : null;
+            $photo = $obj['photo'] ?? null;
+            $data = compact('user','item','quantity','delay','narration','deliver','photo');
             $Items[] = new TokenItem($data);
             TokenItemPrepared::dispatch($data);
         }
@@ -66,9 +69,10 @@ class TokenController extends Controller
     }
 
     public function served(Request $request){
-        $tokenItem = $request->input('id');
+        $tokenItems = $request->input('id');
+        $tokenItems = is_array($tokenItems) ? $tokenItems : [$tokenItems];
         $user = $request->input('user',Auth::id());
-        TokenItemController::Serve($tokenItem,$user);
+        foreach ($tokenItems as $tokenItem) TokenItemController::Serve($tokenItem,$user);
     }
 
     public function cancel(Request $request){

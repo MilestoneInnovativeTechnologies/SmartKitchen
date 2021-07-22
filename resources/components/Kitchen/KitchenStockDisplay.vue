@@ -33,10 +33,7 @@ export default {
   name: "KitchenStockDisplay",
   props: ['kitchen'],
   data(){ return {
-    filter: '',
-    neg: [],
-    les: [],
-    oth: []
+    filter: '', limit: 6,
   } },
   components: {FilterInputText, KitchenStockDisplayItemRow},
   computed: {
@@ -44,26 +41,16 @@ export default {
     ...mapState({
       name: function({ kitchens:{ data } }){ return _.get(data,[this.kid,'name']) },
       stock: function({ kitchens:{ items },items:{ data } }){ return this.filtered(_.map(_.get(items,[this.kid]),item => Object.assign({},item,{ item:data[item.item] }))) },
-      negative(){ return _.sortBy(this.neg,'stock') },
-      least(){ return _.sortBy(this.les,'stock') },
-      other(){ return _.sortBy(this.oth,'stock') },
     }),
-    zero(){
-      this.negative.splice(0,this.negative.length);
-      this.least.splice(0,this.least.length);
-      this.other.splice(0,this.other.length);
-      return _(this.stock).filter((detail) => {
-        if(_.toNumber(detail.stock) === 0) return true;
-        if(_.toNumber(detail.stock) > 6) return !this.oth.push(detail);
-        if(_.toNumber(detail.stock) < 0) return !this.neg.push(detail);
-        if(_.toNumber(detail.stock) > 0) return !this.les.push(detail);
-        return false;
-      }).sortBy('stock').value()
-    }
+    negative(){ return _(this.stock).filter(detail => sType(detail,this.limit) === 1).sortBy('stock').value() },
+    zero(){ return _(this.stock).filter(detail => sType(detail,this.limit) === 2).sortBy('stock').value() },
+    least(){ return _(this.stock).filter(detail => sType(detail,this.limit) === 3).sortBy('stock').value() },
+    other(){ return _(this.stock).filter(detail => sType(detail,this.limit) === 4).sortBy('stock').value() },
   },
   methods: {
     hKey(type,{ id,item }){ return h_key('ksd',id,'type',type,'kitchen',this.kid,'item',item.id) },
     filtered(array){ return this.filter ? _.filter(array,item => matches(item.item,['id','name','detail'],this.filter)) : array }
   }
 }
+function sType({ stock },limit){ let stk = _.toNumber(stock); return (stk < 0) ? 1 : ((stk === 0) ? 2 : ((stk < limit) ? 3 : 4)) }
 </script>

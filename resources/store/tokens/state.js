@@ -1,6 +1,7 @@
 export default function () {
   return {
     data: {},
-    items: {}
+    items: {},
+    img: {},
   }
 }

@@ -13,7 +13,7 @@ const layout_child = {
   Login: ['login_index'],
   Waiter: ['waiter_index','waiter_menu','orders','order_new'],
   Chef: ['chef_index','chef_kitchens','kitchen_items','kitchen_stocks','tokens'],
-  Receptionist: ['receptionist_index','seat_status','receptionist_tokens','bills','seat_status_order','receptionist_orders','receptionist_order_new','receptionist_order_new_items'],
+  Receptionist: ['receptionist_index','seat_status','receptionist_tokens','bills','seat_status_order','receptionist_orders','receptionist_order_new','receptionist_order_new_items','orders_remote','orders_remote_new','sale'],
   Administrator: ['report_index','administration_index',
     'master_customer','master_prop','master_item','master_group','master_kitchen','master_kitchen_items','master_menu','master_price_list','master_seating','master_tax','image_customer','image_item','image_kitchen','image_seating','image_user','master_user','master_settings',
     'day_token_summary','day_sale_summary','sales_by_type','sales_summary_by_type','sales_count_by_item','item_wise_sale_summary','kitchen_stock','bill_summary','payments','payments_by_type',
@@ -81,6 +81,9 @@ const route_master = {
   kitchen_processing: { name:'kitchen_processing', path:'/report/kitchen/processing', component: () => import('pages/Report/Reports/ReportKitchenProcessing'), meta:{ title:'Kitchen Processing',controls:['kitchen','date'] } },
   item_processing: { name:'item_processing', path:'/report/item/processing', component: () => import('pages/Report/Reports/ReportItemProcessing'), meta:{ title:'Item Processing',controls:['item','range'] } },
   chef_performance: { name:'chef_performance', path:'/report/chef/performance', component: () => import('pages/Report/Reports/ReportChefPerformance'), meta:{ title:'Chef Performance',controls:['user','range'] } },
+  orders_remote: { name:'orders_remote', path:'/orders/remote', component: () => import('pages/Order/RemoteOrders'), meta:{ title:'Remote Orders' } },
+  orders_remote_new: { name:'orders_remote_new', path:'/orders/remote/new', component: () => import('pages/Order/RemoteOrdersNew'), meta:{ title:'New Remote Orders',back:true } },
+  sale: { name:'sale', path:'sale', component: () => import('pages/Order/Sale'), meta:{ title:'New Sale',footer:false,back:true } },
 }
 
 function getRoutes(page) {

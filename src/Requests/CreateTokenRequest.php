@@ -3,9 +3,11 @@
 namespace Milestone\SmartKitchen\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Milestone\SmartKitchen\Events\TokenCreated;
 use Milestone\SmartKitchen\Events\TokenCreating;
+use Milestone\SmartKitchen\Models\PriceList;
 use Milestone\SmartKitchen\Models\Token;
 
 class CreateTokenRequest extends FormRequest
@@ -36,12 +38,13 @@ class CreateTokenRequest extends FormRequest
     protected function prepareForValidation(){
         $this->merge([
             'user' => $this->input('user',auth()->id()),
-            'date' => now()->toDateTimeString(),
+            'date' => $this->input('date',now()->toDateTimeString()),
+            'price_list' => $this->input('price_list',Arr::get(PriceList::where('status','Active')->first(),'id')),
         ]);
     }
 
     public function store(){
-        $data = $this->only(['type','seating','price_list','user','customer']);
+        $data = $this->only(['type','seating','date','price_list','user','customer','narration','progress']);
         TokenCreating::dispatch($data);
         $token = Token::create($data);
         TokenCreated::dispatch($token);

@@ -24,7 +24,7 @@ export default {
     progresses: ['New','Processing']
   } },
   computed: mapState('tokens',{
-    tokens({ data }){ return _(data).filter(({ progress }) => this.progresses.includes(progress)).mapKeys('id').value() }
+    tokens({ data }){ return _(data).filter(({ progress,type }) => type !== 'Remote' && this.progresses.includes(progress)).mapKeys('id').value() }
   }),
   methods: {
     hKey({ id }){ h_key('order','summary','order',id) },

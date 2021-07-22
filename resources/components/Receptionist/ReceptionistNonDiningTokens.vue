@@ -22,10 +22,11 @@ export default {
   components: {Masonry, OrderSummaryReceptionistOrder},
   mixins: [Tokens],
   data(){ return {
-    activeProgress: ['New','Processing','Completed','Billed','Pending']
+    activeProgress: ['New','Processing','Completed','Billed','Pending'],
+    displayTypes: ['Take Away','Home Delivery','Other'],
   } },
   computed: {
-    oTokens(){ return _(this.tokens).filter(({ type,progress }) => type !== 'Dining' && this.activeProgress.includes(progress)).value() }
+    oTokens(){ return _(this.tokens).filter(({ type,progress }) => this.displayTypes.includes(type) && this.activeProgress.includes(progress)).value() }
   },
   methods: {
     hKey({ id }){ return h_key('receptionist','non','dining','token',id) },

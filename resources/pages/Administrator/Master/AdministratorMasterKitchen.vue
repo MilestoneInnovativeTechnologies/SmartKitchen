@@ -6,14 +6,17 @@
 
 <script>
 import AdministratorMasterCommon from "components/Administrator/AdministratorMasterCommon";
-import {mapState} from "vuex";
+import {mapGetters, mapState} from "vuex";
 export default {
   name: "PageAdministratorMasterKitchen",
   components: {AdministratorMasterCommon},
   data(){ return {
-    fields: { name:'text',detail:'textarea',auto_accept:'noyes',cloud:'noyes',location:'text',status:'status' },
+    fields: { name:'text',detail:'textarea',auto_accept:'noyes',cloud:'noyes',full_timer:'chef',status:'status' },
     filter: ['name','detail'], validate: ['name']
   } },
-  computed: mapState('kitchens',{ kitchens:'data' })
+  computed: {
+    ...mapGetters('kitchens',['kitchen_full_timer','non_remote']),
+    kitchens(){ return _.map(this.non_remote,kitchen => Object.assign({},kitchen,{ full_timer:this.kitchen_full_timer[kitchen.id] })) },
+  }
 }
 </script>
