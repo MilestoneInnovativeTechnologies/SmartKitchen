@@ -10,6 +10,8 @@
 1. php artisan `vendor:publish`
 1. set config > sk.php > domain properly
 1. set config > sk.php > time zone
+1. set config > sk.php > company
+1. set config > sk.php > branch_code
 1. modify other setting in `sk.php` if necessary
 1. php artisan migrate
 1. php artisan jwt:secret
