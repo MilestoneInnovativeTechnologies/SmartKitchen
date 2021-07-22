@@ -23,5 +23,4 @@
 
 ## Configuration
 
-1. Add company name,location details in admin
 1. set printers
