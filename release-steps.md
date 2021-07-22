@@ -10,6 +10,8 @@
 ###### Do release at github
 
 #### Demo domain changes
+set domain in config.sk to smart-kitchen.xyz
+
 In route, initial ```$clientDBs``` and ```If``` conditions are choosing DB according to visitor subdomain.
 
 setClient static method in SmartKitchenServiceProvider is for setting client from host and `sk.domain` config file
