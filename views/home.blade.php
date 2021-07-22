@@ -15,6 +15,16 @@
     <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="icons/favicon-16x16.png">
     <link rel="icon" type="image/ico" href="favicon.ico">
+    <link rel="apple-touch-startup-image" media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2)" href="icons/apple-launch-828x1792.png">
+    <link rel="apple-touch-startup-image" media="(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3)" href="icons/apple-launch-1125x2436.png">
+    <link rel="apple-touch-startup-image" media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3)" href="icons/apple-launch-1242x2688.png">
+    <link rel="apple-touch-startup-image" media="(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2)" href="icons/apple-launch-750x1334.png">
+    <link rel="apple-touch-startup-image" media="(device-width: 414px) and (device-height: 736px) and (-webkit-device-pixel-ratio: 3)" href="icons/apple-launch-1242x2208.png">
+    <link rel="apple-touch-startup-image" media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2)" href="icons/apple-launch-640x1136.png">
+    <link rel="apple-touch-startup-image" media="(device-width: 768px) and (device-height: 1024px) and (-webkit-device-pixel-ratio: 2)" href="icons/apple-launch-1536x2048.png">
+    <link rel="apple-touch-startup-image" media="(device-width: 834px) and (device-height: 1112px) and (-webkit-device-pixel-ratio: 2)" href="icons/apple-launch-1668x2224.png">
+    <link rel="apple-touch-startup-image" media="(device-width: 834px) and (device-height: 1194px) and (-webkit-device-pixel-ratio: 2)" href="icons/apple-launch-1668x2388.png">
+    <link rel="apple-touch-startup-image" media="(device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2)" href="icons/apple-launch-2048x2732.png">
 
     <script src="{!! \Milestone\SmartKitchen\Controllers\AssetController::AssetRoute('Customer') !!}"></script>
     <script src="{!! \Milestone\SmartKitchen\Controllers\AssetController::AssetRoute('ItemProp') !!}"></script>
@@ -32,8 +42,8 @@
 
     @php cache()->put(ck(),'2000-01-01 00:00:01',now()->addDays(7)) @endphp
     <script>
-        const DATA = [], BASE_URL = '{{ route('base_url') }}', MEDIA_ROOT = '{{ route('media_root') }}', _ROLE = '{{ auth()->user()->role }}', LOGOUT = '{!! route('logout') !!}', LOGIN = '{!! route('login') !!}';
-        const _USER = @json(auth()->user()), _SECTION = @json(auth()->user()->Log->section);
+        const DATA = [], BASE_URL = '{{ route('base_url') }}', MEDIA_ROOT = '{{ route('media_root') }}', _COMPANY = '{{ sk('company') }}', _BRANCH = '{{ sk('branch_code') }}', _ROLE = '{{ auth()->user()->role }}', LOGOUT = '{!! route('logout') !!}', LOGIN = '{!! route('login') !!}';
+        const _USER = @json(auth()->user()), _SECTION = @json(\Illuminate\Support\Arr::get(auth()->user(),'Log.section',[]));
     </script>
 </head>
 <body>
