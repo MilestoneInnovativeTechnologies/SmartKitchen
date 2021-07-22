@@ -11,11 +11,6 @@ use \Milestone\SmartKitchen\Middlewares\SmartKitchenAction;
 use \Milestone\SmartKitchen\Middlewares\SmartKitchenGuest;
 use \Milestone\SmartKitchen\Middlewares\SmartKitchenAuth;
 use \Milestone\SmartKitchen\Middlewares\APIRequest;
-use \Milestone\SmartKitchen\Middlewares\SmartKitchenServer;
-use \Milestone\SmartKitchen\Middlewares\SmartKitchenSync;
-use Milestone\SmartKitchen\Models\Remote;
-use Milestone\SmartKitchen\Models\Sync;
-use \Milestone\SmartKitchen\Server\ServerController;
 
 $clientDBs = [
     'demo'   => ['u752305367_smartkitchen','u752305367_smartkitchen','u752305367_SmartKitchen'],
@@ -90,5 +85,4 @@ Route::group([
 });
 
 Route::get('test', function (Request $request) {
-//    return ServerController::response('kitchen','7','item_details');
 });
