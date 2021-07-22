@@ -16,6 +16,7 @@ class CreateKitchenStatusesTable extends Migration
         Schema::create('kitchen_statuses', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('kitchen')->index();
+            $table->unsignedBigInteger('full_timer')->index()->nullable();
             $table->json('users')->nullable();
             $table->enum('status',['Active','Inactive'])->default('Inactive');
             $table->timestamps();

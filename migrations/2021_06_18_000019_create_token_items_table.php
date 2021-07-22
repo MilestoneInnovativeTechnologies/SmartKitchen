@@ -23,7 +23,8 @@ class CreateTokenItemsTable extends Migration
             $table->enum('progress',['New','Accepted','Processing','Completed','Served','Cancelled'])->default('New');
             $table->unsignedInteger('delay')->default(0);
             $table->string('narration',512)->nullable();
-            $table->dateTime('delivery')->nullable()->index();
+            $table->timestamp('deliver')->nullable();
+            $table->string('photo',2048)->nullable();
             $table->json('progress_timing')->nullable();
             $table->timestamps();
         });

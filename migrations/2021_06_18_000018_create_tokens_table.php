@@ -15,7 +15,7 @@ class CreateTokensTable extends Migration
     {
         Schema::create('tokens', function (Blueprint $table) {
             $table->id();
-            $table->enum('type',['Dining','Home Delivery','Take Away','Order','Other'])->default('Dining');
+            $table->enum('type',['Dining','Home Delivery','Take Away','Remote','Other'])->default('Dining');
             $table->unsignedBigInteger('seating')->nullable();
             $table->timestamp('date')->default(\Illuminate\Support\Facades\DB::raw('CURRENT_TIMESTAMP'));
             $table->unsignedBigInteger('price_list');

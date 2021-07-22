@@ -1,3 +1,4 @@
+1. Do copy firebase configuration of real db to boot/remote.js
 1. Commit required changes
 1. Push commits
 1. Quasar Build
