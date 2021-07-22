@@ -2,7 +2,6 @@
 
 namespace Milestone\SmartKitchen\Controllers;
 
-use Illuminate\Http\Request;
 use Milestone\SmartKitchen\Models\Bill;
 use Milestone\SmartKitchen\Models\Customer;
 use Milestone\SmartKitchen\Models\Item;
@@ -43,6 +42,7 @@ class APIController extends Controller
         Tax::class,
         Token::class,
         TokenItem::class,
+        User::class,
         Settings::class,
         Remote::class,
     ];
@@ -68,19 +68,20 @@ class APIController extends Controller
     public function ping(){
         $after = cache()->get(ck()); $before = now()->toDateTimeString();
         $asset = ($after === '2000-01-01 00:00:01') ? 'NO' : 'YES';
-        $data = [];
+        $data = []; $cache_headers = ['SK-Ping-After' => $after,'SK-Ping-Before' => $before,'SK-Ping-Asset' => $asset];
         foreach (self::$Models as $model){
             if(in_array($model,self::$Assets) && $asset === 'NO') continue;
             $modelObj = new $model;
             $table = self::getTableName($modelObj);
             $lid = tc($table);
+            $cache_headers['SK-Ping-Last_ID-' . $table] = $lid;
             if(self::recordsExists($modelObj,$after,$before,$lid)){
                 $records = self::getRecords($modelObj,$after,$before,$lid);
                 $data[$table] = $records; clid($table,$records);
             }
         }
         cache()->put(ck(),$before);
-        return $data;
+        return $data;//\response($data,200,$cache_headers);
     }
 
     public static function recordsExists($modelObj,$after,$before,$lid){
