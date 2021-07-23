@@ -23,7 +23,7 @@ export default {
   } },
   computed: {
     ...mapGetters({ today:'tokens/today',kitchens:'kitchens/assign' }),
-    items(){ let today = _.map(this.today,'id'); return _.map(_.groupBy(_.flatMap(this.tokens,({ items,id }) => today.includes(id) ? _.filter(items,({ kitchen,progress }) => kitchen && this.kitchens[_USER.id].includes(kitchen.id) && progress !== 'Cancelled') : []),'item.id'),(items,item) => _.zipObject(
+    items(){ let today = _.map(this.today,'id') || []; return _.map(_.groupBy(_.flatMap(this.tokens,({ items,id }) => today.includes(id) ? _.filter(items,({ kitchen,progress }) => kitchen && this.kitchens[_USER.id].includes(kitchen.id) && progress !== 'Cancelled') : []),'item.id'),(items,item) => _.zipObject(
       ['item','quantity','time'],
       [_.get(items,[0,'item','name']),_.sumBy(items,'quantity'),this.pTime(items)]
     )) }
