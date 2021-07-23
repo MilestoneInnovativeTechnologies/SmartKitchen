@@ -210,6 +210,6 @@ const remoteUpdater = function(dispatch,item,id,reference,entry,record,cache){
 }
 
 function fetch_ref_where(ref,item){
-  // ref = ref.where('_location','!=',_BRANCH);
-  return (item === 'token_items') ? ref.where('kitchen_item_location','==',_BRANCH) : ref.where('_location','!=',_BRANCH).where('_monitor','==',true)
+  ref = ref.where('_location','!=',_BRANCH);
+  return (item === 'token_items') ? ref.where('kitchen_item_location','==',_BRANCH).where('progress','==','New') : ref.where('_monitor','==',true)
 }
