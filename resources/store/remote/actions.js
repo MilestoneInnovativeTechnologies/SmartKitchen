@@ -34,8 +34,8 @@ export function deleteRemoteEntry({ state,commit,dispatch },payload){
     if (!rEntry || !_.has(state.monitoring, rEntry.reference) || deleted.includes(rEntry.id)) return commit('process',false);
     deleted.push(id);
     post('remote', 'remove',{ id }).then(function ({ id }) {
-      commit('remove', id);
-      remote(rEntry.item, rEntry.reference).then(ref => ref.update({ _monitor:false }).then(() => commit('process',false)))
+      commit('remove', id); let update = { _monitor:false }; if(rEntry.item === 'tokens') update['progress'] = 'Completed'
+      remote(rEntry.item, rEntry.reference).then(ref => ref.update(update).then(() => commit('process',false)))
     })
   } else setTimeout(dispatch,state.pending * 1000,'deleteRemoteEntry',payload);
 }
