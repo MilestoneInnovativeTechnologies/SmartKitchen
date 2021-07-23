@@ -5,7 +5,7 @@ export function init ({ commit,dispatch }) {
   commit('uploadFn',_.bind(dispatch,this,'upload'))
   commit('monitorFn',_.bind(dispatch,this,'monitor'))
   if(typeof _ASSET_Remote !== "undefined") commit('add',_ASSET_Remote);
-  setTimeout(dispatch,3000,'fetch');
+  setTimeout(dispatch,5000,'fetch');
 }
 export function upload({ state,commit,dispatch,getters },{ item,data }){
   if(!state.processing) { commit('process');
