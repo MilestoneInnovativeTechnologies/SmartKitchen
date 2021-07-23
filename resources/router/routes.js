@@ -83,7 +83,7 @@ const route_master = {
   chef_performance: { name:'chef_performance', path:'/report/chef/performance', component: () => import('pages/Report/Reports/ReportChefPerformance'), meta:{ title:'Chef Performance',controls:['user','range'] } },
   orders_remote: { name:'orders_remote', path:'/orders/remote', component: () => import('pages/Order/RemoteOrders'), meta:{ title:'Remote Orders' } },
   orders_remote_new: { name:'orders_remote_new', path:'/orders/remote/new', component: () => import('pages/Order/RemoteOrdersNew'), meta:{ title:'New Remote Orders',back:true } },
-  sale: { name:'sale', path:'sale', component: () => import('pages/Order/Sale'), meta:{ title:'New Sale',footer:false,back:true } },
+  sale: { name:'sale', path:'sale', component: () => import('pages/Order/Sale'), meta:{ title:'New Sale' } },
 }
 
 function getRoutes(page) {
