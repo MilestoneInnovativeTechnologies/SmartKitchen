@@ -25,7 +25,7 @@ export default {
   },
   methods: {
     hKey(idx){ return h_key('masonry','row',idx) },
-    masonry_cols(width) { return [1,1,2,3,4,5,6,7,8,9,10,11][_.floor(this.$q.screen.width/(_.toInteger(width || 220)))] || 12 },
+    masonry_cols(width) { return [1,1,2,3,4,5,6,7,8,9,10,11][_.floor(this.$q.screen.width/(_.toInteger(width || 175)))] || 12 },
     set_height(){
       this.containerHeight = null; let vm = this;
       this.$nextTick(function(){
