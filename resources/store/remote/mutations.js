@@ -27,6 +27,7 @@ export function remove(state,id){
   let ref = state.data[id].reference, monitoring = ref ? state.monitoring[ref] : null,
     unsub = monitoring ? monitoring[0] : null, unwatch = monitoring ? monitoring[1] : null;
   if(unsub) unsub(); if(unwatch) unwatch();
+  state.monitoring[ref] = [null,null];
   state.data[parseInt(id)].monitor = 'No';
 }
 
