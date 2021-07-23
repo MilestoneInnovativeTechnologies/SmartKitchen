@@ -8,7 +8,7 @@
 
 <script>
 import AdministratorMasterCommon from "components/Administrator/AdministratorMasterCommon";
-import {mapState} from "vuex";
+import {mapGetters} from "vuex";
 import KitchenItemsManage from "components/Kitchen/KitchenItemsManage";
 export default {
   name: "PageAdministratorMasterKitchenItems",
@@ -19,7 +19,7 @@ export default {
     current: null,
     removes: [], updates: []
   } },
-  computed: mapState('kitchens',{ kitchens:'data' }),
+  computed: mapGetters('kitchens',{ kitchens:'non_remote' }),
   methods: {
     response({ removes }){
       if(!this.current || !removes || !_.isArray(removes) || !removes.length) return;
