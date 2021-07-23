@@ -16,11 +16,12 @@ class TokenItemReset
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $tokenItem, $kitchen, $item, $quantity, $user;
+    public $tokenItem, $token, $kitchen, $item, $quantity, $user;
 
     public function __construct($tokenItem,$user)
     {
         $this->tokenItem = $tokenItem->id;
+        $this->token = $tokenItem->token;
         $this->kitchen = $tokenItem->kitchen;
         $this->item = $tokenItem->item;
         $this->quantity = $tokenItem->quantity;
