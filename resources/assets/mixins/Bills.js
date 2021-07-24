@@ -11,7 +11,7 @@ export default {
       { customer:_.get(customers['data'],bill.customer) },
       { user:_.get(users['data'],bill.user) },
       { payments:_(payments['data']).filter(payment => payment.bill === bill.id && payment.status === 'Active').value() },
-      { paid: _.sumBy(_.filter(payments['data'],['bill',bill.id]),({amount}) => _.toNumber(amount)) }
+      { paid: _.sumBy(_.filter(payments['data'],{ bill:bill.id,status:'Active' }),({amount}) => _.toNumber(amount)) }
       )).value() }
   })
 }
