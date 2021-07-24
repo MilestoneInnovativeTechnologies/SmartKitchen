@@ -32,7 +32,7 @@ export default {
   components: {DigitMetric},
   mixins: [Tokens],
   data(){ return {
-    iconColor_sbt: { 'Dining':['local_dining','purple'],'Home Delivery':['delivery_dining','amber'],'Take Away':['home','green'],'Other':['stream','light-blue'] },
+    iconColor_sbt: { 'Dining':['local_dining','purple'],'Home Delivery':['delivery_dining','amber'],'Take Away':['home','green'],'Other':['stream','light-blue'],'Remote':['online_prediction','brown'] },
     iconColor_pyt: { Cash:['money','green'],Card:['payment','teal'],Wallet:['account_balance','purple'],Credit:['money_off','red'] },
   } },
   computed: {
