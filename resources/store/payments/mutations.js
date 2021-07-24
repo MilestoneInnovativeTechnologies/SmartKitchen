@@ -8,3 +8,8 @@ export function add (state,records) {
     Vue.set(state.data,key,data)
   })
 }
+
+export function cancel(state, payment){
+  let id = _.toInteger(_.isObject(payment) ? payment.id : payment)
+  if(_.has(state.data,id)) state.data[id].status = 'Inactive';
+}
