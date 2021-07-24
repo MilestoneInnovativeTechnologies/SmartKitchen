@@ -20,6 +20,8 @@ export function tomorrow(){ return to_format('YYYY-MM-DD',addToDate(new Date(),{
 export function common_format(format){ return format || 'YYYY-MM-DD HH:mm:ss' }
 export function extract_date(datetime,format){ format = common_format(format); return extractDate(datetime,format) }
 export function time(datetime,format,sec){ format = common_format(format); return formatDate(extractDate(datetime,format),sec ? 'hh:mm:ss A' : 'hh:mm A') }
+export function human_date(datetime,time){ return formatDate(extractDate(datetime,common_format()),time ? 'ddd, D/MM - hh:mm A' : 'ddd, D/MM') }
+export function human_date2(datetime){ return formatDate(extractDate(datetime,common_format()),'ddd, D/MMM/YYYY') }
 export function is_today(datetime,format){ format = common_format(format); return isSameDate(extractDate(datetime,format),new Date(),'day') }
 export function is_yesterday(datetime,format){ format = common_format(format); return isSameDate(extractDate(datetime,format),subtractFromDate(new Date,{ days:1 }),'day') }
 export function is_tomorrow(datetime,format){ format = common_format(format); return isSameDate(extractDate(datetime,format),addToDate(new Date,{ days:1 }),'day') }
