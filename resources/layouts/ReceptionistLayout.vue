@@ -7,7 +7,7 @@
           <q-btn v-if="$store.state.back" :to="$store.state.back" flat round dense icon="arrow_back_ios" />
           {{ $store.state.title || receptionist }}
         </q-toolbar-title>
-        <q-btn flat round dense icon="archive" class="lt-md" :to="{ name:'seat_status' }" />
+        <q-btn flat round dense icon="archive" class="lt-md" :to="{ name:'archives' }" />
         <q-btn flat round dense icon="batch_prediction" class="lt-md" :to="{ name:'seat_status' }" />
         <q-btn flat round dense icon="receipt" class="lt-sm" :to="{ name:'receptionist_tokens' }" ><q-badge color="red" :label="completed.length" transparent floating v-show="completed.length>0" /></q-btn>
         <q-btn flat round dense icon="pending_actions" class="lt-sm" :to="{ name:'bills' }" />
@@ -25,7 +25,7 @@
       <q-tabs align="left">
         <q-route-tab exact :to="{ name:'receptionist_index' }" label="Home" icon="home" />
         <q-route-tab :to="{ name:'seat_status' }" label="Seating" icon="batch_prediction" class="gt-sm" />
-        <q-route-tab :to="{ name:'bills' }" label="Archive" icon="archive" class="gt-sm" />
+        <q-route-tab :to="{ name:'archives' }" label="Archive" icon="archive" class="gt-sm" />
         <q-route-tab :to="{ name:'receptionist_tokens' }" label="Tokens" icon="receipt" :alert="alert || completed.length>0" alert-icon="new_releases" class="gt-xs" />
         <q-route-tab :to="{ name:'bills' }" label="Bills" icon="pending_actions" class="gt-xs" />
         <q-route-tab :to="{ name:'sale' }" label="Sale" icon="shopping_cart" />

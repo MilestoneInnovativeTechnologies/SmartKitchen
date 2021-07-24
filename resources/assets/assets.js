@@ -11,3 +11,4 @@ export const TokenProgressColor = { New:'red', Processing:'purple-9', Completed:
 export const DiningTypeColor = { Dining:'purple', 'Home Delivery':'orange', 'Take Away':'green', Remote:'cyan' }
 export const KitchenTokensDisplayMode = ['Token','Progress','Item']
 export const TokenDeliveryReadableChecks = [[is_today,'Today','primary'],[is_tomorrow,'Tomorrow','info'],[is_future_day,'Within 2 Days','teal',2],[is_future_day,'Within 7 Days','purple-6',7],[is_future_day,'Within 30 Days','brown-6',30],[is_future_day,'After 1 month','brown-9',180],[is_yesterday,'Yesterday','pink-6'],[null,'Delayed','red-6']]
+export const Archives = ['Tokens','Orders','Sales','Remote','Bills','Payments']
