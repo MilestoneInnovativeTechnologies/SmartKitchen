@@ -1,6 +1,6 @@
 <template>
-  <q-page padding>
-    <q-list bordered separator>
+  <q-page>
+    <q-list separator>
       <q-item v-for="payment in payments" :key="'archive-payments-' + payment.id" clickable @click="detail(payment)">
         <q-item-section avatar>
           <q-avatar size="md" rounded color="info" class="text-white text-bold">{{ payment.id }}</q-avatar>
@@ -94,12 +94,8 @@ export default {
       this.payment = payment
     },
     cancel(){
-      this.loading = true;
-      post('payment','cancel',{ id:this.payment.id }).then(this.cancelled)
-    },
-    cancelled(payment){
-      if(payment) this.$store.commit('payments/cancel',payment,{ root:true });
-      this.loading = false;
+      this.loading = true; let vm = this;
+      this.$store.dispatch('payments/cancel',this.payment,{ root:true }).then(payment => vm.loading = false)
     }
   }
 }

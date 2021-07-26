@@ -8,3 +8,8 @@ export function add (state,records) {
     Vue.set(state.data,key,data)
   })
 }
+
+export function cancel(state, bill){
+  let id = _.toInteger(_.isObject(bill) ? bill.id : bill)
+  if(_.has(state.data,id)) Vue.delete(state.data,id);
+}

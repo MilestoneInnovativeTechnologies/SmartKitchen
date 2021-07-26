@@ -14,7 +14,7 @@ const layout_child = {
   Waiter: ['waiter_index','waiter_menu','orders','order_new'],
   Chef: ['chef_index','chef_kitchens','kitchen_items','kitchen_stocks','tokens'],
   Receptionist: ['receptionist_index','seat_status','receptionist_tokens','bills','seat_status_order','receptionist_orders','receptionist_order_new','receptionist_order_new_items','orders_remote','orders_remote_new','sale',
-    'archives','archive_payments'
+    'archives','archive_payments','archive_bills'
   ],
   Administrator: ['report_index','administration_index',
     'master_customer','master_prop','master_item','master_group','master_kitchen','master_kitchen_items','master_menu','master_price_list','master_seating','master_tax','image_customer','image_item','image_kitchen','image_seating','image_user','master_user','master_settings',
@@ -88,6 +88,7 @@ const route_master = {
   sale: { name:'sale', path:'sale', component: () => import('pages/Order/Sale'), meta:{ title:'New Sale' } },
   archives: { name:'archives', path:'archives', component: () => import('pages/Archive/Index'), meta:{ title:'Archives' } },
   archive_payments: { name:'archive_payments', path:'archive/payments', component: () => import('pages/Archive/Payments'), meta:{ title:'Recent Payments',back:true,footer:false } },
+  archive_bills: { name:'archive_bills', path:'archive/bills', component: () => import('pages/Archive/Bills'), meta:{ title:'Bills',back:true,footer:false } },
 }
 
 function getRoutes(page) {

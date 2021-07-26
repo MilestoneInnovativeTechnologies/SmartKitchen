@@ -35,7 +35,7 @@ class CreatePaymentRequest extends FormRequest
 
     protected function prepareForValidation(){
         $this->merge([
-            'date' => now()->toDateTimeString(),
+            'date' => $this->input('date',now()->toDateTimeString()),
             'amount'  => doubleval($this->input('amount') ?: 0),
             'type'    => $this->input('type','Cash'),
             'status'    => $this->input('status','Active'),
@@ -43,7 +43,7 @@ class CreatePaymentRequest extends FormRequest
     }
 
     public function store(){
-        $data = $this->only(['bill','amount','type','detail']);
+        $data = $this->only(['bill','amount','type','detail','date']);
         PaymentCreating::dispatch($data);
         $payment = Payment::create($data);
         PaymentCreated::dispatch($payment);

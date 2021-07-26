@@ -5,6 +5,7 @@ namespace Milestone\SmartKitchen\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Milestone\SmartKitchen\Jobs\TryMakingBillAsCancelled;
+use Milestone\SmartKitchen\Models\Bill;
 use Milestone\SmartKitchen\Models\Tax;
 use Milestone\SmartKitchen\Requests\CreateBillRequest;
 
@@ -20,6 +21,16 @@ class BillController extends Controller
     public function Cancel(Request $request){
         $bill_id = $request->bill;
         TryMakingBillAsCancelled::dispatch($bill_id);
+    }
+
+    public function do_cancel(Request $request){
+        $bill_id = $request->id;
+        $bill = Bill::with('Payments')->find($bill_id);
+        if($bill->Payments->isNotEmpty()){
+            $bill->Payments->each(function($payment){ $payment->status = 'Inactive'; $payment->save(); });
+        }
+        TryMakingBillAsCancelled::dispatch($bill_id);
+        return $bill;
     }
 
     public static function Contents($token, $nature = null, $discount = 0){
