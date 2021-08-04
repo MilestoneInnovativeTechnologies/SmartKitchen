@@ -20,6 +20,7 @@ $clientDBs = [
     'client1'   => ['smartkitchen','root','metalic'],
     'server'   => ['skdep','root','metalic'],
     'dolphin'   => ['u752305367_dolphin','u752305367_dolphin','u752305367_Dolphin'],
+    'modern'   => ['u752305367_modern','u752305367_modern','u752305367_Modern'],
     'barak'   => ['u752305367_barak','u752305367_barak','u752305367_Barak'],
 ];
 
