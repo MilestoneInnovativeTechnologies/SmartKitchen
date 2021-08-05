@@ -25,15 +25,16 @@ export default {
   components: {BillDetail, BillListItem},
   mixins: [Bills],
   data(){ return {
-    bill:null, show:false
+    selected:null, show:false
   } },
   computed: {
     pending(){ return _.filter(this.bills,({ progress }) => ['Partial','Pending'].includes(progress)) },
     paid(){ return _(this.bills).filter(['progress','Paid']).sortBy(({ date }) => extract_date(date).getTime()).reverse().value() },
+    bill(){ return this.selected === null ? null : this.bills[this.selected] }
   },
   methods: {
     hKey(item,idx,name){ return h_key(name,idx,item.id) },
-    view(bill){ this.bill = bill; this.show = true }
+    view(bill){ this.selected = _.findIndex(this.bills,['id',_.toInteger(bill.id)]); this.show = true }
   }
 }
 </script>

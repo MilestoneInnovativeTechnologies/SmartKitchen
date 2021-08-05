@@ -10,7 +10,7 @@
           <q-item-label caption>Bill ID: {{ payment.bill }}</q-item-label>
         </q-item-section>
         <q-item-section>
-          <q-item-label class="">{{ payment.type }}</q-item-label>
+          <q-item-label class="text-cyan">{{ payment.type }}</q-item-label>
         </q-item-section>
         <q-item-section side>
           <q-item-label caption>{{ time(payment.date) }}</q-item-label>

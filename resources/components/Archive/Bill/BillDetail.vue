@@ -4,6 +4,7 @@
       <q-card-section class="bg-teal">
         <div class="text-caption">{{ human_date2(bill.date,true) }}</div>
         <div class="text-h5 text-bold">{{ parseFloat(bill.payable).toFixed(2) }}</div>
+        <div class="text-caption">Token ID: {{ bill.token.id }}</div>
       </q-card-section>
       <q-card-section class="col-grow text-right">
         <q-btn icon="close" text-color="teal-1" dense rounded flat class="absolute-top-right q-mr-xs q-mt-xs" v-close-popup />
@@ -31,10 +32,12 @@
           </q-item-section>
           <q-item-section side class="text-teal text-bold text-subtitle2">{{ Math.round((parseFloat(content.quantity) * parseFloat(content.price)) - parseFloat(content.discount)).toFixed(2) }}</q-item-section>
         </q-item>
-        <template v-if="content.tax && parseFloat(content.tax.amount) > 0">
-          <div class="q-px-md text-grey" style="font-size: 0.65rem">Tax Details<br />{{ content.tax.name }} - {{ Math.round(parseFloat(content.tax.amount)).toFixed(2) }}</div>
-          <div class="q-px-xl" style="font-size: 0.65rem" v-for="(tax,idx1) in content.tax.contents" :key="'abd-i-'+idx+'-tc-' + idx1"><q-icon name="subdirectory_arrow_right" /> {{ tax.name }} - {{ Math.round(tax.amount).toFixed(2) }}</div>
-        </template>
+        <div v-if="content.tax && parseFloat(content.tax.amount) > 0" style="transform: translateY(-0.4rem)">
+          <div class="q-px-md text-grey" style="font-size: 0.65rem">Included Tax Details<br />{{ content.tax.name }} - {{ Math.round(parseFloat(content.tax.amount)).toFixed(2) }}</div>
+          <div v-show="content.tax.contents && content.tax.contents.length > 1">
+            <div class="q-px-xl" style="font-size: 0.65rem" v-for="(tax,idx1) in content.tax.contents" :key="'abd-i-'+idx+'-tc-' + idx1"><q-icon name="subdirectory_arrow_right" /> {{ tax.name }} - {{ Math.round(tax.amount).toFixed(2) }}</div>
+          </div>
+        </div>
         <q-separator class="q-mt-xs" />
       </template>
     </q-list>
