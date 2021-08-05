@@ -5,7 +5,6 @@ namespace Milestone\SmartKitchen\Listeners;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Http\Request;
 use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Support\Facades\App;
 use Milestone\SmartKitchen\Controllers\BillController;
 use Milestone\SmartKitchen\Events\TokenItemsSaved;
 use Milestone\SmartKitchen\Jobs\RemoteAddToken;
