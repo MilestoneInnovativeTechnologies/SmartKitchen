@@ -19,6 +19,11 @@ return [
         'Chef' => 'kitchen'
     ],
 
+    /*
+     * Data will be fetched for these no of days only
+     */
+    'recent_days_length' => 10,
+
     'settings' => [
         // true => kitchens with item having no stock will not consider while auto assigning items to kitchen
         // false => kitchens with item having no stock will also consider while auto assigning items to kitchen

@@ -27,7 +27,7 @@ class Bill extends Model
     }
 
     public function scopeRecent($Q){
-        return $Q->where('created_at','>=',now()->subDays(5)->startOfDay()->toDateTimeString());
+        return $Q->where('created_at','>=',now()->subRealDays(sk('recent_days_length'))->startOfDay()->toDateTimeString());
     }
 
     protected $casts = [

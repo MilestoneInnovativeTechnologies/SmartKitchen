@@ -7,6 +7,7 @@ use Milestone\SmartKitchen\Scopes\ActiveOnlyScope;
 
 class Payment extends Model
 {
+    public static $recentDays = 7;
     protected static function booted(){ static::addGlobalScope(new ActiveOnlyScope); }
 
     public function Bill(){ return $this->belongsTo(Bill::class,'bill','id'); }
@@ -15,7 +16,7 @@ class Payment extends Model
     public $print_template = 'payment_print_template';
 
     public function scopeRecent($Q){
-        return $Q->where('created_at','>=',now()->subDays(Token::$recentDays)->startOfDay()->toDateTimeString());
+        return $Q->where('created_at','>=',now()->subRealDays(sk('recent_days_length'))->startOfDay()->toDateTimeString());
     }
     public static function fetch($after,$before,$lid){
         return self::recent()->sync($after,$before,$lid)->get();

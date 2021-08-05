@@ -45,12 +45,13 @@ class Token extends Model
         return $Q->where('created_at','>=',now()->startOfDay()->toDateTimeString());
     }
     public function scopeRecent($Q){
-        return $Q->where('created_at','>=',now()->subDays(5)->startOfDay()->toDateTimeString());
+        return $Q->where('created_at','>=',now()->subRealDays(sk('recent_days_length'))->startOfDay()->toDateTimeString());
     }
     public function scopeActive($Q){
         return $Q
             ->where('progress','!=','Billed')
-            ->orWhere(function($q1){ $q1->where('progress','Billed')->where('updated_at','>',now()->subDays(5)->toDateTimeString()); });
+            ->orWhere(function($q1){ $q1->where('progress','Billed')->where('updated_at','>',now()->subRealDays(sk('recent_days_length'))->toDateTimeString()); })
+            ->orWhere(function($q1){ $q1->where('type','Remote')->whereNotIn('progress',['Billed','Cancelled'])->whereHas('Items',function($q2){ $q2->withoutGlobalScope('token')->where('deliver','>=',now()->toDateTimeString()); }); });
     }
 
     public function Customer(){ return $this->belongsTo(Customer::class,'customer','id'); }
@@ -63,8 +64,8 @@ class Token extends Model
     public static function fetch($after,$before,$lid){
 //        return self::recent()->active()->sync($after,$before,$lid)->get();
         return (auth()->user()->role === 'Waiter')
-            ? self::own()->recent()->active()->sync($after,$before,$lid)->get()
-            : self::recent()->active()->sync($after,$before,$lid)->get();
+            ? self::own()->active()->sync($after,$before,$lid)->get()
+            : self::active()->sync($after,$before,$lid)->get();
     }
 
     public function print_data($data){
