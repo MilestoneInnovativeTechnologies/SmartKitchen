@@ -25,23 +25,27 @@ class RefreshTokenProgress
     public function handle()
     {
         Log::info('Initialized Token Refresh Activity');
-        $items = $this->token->items;
-        if($items->isEmpty()) {
-            Log::critical('Items are empty');
-            $this->makeProgress('New');
-        } elseif($this->token->Bill) {
-            Log::info('Token has bill, Billed');
-            $this->makeProgress('Billed');
-        } elseif($items->every(function($item){ return in_array($item->progress,['Served','Cancelled']); })) {
-            Log::info('Every items are of Served or Cancelled');
-            $this->makeProgress('Completed');
-        } elseif($items->every(function($item){ return in_array($item->progress,['New','Accepted','Cancelled']); })) {
-            Log::info('Every items are of New, Accepted or Cancelled');
-            $this->makeProgress('New');
-        } else {
-            Log::info('Have items in Processing');
-            $this->makeProgress('Processing');
+        $items = $this->token->items; $progresses = $items->map->progress;
+        if($items->isEmpty()) { Log::critical('Items are empty'); return $this->makeProgress('New'); }
+        if($progresses->contains('Processing')) { Log::info('Have items in Processing'); return $this->makeProgress('Processing'); }
+        if($progresses->every(function($progress){ return in_array($progress,['Served','Cancelled']); })) {
+            if($progresses->contains('Cancelled')) Log::info('All Items are served and cancelled.. Token is completed..');
+            else Log::info('All Items served.. Token is completed..');
+            if($this->token->Bill) { Log::info('Token has bill generated, Token progress to Billed'); $this->makeProgress('Billed'); }
+            else $this->makeProgress('Completed');
+            return true;
         }
+        if($progresses->every(function($progress){ return in_array($progress,['New','Accepted','Cancelled']); })) {
+            if($progresses->every(function($progress){ return $progress === 'Cancelled'; })) { Log::info('All Items cancelled.. Token cancelling..'); $this->makeProgress('Cancelled'); }
+            else { Log::info('Every items are of New/Accepted.. Token to New'); $this->makeProgress('New'); }
+            return true;
+        }
+        if($progresses->contains('New') || $progresses->contains('Accepted') || $progresses->contains('Completed')) {
+            Log::info('Still have few items of processing status.. Token to Processing');
+            return $this->makeProgress('Processing');
+        }
+        Log::critical('No any criteria matching.. Urgent attention needed for token: ' . $this->token->id);
+        return true;
     }
 
     private function makeProgress($progress){
