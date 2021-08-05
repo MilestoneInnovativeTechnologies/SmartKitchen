@@ -14,5 +14,5 @@ export function map({ items }){
 
 export function remote({ data,items },getters,rState,rGetters){
   let items_map = _.bind(token_remote_map,this,items), remote_filter = _.bind(token_remote_filter,this,rGetters['remote/token_branch']);
-  return _(data).filter(remote_filter).filter(token_remote_recent).map(items_map).value()
+  return _(data).filter(remote_filter)/*.filter(token_remote_recent)*/.map(items_map).value()
 }
