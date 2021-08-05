@@ -8,8 +8,8 @@
               <div class="text-subtitle1">Customer</div>
               <OrderCustomer v-model="params.customer" get="id" />
               <PriceListSelectDropDown outlined dense input-debounce="0" v-model="params.price_list" label="Select Price List" get="id" />
-              <Date outlined dense label="Delivery Date" :value="deliver" @input="deliver = $event" />
-              <q-input type="textarea" label="Narration" outlined dense v-model="params.narration" />
+              <DateTime outlined dense label="Delivery Date" :value="deliver" @input="deliver = $event" />
+<!--              <q-input type="textarea" label="Narration" outlined dense v-model="params.narration" />-->
             </q-card-section>
             <q-card-section class="col-xs-12 col-sm-6 q-col-gutter-y-xs q-pt-none q-px-none" v-show="params.items.length">
               <div class="text-subtitle1 q-ml-md">Items</div>
@@ -67,13 +67,13 @@ import OrderCustomer from "components/Order/OrderCustomer";
 import PriceListSelectDropDown from "components/Price/PriceListSelectDropDown";
 import RemoteOrderItemUpdateForm from "components/Order/RemoteOrderItemUpdateForm";
 import {image, tomorrow} from "assets/helpers";
-import Date from "components/Date";
+import DateTime from "components/DateTime";
 import {PaymentsTypes} from "assets/assets";
 import {storage} from "boot/remote";
 
 export default {
   name: 'PageRemoteOrdersNew',
-  components: {Date, RemoteOrderItemUpdateForm, PriceListSelectDropDown, OrderCustomer, ItemSelectCard, Masonry},
+  components: { DateTime, RemoteOrderItemUpdateForm, PriceListSelectDropDown, OrderCustomer, ItemSelectCard, Masonry },
   data(){ return {
     expanded: true, payment_types: PaymentsTypes, loading: false, deliver: null,
     params: { type:'remote',price_list:1,customer:null,items:[],nature:null,discount:0,advance_type:PaymentsTypes[0],advance_amount:0 },
