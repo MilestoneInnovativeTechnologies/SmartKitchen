@@ -3,7 +3,6 @@
     <div class="text-caption">{{ label }}</div>
     <div class="text-caption text-bold"><slot></slot></div>
   </div>
-
 </template>
 
 <script>
