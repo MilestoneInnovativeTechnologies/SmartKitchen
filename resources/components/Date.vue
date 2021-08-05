@@ -23,6 +23,9 @@ export default {
   data(){ return { date:null }},
   created(){
     this.date = this.value || to_format('YYYY-MM-DD',new Date)
+  },
+  watch: {
+    date:{ immediate:true,handler(date){ this.$emit('input',date)} }
   }
 }
 </script>
