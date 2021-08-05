@@ -57,7 +57,7 @@
               <q-item-section avatar>0</q-item-section>
               <q-item-section><q-item-label class="text-secondary text-bold">Payable</q-item-label></q-item-section>
               <q-item-section class="text-secondary text-bold" side style="font-size: 1rem">{{ parseFloat(total - params.discount).toFixed(2) }}</q-item-section>
-              <q-item-section side><q-icon name="price_check" color="payments" size="xs" /></q-item-section>
+              <q-item-section side><q-icon size="xs" /></q-item-section>
             </q-item>
           </q-list>
         </q-card-section>
@@ -97,7 +97,7 @@ export default {
     fabPos: [18,18], draggingFab: false,
     payment_mode: false, processing: false,
     params: {
-      type: 'Take Away', price_list: null, items: [],
+      type: 'Sale', price_list: null, items: [],
       customer: null, nature: null, discount: 0, advance_type:PaymentsTypes[0], advance_amount: 0
     }
   } },
