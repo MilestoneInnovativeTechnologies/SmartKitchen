@@ -43,6 +43,7 @@ export default {
     token_time(){ return this.token.date_human },
     token_ref(){ return this.remote.reference },
     items(){ return _(this.token.items).map(item => Object.assign({},item,iMap(item))).value() },
+    items_read_ref(){ return _(_.map(this.items,'id')).mapKeys().mapValues(id => _.get(_.find(this.$store.state.remote.data,{ item:'token_items',local_id:parseInt(id) }),['extra','r_ref'])).value() },
     dtColor(){ return 'bg-' + this.items[0].say_color },
   },
   methods: {
