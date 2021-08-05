@@ -16,12 +16,17 @@
           <q-badge v-else :label="'Full Timer: ' + full_timer.name" color="secondary" outline class="q-py-sm" />
         </template>
         <q-btn v-else align="left" dense color="secondary" icon="view_in_ar" size="sm" padding="sm md" label="Set me as Full Timer" @click="full_time(true)" />
+        <q-btn v-if="kitchen.cloud === 'Yes' && is_in" align="left" dense color="light-blue" icon="cloud" size="sm" padding="sm md" label="Add Remote Order" @click="remote_order = true" />
+<!--        <q-file v-if="kitchen.cloud === 'Yes'" class="glossy bg-light-blue rounded-borders" clearable outlined dense label-color="white" color="light-blue" input-class="text-white" label="Import Remote Order" bottom-slots hide-bottom-space v-model="read_ref"><template #prepend><q-icon name="cloud" color="white" /></template></q-file>-->
       </q-card-actions>
     </q-card-section>
     <q-card-section v-if="kitchen.detail" style="font-size: 0.75rem">{{ kitchen.detail }}</q-card-section>
     <q-inner-loading :showing="loading">
       <q-spinner-dots size="50px" color="primary" />
     </q-inner-loading>
+    <q-dialog persistent :value="remote_order" @before-hide="remote_order = false">
+      <AddRemoteOrder style="width: 22rem" :kitchen="id" @imported="remote_order = false" />
+    </q-dialog>
   </q-card>
 </template>
 
@@ -29,10 +34,11 @@
 import CardImageTitle from "components/CardImageTitle";
 import {mapGetters, mapState} from 'vuex'
 import {image} from "assets/helpers";
+import AddRemoteOrder from "components/Remote/AddRemoteOrder";
 export default {
   name: "KitchenActionsView",
-  components: {CardImageTitle},
-  data(){ return { loading: false } },
+  components: {AddRemoteOrder, CardImageTitle},
+  data(){ return { loading: false, remote_order: false, ref_content: '' } },
   props: ['id','me'],
   computed: {
     ...mapState('kitchens',{ kitchens:'data',status:'status' }),
@@ -48,7 +54,7 @@ export default {
   methods: {
     toggle({ id }){ this.loading = true; this.$store.dispatch('kitchens/chef',{ kitchen:id }).then(() => this.loading = false) },
     auto(auto_accept){ this.loading = true; this.$store.dispatch('kitchens/auto',{ id: this.intID, auto_accept }).then(() => this.loading = false) },
-    full_time(status){ this.loading = true; post('kitchen','full_timer',{ kitchen:this.intID,user:this.me,status }).then(() => this.loading = false) }
-  }
+    full_time(status){ this.loading = true; post('kitchen','full_timer',{ kitchen:this.intID,user:this.me,status }).then(() => this.loading = false) },
+  },
 }
 </script>

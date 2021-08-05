@@ -62,6 +62,30 @@ export function is(state){
 
 export function token_branch({ data }){ return _(data).filter(['item','tokens']).mapKeys(({ local_id }) => _.toInteger(local_id)).mapValues('location').value() }
 
+export function read_reference(state,getters,rootState,rootGetters){
+  return function(id,extra){ id = parseInt(id); extra = extra || {};
+    let map = rootGetters['tokens/map'][id];
+    let ti = _.find(state.data,{ item:'token_items',local_id:parseInt(id) }), tk = _.find(state.data,{ item:'tokens',local_id:parseInt(map[0]) });
+    let ki_refs = _.mapKeys(getters['token_item_kitchen_item_reference_location'][id],(v,key) => 'kitchen_item_' + key);
+    return new Object({
+      local: [tk,ti],
+      server: [getters['tokens'](map[0]),getters['token_items'](id)],
+      // tokens: [_.get(rootState.tokens.data,parseInt(map[0]))],
+      // token_items: [_.get(rootState.tokens.items,map)],
+      ...ki_refs,
+      token_reference: _.get(tk,'reference'), token_item_reference: _.get(ti,'reference'),
+      token_source_location: _BRANCH, token_source_id: map[0], token_item_source_id: id,
+      ...extra
+    })
+  }
+}
+
+export function token_item_token(state,getters,rootState,rootGetters){
+  return function(token_item){
+    return _.find(state.data,{ item:'tokens',local_id:rootGetters['tokens/map'][parseInt(token_item)][0] })
+  }
+}
+
 function ti_item(items,map){ return parseInt(_.get(items,[...map,'item'])) }
 function item_kis(items){ return _(items).flatMap().keyBy(({ item }) => _.toInteger(item)).mapValues(({ id }) => _.toInteger(id)).value() }
 function ki_ref_loc(data){ return _(data).filter(({ item,monitor }) => item === 'kitchen_items').keyBy(({ local_id }) => _.toInteger(local_id)).mapValues(({ reference,location }) => new Object({ reference,location })).value() }

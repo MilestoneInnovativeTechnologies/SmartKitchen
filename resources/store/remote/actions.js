@@ -5,14 +5,17 @@ export function init ({ commit,dispatch }) {
   commit('uploadFn',_.bind(dispatch,this,'upload'))
   commit('monitorFn',_.bind(dispatch,this,'monitor'))
   if(typeof _ASSET_Remote !== "undefined") commit('add',_ASSET_Remote);
-  setTimeout(dispatch,5000,'fetch');
+  if(typeof _COMPANY !== 'undefined') {
+    setTimeout(dispatch,5000,'fetch');
+    setTimeout(dispatch,1000,'fetchReference');
+  }
 }
 export function upload({ state,commit,dispatch,getters },{ item,data }){
   if(!state.processing) { commit('process');
     let rData = _.find(state.data,(rmt) => rmt.item === item && parseInt(rmt.local_id) === parseInt(data.local_id));
     if(rData && (rData.reference || rData.location !== _BRANCH)) return commit('process',false);
     let record = getters[item](data.local_id); if(!record) return commit('process',false);
-    record._location = _BRANCH; record._monitor = true; dispatch('uploadRemoteRecord',{ item,record,id:data.id });
+    record._location = _BRANCH; record._monitor = true; record.extra = _.get(data,'extra'); dispatch('uploadRemoteRecord',{ item,record,id:data.id });
   } else setTimeout(dispatch,state.pending * 1000,'upload',{ item,data });
 }
 
@@ -47,7 +50,7 @@ export function addReference({},{ id,reference }){
 }
 
 export function monitor({ state:{ monitoring,syncRemoteEdits,syncLocalEdits,data },getters,commit,dispatch }, { id,item,reference,entry }){
-  if(!data[parseInt(entry)]) return;
+  if(!reference || !data[parseInt(entry)]) return;
   // if(_.has(monitoring,reference) && monitoring[reference][0]) monitoring[reference][0]();
   let rData = data[parseInt(entry)], rSource = rData['location'], rMonitor = rData['monitor'];
   if(rMonitor === 'Yes' && (!_.has(monitoring,reference) || !monitoring[reference][0])) {
@@ -63,11 +66,24 @@ export function monitor({ state:{ monitoring,syncRemoteEdits,syncLocalEdits,data
         }) }))
     }
   }
+  if(_.has(rData['extra'],'r_ref')) {
+    let r_ref = _.get(rData['extra'],'r_ref')
+    remote('reference',r_ref).then(ref => ref.get().then(function(snap){
+      if(!snap.exists) snap.ref.set(getters['read_reference'](id, { status:'init',name:r_ref }))
+      else if(!snap.get('token_reference') || snap.get('token_item_reference')) {
+        let { token_reference,token_item_reference } = getters['read_reference'](id);
+        snap.ref.update({ token_item_reference,token_reference });
+      }
+    }))
+  }
   let record = getters[item](id); if(!record) return dispatch('deleteRemoteEntry', { id:entry });
   if(rSource === _BRANCH || (rSource !== _BRANCH && syncLocalEdits.includes(item))){
     let listener = _.bind(remoteUpdater,this,dispatch,item,id,reference,entry);
-    if(_.has(monitoring,reference) && monitoring[reference][1]) monitoring[reference][1]();
-    if(rMonitor === 'Yes') dispatch({ type:'subscribeWatch_' + item,id,item,reference,entry,listener })
+    if(!_.has(monitoring,reference) || !monitoring[reference][1]) {
+      if(rMonitor === 'Yes') dispatch({ type:'subscribeWatch_' + item,id,item,reference,entry,listener })
+    } else {
+      if(rMonitor === 'No') monitoring[reference][1]();
+    }
   }
 }
 
@@ -140,7 +156,6 @@ export function subscribeWatch_token_items({ getters,rootGetters,rootState,state
 }
 
 export function fetch({ state,dispatch }){
-  if(typeof _COMPANY === 'undefined') return;
   ['kitchens','kitchen_items'].forEach(item => remote(item).then(ref => fetch_ref_where(ref,item).onSnapshot(snaps => snaps.docChanges().forEach(function(change){
     if(change.type !== 'added') return true; let doc = change.doc, reference = doc.id, data = doc.data(); cache[reference] = data;
     if(!_.find(state.data,({ item:dItem,reference:dRef }) => dItem === item && dRef === reference)) dispatch('uploadFetch',{ item,data:{ ...data,reference } })
@@ -160,6 +175,18 @@ export function fetch({ state,dispatch }){
     _(state.data).filter(({ item,monitor,location }) => item === 'tokens' && monitor === 'Yes' && location !== _BRANCH).forEach(function({ id,reference,local_id }){
       if(!_.includes(monitor_tokens,reference)) dispatch('completeToken',{ token_id:local_id,remote_id:id })
     });
+  }))
+}
+
+export function fetchReference({ dispatch }){
+  remote('reference').then(ref => ref.where('status','==','init').where('kitchen_item_location','==',_BRANCH).onSnapshot(function(snaps){
+    snaps.docChanges().forEach(function(change){ if(change.type === 'removed') return;
+      let doc = change.doc, r_ref = doc.id, data = doc.data(); cache[r_ref] = data;
+      if(data.token_reference && data.token_item_reference){
+        cache[data.token_item_reference] = _.get(data,['server',1]); cache[data.token_reference] = _.get(data,['server',0]);
+        dispatch('processReference',{ r_ref,reference:data,doc_ref:doc.ref })
+      }
+    })
   }))
 }
 
@@ -197,6 +224,30 @@ export function completeToken({ state,rootState,dispatch }, { token_id,remote_id
   let token_items = _.get(rootState.tokens.items,_.toInteger(token_id));
   let un_served_token_items = _(token_items).filter(({ progress }) => state.token_item_progress.indexOf(progress) < state.token_item_progress.indexOf('Served')).map('id').value();
   post('token','served',{ id:un_served_token_items }).then(() => dispatch('deleteRemoteEntry', { id:remote_id }))
+}
+
+export function processReference({ state,dispatch,getters },{ r_ref,reference,doc_ref }){
+  let read_ref_remote = _.find(state.data,({ item,extra }) => item === 'token_items' && _.get(extra,'r_ref') === r_ref)
+  if(read_ref_remote) {
+    if(read_ref_remote && !_.get(read_ref_remote,'reference')){
+      dispatch('addReference', { id:read_ref_remote.id,reference:reference.token_item_reference });
+      let local_token = getters['token_item_token'](read_ref_remote.local_id)
+      dispatch('addReference', { id:local_token.id,reference:reference.token_reference });
+    }
+    if(doc_ref) doc_ref.update({ status:'fetched' })
+  } else {
+    let ref_remote = _.find(state.data,({ item,reference }) => item === 'token_items' && reference === reference.token_item_reference);
+    if(ref_remote) post('remote','readReference',{ id:ref_remote.id,reference:r_ref })
+    else dispatch('referenceToken',{ r_ref,reference,doc_ref })
+  }
+}
+export function referenceToken({ state },{ r_ref,reference,doc_ref }){
+  let cr_data = Object.assign({},reference.server[0], { reference:reference.token_reference },{ items:[{ ...(reference.server[1]),reference:reference.token_item_reference,extra:{ r_ref } }] },{ _location:reference.token_source_location,_monitor:true })
+  post('remote','tokens',cr_data).then(function({ items }){
+    let kitchen = _.get(_.find(state.data,{ item:'kitchens',reference:reference.server[1].kitchen }),'local_id');
+    if(kitchen) _.forEach(items,({ id }) => post('token','accept',{ id,kitchen }))
+    if(doc_ref) doc_ref.update({ status:'fetched' })
+  });
 }
 
 const remoteUpdater = function(dispatch,item,id,reference,entry,record,cache){
