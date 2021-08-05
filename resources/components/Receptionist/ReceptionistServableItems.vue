@@ -34,7 +34,7 @@ export default {
     serving: [],
   } },
   computed: {
-    items(){ return _.flatMap(this.tokens,token => {
+    items(){ return _.flatMap(this.tokens_own,token => {
       if(token.type !== 'Dining') return [];
       return _.filter(token.items,['progress','Completed'])
     }) },
