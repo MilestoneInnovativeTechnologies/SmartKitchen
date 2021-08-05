@@ -6,4 +6,5 @@ export const images = {
   takeaway: 'takeaway.jpg',
   homedelivery: 'homedelivery.jpg',
   remote: 'remote.jpg',
+  sale: 'sale.jpg',
 }
