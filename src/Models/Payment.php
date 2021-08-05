@@ -14,6 +14,13 @@ class Payment extends Model
     public $printer_name = 'payment_printer';
     public $print_template = 'payment_print_template';
 
+    public function scopeRecent($Q){
+        return $Q->where('created_at','>=',now()->subDays(Token::$recentDays)->startOfDay()->toDateTimeString());
+    }
+    public static function fetch($after,$before,$lid){
+        return self::recent()->sync($after,$before,$lid)->get();
+    }
+
     public function print_data($data){
         $bill = (new Bill)->print_data(Bill::with(['Payments'])->find($data->bill));
         foreach ($bill['payments'] as $pKey => $payment){
