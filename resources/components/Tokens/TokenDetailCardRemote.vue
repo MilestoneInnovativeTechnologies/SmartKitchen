@@ -9,7 +9,7 @@
       <div class="text-bold">{{ token_time }}</div>
     </q-card-section>
     <q-list bordered class="bg-grey-1" separator>
-      <TokenDetailCardItem v-for="item in items" :key="hKey(item)" :token="token" :item="item" :kitchen="kitchen" @photo="photo" />
+      <TokenDetailCardItem v-for="item in items" :key="hKey(item)" :token="token" :item="item" :kitchen="kitchen" @photo="photo" :read_ref="items_read_ref[item.id]" />
     </q-list>
     <q-dialog persistent v-model="view_image">
       <q-card style="min-width: 75vw" flat>
