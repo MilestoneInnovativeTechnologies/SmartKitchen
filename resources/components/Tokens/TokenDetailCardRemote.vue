@@ -4,7 +4,7 @@
     <q-card-section class="bg-grey-2 row justify-between items-center q-py-sm">
       <div class="text-bold text-white text-weight-bolder q-gutter-x-xs">
         <q-badge :label="remote.location" class="q-py-sm q-px-sm" :class="dtColor" />
-        <q-badge :label="token_ref" class="q-py-sm q-px-sm" :class="dtColor" />
+        <q-badge v-show="token_ref" :label="token_ref" class="q-py-sm q-px-sm" :class="dtColor" />
       </div>
       <div class="text-bold">{{ token_time }}</div>
     </q-card-section>
