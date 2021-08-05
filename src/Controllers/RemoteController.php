@@ -53,15 +53,15 @@ class RemoteController extends Controller
         }
         if(empty($items)) return 'NO ITEMS';
         $request->merge(['type' => 'Remote','price_list' => 1, 'items' => $items]);
-        $token_ref = $request->input('reference'); $location = $request->input('_location');
+        $token_ref = $request->input('reference'); $location = $request->input('_location'); $extra = $request->input('extra',[]) ?: [];
         if(Remote::where('reference',$token_ref)->exists()) return 'ALREADY EXISTS';
         $token = app()->call(TokenController::class,[],'create');
         $token_id = $token->id;
-        Remote::updateOrCreate(['item' => 'tokens','local_id' => $token_id],['reference' => $token_ref, 'location' => $location, 'monitor' => $request->_monitor ? 'Yes' : 'No']);
+        Remote::updateOrCreate(['item' => 'tokens','local_id' => $token_id],['reference' => $token_ref, 'location' => $location, 'monitor' => $request->_monitor ? 'Yes' : 'No', 'extra' => $extra]);
         $token->items->each(function($TokenItem) use($items,$location){
             foreach($items as $rTI){
                 if($TokenItem->item === $rTI['item'] && $TokenItem->quantity === $rTI['quantity'] && $TokenItem->narration === $rTI['narration'] && $TokenItem->deliver === $rTI['deliver']){
-                    Remote::updateOrCreate(['item' => 'token_items','local_id' => $TokenItem->id],['reference' => $rTI['reference'], 'location' => $location, 'monitor' => 'Yes']);
+                    Remote::updateOrCreate(['item' => 'token_items','local_id' => $TokenItem->id],['reference' => $rTI['reference'], 'location' => $location, 'monitor' => 'Yes', 'extra' => $rTI['extra']]);
                 }
             }
         });
@@ -75,6 +75,17 @@ class RemoteController extends Controller
         $remote = Remote::where(['item' => 'kitchen_items','reference' => $reference])->first();
         if(!$remote) return null; $ki_local_id = Arr::get($remote,'local_id');
         return Arr::get(KitchenItem::find($ki_local_id),'item',null);
+    }
+
+    public function readReference(Request $request){
+        if($request->filled(['id','reference'])){
+            $remote = Remote::find($request->input('id'));
+            $remote->extra = array_merge($remote->extra ?: [], ['r_ref' => $request->input('reference')]);
+            $remote->save();
+            if($request->input('kitchen')) TokenItemController::Accept($remote->local_id,$request->input('kitchen'),auth()->id());
+            return $remote;
+        }
+        return null;
     }
 }
 
