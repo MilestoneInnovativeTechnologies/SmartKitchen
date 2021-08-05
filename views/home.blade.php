@@ -40,6 +40,21 @@
     <script src="{!! \Milestone\SmartKitchen\Controllers\AssetController::AssetRoute('User') !!}"></script>
     <script src="{!! \Milestone\SmartKitchen\Controllers\AssetController::AssetRoute('Settings') !!}"></script>
 
+    <link rel=manifest href=manifest.json>
+    <meta name=theme-color content=#1976d2>
+    <meta name=apple-mobile-web-app-capable content=yes>
+    <meta name=apple-mobile-web-app-status-bar-style content=default>
+    <meta name=apple-mobile-web-app-title content="Smart Kitchen">
+
+    <link rel=apple-touch-icon href=icons/apple-icon-120x120.png>
+    <link rel=apple-touch-icon sizes=152x152 href=icons/apple-icon-152x152.png>
+    <link rel=apple-touch-icon sizes=167x167 href=icons/apple-icon-167x167.png>
+    <link rel=apple-touch-icon sizes=180x180 href=icons/apple-icon-180x180.png>
+
+    <link rel=mask-icon href=icons/safari-pinned-tab.svg color=#1976d2>
+    <meta name=msapplication-TileImage content=icons/ms-icon-144x144.png>
+    <meta name=msapplication-TileColor content=#000000>
+
     @php cache()->put(ck(),'2000-01-01 00:00:01',now()->addDays(7)) @endphp
     <script>
         const DATA = [], BASE_URL = '{{ route('base_url') }}', MEDIA_ROOT = '{{ route('media_root') }}', _COMPANY = '{{ sk('company') }}', _BRANCH = '{{ sk('branch_code') }}', _ROLE = '{{ auth()->user()->role }}', LOGOUT = '{!! route('logout') !!}', LOGIN = '{!! route('login') !!}';
