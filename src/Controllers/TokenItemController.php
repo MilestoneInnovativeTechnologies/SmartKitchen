@@ -32,6 +32,7 @@ class TokenItemController extends Controller
         $progress = 'New'; $tokenItem = TokenItem::find($tokenItem);
         if(!$tokenItem) return Log::warning('Called function to Reset token item: ' . $tokenItem->id . ', But such token item does not exist..');
         TokenItemResetting::dispatch($tokenItem,$kitchen,$user);
+        $kitchen = null;
         $tokenItem->update(compact('kitchen','progress'));
         TokenItemReset::dispatch($tokenItem,$user);
         return $tokenItem;
