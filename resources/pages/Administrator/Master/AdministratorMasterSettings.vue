@@ -12,7 +12,7 @@ export default {
   components: {AdministratorMasterCommon},
   data(){ return {
     fields: { name:'text',value:'textarea' },
-    filter: ['name','value'], validate: ['name','value']
+    filter: ['name','value'], validate: ['name']
   } },
   computed: mapState('settings',{ settings:'data' })
 }
