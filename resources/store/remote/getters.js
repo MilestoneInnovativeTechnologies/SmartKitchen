@@ -64,7 +64,7 @@ export function token_branch({ data }){ return _(data).filter(['item','tokens'])
 
 export function read_reference(state,getters,rootState,rootGetters){
   return function(id,extra){ id = parseInt(id); extra = extra || {};
-    let map = rootGetters['tokens/map'][id];
+    let map = rootGetters['tokens/map'][id]; if(!id || !map || !map[0]) return {};
     let ti = _.find(state.data,{ item:'token_items',local_id:parseInt(id) }), tk = _.find(state.data,{ item:'tokens',local_id:parseInt(map[0]) });
     let ki_refs = _.mapKeys(getters['token_item_kitchen_item_reference_location'][id],(v,key) => 'kitchen_item_' + key);
     return new Object({

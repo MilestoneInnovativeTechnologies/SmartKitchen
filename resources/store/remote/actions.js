@@ -72,7 +72,7 @@ export function monitor({ state:{ monitoring,syncRemoteEdits,syncLocalEdits,data
       if(!snap.exists) snap.ref.set(getters['read_reference'](id, { status:'init',name:r_ref }))
       else if(!snap.get('token_reference') || snap.get('token_item_reference')) {
         let { token_reference,token_item_reference } = getters['read_reference'](id);
-        snap.ref.update({ token_item_reference,token_reference });
+        if(token_reference && token_item_reference) snap.ref.update({ token_item_reference,token_reference });
       }
     }))
   }
