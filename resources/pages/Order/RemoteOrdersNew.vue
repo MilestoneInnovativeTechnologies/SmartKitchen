@@ -101,6 +101,11 @@ export default {
   created() {
     this.$q.notify.setDefaults({ position: 'top-right', timeout: 1000, color: 'positive', group: false, html: true, caption: 'Items Updated !!' });
     this.deliver = tomorrow();
+    if(!_.has(this.$store.state.public,'remote_price_list')){
+      let remote_price_list = _.get(this.$store.getters['prices/remote'],'id',null)
+      this.$store.commit('public',{ remote_price_list })
+    }
+    this.params.price_list = this.$store.state.public['remote_price_list'] || 1
   }
 }
 </script>

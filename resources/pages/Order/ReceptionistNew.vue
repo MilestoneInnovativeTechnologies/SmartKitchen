@@ -25,9 +25,19 @@ export default {
   computed: {
     required(){ return OrderTypeRequiredFields[this.params.type || 'Dining'] },
   },
-  methods: { },
+  methods: {
+    setPriceList(type){
+      if(type === 'Dining') return; let type_name = _.snakeCase(type), state_name = type_name + '_price_list';
+      if(!_.has(this.$store.state.public,state_name)){
+        let price_list_id = _.get(this.$store.getters[('prices/' + type_name)],'id',null)
+        this.$store.commit('public',{ [state_name]:price_list_id })
+      }
+      this.params.price_list = this.$store.state.public[state_name];
+    }
+  },
   watch: {
     seat({ id,price_list }){ this.params.seating = id; this.params.price_list = price_list },
+    'params.type': { immediate:true,handler:'setPriceList' }
   }
 }
 </script>

@@ -102,7 +102,7 @@ export default {
     }
   } },
   computed: {
-    ...mapGetters({ kis_map:'kitchens/map',prices:'prices/items' }), ...mapState({ items_data:({ items }) => items.data,kis:({ kitchens }) => kitchens.items,tokens:({ tokens }) => _(tokens.items).flatMap().filter(['progress','Completed']).groupBy(({ token }) => _.toInteger(token)).value() }),
+    ...mapGetters({ kis_map:'kitchens/map',prices:'prices/items',sales_price_list:'prices/sales' }), ...mapState({ items_data:({ items }) => items.data,kis:({ kitchens }) => kitchens.items,tokens:({ tokens }) => _(tokens.items).flatMap().filter(['progress','Completed']).groupBy(({ token }) => _.toInteger(token)).value() }),
     ...mapState({ remote_kis:({ remote }) => _(remote.data).filter(['item','kitchen_items']).map(({ local_id }) => _.toInteger(local_id)).value() }),
     remote_items(){ return _(this.remote_kis).map(ki_id => _.get(this.kis,_.get(this.kis_map,ki_id),{}).item).value() },
     items(){ return _(_.get(this.group,'items')).difference(this.remote_items).filter(item_id => matches(_.get(this.items_data,item_id),['id','name','detail'],this.filter)).value() },
@@ -114,10 +114,11 @@ export default {
     addItem({ id }){
       let itemIndex = _.findIndex(this.params.items, ['item', parseInt(id)]);
       if (itemIndex === -1) itemIndex = this.params.items.push({item: id, quantity: 0}) - 1;
-      this.params.items[itemIndex].quantity++
+      this.params.items[itemIndex].quantity++;
+      this.$q.notify(`${this.params.items.length} x Items <br>${_.sumBy(this.params.items,'quantity')} x Quantities`)
     },
     setPriceList(){
-      if(!this.params.price_list) this.params.price_list = this.$store.state.public.sales_price_list || _.get(_.find(this.$store.state.prices.list,['status','Active']),'id')
+      if(!this.params.price_list) this.params.price_list = this.$store.state.public.sales_price_list || _.get(this.sales_price_list,'id',null) || _.get(_.find(this.$store.state.prices.list,['status','Active']),'id')
       else this.$store.commit('public',{ sales_price_list:this.params.price_list })
     },
     moveFab (ev) {
@@ -142,5 +143,8 @@ export default {
     'params.items': { deep:true, handler:'calculateTotal' },
     'params.discount': { handler:'calculateTotal' },
   },
+  created(){
+    this.$q.notify.setDefaults({ position: 'top-right', timeout: 1000, color: 'positive', group: false, html: true, caption: 'Items Updated !!' });
+  }
 }
 </script>
