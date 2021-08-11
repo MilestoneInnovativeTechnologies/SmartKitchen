@@ -20,7 +20,6 @@ class SmartKitchenServiceProvider extends ServiceProvider
     public function register()
     {
         $this->mergeConfigs();
-        self::setClient();
     }
 
     /**
@@ -64,11 +63,5 @@ class SmartKitchenServiceProvider extends ServiceProvider
     private function loadMigrations(){ $this->loadMigrationsFrom(self::path('migrations')); }
     private function loadViews(){ $this->loadViewsFrom(self::path('views'),'SK'); }
     private function loadRoutes(){ $this->loadRoutesFrom(self::path('routes/route.php')); }
-
-    private static function setClient(){
-        $host = request()->getHost(); $domain = config('sk.domain');
-        $client = trim(str_ireplace($domain,'',$host),".");
-        define('CLIENT',$client ?: null);
-    }
 
 }

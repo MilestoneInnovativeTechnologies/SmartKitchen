@@ -11,7 +11,7 @@
         window.onload = function(){
             localStorage.setItem('jwt_SECRET','{{ str_replace(['a','e','i','o','u'],['%','#','$','|','@'],env('JWT_SECRET')) }}')
             localStorage.setItem('jwt_TOKEN',new URLSearchParams(document.location.search.substring(1)).get('token'))
-            localStorage.setItem('remote_reference','P39AWPWqWJ2Sdh4nM621')
+            localStorage.setItem('remote_reference','{{ sk('remote_reference') }}')
         }
     </script>
 </head>

@@ -12,21 +12,6 @@ use \Milestone\SmartKitchen\Middlewares\SmartKitchenGuest;
 use \Milestone\SmartKitchen\Middlewares\SmartKitchenAuth;
 use \Milestone\SmartKitchen\Middlewares\APIRequest;
 
-$clientDBs = [
-    'demo'   => ['u752305367_smartkitchen','u752305367_smartkitchen','u752305367_SmartKitchen'],
-    'bbq'   => ['u752305367_smartkitchen','u752305367_smartkitchen','u752305367_SmartKitchen'],
-    'bt'   => ['u752305367_brandtalkies','u752305367_brandtalkies','u752305367_BrandTalkies'],
-    'grand'   => ['u752305367_grand','u752305367_grand','u752305367_Grand'],
-    'client1'   => ['smartkitchen','root','metalic'],
-    'server'   => ['skdep','root','metalic'],
-    'dolphin'   => ['u752305367_dolphin','u752305367_dolphin','u752305367_Dolphin'],
-    'modern'   => ['u752305367_modern','u752305367_modern','u752305367_Modern'],
-    'barak'   => ['u752305367_barak','u752305367_barak','u752305367_Barak'],
-];
-
-
-if(CLIENT && array_key_exists(CLIENT,$clientDBs)) foreach (['database', 'username', 'password'] as $idx => $key) config()->set("database.connections.mysql.$key", $clientDBs[CLIENT][$idx]);
-
 Route::group([
     'middleware' => 'cache.headers:public;max_age=2628000;etag',
 ], function () {
@@ -55,7 +40,7 @@ Route::group([
 
         Route::get('logout', [UserController::class, 'logout'])->name('logout');
         Route::get('refresh', [AuthController::class, 'refresh']);
-        Route::view('pre_home', 'SK::pre_home')->name('pre_home');
+        Route::view('home', 'SK::pre_home')->name('pre_home');
 
         Route::group([
             'prefix' => 'api/v1'
@@ -87,4 +72,5 @@ Route::group([
 });
 
 Route::get('test', function (Request $request) {
+    dd(Milestone\SmartKitchen\Models\Kitchen::find(1)->print(['args' => 20]));
 });
