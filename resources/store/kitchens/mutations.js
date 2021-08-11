@@ -71,9 +71,9 @@ function kimap({ id,stock,item,kitchen,duration,auto_process,auto_complete,statu
   ])
 }
 
-function ksmap({ users,status,kitchen,full_timer }){
+function ksmap({ users,status,kitchen,full_timer,printer }){
   return _.zipObject(
-    ['kitchen','users','status','full_timer'],
-    [_.toSafeInteger(kitchen),_.map(users,_.toSafeInteger),status,full_timer ? _.toInteger(full_timer) : null]
+    ['kitchen','users','status','full_timer','printer'],
+    [_.toSafeInteger(kitchen),_.map(users,_.toSafeInteger),status,full_timer ? _.toInteger(full_timer) : null,printer]
   )
 }

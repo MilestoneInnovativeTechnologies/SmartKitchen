@@ -26,4 +26,5 @@ export function remote({ data },getters,rState,rGetters){ return _.filter(data,k
 export function remote_items({ items },{ remote }){ return _(items).pick(_.map(remote,'id')).flatMap().value() }
 
 export function kitchen_full_timer({ status }){ return _(status).keyBy(({ kitchen }) => _.toInteger(kitchen)).mapValues(({ full_timer }) => full_timer ? _.toInteger(full_timer) : null).value() }
+export function kitchen_printer({ status }){ return _(status).keyBy(({ kitchen }) => _.toInteger(kitchen)).mapValues('printer').value() }
 export function non_remote({ data },getters,rState,rGetters){ return _(data).filter(kitchen => !rGetters["remote/is"]('kitchens',kitchen.id)).value() }

@@ -17,6 +17,7 @@ class CreateKitchenStatusesTable extends Migration
             $table->id();
             $table->unsignedBigInteger('kitchen')->index();
             $table->unsignedBigInteger('full_timer')->index()->nullable();
+            $table->string('printer',32)->nullable();
             $table->json('users')->nullable();
             $table->enum('status',['Active','Inactive'])->default('Inactive');
             $table->timestamps();

@@ -2,7 +2,7 @@
 
 namespace Milestone\SmartKitchen\Models;
 
-use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Arr;
 use Milestone\SmartKitchen\Events\KitchenSaved;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
@@ -34,6 +34,12 @@ class Kitchen extends Model implements HasMedia
         $data->setAttribute('date_human',human_date($data->date));
         $data->setAttribute('time_human',human_time($data->date));
         return $data;
+    }
+
+    public function print($props = []) {
+        $printer = Arr::get(KitchenStatus::where('kitchen',$this->id)->first(),'printer',Arr::get(Settings::where('name',$this->printer_name)->first(),'value'));
+        $props['printer'] = $printer;
+        return parent::print($props);
     }
 
 }
