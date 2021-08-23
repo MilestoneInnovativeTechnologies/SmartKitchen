@@ -17,10 +17,11 @@ import { mapState } from 'vuex'
 import {images} from "assets/default_images";
 import {DiningTypeColor} from "assets/assets";
 import {image} from "assets/helpers";
+import CustomerDetailCard from "components/Customer/CustomerDetailCard";
 export default {
-  components: {CardImageTitle, OrderSummaryItemAdd, OrderSummaryWaiterOrderItemsList},
+  components: {CustomerDetailCard, CardImageTitle, OrderSummaryItemAdd, OrderSummaryWaiterOrderItemsList},
   data(){ return {
-    add_mode: false
+    add_mode: false, info: false,
   } },
   props: ['id','noserve'],
   name: "OrderSummaryReceptionistOrder",
@@ -33,7 +34,7 @@ export default {
           { customer:customers.data[_.toInteger(token.customer)] }
         )
       }}),
-    image(){ let type = this.token.type; return type === 'Dining' ? this.token.seating.image : images[_.toLower(type).replace(/\s*/g,'')] },
+    image(){ let type = this.token.type; return type === 'Dining' ? this.token.seating.image : ((type === 'Home Delivery' && this.token.customer) ? this.token.customer.image : images[_.toLower(type).replace(/\s*/g,'')]) },
     src(){ return image(this.image) },
     cColor(){ return 'bg-' + DiningTypeColor[this.token.type] }
   }
