@@ -1,10 +1,11 @@
 <template>
   <q-card>
     <q-card-section class="q-py-xs text-center text-white" :class="cColor"><span v-if="token.type === 'Dining' && token.user">{{ token.user.name }}</span></q-card-section>
-    <CardImageTitle :image="src" :title="token.seating ? token.seating.name : (token.customer ? token.customer.name : token.type)" />
+    <CardImageTitle :image="src" :title="token.seating ? token.seating.name : (token.customer ? token.customer.name : token.type)" :caption="token.customer ? token.customer.phone : null" :info="token.type === 'Home Delivery'" @info="info = !info" />
     <q-card-actions><q-badge :label="token.id" class="q-py-sm q-px-sm" /><q-badge :label="token.type" class="q-py-sm q-ml-xs" /><q-badge :label="token.progress" class="q-py-sm q-ml-xs" /><q-space /><q-btn v-if="token.progress !== 'Billed'" icon="add_box" color="primary" flat @click="add_mode = true" padding="0" /></q-card-actions>
-    <OrderSummaryWaiterOrderItemsList :order="id" />
+    <OrderSummaryWaiterOrderItemsList :order="id" :noserve="noserve" />
     <q-dialog v-model="add_mode" persistent v-if="token.progress !== 'Billed'"><OrderSummaryItemAdd :token="id" style="width: 700px; max-width: 90vw;" @close="add_mode = false" /></q-dialog>
+    <q-dialog v-model="info" persistent v-if="token.type === 'Home Delivery'"><CustomerDetailCard :id="token.customer.id" style="max-width: 360px; width: 90vw;" color="purple" /></q-dialog>
   </q-card>
 </template>
 
@@ -21,7 +22,7 @@ export default {
   data(){ return {
     add_mode: false
   } },
-  props: ['id'],
+  props: ['id','noserve'],
   name: "OrderSummaryReceptionistOrder",
   computed: {
     ...mapState({ token:function({ tokens:{ data },seating,users,customers }){

@@ -10,7 +10,7 @@
       <q-item-section side><q-badge :label="row.progress" class="q-py-xs" /></q-item-section>
       <q-item-section side>
         <q-btn icon="edit" v-if="editable(row)" color="warning" round @click="edit_mode = !!(edit_obj = row)" dense />
-        <q-btn icon="how_to_reg" v-if="row.progress === 'Completed'" color="positive" round @click="served(row)" dense />
+        <q-btn icon="how_to_reg" v-if="row.progress === 'Completed' && !noserve" color="positive" round @click="served(row)" dense />
       </q-item-section>
       <q-inner-loading :showing="processing.includes(row.id)"><q-spinner-facebook color="primary" size="2em" /></q-inner-loading>
     </q-item>
@@ -26,7 +26,7 @@ import OrderSummaryItemUpdate from "components/Order/OrderSummaryItemUpdate";
 export default {
   name: "OrderSummaryWaiterOrderItemsList",
   components: {OrderSummaryItemUpdate},
-  props: ['order'],
+  props: ['order','noserve'],
   data(){ return {
     edit_mode: false,
     edit_obj: null,
