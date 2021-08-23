@@ -59,4 +59,10 @@ class BillController extends Controller
         $contents = Tax::Contents($contents,$price,$quantity);
         return compact('price','quantity','percent','amount','contents');
     }
+
+    public function print(Request $request){
+        if(!$request->input('id')) return []; $bill_id = $request->input('id');
+        Bill::find($bill_id)->print();
+        return [];
+    }
 }
