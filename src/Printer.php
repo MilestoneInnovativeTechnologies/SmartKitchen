@@ -168,31 +168,36 @@ class Printer
 
     private function process_upi($content,$props){
         $this->process_props($props,"",false);
-        $this->Printer->qrCode(self::upiUrl($content,$this->_data));
-        $this->reset();
+        $qrCode = self::upiUrl($content,$this->_data);
+        if($qrCode){
+            $this->Printer->qrCode($qrCode);
+            $this->reset();
+        }
     }
 
     private function process_table($info,$props,$len,$rht){
         $rows = self::row_segregate($info,$this->_data,in_array('index',$props)); $head = $body = $size = null;
-        extract(self::slim($rows,self::s('width'),$len,$rht));
-        $this->reset();
-        foreach(self::table_lines($head,$size) as $line) $this->Printer->text($line . "\n");
-        $this->process_line();
-        foreach(array_map(function($content)use($size){ return self::table_lines($content,$size); },$body) as $row)
-            foreach($row as $line) $this->Printer->text($line . "\n");
-        $this->process_line();
+        if($rows && count($rows) > 0){
+            extract(self::slim($rows,self::s('width'),$len,$rht));
+            $this->reset();
+            foreach(self::table_lines($head,$size) as $line) $this->Printer->text($line . "\n");
+            $this->process_line();
+            foreach(array_map(function($content)use($size){ return self::table_lines($content,$size); },$body) as $row)
+                foreach($row as $line) $this->Printer->text($line . "\n");
+            $this->process_line();
+        }
     }
 
     private static function row_segregate($info,$data,$index = false){
         list($key,$columns) = explode('#',$info);
         $columns = collect(explode("|",$columns))->mapWithKeys(function($item){ $parts = explode(":",$item); return [$parts[0] => $parts[1]]; })->toArray();
         $items = Arr::get($data,$key);
-        return array_map(function($item,$idx)use($columns,$data,$index){
+        return count($items) ? array_map(function($item,$idx)use($columns,$data,$index){
             $columns = $index ? array_merge(['#' => $idx],$columns) : $columns;
             return collect($columns)->mapWithKeys(function($value,$key)use($data,$item){
                 return [self::exec_template($key,$item,$data) => self::exec_template($value,$item,$data)];
             })->toArray();
-        },$items,range(1,count($items)));
+        },$items,range(1,count($items))) : [];
     }
 
     private static function slim($rows,$width,$len,$rht){
@@ -233,7 +238,7 @@ class Printer
     private static function upiUrl($content,$data){
         list($id,$amount) = array_map(function($template)use($data){ return self::exec_template($template,$data); },explode("|",$content));
         $data = array_merge(Settings::where('name','like','upi_%')->get()->mapWithKeys(function($item){ return [str_replace('upi_','',$item->name) => $item->value]; })->toArray(),compact('id','amount'));
-        return self::exec_template(self::$upi_addr,$data);
+        return Arr::has($data,['address','name','id','amount']) ? self::exec_template(self::$upi_addr,$data) : null;
     }
 
 }
