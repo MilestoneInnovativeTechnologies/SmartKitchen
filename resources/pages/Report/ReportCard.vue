@@ -5,7 +5,7 @@
     <ReportTable :data="table" v-bind="$attrs" />
     <ReportFoot :data="foot" />
     <q-card-section class="q-pa-none q-pb-none">
-      <div class="col-12 q-px-xl q-py-xs text-center bg-grey-1" style="font-size: 0.45rem">{{ footer }}</div>
+      <div class="col-12 q-px-xl q-py-xs text-center bg-grey-1" style="font-size: 0.50rem">{{ footer }}</div>
     </q-card-section>
   </q-card>
 </template>
