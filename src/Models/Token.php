@@ -5,9 +5,12 @@ namespace Milestone\SmartKitchen\Models;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Milestone\SmartKitchen\Scopes\NotCancelledScope;
+use Milestone\SmartKitchen\Traits\TokenPrintTrait;
 
 class Token extends Model
 {
+    use TokenPrintTrait;
+
     private static $timingRequests = ['user','comment'];
     public static $summableProgress = ['New','Accepted','Processing','Completed','Served'];
     public static $fetchMethods = ['Waiter' => 'waiter'];
@@ -68,13 +71,10 @@ class Token extends Model
             : self::active()->sync($after,$before,$lid)->get();
     }
 
-    public function print_data($data){
-        $data->load(['Items' => function($Q){ $Q->withoutGlobalScopes()->with(['Item','User','Kitchen']); },'User','Seating','Customer']);
-        $this->setAttribute('total_items',$data->Items->count());
-        $this->setAttribute('total_quantities',$data->Items->sum->quantity);
-        $this->setAttribute('date_human',human_date($data->date));
-        $this->setAttribute('time_human',human_time($data->date));
-        return $data;
+    public function print($props = []) {
+        $props = $this->print_printer_name($props);
+        $props = $this->print_template_name($props);
+        return parent::print($props);
     }
 
 }

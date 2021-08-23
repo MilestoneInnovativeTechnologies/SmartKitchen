@@ -3,6 +3,7 @@
 namespace Milestone\SmartKitchen\Models;
 
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Str;
 use Milestone\SmartKitchen\Scopes\ActiveOnlyScope;
 
 class Payment extends Model
@@ -23,12 +24,19 @@ class Payment extends Model
     }
 
     public function print_data($data){
-        $bill = (new Bill)->print_data(Bill::with(['Payments'])->find($data->bill));
-        foreach ($bill['payments'] as $pKey => $payment){
-            $bill['payments'][$pKey]['date_time'] = Carbon::parse($payment['date'])->format('d/m h:i A');
-            $bill['payments'][$pKey]['amount_precise'] = precise($payment['amount']);
-        }
-        $bill['paid_precise'] = precise(array_sum(array_column($bill['payments'],'amount')));
-        return $bill;
+        $Token = Token::find($data->Bill->token);
+        $data->setAttribute('token',$Token->print_data($Token)->toArray());
+        $data->setAttribute('date_human',human_date($data->date));
+        $data->setAttribute('time_human',human_time($data->date));
+        $data->setAttribute('amount_precise',precise($data->amount));
+        return $data;
     }
+
+    public function print($props = []){
+        $printer_name = Str::snake((auth()->user() ? auth()->user()->role : '') . 'Payment Printer');
+        $printer_name = Settings::where('name',$printer_name)->exists() ? $printer_name : $this->printer_name;
+        $props['printer_name'] = $printer_name;
+        return parent::print($props);
+    }
+
 }
