@@ -9,7 +9,7 @@
       <BillListItem v-for="(bill,idx) in paid" :key="hKey(bill,idx,'a-b-p-b')" :bill="bill" clickable :class="{ 'bg-grey-1':idx%2 }" @click.native="view(bill)" />
     </q-list>
     <q-dialog persistent v-model="show" transition-show="flip-down" transition-hide="flip-up">
-      <BillDetail v-if="bill" :bill="bill" style="min-width: 80vw" />
+      <BillDetail v-if="bill" :bill="bill" style="min-width: 80vw" @print="print(bill)" />
     </q-dialog>
   </q-page>
 </template>
@@ -34,7 +34,8 @@ export default {
   },
   methods: {
     hKey(item,idx,name){ return h_key(name,idx,item.id) },
-    view(bill){ this.selected = _.findIndex(this.bills,['id',_.toInteger(bill.id)]); this.show = true }
+    view(bill){ this.selected = _.findIndex(this.bills,['id',_.toInteger(bill.id)]); this.show = true },
+    print({ id }){ post('bill','print',{ id }) },
   }
 }
 </script>

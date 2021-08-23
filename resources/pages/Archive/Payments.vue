@@ -63,7 +63,7 @@
         </q-card-section>
         <q-card-actions class="bg-grey-3" align="right" v-show="payment && payment.status === 'Active'">
           <q-btn dense color="red" size="sm" :loading="loading" label="Cancel Payment" @click="cancel" />
-          <q-btn dense color="teal" size="sm" :disable="loading" label="Print" />
+          <q-btn dense color="teal" size="sm" :disable="loading" label="Print" @click="print(payment)" />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -96,7 +96,8 @@ export default {
     cancel(){
       this.loading = true; let vm = this;
       this.$store.dispatch('payments/cancel',this.payment,{ root:true }).then(payment => vm.loading = false)
-    }
+    },
+    print({ id }){ post('payment','print',{ id }) },
   }
 }
 </script>
