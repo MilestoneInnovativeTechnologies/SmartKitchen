@@ -13,6 +13,7 @@ use Milestone\SmartKitchen\Events\TokenItemsSaved;
 use Milestone\SmartKitchen\Events\TokenItemsSaving;
 use Milestone\SmartKitchen\Events\TokenItemUpdated;
 use Milestone\SmartKitchen\Events\TokenItemUpdating;
+use Milestone\SmartKitchen\Models\Kitchen;
 use Milestone\SmartKitchen\Models\Tax;
 use Milestone\SmartKitchen\Models\Token;
 use Milestone\SmartKitchen\Models\TokenItem;
@@ -133,5 +134,25 @@ class TokenController extends Controller
     public function customer(Request $request){
         if(!$request->filled(['token'])) return;
         Token::find($request->input('token'))->update($request->only('customer'));
+    }
+
+    public function kot_print(Request $request){
+        if(!$request->input('id')) return []; $token_id = $request->input('id');
+        $Token = Token::with('Items')->find($token_id);
+        $kitchens = $Token->Items->map->kitchen->filter()->unique()->values()->toArray();
+        if($kitchens) Kitchen::whereIn('id',$kitchens)->get()->each(function($kitchen)use($token_id){ $kitchen->print(['args' => $token_id]); });
+        return [];
+    }
+
+    public function print(Request $request){
+        if(!$request->input('id')) return []; $token_id = $request->input('id');
+        Token::find($token_id)->print(['template_name' => 'token_print_template','printer_name' => 'token_printer']);
+        return [];
+    }
+
+    public function sales_print(Request $request){
+        if(!$request->input('id')) return []; $token_id = $request->input('id');
+        Token::find($token_id)->print(['template_name' => 'sale_print_template','printer_name' => 'sale_printer']);
+        return [];
     }
 }

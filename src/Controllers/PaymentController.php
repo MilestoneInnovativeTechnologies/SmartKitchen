@@ -21,4 +21,10 @@ class PaymentController extends Controller
         UpdateBillProgress::dispatch($Payment->bill);
         return $Payment;
     }
+
+    public function print(Request $request){
+        if(!$request->input('id')) return []; $payment_id = $request->input('id');
+        Payment::find($payment_id)->print();
+        return [];
+    }
 }
