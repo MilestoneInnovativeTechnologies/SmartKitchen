@@ -71,6 +71,10 @@ Route::group([
     });
 });
 
+Route::any('print',function(){
+    return view('SK::print');
+});
+
 Route::get('test', function (Request $request) {
     dd(Milestone\SmartKitchen\Models\Kitchen::find(1)->print(['args' => 20]));
 });
