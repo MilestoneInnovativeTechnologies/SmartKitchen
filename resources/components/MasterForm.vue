@@ -45,7 +45,7 @@ export default {
   methods: {
     title(text){ return _.startCase(text) },
     defs(field){ return _.get(defs,field,'') },
-    reset(){ let vm = this; _.forEach(this.params,(value,field) => vm.$set(vm['params'],field,this.defs(this.fields[field]))); this.$emit('new') }
+    reset(){ let vm = this; _.forEach(this.params,(value,field) => vm.$set(vm['params'],field,vm.defs(vm.fields[field]))); this.$emit('new') }
   },
   watch: {
     fields: {
