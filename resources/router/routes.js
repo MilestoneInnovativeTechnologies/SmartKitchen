@@ -1,4 +1,4 @@
-const { map,set } = require('lodash')
+const { map,set,merge,get } = require('lodash')
 
 const layout_master = {
   Login: { path:'/', component: () => import('layouts/LoginLayout.vue')  },
@@ -6,12 +6,12 @@ const layout_master = {
   Chef: { path:'/', component: () => import('layouts/ChefLayout.vue')  },
   Receptionist: { path:'/', component: () => import('layouts/ReceptionistLayout.vue')  },
   Administrator: { path:'/', component: () => import('layouts/AdministratorLayout.vue')  },
-  Management: { path:'/', component: () => import('layouts/ManagementLayout.vue')  },
+  'Delivery Boy': { path:'/', component: () => import('layouts/DeliveryBoyLayout.vue')  },
 }
 
 const layout_child = {
   Login: ['login_index'],
-  Waiter: ['waiter_index','waiter_menu','orders','order_new'],
+  Waiter: ['waiter_index','waiter_menu','orders','order_new','waiter_tokens','waiter_bills'],
   Chef: ['chef_index','chef_kitchens','kitchen_items','kitchen_stocks','tokens'],
   Receptionist: ['receptionist_index','seat_status','receptionist_tokens','bills','seat_status_order','receptionist_orders','receptionist_order_new','receptionist_order_new_items','orders_remote','orders_remote_new','sale',
     'archives','archive_payments','archive_bills','archive_remote','archive_orders','archive_sales','archive_tokens'
@@ -20,9 +20,9 @@ const layout_child = {
     'master_customer','master_prop','master_item','master_group','master_kitchen','master_kitchen_items','master_menu','master_price_list','master_seating','master_tax','image_customer','image_item','image_kitchen','image_seating','image_user','master_user','master_settings',
     'day_token_summary','day_sale_summary','sales_by_type','sales_summary_by_type','sales_count_by_item','item_wise_sale_summary','kitchen_stock','bill_summary','payments','payments_by_type',
     'bill_summary_tax','bill_summary_tax_nature','tax_bill_detail','tax_details',
-    'orders_by_waiter','waiter_orders', 'kitchen_processing','item_processing','chef_performance'
+    'orders_by_waiter','orders_by_receptionist','orders_by_delivery_boy','user_orders', 'kitchen_processing','item_processing','chef_performance'
   ],
-  Management: ['management_index'],
+  'Delivery Boy': ['delivery_boy_index','delivery_boy_orders','delivery_boy_order_new','delivery_boy_order_items','delivery_boy_customers','delivery_boy_completed','delivery_boy_payments'],
 }
 
 const route_master = {
@@ -31,6 +31,8 @@ const route_master = {
   waiter_menu: { name:'waiter_menu', path:'/menu', component: () => import('pages/Waiter/Menu'), meta:{ title:'Menu' } },
   orders: { name:'orders', path:'/orders', component: () => import('pages/Order/Orders'), meta:{ title:'Order' } },
   order_new: { name:'order_new', path:'/order/new', component: () => import('pages/Order/New'), meta:{ title:'New Order',back:true,footer:false } },
+  waiter_tokens: { name:'waiter_tokens', path:'/tokens', component: () => import('pages/Waiter/Tokens'), meta:{ title:'Completed Tokens' } },
+  waiter_bills: { name:'waiter_bills', path:'/bills/pending', component: () => import('pages/Bill/PendingWaiter'), meta:{ title:'Pending Bills' } },
   chef_index: { name:'chef_index', path:'/', component: () => import('pages/Chef/Index'), meta:{ title:'' } },
   chef_kitchens: { name:'chef_kitchens', path:'/kitchens', component: () => import('pages/Chef/ChefKitchens'), meta:{ title:'Kitchens' } },
   kitchen_items: { name:'kitchen_items', path:'/kitchen/:id/items', component: () => import('pages/Kitchen/KitchenItems'), props:true, meta:{ title:'Items',back:true,footer:false } },
@@ -62,7 +64,6 @@ const route_master = {
   image_kitchen: { name:'image_kitchen', path:'/image/kitchens', component: () => import('pages/Administrator/Image/AdministratorImageKitchen'), meta:{ title:'Kitchens' } },
   image_seating: { name:'image_seating', path:'/image/seating', component: () => import('pages/Administrator/Image/AdministratorImageSeating'), meta:{ title:'Seating' } },
   image_user: { name:'image_user', path:'/image/users', component: () => import('pages/Administrator/Image/AdministratorImageUser'), meta:{ title:'Users' } },
-  management_index: { name:'management_index', path:'/', component: () => import('pages/Management/ManagementIndex'), meta:{ title:null } },
   report_index: { name:'report_index', path:'/', component: () => import('pages/Report/ReportIndex'), meta:{ title:null } },
   day_token_summary: { name:'day_token_summary', path:'/report/day/token/summary', component: () => import('pages/Report/Reports/ReportDayTokenSummary'), meta:{ title:'Day Token Summary',controls:['date'] } },
   day_sale_summary: { name:'day_sale_summary', path:'/report/day/sale/summary', component: () => import('pages/Report/Reports/ReportDaySaleSummary'), meta:{ title:'Day Sales Summary',controls:['date'] } },
@@ -79,7 +80,9 @@ const route_master = {
   tax_bill_detail: { name:'tax_bill_detail', path:'/report/tax/bill/detail', component: () => import('pages/Report/Reports/ReportTaxBillDetail'), meta:{ title:'Tax Bill Details',controls:['range'] } },
   tax_details: { name:'tax_details', path:'/report/tax/details', component: () => import('pages/Report/Reports/ReportTaxDetails'), meta:{ title:'Tax Details',controls:['range'] } },
   orders_by_waiter: { name:'orders_by_waiter', path:'/report/orders/waiter', component: () => import('pages/Report/Reports/ReportOrdersByWaiter'), meta:{ title:'Tokens By Waiter',controls:['range'] } },
-  waiter_orders: { name:'waiter_orders', path:'/report/waiter/orders', component: () => import('pages/Report/Reports/ReportWaiterOrders'), meta:{ title:'Waiter Orders',controls:['user','date'] } },
+  orders_by_receptionist: { name:'orders_by_receptionist', path:'/report/orders/receptionist', component: () => import('pages/Report/Reports/ReportOrdersByReceptionist'), meta:{ title:'Tokens By Receptionist',controls:['range'] } },
+  orders_by_delivery_boy: { name:'orders_by_delivery_boy', path:'/report/orders/delivery_boy', component: () => import('pages/Report/Reports/ReportOrdersByDeliveryBoy'), meta:{ title:'Tokens By Delivery Boy',controls:['range'] } },
+  user_orders: { name:'user_orders', path:'/report/user/orders', component: () => import('pages/Report/Reports/ReportUserOrders'), meta:{ title:'User Orders',controls:['user','date'] } },
   kitchen_processing: { name:'kitchen_processing', path:'/report/kitchen/processing', component: () => import('pages/Report/Reports/ReportKitchenProcessing'), meta:{ title:'Kitchen Processing',controls:['kitchen','date'] } },
   item_processing: { name:'item_processing', path:'/report/item/processing', component: () => import('pages/Report/Reports/ReportItemProcessing'), meta:{ title:'Item Processing',controls:['item','range'] } },
   chef_performance: { name:'chef_performance', path:'/report/chef/performance', component: () => import('pages/Report/Reports/ReportChefPerformance'), meta:{ title:'Chef Performance',controls:['user','range'] } },
@@ -93,11 +96,18 @@ const route_master = {
   archive_orders: { name:'archive_orders', path:'archive/orders', component: () => import('pages/Archive/Orders'), meta:{ title:'Orders',back:true,footer:false } },
   archive_sales: { name:'archive_sales', path:'archive/sales', component: () => import('pages/Archive/Sales'), meta:{ title:'Sales',back:true,footer:false } },
   archive_tokens: { name:'archive_tokens', path:'archive/tokens', component: () => import('pages/Archive/Tokens'), meta:{ title:'Tokens',back:true,footer:false } },
+  delivery_boy_index: { name:'delivery_boy_index', path:'/', component: () => import('pages/DeliveryBoy/DeliveryBoyIndex'), meta:{ title:null } },
+  delivery_boy_orders: { name:'orders', path:'/orders', component: () => import('pages/DeliveryBoy/DeliveryBoyOrders'), meta:{ title:'Orders' } },
+  delivery_boy_order_new: { name:'delivery_boy_order_new', path:'/order/new', component: () => import('pages/DeliveryBoy/DeliveryBoyOrderNew'), meta:{ title:'New Order' } },
+  delivery_boy_order_items: { name:'delivery_boy_order_items', path:'/order/items', component: () => import('pages/Order/CommonNew'), props:true, meta:{ title:'Select Items',back:true,footer:false } },
+  delivery_boy_customers: { name:'delivery_boy_customers', path:'/customers', component: () => import('pages/Customer/CustomerIndex'), meta:{ title:'Customers' } },
+  delivery_boy_completed: { name:'delivery_boy_completed', path:'/completed', component: () => import('pages/DeliveryBoy/DeliveryBoyCompleted'), meta:{ title:'Completed Tokens' } },
+  delivery_boy_payments: { name:'delivery_boy_payments', path:'/payments', component: () => import('pages/DeliveryBoy/DeliveryBoyPayments'), meta:{ title:'Payments' } },
 }
 
 function getRoutes(page) {
   let layout = layout_master[page]; if(!page || !layout) return console.error('No Page or Layout defined.. Page: ',page,' & Layout: ',layout) || [];
-  let children = map(layout_child[page],name => _.get(route_master,name));
+  let children = map(layout_child[page],name => merge({},get(route_master,name),{ meta: { me: typeof _USER === 'undefined' ? null : _USER }}));
   return [set(layout,'children',children)];
 }
 
