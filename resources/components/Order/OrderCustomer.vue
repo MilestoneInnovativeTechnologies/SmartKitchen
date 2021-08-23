@@ -10,14 +10,14 @@
       clearable
     />
     <q-dialog v-model="create_mode"  persistent transition-show="scale" transition-hide="scale">
-      <CustomerCreate :param="param" :param_value="param_value" style="width: 700px; max-width: 60vw;" @close="closeCreate" @customer="closeCreate" />
+      <CustomerCreate :param="param" :param_value="param_value" :style="popup_width(400)" @close="closeCreate" @customer="closeCreate" />
     </q-dialog>
   </div>
 </template>
 
 <script>
 import CustomerCreate from "components/Customer/CustomerCreate";
-import {o_customer, o_customers} from "assets/helpers";
+import {o_customer, o_customers, popup_width} from "assets/helpers";
 import { mapState } from 'vuex';
 export default {
   name: "OrderCustomer",
@@ -36,6 +36,7 @@ export default {
     }
   },
   methods: {
+    popup_width,
     filter(val, update){
       update(() => {
         const needle = (val || '').toLowerCase();
