@@ -32,7 +32,7 @@ export default {
   components: {DigitMetric},
   mixins: [Tokens],
   data(){ return {
-    iconColor_sbt: { 'Dining':['local_dining','purple'],'Home Delivery':['delivery_dining','amber'],'Take Away':['home','green'],'Other':['stream','light-blue'],'Remote':['online_prediction','brown'] },
+    iconColor_sbt: { 'Dining':['local_dining','purple'],'Home Delivery':['delivery_dining','amber'],'Take Away':['home','green'],'Other':['stream','light-blue'],'Sale':['shopping_cart','indigo'],'Remote':['online_prediction','brown'] },
     iconColor_pyt: { Cash:['money','green'],Card:['payment','teal'],Wallet:['account_balance','purple'],Credit:['money_off','red'] },
   } },
   computed: {
@@ -41,7 +41,8 @@ export default {
     Payments(){ return _(this.payments).filter(({ status,date }) => status === 'Active' && is_today(date)).value() },
     total_payments(){ return _.sumBy(this.Payments,({ amount }) => _.toNumber(amount)) },
     sales_by_type(){
-      let sbt = _.zipObject(OrderTypes,Array(OrderTypes.length).fill(0))
+      let defaults = _.zipObject(OrderTypes,Array(OrderTypes.length).fill(0))
+      return _.defaults(_.countBy(this.Tokens,'type'),defaults)
       _.forEach(this.Tokens,({ type }) => sbt[type]++);
       return sbt;
     },
