@@ -31,7 +31,7 @@ export default {
     serving: [],
   } },
   computed: {
-    orders(){ return this.$store.getters['tokens/today'] },
+    orders(){ return _(this.$store.state.tokens.data).filter({ type:'Dining',progress:'Processing' }).mapKeys(({ id }) => parseInt(id)).value() },
     items(){ return _.flatMap(_.pick(this.$store.state.tokens.items,_.keys(this.orders))) },
     servable(){ return _.filter(this.items,['progress','Completed']) },
   },
