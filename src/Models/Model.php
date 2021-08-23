@@ -50,7 +50,7 @@ class Model extends BaseModel
 
         $settings = Settings::pluck('value','name')->toArray();
 
-        $printer = Arr::get($props,'printer',Arr::get($settings,$this->printer_name,null));
+        $printer = Arr::get($props,'printer',Arr::get($settings,Arr::get($props,'printer_name',$this->printer_name),null));
         if(!$printer || empty(Arr::get($settings,$printer))) return Log::info('Print called with no printer or printer defined!!');
 
         $template = Arr::get($props,'template',null); $template_name = null;
