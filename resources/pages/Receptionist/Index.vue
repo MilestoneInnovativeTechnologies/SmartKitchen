@@ -2,6 +2,7 @@
   <q-page padding class="q-gutter-y-sm">
     <ReceptionistBillSummary />
     <ReceptionistServableItems />
+    <ReceptionistHomeDeliveryStatuses />
     <ReceptionistNonDiningTokens />
     <ReceptionistRemoteTokens />
   </q-page>
@@ -12,9 +13,10 @@ import ReceptionistBillSummary from "components/Receptionist/ReceptionistBillSum
 import ReceptionistNonDiningTokens from "components/Receptionist/ReceptionistNonDiningTokens";
 import ReceptionistServableItems from "components/Receptionist/ReceptionistServableItems";
 import ReceptionistRemoteTokens from "components/Receptionist/ReceptionistRemoteTokens";
+import ReceptionistHomeDeliveryStatuses from "components/Receptionist/ReceptionistHomeDeliveryStatuses";
 
 export default {
   name: "PageReceptionistIndex",
-  components: {ReceptionistRemoteTokens, ReceptionistServableItems, ReceptionistNonDiningTokens, ReceptionistBillSummary},
+  components: {ReceptionistRemoteTokens, ReceptionistServableItems, ReceptionistNonDiningTokens, ReceptionistBillSummary, ReceptionistHomeDeliveryStatuses},
 }
 </script>
