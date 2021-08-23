@@ -7,7 +7,7 @@ export function init ({ commit,dispatch }) {
   if(typeof _ASSET_Remote !== "undefined") commit('add',_ASSET_Remote);
   if(typeof _COMPANY !== 'undefined') {
     setTimeout(dispatch,5000,'fetch');
-    setTimeout(dispatch,1000,'fetchReference');
+    setTimeout(dispatch,10000,'fetchReference');
   }
 }
 export function upload({ state,commit,dispatch,getters },{ item,data }){
