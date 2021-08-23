@@ -44,7 +44,7 @@ class Model extends BaseModel
         return Arr::get(self::$mCache,$this->attributes['id'],$item . '.jpg');
     }
 
-    //['printer' => '','template' => [],'modify' => '','data' => ,'template_name' => '','args' => []]
+    //['printer' => '','printer_name' => '','template' => [],'modify' => '','data' => ,'template_name' => '','args' => []]
     // template should be array, while template name should be from settings
     public function print($props = []){
 
