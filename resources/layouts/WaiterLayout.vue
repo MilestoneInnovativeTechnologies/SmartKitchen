@@ -21,6 +21,8 @@
         <q-route-tab :to="{ name:'waiter_index' }" label="Home" icon="home"  />
         <q-route-tab :to="{ name:'waiter_menu' }" label="Menu" icon="menu_book"  />
         <q-route-tab :to="{ name:'orders' }" label="Orders" icon="add_task" />
+        <q-route-tab :to="{ name:'waiter_tokens' }" label="Tokens" icon="receipt" />
+        <q-route-tab :to="{ name:'waiter_bills' }" label="Bills" icon="pending_actions" />
       </q-tabs>
     </q-footer>
 
