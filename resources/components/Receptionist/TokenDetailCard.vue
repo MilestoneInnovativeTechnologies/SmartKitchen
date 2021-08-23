@@ -69,7 +69,6 @@ export default {
   props: ['id'],
   data() { return {
     loading: false,
-    src: 'https://cdn.quasar.dev/img/parallax2.jpg',
     tax: null, discount: 0
   } },
   computed: {
