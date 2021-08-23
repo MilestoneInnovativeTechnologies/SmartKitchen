@@ -8,7 +8,7 @@
         </q-toolbar-title>
         <div v-if="$route.meta.controls" class="row">
           <ReportControlElement :name="control" v-for="control in $route.meta.controls" :key="hKey(control)" class="q-mr-xs" />
-          <q-btn label="Print" color="teal" />
+          <q-btn label="Print" color="teal" @click="print_page" />
         </div>
         <q-btn flat round dense :icon="$store.state.public.mode === 'report' ? 'admin_panel_settings' : 'analytics'" :to="{ name:ops[$store.state.public.mode] }" />
         <Logout />
@@ -37,7 +37,8 @@ export default {
   },
   methods: {
     hKey(control){ return h_key('alr','control',control) },
-    comp(name){ return 'ReportControl' + _.startCase(name).replace(/\s/,'') }
+    comp(name){ return 'ReportControl' + _.startCase(name).replace(/\s/,'') },
+    print_page(){ print() },
   }
 }
 </script>
