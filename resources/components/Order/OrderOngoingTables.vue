@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="text-h6 q-mb-sm q-ml-sm">Ongoing Seating</div>
-    <Masonry :items="tokens">
+    <Masonry :items="tokens" width="300">
       <template v-slot:item="row">
         <div class="q-pa-xs col-xs-6 col-sm-4 col-md-3 col-lg-2 col-xl-1">
           <q-card :class="'bg-' + cColor[row.progress]">
