@@ -4,7 +4,8 @@
       <q-card-section class="bg-teal">
         <div class="text-caption">{{ human_date2(bill.date,true) }}</div>
         <div class="text-h5 text-bold">{{ parseFloat(bill.payable).toFixed(2) }}</div>
-        <div class="text-caption">Token ID: {{ bill.token.id }}</div>
+        <div class="text-caption">Bill ID: {{ bill.id }}</div>
+        <div class="text-caption" style="line-height: 0.45rem">Token ID: {{ bill.token.id }}</div>
       </q-card-section>
       <q-card-section class="col-grow text-right">
         <q-btn icon="close" text-color="teal-1" dense rounded flat class="absolute-top-right q-mr-xs q-mt-xs" v-close-popup />
@@ -64,7 +65,7 @@
       <q-btn type="a" size="sm" dense flat text-color="red" label="Cancel Bill" @click="bill_cancel" />
       <q-space />
       <q-btn dense color="cyan" size="sm" v-show="bill.payable > bill.paid" label="Add Payment" @click="add_payment = true" />
-      <q-btn dense color="teal" size="sm" label="Print" />
+      <q-btn dense color="teal" size="sm" label="Print" @click="$emit('print')" />
     </q-card-actions>
     <q-dialog persistent v-model="add_payment" transition-show="zoom-in" transition-hide="zoom-out">
       <BillPaymentAdd :bill="bill" style="min-width: 60vw" @added="add_payment = false" />

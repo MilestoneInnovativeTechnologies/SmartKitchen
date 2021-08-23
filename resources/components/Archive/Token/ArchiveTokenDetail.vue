@@ -27,7 +27,7 @@
     <q-card-actions>
       <q-space />
       <q-btn dense :color="color" size="sm" label="Progress Timings" @click="token_timings = true" />
-      <q-btn dense :color="color" size="sm" label="Print" />
+      <q-btn dense :color="color" size="sm" label="Print" @click="$emit('print')" />
     </q-card-actions>
     <q-dialog persistent v-model="token_timings">
       <TokenTimingCard :timing="timing" :color="color" bordered separator style="min-width: 65vw" />
