@@ -26,10 +26,10 @@
     <div class="col-12 text-bold q-mt-md">Users</div>
     <div class="row q-col-gutter-xs q-mt-xs">
       <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2 col-xl-1 cursor-pointer"><Jumbotron :dark="true" color="secondary" style="text-align: center" @click.native="$router.push({ name:'master_user',params:{ role:'Administrator' } })" icon="psychology" text="Administrators" /></div>
-      <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2 col-xl-1 cursor-pointer"><Jumbotron :dark="true" color="secondary" style="text-align: center" @click.native="$router.push({ name:'master_user',params:{ role:'Management' } })" icon="addchart" text="Management" /></div>
       <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2 col-xl-1 cursor-pointer"><Jumbotron :dark="true" color="secondary" style="text-align: center" @click.native="$router.push({ name:'master_user',params:{ role:'Receptionist' } })" icon="support_agent" text="Receptionist" /></div>
       <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2 col-xl-1 cursor-pointer"><Jumbotron :dark="true" color="secondary" style="text-align: center" @click.native="$router.push({ name:'master_user',params:{ role:'Waiter' } })" icon="supervised_user_circle" text="Waiters" /></div>
       <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2 col-xl-1 cursor-pointer"><Jumbotron :dark="true" color="secondary" style="text-align: center" @click.native="$router.push({ name:'master_user',params:{ role:'Chef' } })" icon="engineering" text="Chefs" /></div>
+      <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2 col-xl-1 cursor-pointer"><Jumbotron :dark="true" color="secondary" style="text-align: center" @click.native="$router.push({ name:'master_user',params:{ role:'Delivery Boy' } })" icon="delivery_dining" text="Delivery Boy" /></div>
     </div>
   </q-page>
 </template>

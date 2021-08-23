@@ -1,5 +1,5 @@
 <template>
-  <UserSelectDropDown v-model="user" option-label="name" :role="['Waiter','Receptionist','Chef']" dark outlined dense label="User" style="min-width: 6rem" />
+  <UserSelectDropDown v-model="user" option-label="name" :role="['Waiter','Receptionist','Chef','Delivery Boy']" dark outlined dense label="User" style="min-width: 6rem" />
 </template>
 
 <script>

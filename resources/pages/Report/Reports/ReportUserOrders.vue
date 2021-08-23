@@ -1,7 +1,7 @@
 <template>
   <q-page padding>
-    <ReportCard v-if="waiter" title="Waiter Tokens" :head="head" index :table="table" :right="['Amount']" :foot="foot" />
-    <div v-else class="text-center text-bold">Select a Waiter</div>
+    <ReportCard v-if="waiter" title="User Tokens" :head="head" index :table="table" :right="['Amount']" :foot="foot" />
+    <div v-else class="text-center text-bold">Select a User</div>
   </q-page>
 </template>
 
@@ -16,7 +16,7 @@ export default {
   mixins: [Bills],
   computed: {
     date(){ return this.$store.state.public.date + ' 00:00:00' }, waiter(){ return this.$store.state.public.user },
-    head(){ return _.zipObject(['Report','Waiter','Date'],['Waiter Tokens',this.waiter.name,to_format('ddd - Do MMM',this.date)]) },
+    head(){ return _.zipObject(['Report','User','Date'],['User Tokens',this.waiter.name,to_format('ddd - Do MMM',this.date)]) },
     token_amounts(){ return _(this.bills).filter(({ progress }) => progress !== 'Cancelled').mapKeys('token.id').mapValues(({ amount,payable }) => _.zipObject(['amount','payable'],[_.toNumber(amount),_.toNumber(payable)])).value() },
     date_tokens(){ return _(this.tokens).filter(({ progress,date,user }) => user === this.waiter.id && progress !== 'Cancelled' && is_date_same(date,this.date,'day')).value() },
     table(){ return _(this.date_tokens).map(({ date,id,customer,progress }) => _.zipObject(['Time','Token','Customer','Progress','Amount'],[

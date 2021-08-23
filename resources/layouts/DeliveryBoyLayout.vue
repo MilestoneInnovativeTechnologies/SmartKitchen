@@ -18,7 +18,11 @@
 
     <q-footer elevated class="bg-primary text-white" v-show="$store.state.footer">
       <q-tabs align="left">
-        <q-route-tab :to="{ name:'management_index' }" label="Home" icon="home"  />
+        <q-route-tab :to="{ name:'delivery_boy_index' }" label="Home" icon="home"  />
+        <q-route-tab :to="{ name:'orders' }" label="Orders" icon="add_task" />
+        <q-route-tab :to="{ name:'delivery_boy_completed' }" label="Ready" icon="receipt" />
+        <q-route-tab :to="{ name:'delivery_boy_payments' }" label="Payments" icon="account_balance" />
+        <q-route-tab :to="{ name:'delivery_boy_customers' }" label="Customers" icon="switch_account" />
       </q-tabs>
     </q-footer>
 
@@ -28,7 +32,7 @@
 <script>
 import ManualSync from "components/ManualSync";
 export default {
-  name: 'ManagementLayout',
+  name: 'DeliveryBoyLayout',
   components: {ManualSync},
   data () { return { name:_USER.name, logout: LOGOUT } },
 }

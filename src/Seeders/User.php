@@ -15,7 +15,7 @@ class User extends Seeder
     public static $times = 10;
     public function run()
     {
-        foreach (['Administrator','Receptionist','Waiter','Chef','Management'] as $role)
+        foreach (['Administrator','Receptionist','Waiter','Chef','DeliveryBoy'] as $role)
             UserFactory::times(self::$times)->state(compact('role'))->create();
     }
 }

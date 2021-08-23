@@ -22,7 +22,7 @@ export default {
   created(){ this.$store.commit('public',{ mode:'report' }) },
   data(){ return {
     reports: {
-      Token: [0,14,15],
+      Token: [0,14,19,20,15],
       Sales: [1,2,3,4,5],
       Bill: [7,8,9,10],
       Tax: [8,9,10,13],
@@ -31,6 +31,8 @@ export default {
       Item: [4,5,17],
       Waiter: [14,15],
       Chef: [18],
+      Receptionist: [19],
+      'Delivery Boy': [20],
       Performance: [14,15,16,17,18]
     },
     masters: [
@@ -49,10 +51,12 @@ export default {
       ['Payments By Type', 'payments_by_type'],//12
       ['Tax Details', 'tax_details'],//13
       ['Orders by Waiter', 'orders_by_waiter'],//14
-      ['Waiter Orders', 'waiter_orders'],//15
+      ['User Orders', 'user_orders'],//15
       ['Kitchen Processing', 'kitchen_processing'],//16
       ['Item Processing', 'item_processing'],//17
       ['Chef Performance', 'chef_performance'],//18
+      ['Orders by Receptionist', 'orders_by_receptionist'],//19
+      ['Orders by Delivery Boy', 'orders_by_delivery_boy'],//20
     ]
   } },
   methods: {
