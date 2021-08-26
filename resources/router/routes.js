@@ -20,7 +20,8 @@ const layout_child = {
     'master_customer','master_prop','master_item','master_group','master_kitchen','master_kitchen_items','master_menu','master_price_list','master_seating','master_tax','image_customer','image_item','image_kitchen','image_seating','image_user','master_user','master_settings',
     'day_token_summary','day_sale_summary','sales_by_type','sales_summary_by_type','sales_count_by_item','item_wise_sale_summary','kitchen_stock','bill_summary','payments','payments_by_type',
     'bill_summary_tax','bill_summary_tax_nature','tax_bill_detail','tax_details',
-    'orders_by_waiter','orders_by_receptionist','orders_by_delivery_boy','user_orders', 'kitchen_processing','item_processing','chef_performance'
+    'orders_by_waiter','orders_by_receptionist','orders_by_delivery_boy','user_orders', 'kitchen_processing','item_processing','chef_performance',
+    'data_import',
   ],
   'Delivery Boy': ['delivery_boy_index','delivery_boy_orders','delivery_boy_order_new','delivery_boy_order_items','delivery_boy_customers','delivery_boy_completed','delivery_boy_payments'],
 }
@@ -82,6 +83,7 @@ const route_master = {
   orders_by_waiter: { name:'orders_by_waiter', path:'/report/orders/waiter', component: () => import('pages/Report/Reports/ReportOrdersByWaiter'), meta:{ title:'Tokens By Waiter',controls:['range'] } },
   orders_by_receptionist: { name:'orders_by_receptionist', path:'/report/orders/receptionist', component: () => import('pages/Report/Reports/ReportOrdersByReceptionist'), meta:{ title:'Tokens By Receptionist',controls:['range'] } },
   orders_by_delivery_boy: { name:'orders_by_delivery_boy', path:'/report/orders/delivery_boy', component: () => import('pages/Report/Reports/ReportOrdersByDeliveryBoy'), meta:{ title:'Tokens By Delivery Boy',controls:['range'] } },
+  data_import: { name:'data_import', path:'/data/import', component: () => import('pages/Administrator/Data/AdministratorDataImport'), meta:{ title:'Import Data',controls:['noprint','download_template'] } },
   user_orders: { name:'user_orders', path:'/report/user/orders', component: () => import('pages/Report/Reports/ReportUserOrders'), meta:{ title:'User Orders',controls:['user','date'] } },
   kitchen_processing: { name:'kitchen_processing', path:'/report/kitchen/processing', component: () => import('pages/Report/Reports/ReportKitchenProcessing'), meta:{ title:'Kitchen Processing',controls:['kitchen','date'] } },
   item_processing: { name:'item_processing', path:'/report/item/processing', component: () => import('pages/Report/Reports/ReportItemProcessing'), meta:{ title:'Item Processing',controls:['item','range'] } },

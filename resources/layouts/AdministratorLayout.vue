@@ -7,8 +7,8 @@
           {{ $store.state.title || admin }}
         </q-toolbar-title>
         <div v-if="$route.meta.controls" class="row">
-          <ReportControlElement :name="control" v-for="control in $route.meta.controls" :key="hKey(control)" class="q-mr-xs" />
-          <q-btn label="Print" color="teal" @click="print_page" />
+          <ReportControlElement :name="control" v-for="control in $route.meta.controls" :key="hKey(control)" v-if="control !== 'noprint'" class="q-mr-xs" />
+          <q-btn v-if="!$route.meta.controls.includes('noprint')" label="Print" color="teal" @click="print_page" />
         </div>
         <q-btn flat round dense :icon="$store.state.public.mode === 'report' ? 'admin_panel_settings' : 'analytics'" :to="{ name:ops[$store.state.public.mode] }" />
         <Logout />

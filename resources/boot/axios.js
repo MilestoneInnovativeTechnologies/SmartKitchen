@@ -38,12 +38,15 @@ const aMediaInstance = axios.create({
   baseURL: MEDIA_ROOT
 })
 
-
 aMediaInstance.interceptors.request.use(function(config){
   let bearer = { model:config.data.model,id:config.data.id }
   config.headers.Authorization = `Bearer ` + jwt.sign(jwt_payload(bearer),jwt_secret());
   delete config.data.model; delete config.data.id
   return config;
+})
+
+const aDataInstance = axios.create({
+  baseURL: MEDIA_ROOT.replace('media','data')
 })
 
 
@@ -59,5 +62,9 @@ export default () => {
     if(!model || !id) return Promise.reject(!!console.error('Mandatory fields are null'))
     let formData = new FormData(); formData.append('model',model); formData.append('id',id);
     return aMediaInstance.post('remove',formData)
+  };
+  global.import_data = function(params){
+    if(!params || !_.every(params)) return Promise.reject(!!console.error('For Import all fields are mandatory!!'))
+    return aDataInstance.post('import',params)
   };
 }
