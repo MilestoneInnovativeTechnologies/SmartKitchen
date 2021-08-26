@@ -7,6 +7,7 @@ use \Milestone\SmartKitchen\Controllers\UserController;
 use \Milestone\SmartKitchen\Controllers\APIController;
 use \Milestone\SmartKitchen\Controllers\AssetController;
 use \Milestone\SmartKitchen\Controllers\MediaController;
+use \Milestone\SmartKitchen\Controllers\DataController;
 use \Milestone\SmartKitchen\Middlewares\SmartKitchenAction;
 use \Milestone\SmartKitchen\Middlewares\SmartKitchenGuest;
 use \Milestone\SmartKitchen\Middlewares\SmartKitchenAuth;
@@ -60,12 +61,18 @@ Route::group([
         Route::group([
             'prefix' => 'media'
         ], function () {
-            Route::get('/', function () {
-                return '';
-            })->name('media_root');
+            Route::get('/', function () { return ''; })->name('media_root');//boot/axios is using instead of data_root
             Route::post('remove', [MediaController::class, 'remove']);
             Route::post('upload', [MediaController::class, 'upload']);
 
+        });
+
+        Route::group([
+            'prefix' => 'data',
+        ], function () {
+            Route::get('/', function () { return ''; })->name('data_root');//boot/axios not using instead uses media_root
+            Route::get('download_import_template',[DataController::class,'download_import_template']);
+            Route::post('import',[DataController::class,'import']);
         });
 
     });
@@ -75,6 +82,3 @@ Route::any('print',function(){
     return view('SK::print');
 });
 
-Route::get('test', function (Request $request) {
-    dd(Milestone\SmartKitchen\Models\Kitchen::find(1)->print(['args' => 20]));
-});
