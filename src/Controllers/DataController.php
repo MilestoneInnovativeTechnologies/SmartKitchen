@@ -48,7 +48,7 @@ class DataController extends Controller
 
     public function import(Request $request){
         $data = self::getDataArray($request->all()); $mode = $request->input('mode');
-        if(self::$importError) return self::outError(); $DB = [];
+        if(self::$importError) return self::outError();
         foreach (self::$tblKeys as $table => $key){
             if(!array_key_exists($key,$data)) continue;
             $method = 'getDBData_' . $table; $db_data = self::$method($mode,$data[$key],$data);
@@ -57,7 +57,7 @@ class DataController extends Controller
             self::doUpdate($table,$update,$mode === 'Fresh');
             self::doInsert($table,$insert,$mode === 'Fresh');
         }
-        return $DB;
+        return response('',200);
     }
 
     private static function doUpdate($table,$data,$truncate = false){
@@ -234,7 +234,7 @@ class DataController extends Controller
         $update = []; $insert = []; $now = now()->toDateTimeString();
         $upd = strpos($mode, 'Update') !== false; $ins = strpos($mode, 'Insert') !== false;
         $Ms = Menu::pluck('id','name')->toArray(); $Menus = [];
-        $Gs = ItemGroup::pluck('name','id')->toArray();
+        $Gs = ItemGroup::pluck('id','name')->toArray();
         foreach ($records as $data){
             $rec_menus = array_values(array_filter(Arr::only($data,array_map(function($n){ return 'Menu ' . $n; },range(1,5)))));
             foreach($rec_menus as $mnu){
