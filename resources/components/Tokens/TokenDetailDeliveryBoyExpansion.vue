@@ -26,7 +26,7 @@
           <q-item-section side :class="'text-' + clr" class="text-bold">{{ precision(item.price * item.quantity) }}</q-item-section>
         </q-item>
       </q-list>
-      <q-card-section class="q-gutter-y-xs bg-grey-1">
+      <q-card-section class="q-gutter-y-xs bg-grey-1" v-if="token.customer.id">
         <q-input label="Customer Phone" :value="token.customer.phone" outlined dense :color="clr" />
         <q-input label="Customer Address" type="textarea" :value="token.customer.address" readonly outlined dense autogrow />
       </q-card-section>

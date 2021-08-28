@@ -27,6 +27,7 @@ import TokenDetailDeliveryBoyExpansion from "components/Tokens/TokenDetailDelive
 import {time} from "assets/helpers";
 import BillGenerateCard from "components/Bill/BillGenerateCard";
 import DeliveryBoyPaymentCard from "components/Payment/DeliveryBoyPaymentCard";
+import {NoCustomer} from "assets/assets";
 
 export default {
   name: "DeliveryBoyCompleted",
@@ -39,7 +40,7 @@ export default {
     fab: true, offset: [24,24],
   } },
   computed: {
-    Tokens(){ return _(this.tokens).filter(['type','Home Delivery']).filter(is_all_completed).value() },
+    Tokens(){ return _(this.tokens).filter(['type','Home Delivery']).filter(is_all_completed).map(token => token.customer ? token : Object.assign({},token,{ customer:NoCustomer })).value() },
     own(){ return _.filter(this.Tokens,['user',this.me]) },
     orphan(){ return _.filter(this.Tokens,({ user }) => _.isNull(user)) },
     other(){ return _.filter(this.Tokens,({ user }) => !_.isNull(user) && user !== this.me) },

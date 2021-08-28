@@ -12,7 +12,7 @@
           <q-item-label caption lines="2">{{ customer.address }}</q-item-label>
         </q-item-section>
         <q-item-section side>
-          <q-badge outline color="primary" class="q-pa-sm" style="font-size: 0.65rem">{{ customer.phone }}</q-badge>
+          <q-badge outline color="primary" class="q-pa-sm" style="font-size: 0.65rem" v-show="customer.phone">{{ customer.phone }}</q-badge>
         </q-item-section>
       </q-item>
     </q-list>

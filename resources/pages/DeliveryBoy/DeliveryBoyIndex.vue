@@ -27,6 +27,7 @@ import Bills from "assets/mixins/Bills";
 import {is_today} from "assets/helpers";
 import DigitMetric from "components/Metric/DigitMetric";
 import OrderSummaryDeliveryBoy from "components/Order/OrderSummaryDeliveryBoy";
+import {NoCustomer} from "assets/assets";
 
 export default {
   name: 'PageDeliveryBoyIndex',
@@ -36,7 +37,7 @@ export default {
     me: parseInt(this.$route.meta.me.id)
   } },
   computed: {
-    Tokens(){ return _(this.tokens).filter(['type','Home Delivery']).filter(({ date }) => is_today(date)).value() },
+    Tokens(){ return _(this.tokens).filter(['type','Home Delivery']).map(token => token.customer ? token : Object.assign({},token,{ customer:NoCustomer }))./*filter(({ date }) => is_today(date)).*/value() },
     bills_today(){ return _(this.bills).filter(({ date }) => is_today(date)).value() },
     bills_own(){ return _.filter(this.bills_today,['user.id',this.me]) },
     token_bill(){ return _(this.Tokens).mapKeys(({ id }) => parseInt(id)).mapValues((token,token_id) => _.get(_.find(this.bills,['token.id',parseInt(token_id)]),'id',null) ).value() },

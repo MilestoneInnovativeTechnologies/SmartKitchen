@@ -5,7 +5,7 @@
     <q-card-actions><q-badge :label="token.id" class="q-py-sm q-px-sm" /><q-badge :label="token.type" class="q-py-sm q-ml-xs" /><q-badge :label="token.progress" class="q-py-sm q-ml-xs" /><q-space /><q-btn v-if="token.progress !== 'Billed'" icon="add_box" color="primary" flat @click="add_mode = true" padding="0" /></q-card-actions>
     <OrderSummaryWaiterOrderItemsList :order="id" :noserve="noserve" />
     <q-dialog v-model="add_mode" persistent v-if="token.progress !== 'Billed'"><OrderSummaryItemAdd :token="id" style="width: 700px; max-width: 90vw;" @close="add_mode = false" /></q-dialog>
-    <q-dialog v-model="info" persistent v-if="token.type === 'Home Delivery'"><CustomerDetailCard :id="token.customer.id" style="max-width: 360px; width: 90vw;" color="purple" /></q-dialog>
+    <q-dialog v-model="info" persistent v-if="token.type === 'Home Delivery' && token.customer"><CustomerDetailCard :id="token.customer.id" style="max-width: 360px; width: 90vw;" color="purple" /></q-dialog>
   </q-card>
 </template>
 
@@ -18,6 +18,7 @@ import {images} from "assets/default_images";
 import {DiningTypeColor} from "assets/assets";
 import {image} from "assets/helpers";
 import CustomerDetailCard from "components/Customer/CustomerDetailCard";
+
 export default {
   components: {CustomerDetailCard, CardImageTitle, OrderSummaryItemAdd, OrderSummaryWaiterOrderItemsList},
   data(){ return {
