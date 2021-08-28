@@ -3,6 +3,7 @@ export const images = {
   item: 'item.png',
   seating: 'seating.jpg',
   kitchen: 'kitchen.png',
+  customer: 'customer.jpg',
   takeaway: 'takeaway.jpg',
   homedelivery: 'homedelivery.jpg',
   remote: 'remote.jpg',
