@@ -1,4 +1,5 @@
 import {is_future_day, is_today, is_tomorrow, is_yesterday} from "assets/helpers";
+import { images } from "assets/default_images";
 
 export const OrderTypes = ['Dining','Home Delivery','Take Away','Sale','Remote','Other']
 export const PaymentsTypes = ['Cash','Card','Wallet','Credit']
@@ -12,3 +13,4 @@ export const DiningTypeColor = { Dining:'purple', 'Home Delivery':'orange', 'Tak
 export const KitchenTokensDisplayMode = ['Token','Progress','Item']
 export const TokenDeliveryReadableChecks = [[is_today,'Today','primary'],[is_tomorrow,'Tomorrow','info'],[is_future_day,'Within 2 Days','teal',2],[is_future_day,'Within 7 Days','purple-6',7],[is_future_day,'Within 30 Days','brown-6',30],[is_future_day,'After 1 month','brown-9',180],[is_yesterday,'Yesterday','pink-6'],[null,'Delayed','red-6']]
 export const Archives = ['Tokens','Orders','Sales','Remote','Bills','Payments']
+export const NoCustomer = { id:0, name:'No Customer Selected', image:images.no, phone:'', address:'', email:'' }
