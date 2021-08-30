@@ -12,7 +12,7 @@
           </template>
         </q-virtual-scroll>
         <q-card-section class="full-width">
-          <MasterForm :data="current" :fields="fields" :loading="loading" @new="current = null" @save="save" ref="master_form"><slot /></MasterForm>
+          <MasterForm :data="current" :fields="fields" :loading="loading" @new="current = null" @save="save" @destroy="remove" :destroy="!!destroy" ref="master_form"><slot /></MasterForm>
         </q-card-section>
       </q-card-section>
     </q-card>
@@ -32,7 +32,7 @@ export default {
     search: '', loading: false,
     v_current: null
   } },
-  props: ['content','items','label','fields','validate','update','create','filter','extra'],
+  props: ['content','items','label','fields','validate','destroy','update','create','filter','extra'],
   computed: {
     list(){ return _.isEmpty(this.search) ? (_.isArray(this.items) ? this.items : _.values(this.items)) : _.filter(this.items,item => matches(item,this.filter || [this.label], this.search)) },
     current: {
@@ -49,6 +49,12 @@ export default {
       post(this.content,(_.has(data,'id') && !!data['id']) ? this.update : this.create,data).then(res => {
         this.$emit('response',res); this.current = null;
         this.$refs['master_form'].reset(); this.loading = false;
+      })
+    },
+    remove({ id }){
+      post(this.content,this.destroy, { id }).then(res => {
+        this.current = null; this.$refs['master_form'].reset(); this.loading = false;
+        this.$emit('destroyed',res);
       })
     }
   }

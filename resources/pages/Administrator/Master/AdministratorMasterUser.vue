@@ -1,6 +1,6 @@
 <template>
   <q-page padding>
-    <AdministratorMasterCommon content="user" :fields="fields" label="name" :filter="filter" :validate="validate" :items="items" :extra="{ role }" create="manage" update="manage" />
+    <AdministratorMasterCommon content="user" :fields="fields" label="name" :filter="filter" :validate="validate" :items="items" :extra="{ role }" create="manage" update="manage" destroy="delete" @destroyed="destroyed" />
   </q-page>
 </template>
 
@@ -18,6 +18,9 @@ export default {
   } },
   computed: {
     ...mapState('users',{ items({ data }){ return _.filter(data,['role',this.role]) } }),
+  },
+  methods: {
+    destroyed(id){ this.$store.commit('users/remove',id,{ root:true }) }
   },
   created(){ this.$store.commit('title',this.role + 's') }
 }
