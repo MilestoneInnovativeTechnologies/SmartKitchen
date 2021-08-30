@@ -8,3 +8,7 @@ export function add (state,records) {
     Vue.set(state.data,key,data)
   })
 }
+
+export function remove (state,id) {
+  Vue.delete(state.data,parseInt(id))
+}
