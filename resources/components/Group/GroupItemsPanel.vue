@@ -1,14 +1,14 @@
 <template>
   <q-tab-panels v-model="value" animated transition-prev="slide-down" transition-next="slide-up">
     <q-tab-panel name="group-all" class="row q-col-gutter-xs">
-      <Masonry :items="all_items" width="180">
+      <Masonry :items="all_items" width="220">
         <template #item="item">
           <ItemSelectCard @selected="$emit('item',$event)" :id="item.item" :price_list="price_list" />
         </template>
       </Masonry>
     </q-tab-panel>
     <q-tab-panel v-for="group in m_groups" :name="'group-' + group" :key="hKey({ id:group},'group')" class="row q-col-gutter-xs">
-      <Masonry :items="groupItems(group)" width="180">
+      <Masonry :items="groupItems(group)" width="220">
         <template #item="item">
           <ItemSelectCard @selected="$emit('item',$event)" :id="item.item" :price_list="price_list" />
         </template>
