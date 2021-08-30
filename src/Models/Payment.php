@@ -8,7 +8,6 @@ use Milestone\SmartKitchen\Scopes\ActiveOnlyScope;
 
 class Payment extends Model
 {
-    public static $recentDays = 7;
     protected static function booted(){ static::addGlobalScope(new ActiveOnlyScope); }
 
     public function Bill(){ return $this->belongsTo(Bill::class,'bill','id'); }
