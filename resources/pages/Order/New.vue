@@ -40,7 +40,7 @@
       <q-btn v-if="horizontal" fab glossy color="accent" :icon="'vertical_align_' + (hide ? 'top' : 'bottom')" @click="hide = !hide" />
       <q-btn v-else fab glossy color="accent" icon="keyboard_tab" @click="hide = !hide" :style="{ transform: hide ? 'rotateY(180deg)' : null }" />
     </q-page-sticky>
-    <q-dialog v-model="m_show" persistent><MenuSelect style="width: 75vw; max-width: 330px" /></q-dialog>
+    <q-dialog v-model="m_show" persistent><MenuSelect style="width: 75vw; max-width: 330px" @selected="r_menu = false" /></q-dialog>
   </q-page>
 </template>
 
