@@ -1,6 +1,6 @@
 <template>
-  <q-card>
-    <q-card-section class="bg-grey-2 row justify-between text-bold"><div>Non Dining Orders</div><div v-if="oTokens.length">{{ oTokens.length }}</div></q-card-section>
+  <q-card v-if="oTokens.length">
+    <q-card-section class="bg-grey-2 row justify-between text-bold"><div>Non Dining Orders</div><div>{{ oTokens.length }}</div></q-card-section>
     <q-card-section class="q-pa-xs">
       <Masonry :items="oTokens" width="260">
         <template #item="token">

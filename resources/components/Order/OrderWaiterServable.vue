@@ -17,7 +17,7 @@
         <q-inner-loading v-if="serving.includes(item.id)" :showing="true"><q-spinner-facebook color="primary" size="2em" /></q-inner-loading>
       </q-item>
     </q-list>
-    <q-card-section v-else class="text-center">NO ITEMS</q-card-section>
+    <q-card-section v-else class="text-center">NO ITEMS RIGHT NOW..</q-card-section>
   </q-card>
 </template>
 

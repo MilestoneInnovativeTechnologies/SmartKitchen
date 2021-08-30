@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="tokens.length">
     <div class="text-h6 q-mb-sm q-ml-sm">Ongoing Seating</div>
     <Masonry :items="tokens" width="300">
       <template v-slot:item="row">

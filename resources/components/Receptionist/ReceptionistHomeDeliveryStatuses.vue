@@ -1,6 +1,6 @@
 <template>
-  <q-card>
-    <q-card-section class="bg-deep-purple text-white row justify-between text-bold"><div>Home Delivery Statuses</div><div v-if="Tokens.length">{{ Tokens.length }}</div></q-card-section>
+  <q-card v-if="Tokens.length">
+    <q-card-section class="bg-deep-purple text-white row justify-between text-bold"><div>Home Delivery Statuses</div><div>{{ Tokens.length }}</div></q-card-section>
     <OrderSummaryDeliveryBoy :tokens="Tokens" kitchen user />
   </q-card>
 </template>

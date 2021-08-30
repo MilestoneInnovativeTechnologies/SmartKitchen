@@ -1,7 +1,7 @@
 <template>
-  <q-card>
+  <q-card v-if="items.length">
     <q-card-section class="row justify-between text-bold bg-green text-white"><div>Servable Items</div><div v-if="items.length > 0">{{ items.length }}</div></q-card-section>
-    <q-list separator bordered v-if="items.length">
+    <q-list separator bordered>
       <q-item v-for="item in items" :key="'order-receptionist-servable-item-' + item.id">
         <q-item-section>
           <q-item-label>{{ item.quantity }} X {{ item.item ? item.item.name : '' }}</q-item-label>
@@ -18,7 +18,6 @@
         <q-inner-loading v-if="serving.includes(item.id)" :showing="true"><q-spinner-facebook color="primary" size="2em" /></q-inner-loading>
       </q-item>
     </q-list>
-    <q-card-section v-else class="text-center">NO ITEMS</q-card-section>
   </q-card>
 </template>
 
