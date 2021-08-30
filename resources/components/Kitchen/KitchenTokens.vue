@@ -5,7 +5,7 @@
     </q-card-section>
     <q-card-section v-show="Tokens.length === 0" class="text-center">NO TOKENS</q-card-section>
     <q-card-section v-show="Tokens.length !== 0" class="q-pa-none q-ma-none">
-      <q-card-section class="row q-col-gutter-sm" v-show="mode === 'Item'">
+      <q-card-section v-show="mode === 'Item'">
         <Masonry width="250" :items="items">
           <template #item="item">
             <KitchenTokenItem :kitchen="id" :details="item.item" :item="getItem(item.item)" :stock="getStock(item.item)" />
@@ -17,7 +17,7 @@
         <div class="col-xs-12 col-sm-4"><KitchenTokenBundle :kitchen="id" type="Accepted" action="true" /></div>
         <div class="col-xs-12 col-sm-4"><KitchenTokenBundle :kitchen="id" type="Processing" action="true" /></div>
       </q-card-section>
-      <q-card-section class="row q-col-gutter-sm" v-show="mode === 'Token'">
+      <q-card-section v-show="mode === 'Token'">
         <Masonry width="320" gutter="xs" :items="cloud ? sTokens : Tokens">
           <template #item="token">
             <component :is="cloud ? 'TokenDetailCardRemote' : 'TokenDetailCard'" :id="token.id" :kitchen="kitchen.id" :multiple="card" />
