@@ -28,6 +28,14 @@ class RefreshTokenProgress
         $items = $this->token->items; $progresses = $items->map->progress;
         if($items->isEmpty()) { Log::critical('Items are empty'); return $this->makeProgress('New'); }
         if($progresses->contains('Processing')) { Log::info('Have items in Processing'); return $this->makeProgress('Processing'); }
+        if($progresses->every(function($progress){ return $progress === 'Cancelled'; })) {
+            Log::info('All Items cancelled.. Token is cancelling..');
+            if($this->token->Bill) {
+                $this->makeProgress('Cancelled');
+                Log::info('Token has bill generated, Cancelling that bill');
+                return TryMakingBillAsCancelled::dispatch($this->token->Bill->id);
+            } else return $this->makeProgress('Cancelled');
+        }
         if($progresses->every(function($progress){ return in_array($progress,['Served','Cancelled']); })) {
             if($progresses->contains('Cancelled')) Log::info('All Items are served and cancelled.. Token is completed..');
             else Log::info('All Items served.. Token is completed..');

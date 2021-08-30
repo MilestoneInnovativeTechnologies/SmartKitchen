@@ -14,6 +14,6 @@ class TryRefreshingTokenProgress
     }
     public function handle($event)
     {
-        RefreshTokenProgress::dispatch($event->token->id);
+        if($event->token && $event->token->id) RefreshTokenProgress::dispatch($event->token->id);
     }
 }
