@@ -1,6 +1,6 @@
 <template>
   <q-form class="q-gutter-y-xs" @submit="() => false">
-    <div class="text-right"><q-btn label="CREATE" color="light-blue" @click="reset" :disable="loading" /></div>
+    <div class="text-right"><q-btn label="add new" color="light-blue" @click="reset" :disable="loading" v-if="data" /></div>
     <template v-for="(type,field,idx) in fields">
       <q-select v-if="type === 'status'" :options="['Active','Inactive']" v-model="params[field]" :label="title(field)" outlined />
       <q-select v-else-if="type === 'yesno'" :options="['Yes','No']" v-model="params[field]" :label="title(field)" outlined />
@@ -15,7 +15,12 @@
       <q-input v-else :type="type" v-model="params[field]" :label="title(field)" outlined />
     </template>
     <slot></slot>
-    <q-btn class="block full-width" label="Save" color="light-blue" :loading="loading" @click="$emit('save',params)" />
+    <div class="row items-center justify-between">
+      <q-btn class="q-mr-sm" label="Delete" color="negative" icon="delete" :loading="loading" @click="$emit('destroy',data)" v-if="destroy && data" />
+      <q-btn class="q-mr-sm" label="Reset" color="warning" icon="reset_tv" :loading="loading" @click="reset" v-if="!data" />
+      <q-btn class="col-grow" :label="data ? 'Update' : 'Submit'" color="light-blue" :loading="loading" @click="$emit('save',params)" />
+    </div>
+
   </q-form>
 </template>
 
@@ -38,7 +43,7 @@ export default {
     UserSelectDropDown, UserLoginUserName, UserLoginPin,
     KitchenSelectDropDown, AdministratorMasterPriceListPriceSet,
     ItemsChoose, TaxContentManage, SeatInputSeats, PriceListSelectDropDown},
-  props: ['fields','data','loading'],
+  props: ['fields','data','loading','destroy'],
   data(){ return {
     params: { },
   } },
