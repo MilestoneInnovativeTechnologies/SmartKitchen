@@ -37,4 +37,11 @@ class UserController extends Controller
         $item->update(self::data());
         return $item->fresh();
     }
+
+    public function delete(){
+        if(!request()->has('id') || !request()->filled('id')) return self::create();
+        User::destroy(request()->input('id'));
+        User::orderBy('id','desc')->first()->touch();
+        return request()->input('id');
+    }
 }

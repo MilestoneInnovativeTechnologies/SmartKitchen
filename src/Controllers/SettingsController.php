@@ -24,4 +24,11 @@ class SettingsController extends Controller
         return $item->fresh();
     }
 
+    public function delete(){
+        if(!request()->has('id') || !request()->filled('id')) return [];
+        Settings::destroy(request()->input('id'));
+        Settings::orderBy('id','desc')->first()->touch();
+        return request()->input('id');
+    }
+
 }
