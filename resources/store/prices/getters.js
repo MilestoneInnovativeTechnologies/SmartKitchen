@@ -3,7 +3,7 @@ export function items ({ data }) {
 }
 
 export function sales(state,getters,rootState,rootGetters){
-  let name_pl = _.find(state.list,{ name:'Sales' }); if(name_pl) return name_pl;
+  let name_pl = _.find(state.list,{ name:'Sale' }); if(name_pl) return name_pl;
   let settings = rootGetters['settings/settings'],
     name = _.get(settings,'sale_pricelist',_.get(settings,'sales_pricelist',_.get(settings,'sale_price_list',_.get(settings,'sales_price_list',null))));
   if(!name) return null;
