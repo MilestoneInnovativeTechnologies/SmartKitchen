@@ -7,6 +7,7 @@
           <q-btn v-if="$store.state.back" :to="$store.state.back" flat round dense icon="arrow_back_ios" />
           {{ $store.state.title || waiter }}
         </q-toolbar-title>
+        <q-btn flat round dense icon="menu_book" :to="{ name:'waiter_menu' }" />
         <ManualSync />
         <Logout />
       </q-toolbar>
@@ -19,7 +20,6 @@
     <q-footer elevated class="bg-primary text-white" v-show="$store.state.footer">
       <q-tabs align="left">
         <q-route-tab :to="{ name:'waiter_index' }" label="Home" icon="home"  />
-        <q-route-tab :to="{ name:'waiter_menu' }" label="Menu" icon="menu_book"  />
         <q-route-tab :to="{ name:'orders' }" label="Orders" icon="add_task" />
         <q-route-tab :to="{ name:'waiter_tokens' }" label="Tokens" icon="receipt" />
         <q-route-tab :to="{ name:'waiter_bills' }" label="Bills" icon="pending_actions" />
