@@ -1,6 +1,6 @@
 <template>
-  <div class="q-col-gutter-xs">
-    <FilterInputText label="Filter Seats" @text="filter = $event" />
+  <div>
+    <FilterInputText label="Filter Seats" @text="filter = $event" class="q-mb-xs" />
     <Masonry :items="seats" width="180">
       <template #item="seat">
         <SeatSelectItem :id="seat.id" @selected="$emit('selected',seat)" class="cursor-pointer" />
@@ -11,7 +11,7 @@
 
 <script>
 import SeatSelectItem from "components/Seating/SeatSelectItem";
-import {h_key} from "assets/helpers";
+import {h_key, matches} from "assets/helpers";
 import FilterInputText from "components/FilterInputText";
 import Masonry from "components/Masonry";
 
@@ -20,12 +20,11 @@ export default {
   components: {Masonry, FilterInputText, SeatSelectItem},
   data(){ return { filter:'' } },
   computed: {
-    s_seats(){ return this.$store.state.seating.data },
-    seats(){ return this.filter ? _.filter(this.s_seats,this.filtered) : this.s_seats },
+    s_seats(){ return _(this.$store.state.seating.data).filter(['status','Active']).value() },
+    seats(){ return this.filter ? _.filter(this.s_seats,seat => matches(seat,['id','name','detail'],this.filter)) : this.s_seats },
   },
   methods: {
     hKey({ id }){ return h_key('seat','select','item',id); },
-    filtered({ id,name,detail }){ return [id,name,detail].join(' ').toLowerCase().includes(this.filter.toLowerCase()) }
   }
 }
 </script>
