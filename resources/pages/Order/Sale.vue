@@ -3,8 +3,8 @@
     <FilterInputText @text="item_filter = $event" class="q-mb-xs" />
     <GroupItemsSelect :selected="group" :filter="item_filter" :price_list="params.price_list" @item="addItem" />
     <GroupStickyButton v-model="group" />
-    <q-dialog v-if="!price_list" :value="!price_list" persistent @hide="CFL">
-      <q-card>
+    <q-dialog v-if="!price_list" :value="!price_list" persistent @hide="CFL()">
+      <q-card :style="popup_width()">
         <q-bar class="text-white bg-info q-py-lg items-center"><q-icon name="receipt" color="white" left /><span>Select Price List</span><q-space /><q-btn icon="clear" v-close-popup flat round color="white" /></q-bar>
         <q-card-section>
           <PriceListSelectDropDown outlined dense input-debounce="0" v-model="price_list" label="Select Price List" get="id" />
@@ -143,10 +143,10 @@ export default {
   watch: {
     'params.items': { deep:true, handler:'calculateTotal' },
     'params.discount': { handler:'calculateTotal' },
+    'price_list': { immediate:true, handler(pl){ if(pl) this.params.price_list = parseInt(pl) } },
   },
   created(){
     this.$q.notify.setDefaults({ position: 'top-right', timeout: 2000, color: 'positive', group:'items', html: true, caption: 'Items Updated !!' });
-    this.params.price_list = this.price_list;
   }
 }
 </script>
