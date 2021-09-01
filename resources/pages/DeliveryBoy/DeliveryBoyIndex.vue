@@ -23,9 +23,8 @@
 </template>
 
 <script>
-import Tokens from "assets/mixins/Tokens";
 import Bills from "assets/mixins/Bills";
-import {is_today} from "assets/helpers";
+import {attention, is_today} from "assets/helpers";
 import DigitMetric from "components/Metric/DigitMetric";
 import OrderSummaryDeliveryBoy from "components/Order/OrderSummaryDeliveryBoy";
 import {NoCustomer} from "assets/assets";
@@ -34,7 +33,7 @@ import OrderNewFabDeliveryBoy from "components/Order/OrderNewFabDeliveryBoy";
 export default {
   name: 'PageDeliveryBoyIndex',
   components: {OrderNewFabDeliveryBoy, OrderSummaryDeliveryBoy, DigitMetric},
-  mixins: [Tokens,Bills],
+  mixins: [Bills],
   data(){ return {
     me: parseInt(this.$route.meta.me.id)
   } },
@@ -49,6 +48,10 @@ export default {
     deliverable(){ return _(this.tokens_own).filter(({ id }) => _.get(this.token_bill,parseInt(id)) && _.get(_.find(this.bills,['id',_.get(this.token_bill,parseInt(id))]),'progress') === 'Pending').value() },
     processing(){ return _.filter(this.tokens_own,({ items }) => !is_all_completed(items)) },
     delivered(){ return _(this.tokens_own).filter(({ id }) => _.get(this.token_bill,parseInt(id))).filter(({ id }) => _.get(_.find(this.bills,['id',_.get(this.token_bill,id)]),'progress') !== 'Pending').value() },
+  },
+  watch: {
+    tokens(Nw,Ol){ if(!Ol || Nw.length > Ol.length) { attention(); } },
+    bills(Nw,Ol){ if(!Ol || Nw.length > Ol.length) { attention(); } }
   }
 }
 
