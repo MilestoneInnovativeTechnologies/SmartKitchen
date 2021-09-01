@@ -1,6 +1,6 @@
 <template>
   <q-page padding>
-    <WaiterMenuManage class="q-mx-auto" style="max-width: 360px; width: 90vw" />
+    <WaiterMenuManage class="q-mx-auto" style="width: 90vw" />
   </q-page>
 </template>
 
