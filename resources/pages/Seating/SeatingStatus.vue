@@ -12,7 +12,7 @@
         <q-btn rounded glossy push size="sm" :color="(filter == 'Billed') ? 'positive' : 'grey'" @click="filter = (filter == 'Billed') ? '' : 'Billed'" label="Billed" />
       </div>
     </div>
-    <Masonry :items="filtered">
+    <Masonry :items="filtered" width="180">
       <template #item="seat">
         <SeatStatusPreview v-bind="seat" />
       </template>
