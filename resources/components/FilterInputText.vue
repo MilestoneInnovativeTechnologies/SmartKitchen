@@ -9,7 +9,7 @@ export default {
   name: "FilterInputText",
   props: ['label','lazy','blur'],
   data(){ return {
-    filter: '', dLabel: 'Filter'
+    filter: '', dLabel: 'Filter Items'
   } }
 }
 </script>
