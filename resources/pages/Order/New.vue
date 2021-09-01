@@ -1,6 +1,6 @@
 <template>
   <q-page padding>
-    <OrderNewGlobal type="Dining" :user="$route.meta.me.id" :seat="true" />
+    <OrderNewGlobal :seat="seat" v-bind="$attrs" />
     <q-dialog v-model="m_show" persistent><MenuSelect style="width: 75vw; max-width: 330px" @selected="r_menu = false" /></q-dialog>
   </q-page>
 </template>
@@ -12,6 +12,7 @@ import OrderNewGlobal from "components/Order/OrderNewGlobal";
 export default {
   name: "PageOrderNew",
   components: { OrderNewGlobal, MenuSelect },
+  props: ['seat'],
   data() { return {
     r_menu: false,
   } },

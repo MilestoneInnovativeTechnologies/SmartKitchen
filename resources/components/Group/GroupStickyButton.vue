@@ -1,5 +1,5 @@
 <template>
-  <q-page-sticky position="top-right" :offset="offset" ref="sticky">
+  <q-page-sticky position="top-left" :offset="[xoffset,15]" ref="sticky" style="transition: all 500ms" :style="{ width }">
     <q-fab v-for="i in count" :key="'grp-set-' + i" :ref="'fab'+i" v-model="fab" v-bind="attrs(i)" direction="down" vertical-actions-align="left">
       <q-fab-action v-if="i === 1" glossy push square label="All" color="indigo" :icon="is_sel({ id:0 }) ? 'reply_all' : ''" :padding="is_sel({ id:0 }) ? 'md' : 'xs sm'" @click="$emit('input',0)" />
       <q-fab-action v-for="group in groups.slice(max*(i-1),max*i)" :key="'gsb-gr-' + group.id" glossy push square color="indigo" :label="group.name" :icon="is_sel(group) ? 'reply_all' : ''" :padding="is_sel(group) ? 'md' : 'xs sm'" @click="$emit('input',group.id)" />
@@ -14,8 +14,7 @@ export default {
   name: "GroupStickyButton",
   props: ['value'],
   data() { return {
-    fab: false, offset: [-50,15],
-    xoffset: 0,
+    fab: false, xoffset: 0, width:0
   } },
   computed: {
     ...mapState('menus',{ menus:'data',selected:'s_items' }),
@@ -32,15 +31,14 @@ export default {
   },
   mounted(){
     setTimeout(function(vm){
+      let sWidth = vm.$q.screen.width; vm.xoffset = sWidth-50;
       let tWidth = _.reduce(_.range(1,vm.count+1),function(sum,num){ return sum + vm.$refs['fab'+num][0].$el.clientWidth },0);
-      let fWidth = vm.$refs['fab1'][0].$el.clientWidth;
-      vm.xoffset = 0-tWidth+_.toInteger(fWidth/2.5)
-      vm.offset = [vm.xoffset,15]
+      vm.width = tWidth + 5 + 'px';
     },500,this);
 
   },
   watch: {
-    fab(fab){ if(!fab) this.offset = [this.xoffset,15]; else this.offset = [50,15] },
+    fab(fab){ this.xoffset = fab ? 0 : (this.$q.screen.width - 50) },
   }
 }
 </script>

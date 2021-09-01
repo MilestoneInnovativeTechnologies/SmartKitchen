@@ -13,11 +13,7 @@
     </q-list>
     <q-dialog persistent v-model="bill_mode" @before-hide="bill_mode = false"><BillGenerateCard :token="selected" style="width:360px; max-width: 90vw;" v-if="selected" @generated="bill_mode = false" /></q-dialog>
     <q-dialog persistent v-model="deliver_mode" @before-hide="deliver_mode = false"><DeliveryBoyPaymentCard :token="selected" style="width:360px; max-width: 90vw;" v-if="selected" @paid="deliver_mode = false" /></q-dialog>
-    <transition appear enter-active-class="animated fadeIn" leave-active-class="animated fadeOut">
-      <q-page-sticky v-show="fab || !Tokens.length" position="bottom-right" :offset="offset">
-        <q-fab icon="add" color="primary" glossy :to="{ name: 'delivery_boy_order_new' }" v-touch-pan.prevent.mouse="move" />
-      </q-page-sticky>
-    </transition>
+    <OrderNewFabDeliveryBoy />
   </q-page>
 </template>
 
@@ -28,16 +24,16 @@ import {time} from "assets/helpers";
 import BillGenerateCard from "components/Bill/BillGenerateCard";
 import DeliveryBoyPaymentCard from "components/Payment/DeliveryBoyPaymentCard";
 import {NoCustomer} from "assets/assets";
+import OrderNewFabDeliveryBoy from "components/Order/OrderNewFabDeliveryBoy";
 
 export default {
   name: "DeliveryBoyCompleted",
-  components: {DeliveryBoyPaymentCard, BillGenerateCard, TokenDetailDeliveryBoyExpansion},
+  components: {OrderNewFabDeliveryBoy, DeliveryBoyPaymentCard, BillGenerateCard, TokenDetailDeliveryBoyExpansion},
   mixins: [Tokens],
   data(){ return {
     me: parseInt(this.$route.meta.me.id),
     bill_mode: false, deliver_mode: false,
     selected: null,
-    fab: true, offset: [24,24],
   } },
   computed: {
     Tokens(){ return _(this.tokens).filter(['type','Home Delivery']).filter(is_all_completed).map(token => token.customer ? token : Object.assign({},token,{ customer:NoCustomer })).value() },
@@ -50,7 +46,6 @@ export default {
     np({ customer }){ return [customer.name,customer.phone].join(', ') },
     pa({ customer }){ return [customer.phone,customer.address].join('<br />') },
     wa({ waiter,customer }){ return [customer.address,'(User: '+waiter.name+')'].join('<br />') },
-    move(ev){ this.offset = [this.offset[0] - ev.delta.x, this.offset[1] - ev.delta.y] },
     bill({ id }){ this.selected = id; this.bill_mode = true },
     deliver({ id }){ this.selected = id; this.deliver_mode = true },
   }

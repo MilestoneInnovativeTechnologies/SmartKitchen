@@ -12,7 +12,7 @@
       <q-tab class="text-white" name="items" icon="widgets" label="Items" />
       <q-tab class="text-white" name="proceed" icon="where_to_vote" label="Proceed" />
     </q-tabs>
-    <GroupStickyButton v-model="active_group" />
+    <GroupStickyButton v-model="active_group" :style="{ visibility:(tab && tab !== 'seating') ? 'visible' : 'hidden' }" />
     <q-dialog persistent :value="tab === 'proceed'" @before-hide="tab = 'items'">
       <OrderNewSummary :style="popup_width()" v-bind="params" @process="process" :loading="loading" />
     </q-dialog>

@@ -1,6 +1,6 @@
 <template>
   <q-card>
-    <q-bar class="bg-accent text-white q-py-lg items-center" :class="'bg-' + clr">
+    <q-bar class="text-white q-py-lg items-center" :class="'bg-' + clr">
       <q-icon name="receipt" color="white" left />
       <span>Order Summary</span><q-space />
       <q-btn icon="clear" v-close-popup flat round color="white" />

@@ -18,6 +18,7 @@
       <q-item-label header v-if="deliverable.length">Deliverable Orders</q-item-label>
       <OrderSummaryDeliveryBoy :tokens="deliverable" address separator />
     </q-list>
+    <OrderNewFabDeliveryBoy />
   </q-page>
 </template>
 
@@ -28,10 +29,11 @@ import {is_today} from "assets/helpers";
 import DigitMetric from "components/Metric/DigitMetric";
 import OrderSummaryDeliveryBoy from "components/Order/OrderSummaryDeliveryBoy";
 import {NoCustomer} from "assets/assets";
+import OrderNewFabDeliveryBoy from "components/Order/OrderNewFabDeliveryBoy";
 
 export default {
   name: 'PageDeliveryBoyIndex',
-  components: {OrderSummaryDeliveryBoy, DigitMetric},
+  components: {OrderNewFabDeliveryBoy, OrderSummaryDeliveryBoy, DigitMetric},
   mixins: [Tokens,Bills],
   data(){ return {
     me: parseInt(this.$route.meta.me.id)

@@ -13,7 +13,7 @@ const layout_child = {
   Login: ['login_index'],
   Waiter: ['waiter_index','waiter_menu','orders','order_new','waiter_tokens','waiter_bills'],
   Chef: ['chef_index','chef_kitchens','kitchen_items','kitchen_stocks','tokens'],
-  Receptionist: ['receptionist_index','seat_status','receptionist_tokens','bills','seat_status_order','receptionist_orders','receptionist_order_new','receptionist_order_new_items','orders_remote','orders_remote_new','sale',
+  Receptionist: ['receptionist_index','seat_status','receptionist_tokens','bills','seat_status_order','receptionist_orders','order_new','orders_remote','orders_remote_new','sale',
     'archives','archive_payments','archive_bills','archive_remote','archive_orders','archive_sales','archive_tokens'
   ],
   Administrator: ['report_index','administration_index',
@@ -23,7 +23,7 @@ const layout_child = {
     'orders_by_waiter','orders_by_receptionist','orders_by_delivery_boy','user_orders', 'kitchen_processing','item_processing','chef_performance',
     'data_import',
   ],
-  'Delivery Boy': ['delivery_boy_index','delivery_boy_orders','delivery_boy_order_new','delivery_boy_order_items','delivery_boy_customers','delivery_boy_completed','delivery_boy_payments'],
+  'Delivery Boy': ['delivery_boy_index','delivery_boy_orders','order_new','delivery_boy_customers','delivery_boy_completed','delivery_boy_payments'],
 }
 
 const route_master = {
@@ -31,7 +31,7 @@ const route_master = {
   waiter_index: { name:'waiter_index', path:'/', component: () => import('pages/Waiter/Index'), meta:{ title:'' } },
   waiter_menu: { name:'waiter_menu', path:'/menu', component: () => import('pages/Waiter/Menu'), meta:{ title:'Menu' } },
   orders: { name:'orders', path:'/orders', component: () => import('pages/Order/Orders'), meta:{ title:'Order' } },
-  order_new: { name:'order_new', path:'/order/new', component: () => import('pages/Order/New'), meta:{ title:'New Order',back:true,footer:false } },
+  order_new: { name:'order_new', path:'/order/new', component: () => import('pages/Order/New'), props:true, meta:{ title:'New Order',back:true,footer:false } },
   waiter_tokens: { name:'waiter_tokens', path:'/tokens', component: () => import('pages/Waiter/Tokens'), meta:{ title:'Completed Tokens' } },
   waiter_bills: { name:'waiter_bills', path:'/bills/pending', component: () => import('pages/Bill/PendingWaiter'), meta:{ title:'Pending Bills' } },
   chef_index: { name:'chef_index', path:'/', component: () => import('pages/Chef/Index'), meta:{ title:'' } },
@@ -45,8 +45,6 @@ const route_master = {
   seat_status: { name:'seat_status', path:'/seating/status', component: () => import('pages/Seating/SeatingStatus'), meta:{ title:'Seat Status' } },
   seat_status_order: { name:'seat_status_order', path:'/seating/status/order', component: () => import('pages/Order/CommonNew'), props: true, meta:{ title:'New Order' } },
   receptionist_orders: { name:'orders', path:'/orders', component: () => import('pages/Order/ReceptionistOrders'), meta:{ title:'Order' } },
-  receptionist_order_new: { name:'receptionist_order_new', path:'/orders/new', component: () => import('pages/Order/ReceptionistNew'), meta:{ title:'New Order',back:true } },
-  receptionist_order_new_items: { name:'receptionist_order_new_items', path:'/orders/new/items', component: () => import('pages/Order/CommonNew'), props:true, meta:{ title:'Select Items',back:true,footer:false } },
   administration_index: { name:'administration_index', path:'/administration', component: () => import('pages/Administrator/AdministrationIndex'), meta:{ title:null } },
   master_customer: { name:'master_customer', path:'/settings/customers', component: () => import('pages/Administrator/Master/AdministratorMasterCustomer'), meta:{ title:'Customers' } },
   master_prop: { name:'master_prop', path:'/settings/items/props', component: () => import('pages/Administrator/Master/AdministratorMasterProp'), meta:{ title:'Item Props' } },
@@ -90,7 +88,7 @@ const route_master = {
   chef_performance: { name:'chef_performance', path:'/report/chef/performance', component: () => import('pages/Report/Reports/ReportChefPerformance'), meta:{ title:'Chef Performance',controls:['user','range'] } },
   orders_remote: { name:'orders_remote', path:'/orders/remote', component: () => import('pages/Order/RemoteOrders'), meta:{ title:'Remote Orders' } },
   orders_remote_new: { name:'orders_remote_new', path:'/orders/remote/new', component: () => import('pages/Order/RemoteOrdersNew'), meta:{ title:'New Remote Orders',back:true } },
-  sale: { name:'sale', path:'sale', component: () => import('pages/Order/Sale'), meta:{ title:'New Sale' } },
+  sale: { name:'sale', path:'sale', component: () => import('pages/Order/Sale'), meta:{ title:'New Sale',footer:false,back:true } },
   archives: { name:'archives', path:'archives', component: () => import('pages/Archive/Index'), meta:{ title:'Archives' } },
   archive_payments: { name:'archive_payments', path:'archive/payments', component: () => import('pages/Archive/Payments'), meta:{ title:'Recent Payments',back:true,footer:false } },
   archive_bills: { name:'archive_bills', path:'archive/bills', component: () => import('pages/Archive/Bills'), meta:{ title:'Bills',back:true,footer:false } },
@@ -100,8 +98,6 @@ const route_master = {
   archive_tokens: { name:'archive_tokens', path:'archive/tokens', component: () => import('pages/Archive/Tokens'), meta:{ title:'Tokens',back:true,footer:false } },
   delivery_boy_index: { name:'delivery_boy_index', path:'/', component: () => import('pages/DeliveryBoy/DeliveryBoyIndex'), meta:{ title:null } },
   delivery_boy_orders: { name:'orders', path:'/orders', component: () => import('pages/DeliveryBoy/DeliveryBoyOrders'), meta:{ title:'Orders' } },
-  delivery_boy_order_new: { name:'delivery_boy_order_new', path:'/order/new', component: () => import('pages/DeliveryBoy/DeliveryBoyOrderNew'), meta:{ title:'New Order' } },
-  delivery_boy_order_items: { name:'delivery_boy_order_items', path:'/order/items', component: () => import('pages/Order/CommonNew'), props:true, meta:{ title:'Select Items',back:true,footer:false } },
   delivery_boy_customers: { name:'delivery_boy_customers', path:'/customers', component: () => import('pages/Customer/CustomerIndex'), meta:{ title:'Customers' } },
   delivery_boy_completed: { name:'delivery_boy_completed', path:'/completed', component: () => import('pages/DeliveryBoy/DeliveryBoyCompleted'), meta:{ title:'Completed Tokens' } },
   delivery_boy_payments: { name:'delivery_boy_payments', path:'/payments', component: () => import('pages/DeliveryBoy/DeliveryBoyPayments'), meta:{ title:'Payments' } },

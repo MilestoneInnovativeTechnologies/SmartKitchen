@@ -1,32 +1,39 @@
 <template>
   <q-page padding v-scroll="scrolled">
-    <Masonry width="300" :items="tokens">
+    <Masonry width="280" :items="tokens">
       <template #item="token">
         <OrderSummaryReceptionistOrder :id="token.id" />
       </template>
     </Masonry>
-    <q-page-sticky v-show="fab || Object.keys(tokens).length < 6" position="bottom-right" :offset="offset">
-      <q-fab icon="add" color="primary" glossy :to="{ name: 'receptionist_order_new' }" v-touch-pan.prevent.mouse="move" />
-    </q-page-sticky>
+    <transition appear enter-active-class="animated fadeIn" leave-active-class="animated fadeOut">
+      <q-page-sticky v-show="fab || tokens.length < 6" position="bottom-right" :offset="offset">
+        <q-fab icon="add" color="primary" glossy @click="order = true" v-touch-pan.prevent.mouse="move" />
+      </q-page-sticky>
+    </transition>
+    <q-dialog v-model="order" persistent><OrderNewBasic :style="popup_width()" /></q-dialog>
   </q-page>
 </template>
 
 <script>
-import {h_key} from "assets/helpers";
+import {h_key, popup_width} from "assets/helpers";
 import {mapState} from "vuex";
 import OrderSummaryReceptionistOrder from "components/Order/OrderSummaryReceptionistOrder";
 import Masonry from "components/Masonry";
+import OrderNewBasic from "components/Order/OrderNewBasic";
+
 export default {
   name: 'PageReceptionistOrders',
-  components: {Masonry, OrderSummaryReceptionistOrder},
+  components: {OrderNewBasic, Masonry, OrderSummaryReceptionistOrder},
   data(){ return {
     fab: true, timeout: 0, offset: [24,24],
-    progresses: ['New','Processing']
+    progresses: ['New','Processing'],
+    order: false,
   } },
   computed: mapState('tokens',{
-    tokens({ data }){ return _(data).filter(({ progress,type }) => type !== 'Remote' && this.progresses.includes(progress)).mapKeys('id').value() }
+    tokens({ data }){ return _(data).filter(({ progress,type }) => type !== 'Remote' && this.progresses.includes(progress)).value() }
   }),
   methods: {
+    popup_width,
     hKey({ id }){ h_key('order','summary','order',id) },
     scrolled(pos){ this.fab = true },
     move(ev){ this.offset = [this.offset[0] - ev.delta.x, this.offset[1] - ev.delta.y] }
