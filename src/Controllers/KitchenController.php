@@ -40,7 +40,7 @@ class KitchenController extends Controller
         $kitchen = intval($request->input('kitchen')); $user = auth()->id();
         if(!UserLogin::where(['user' => $user, 'out' => 0])->exists()) {
             Log::warning('Trying to set kitchen of chef which not exists in UserLogin.. User: ' . $user);
-            return;
+            return null;
         }
         $kitchens = []; $full_time = KitchenStatus::where('full_timer',$user)->pluck('kitchen')->toArray();
         UserLogin::where(['user' => $user, 'out' => 0])->each(function($log) use($kitchen,&$kitchens,$full_time){
@@ -118,5 +118,11 @@ class KitchenController extends Controller
             else $status->update(compact('full_timer'));
         });
         return $req['status'] ? $req['kitchen'] : null;
+    }
+
+    public function items_all(Request $request){
+        if(request()->has('kitchen') && request()->filled('kitchen'))
+            KitchenItem::where($request->only(['kitchen']))->update([$request->item => $request->process]);
+        return [];
     }
 }
