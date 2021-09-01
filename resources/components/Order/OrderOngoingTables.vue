@@ -3,7 +3,7 @@
     <div class="text-h6 q-mb-sm q-ml-sm">Ongoing Seating</div>
     <Masonry :items="tokens" width="300">
       <template v-slot:item="row">
-        <div class="q-pa-xs col-xs-6 col-sm-4 col-md-3 col-lg-2 col-xl-1">
+        <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2 col-xl-1">
           <q-card :class="'bg-' + cColor[row.progress]">
             <q-card-section class="q-py-xs" :class="'bg-' + cColor[row.progress]"></q-card-section>
             <q-img basic :src="media(row.seating.image)">

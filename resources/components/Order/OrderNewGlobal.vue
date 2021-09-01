@@ -1,10 +1,10 @@
 <template>
-  <q-card flat square class="q-pa-none q-ma-none">
-    <q-card-section class="q-gutter-y-sm" v-if="seat && (!tab || tab === 'seating')">
+  <q-card flat square>
+    <q-card-section class="q-px-none" v-if="seat && (!tab || tab === 'seating')">
       <SeatSelect @selected="seating" />
     </q-card-section>
-    <q-card-section class="q-gutter-y-sm" v-else>
-      <FilterInputText @text="item_filter = $event" />
+    <q-card-section class="q-px-none" v-else>
+      <FilterInputText @text="item_filter = $event" class="q-mb-xs" />
       <GroupItemsSelect :selected="active_group" :filter="item_filter" :price_list="params.price_list" @item="item" />
     </q-card-section>
     <q-tabs v-model="tab" align="justify" dense class="fixed-bottom bg-primary">
