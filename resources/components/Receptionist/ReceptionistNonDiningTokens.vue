@@ -23,7 +23,7 @@ export default {
   mixins: [Tokens],
   data(){ return {
     activeProgress: ['New','Processing','Completed','Billed','Pending'],
-    displayTypes: ['Take Away','Home Delivery','Sale','Other'],
+    displayTypes: ['Take Away','Sale','Other'],
   } },
   computed: {
     oTokens(){ return _(this.tokens).filter(({ type,progress }) => this.displayTypes.includes(type) && this.activeProgress.includes(progress)).value() }
