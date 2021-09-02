@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import ReportCard from "pages/Report/ReportCard";
+import ReportCard from "components/Report/ReportCard";
 import {extract_date, is_between, precision, range, to_format} from "assets/helpers";
 import Bills from "assets/mixins/Bills";
 

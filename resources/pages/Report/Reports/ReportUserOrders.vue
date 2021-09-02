@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import ReportCard from "pages/Report/ReportCard";
+import ReportCard from "components/Report/ReportCard";
 import {is_date_same, precision, time, to_format} from "assets/helpers";
 import Bills from "assets/mixins/Bills";
 

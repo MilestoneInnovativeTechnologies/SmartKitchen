@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import ReportCard from "pages/Report/ReportCard";
+import ReportCard from "components/Report/ReportCard";
 import {is_between, precision, range, to_format, to_html} from "assets/helpers";
 import Bills from "assets/mixins/Bills";
 import {bill_tax, bill_tax_details} from "assets/module_helpers";

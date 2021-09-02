@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import ReportCard from "pages/Report/ReportCard";
+import ReportCard from "components/Report/ReportCard";
 import {is_today, to_format} from "assets/helpers";
 import {mapState} from "vuex";
 import Tokens from "assets/mixins/Tokens";

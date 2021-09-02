@@ -8,7 +8,7 @@
 import Tokens from "assets/mixins/Tokens";
 import {extract_date, is_date_same, precision, time, to_format} from "assets/helpers";
 import {bill_payable} from "assets/module_helpers";
-import ReportCard from "pages/Report/ReportCard";
+import ReportCard from "components/Report/ReportCard";
 
 export default {
   name: "PageReportDayTokenSummary",

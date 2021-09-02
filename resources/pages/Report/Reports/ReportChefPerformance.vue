@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import ReportCard from "pages/Report/ReportCard";
+import ReportCard from "components/Report/ReportCard";
 import {is_between, is_date_same, precision, range, time, to_format} from "assets/helpers";
 import Tokens from "assets/mixins/Tokens";
 import {token_timing_average} from "assets/module_helpers";
