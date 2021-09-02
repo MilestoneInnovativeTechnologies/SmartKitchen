@@ -18,7 +18,12 @@
         </template>
       </q-item-section>
       <q-item-section side v-if="user === undefined">{{ precision(token_total(token)) }}</q-item-section>
-      <q-item-section side v-else class="text-purple text-bold text-caption">{{ token_status(token) }}</q-item-section>
+      <q-item-section side v-else class="text-purple text-caption">
+        <q-item-label class="text-bold">{{ token_status(token) }}
+          <q-btn v-if="token_status(token) === 'Billable'" dense icon="reply_all" flat size="sm" class="flip-horizontal q-mb-xs" @click="$emit('generate',token)" />
+          <q-btn v-if="token_status(token) === 'Deliverable'" dense icon="reply_all" flat size="sm" class="flip-horizontal q-mb-xs" @click="$emit('deliver',token)" />
+        </q-item-label>
+      </q-item-section>
     </q-item>
   </q-list>
 </template>
