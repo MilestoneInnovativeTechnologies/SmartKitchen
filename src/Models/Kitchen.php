@@ -27,12 +27,9 @@ class Kitchen extends Model implements HasMedia
 
     public function kot_print_template_data($kitchen,$token_id = null){
         if(!$token_id) return null;
-        $kitchen_id = $kitchen->id;
-        $data = Token::with(['User','Seating','Customer','Items' => function($Q)use($kitchen_id){ $Q->withoutGlobalScopes()->with(['Item','User','Kitchen'])->where('kitchen',$kitchen_id); }])->find($token_id);
-        $data->setAttribute('total_items',$data->Items->count());
-        $data->setAttribute('total_quantities',$data->Items->sum->quantity);
-        $data->setAttribute('date_human',human_date($data->date));
-        $data->setAttribute('time_human',human_time($data->date));
+        $Token = Token::find($token_id);
+        $data = $Token->print_data($Token);
+        $data->setAttribute('kitchen',is_array($kitchen) ? $kitchen : $kitchen->toArray());
         return $data;
     }
 
