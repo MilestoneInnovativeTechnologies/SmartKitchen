@@ -11,8 +11,8 @@
       <q-item-label caption v-if="!other.length" class="q-pl-lg">No Others Tokens</q-item-label>
       <TokenDetailDeliveryBoyExpansion v-for="token in other" :key="'dbc-own-' + token.id" :token="token" @deliver="deliver(token)" @bill="bill(token)" group="other" color="secondary" popup :label="np(token)" :caption="wa(token)" />
     </q-list>
-    <q-dialog persistent v-model="bill_mode" @before-hide="bill_mode = false"><BillGenerateCard :token="selected" style="width:360px; max-width: 90vw;" v-if="selected" @generated="bill_mode = false" /></q-dialog>
-    <q-dialog persistent v-model="deliver_mode" @before-hide="deliver_mode = false"><DeliveryBoyPaymentCard :token="selected" style="width:360px; max-width: 90vw;" v-if="selected" @paid="deliver_mode = false" /></q-dialog>
+    <q-dialog persistent v-model="bill_mode" @before-hide="bill_mode = false"><BillGenerateCard :token="selected" :style="popup_width()" v-if="selected" @generated="bill_mode = false" /></q-dialog>
+    <q-dialog persistent v-model="deliver_mode" @before-hide="deliver_mode = false"><DeliveryBoyPaymentCard :token="selected" :style="popup_width()" v-if="selected" @paid="deliver_mode = false" /></q-dialog>
     <OrderNewFabDeliveryBoy />
   </q-page>
 </template>
@@ -20,7 +20,7 @@
 <script>
 import Tokens from "assets/mixins/Tokens";
 import TokenDetailDeliveryBoyExpansion from "components/Tokens/TokenDetailDeliveryBoyExpansion";
-import {time} from "assets/helpers";
+import {time,popup_width} from "assets/helpers";
 import BillGenerateCard from "components/Bill/BillGenerateCard";
 import DeliveryBoyPaymentCard from "components/Payment/DeliveryBoyPaymentCard";
 import {NoCustomer} from "assets/assets";
@@ -42,7 +42,7 @@ export default {
     other(){ return _.filter(this.Tokens,({ user }) => !_.isNull(user) && user !== this.me) },
   },
   methods: {
-    time,
+    time, popup_width,
     np({ customer }){ return [customer.name,customer.phone].join(', ') },
     pa({ customer }){ return [customer.phone,customer.address].join('<br />') },
     wa({ waiter,customer }){ return [customer.address,'(User: '+waiter.name+')'].join('<br />') },
