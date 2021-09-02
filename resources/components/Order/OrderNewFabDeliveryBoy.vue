@@ -2,7 +2,7 @@
   <div>
     <q-page-sticky position="bottom-right" :offset="offset">
       <transition appear enter-active-class="animated zoomIn" leave-active-class="animated zoomOut">
-        <q-fab v-show="fab" icon="add" color="primary" glossy @click="fab = false" v-touch-pan.prevent.mouse="move" />
+        <q-fab v-show="fab" icon="add" active-icon="add" color="primary" glossy @click="fab = false" v-touch-pan.prevent.mouse="move" />
       </transition>
     </q-page-sticky>
     <q-dialog persistent :value="!fab" @hide="fab = true" transition-show="flip-down" transition-hide="flip-up"><OrderNewBasic :style="popup_width()" type="Home Delivery" :price_list="price_list" :user="$route.meta.me.id" /></q-dialog>
