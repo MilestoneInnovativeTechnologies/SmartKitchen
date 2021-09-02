@@ -1,6 +1,6 @@
 <template>
   <q-page padding>
-    <ReportCard title="Tokens By Receptionist" :head="head" index :table="table" :center="['Tokens']" :right="['Amount','Payable']" :foot="foot" />
+    <ReportCard title="Tokens By Delivery Boy" :head="head" index :table="table" :center="['Tokens']" :right="['Amount','Payable']" :foot="foot" />
   </q-page>
 </template>
 
