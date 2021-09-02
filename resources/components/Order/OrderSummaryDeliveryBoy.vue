@@ -36,7 +36,7 @@ export default {
   },
   methods: {
     image, precision, time,
-    kitchen_view(item){ return item.quantity + 'x ' + item.item.name + ': <span class="text-deep-purple">' + item.progress + '</span> ('+ item.kitchen.name +')' },
+    kitchen_view(item){ return `${item.quantity}x ${item.item.name}: <span class="text-deep-purple">${item.progress}</span>`+(item.kitchen ? ` (${item.kitchen.name})` : '') },
     bill_paid(payments){ return _.sumBy(payments,({ amount }) => _.toNumber(amount)) },
     token_payment({ id }){ return _.get(this.Payments,_.get(this.Bills,[id,'id'])) },
     payment_date(token){ return _.get(_.last(this.token_payment(token)),'date') },
