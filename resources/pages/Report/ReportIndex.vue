@@ -24,7 +24,7 @@ export default {
     reports: {
       Token: [0,14,19,20,15],
       Sales: [1,2,3,4,5],
-      Bill: [7,8,9,10],
+      Bill: [7,8,9,10,21,22,23,24],
       Tax: [8,9,10,13],
       Kitchen: [6,16],
       Stock: [6],
@@ -32,7 +32,7 @@ export default {
       Waiter: [14,15],
       Chef: [18],
       Receptionist: [19],
-      'Delivery Boy': [20],
+      'Delivery Boy': [20,24],
       Performance: [14,15,16,17,18]
     },
     masters: [
@@ -57,6 +57,10 @@ export default {
       ['Chef Performance', 'chef_performance'],//18
       ['Orders by Receptionist', 'orders_by_receptionist'],//19
       ['Orders by Delivery Boy', 'orders_by_delivery_boy'],//20
+      ['Bill Summary with Customer', 'bill_summary_customer'],//21
+      ['Bill Summary - User Type', 'bill_summary_user_type'],//22
+      ['Bill by User', 'bill_by_user'],//23
+      ['Delivery Boy Bills', 'delivery_boy_bills'],//24
     ]
   } },
   methods: {
