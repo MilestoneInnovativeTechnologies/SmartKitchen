@@ -26,11 +26,14 @@
       <div class="col-5"><q-input outlined dense class="col-5" v-model.number="discount" type="number" label="Discount" /></div>
     </q-card-section>
     <q-card-section class="row items-center justify-around q-px-md">
-      <div class="text-center">
+      <div class="text-center col-6">
         <q-item-label style="font-size: 1.5rem; line-height: 1rem !important;" class="text-weight-bolder">{{ precision(total - discount) }}</q-item-label>
         <q-item-label caption class="text-capitalize">Payable</q-item-label>
       </div>
-      <div><q-btn label="Generate Bill" color="accent" padding="xs md" dense :loading="loading" @click="generate" /></div>
+      <div class="text-center col-6">
+        <UserSelectDropDown v-if="$route.meta.me.role !== 'Delivery Boy'" outlined dense get="id" role="Delivery Boy" clearable v-model="user" label="Delivery Boy" class="q-mb-xs" />
+        <q-btn label="Generate Bill" color="accent" padding="xs md" dense :loading="loading" @click="generate" />
+      </div>
     </q-card-section>
   </q-card>
 </template>
@@ -40,15 +43,16 @@ import Tokens from "assets/mixins/Tokens";
 import {image,precision} from "assets/helpers";
 import Bills from "assets/mixins/Bills";
 import OrderCustomer from "components/Order/OrderCustomer";
+import UserSelectDropDown from "components/Users/UserSelectDropDown";
 
 export default {
   name: "BillGenerateCard",
-  components: {OrderCustomer},
+  components: {UserSelectDropDown, OrderCustomer},
   props: ['token'],
   mixins: [Tokens,Bills],
   data(){ return {
     tax: null, discount: 0, customer: null,
-    loading: false,
+    loading: false, user: null,
   } },
   computed: {
     Token(){ return _.find(this.tokens,['id',parseInt(this.token)]) },
@@ -60,7 +64,7 @@ export default {
     image, precision,
     generate(){
       this.loading = true; if(!this.token || !this.customer) return this.loading = false;
-      let params = { token:this.token, customer:this.customer, discount:this.discount,nature:this.tax }
+      let params = { token:this.token, customer:this.customer, discount:this.discount,nature:this.tax, user:this.user || this.$route.meta.me.id }
       post('bill','create',params).then(() => this.$store.dispatch('server/ping',null,{ root:true })).catch().finally(this.generated)
     },
     generated(){
