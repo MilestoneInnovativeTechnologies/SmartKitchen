@@ -6,8 +6,8 @@
       </template>
     </Masonry>
     <transition appear enter-active-class="animated fadeIn" leave-active-class="animated fadeOut">
-      <q-page-sticky v-show="fab || tokens.length < 6" position="bottom-right" :offset="offset">
-        <q-fab icon="add" color="primary" glossy @click="order = true" v-touch-pan.prevent.mouse="move" />
+      <q-page-sticky v-show="!order && (fab || tokens.length < 6)" position="bottom-right" :offset="offset">
+        <q-fab icon="add" active-icon="add" color="primary" glossy @click="order = true" v-touch-pan.prevent.mouse="move" />
       </q-page-sticky>
     </transition>
     <q-dialog v-model="order" persistent><OrderNewBasic :style="popup_width()" /></q-dialog>
