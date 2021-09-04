@@ -39,8 +39,9 @@ class CreateBillRequest extends FormRequest
         $nature = $this->input('nature',null);
         $user = $this->input('user',Auth::id());
         $discount = doubleval($this->input('discount') ?: 0);
+        $date = $this->input('date',now()->toDateTimeString());
         $this->merge([
-            'date'      => now()->toDateTimeString(),
+            'date'      => $date,
             'nature'    => $nature,
             'discount'  => $discount,
             'user'      => $user,
@@ -50,7 +51,7 @@ class CreateBillRequest extends FormRequest
     }
 
     public function store(){
-        $data = $this->only(['token','customer','user','amount','discount','nature','contents']);
+        $data = $this->only(['token','user','customer','date','amount','discount','nature','contents']);
         BillCreating::dispatch($data);
         $bill = Bill::create($data);
         BillCreated::dispatch($bill);
