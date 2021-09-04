@@ -2,10 +2,10 @@
   <q-card>
     <q-card-section class="bg-grey-2 row items-center q-py-xs">
       <div class="text-bold">Select Menu</div><q-space />
-      <q-btn round icon="clear" flat class="text-weight-bold" color="red-12" v-show="selected.length || !menus_count" v-close-popup />
+      <q-btn round :icon="loading ? 'loop' : 'clear'" flat class="text-weight-bold" :class="{ rotate:loading }" color="red-12" v-close-popup />
     </q-card-section>
     <q-list separator bordered v-if="menus_count">
-      <q-item v-for="menu in menus" :key="hKey(menu)" clickable @click="selected = menu" v-ripple>
+      <q-item v-for="menu in menus" :key="hKey(menu)" tag="label" clickable @click="selected = menu" v-ripple :disable="loading">
         <q-item-section>
           <q-item-label>{{ menu.name }}</q-item-label>
         </q-item-section>
@@ -25,14 +25,14 @@ import {h_key} from "assets/helpers";
 export default {
   name: "MenuSelect",
   data(){ return {
-
+    loading: false,
   } },
   computed: {
     ...mapState('menus',{ menus:'data',assigned:'s_items' }),
     menus_count(){ return _.size(this.menus) },
     selected: {
       get(){ return this.assigned },
-      set({ id }){ this.$store.dispatch('menus/toggle',id) }
+      set({ id }){ this.loading = true; this.$store.dispatch('menus/toggle',id) }
     }
   },
   methods: {
@@ -41,9 +41,11 @@ export default {
   },
   created() {
     if(!this.selected.length && this.menus_count === 1) {
-      this.selected = _.first(_.values(this.menus));
-      this.$emit('selected');
+      this.selected = _.head(_.values(this.menus));
     }
+  },
+  watch: {
+    selected(s_menus){ if(s_menus && !_.isEmpty(s_menus)) return this.$emit('selected') }
   }
 }
 </script>
