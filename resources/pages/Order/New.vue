@@ -1,27 +1,25 @@
 <template>
   <q-page padding>
     <OrderNewGlobal :seat="seat" v-bind="$attrs" />
-    <q-dialog v-model="m_show" persistent><MenuSelect style="width: 75vw; max-width: 330px" @selected="r_menu = false" /></q-dialog>
+    <q-dialog v-model="m_show" persistent><MenuSelect :style="popup_width" /></q-dialog>
   </q-page>
 </template>
 
 <script>
 import MenuSelect from "components/Menu/MenuSelect";
 import OrderNewGlobal from "components/Order/OrderNewGlobal";
+import {popup_width} from "assets/helpers";
 
 export default {
   name: "PageOrderNew",
   components: { OrderNewGlobal, MenuSelect },
   props: ['seat'],
-  data() { return {
-    r_menu: false,
-  } },
   computed: {
+    popup_width(){ return popup_width() },
     m_show: {
-      get(){ return !this.$store.state.menus.s_items.length || this.r_menu },
-      set(s){ this.r_menu = !!s }
+      get() { return !this.$store.state.menus.s_items.length },
+      set() { },
     }
-  },
-  created() { this.r_menu = this.m_show; }
+  }
 }
 </script>
