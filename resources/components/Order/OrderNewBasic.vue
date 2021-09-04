@@ -24,7 +24,7 @@ import {OrderTypeRequiredFields} from "assets/assets";
 export default {
   name: "OrderNewBasic",
   components: {PriceListSelectDropDown, WaiterSelectDropDown, SeatSelectDropDown, OrderCustomer},
-  props: ['color'],
+  props: ['color','after'],
   data(){ return {
     params: { type:'Dining',seating:null,customer:null,price_list:null,user:null }, seat: null,
     types: ['Dining','Home Delivery','Take Away'],
@@ -48,7 +48,7 @@ export default {
     },
     proceed(){
       this.validate = true; if(this.seat_error) return; this.validate = false;
-      this.$router.push({ name:'order_new',params:{ seat:false,...(this.params) } });
+      this.$router.push({ name:'order_new',params:{ seat:false,after:this.after,...(this.params) } });
     },
   },
   watch: {

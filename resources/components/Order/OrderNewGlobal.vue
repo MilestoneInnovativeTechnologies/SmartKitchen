@@ -38,7 +38,7 @@ export default {
     },
     loading: false,
   } },
-  props: ['seat'],
+  props: ['seat','after'],
   computed: {
     attrs(){ return _.pick(this.$attrs,_.keys(this.params)) },
   },
@@ -65,7 +65,8 @@ export default {
       post('token','create',this.params).then(() => {
         this.params.items.splice(0,this.params.items.length);
         this.item_filter = ""; this.active_group = 0; this.init(this.attrs);
-        this.tab = "items"; this.loading = false;
+        this.loading = false; this.tab = "items"
+        if(this.after) return this.$router.push(_.isObject(this.after) ? this.after : { name:this.after })
         if(this.seat) setTimeout(vm => vm.tab = 'seating',600,this)
       })
     },

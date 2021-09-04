@@ -10,7 +10,7 @@
         <q-fab icon="add" active-icon="add" color="primary" glossy @click="order = true" v-touch-pan.prevent.mouse="move" />
       </q-page-sticky>
     </transition>
-    <q-dialog v-model="order" persistent><OrderNewBasic :style="popup_width()" /></q-dialog>
+    <q-dialog v-model="order" persistent><OrderNewBasic :style="popup_width()" after="orders" /></q-dialog>
   </q-page>
 </template>
 
