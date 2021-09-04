@@ -12,7 +12,7 @@ export function add (state,records) {
 export function section (state,sec) {
   if(!sec) return state.s_items.splice(0,state.s_items.length);
   _.forEach(sec,(s_items,section) => {
-    state['section'] = section;
-    state['s_items'] = _.map(s_items,_.toSafeInteger)
+    Vue.set(state,'section',section)
+    Vue.set(state,'s_items',_.map(s_items,_.toSafeInteger))
   })
 }
