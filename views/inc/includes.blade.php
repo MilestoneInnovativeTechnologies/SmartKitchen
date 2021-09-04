@@ -3,11 +3,11 @@ $dev = (env('DEV') === 'YES');
 $files = [
     'css' => [
         'vendor' => 'cc2d5690',
-        'app' => 'e3385c90',
+        'app' => '784fe0af',
     ],
     'js' => [
         'vendor' => 'cfad1fdd',
-        'app' => 'b1527497',
+        'app' => '5c66207b',
     ]
 ]
 @endphp
