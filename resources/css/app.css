@@ -4,3 +4,4 @@
 }
 
 .spin { animation: spin 300ms linear 0s 1 alternate-reverse; }
+.rotate { animation: spin 750ms linear infinite; }
