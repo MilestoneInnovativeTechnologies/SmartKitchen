@@ -10,9 +10,9 @@
     <q-tabs v-model="tab" align="justify" dense class="fixed-bottom bg-primary">
       <q-tab v-if="seat" class="text-white" name="seating" icon="event_seat" label="Seat" />
       <q-tab class="text-white" name="items" icon="widgets" label="Items" />
-      <q-tab class="text-white" name="proceed" icon="where_to_vote" label="Proceed" />
+      <q-tab class="text-white" name="proceed" icon="forward" label="Proceed" />
     </q-tabs>
-    <GroupStickyButton v-model="active_group" :style="{ visibility:(tab && tab !== 'seating') ? 'visible' : 'hidden' }" />
+    <GroupStickyButton v-model="active_group" :style="{ visibility:(seat && (!tab || tab === 'seating')) ? 'hidden' : 'visible' }" />
     <q-dialog persistent :value="tab === 'proceed'" @before-hide="tab = 'items'">
       <OrderNewSummary :style="popup_width()" v-bind="params" @process="process" :loading="loading" />
     </q-dialog>
