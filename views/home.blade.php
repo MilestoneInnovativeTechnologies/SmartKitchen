@@ -61,7 +61,7 @@
         const _USER = @json(auth()->user()), _SECTION = @json(\Illuminate\Support\Arr::get(auth()->user(),'Log.section',[]));
     </script>
 </head>
-<body>
+<body style="overscroll-behavior-y: contain">
 <div id="q-app"></div>
 @include('SK::inc.includes')
 </html>
