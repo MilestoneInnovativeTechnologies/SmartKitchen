@@ -8,6 +8,22 @@ use Illuminate\Support\Facades\Storage;
 class SubscriptionController extends Controller
 {
 
+    public static function code(){
+        return Storage::exists('subscription') ? Storage::get('subscription') : '';
+    }
+
+    public static function serial(){
+        $text = @shell_exec('cat /proc/cpuinfo');
+        if($text){
+            foreach (explode("\n",$text) as $line) {
+                $cols = explode(":",trim($line));
+                if(count($cols) === 2 && trim($cols[0]) === "Serial") return trim($cols[1]);
+            }
+        }
+        return null;
+
+    }
+
     public function subscribe(Request $request){
         if($request->filled(['key','code'])){
             $env = file_get_contents(base_path('.env')); $key = $request->input('key');
@@ -22,7 +38,7 @@ class SubscriptionController extends Controller
     }
 
     public static function ExipreTimestamp(){
-        $code = Storage::exists('subscription') ? Storage::get('subscription') : false;
+        $code = self::code();
         return $code ? intval(substr($code,34,5) . substr(explode("/",$code)[0],-5)) : time();
     }
 
