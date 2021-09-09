@@ -8,5 +8,9 @@ export default {
     clear(){ this.$emit('input',null) },
     doEmit(sel){ this.$emit('input',this.get ? _.get(sel,this.get,null) : sel) },
     getName(obj){ return this.name ? this.name(obj) : obj.name }
+  },
+  created() {
+    if(_.has(this.$attrs,'clearable') || this.value) return;
+    this.doEmit(_.head(this.options));
   }
 }
