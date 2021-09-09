@@ -7,6 +7,11 @@ const KEY = localStorage.getItem('key')
 const CODE = localStorage.getItem('code')
 const SERIAL = localStorage.getItem('serial')
 
+let CODE_VALID = true, CODE_INVALID_REASON = '', CODE_INVALID_DETAIL = '', CODE_INVALID_ERROR_CODE = '';
+
+// E00
+if(CODE_VALID && (!KEY || !CODE || !SERIAL)) { CODE_VALID = false; CODE_INVALID_REASON = "Subscription details missing"; CODE_INVALID_DETAIL = "KEY, CODE or SERIAL is not accessible"; CODE_INVALID_ERROR_CODE = 'E00' }
+
 export const KEY_VALID = (KEY.substr(0,2) + CryptoJS.MD5(KEY.substr(0,2) + SERIAL + KEY.substr(-4)).toString() + KEY.substr(-4)) === KEY
 const CODE_HAS_BASIC = CODE.split('/').length === 2 && !_.isEmpty(CODE.split('/')[0]) && !_.isEmpty(CODE.split('/')[1])
 const CODE_BASIC_JSON_STRING = CODE_HAS_BASIC ? atob(CODE.split("/")[1]) : ""
@@ -20,7 +25,6 @@ if(CODE_HAS_BASIC){
   }
 }
 
-let CODE_VALID = true, CODE_INVALID_REASON = '', CODE_INVALID_DETAIL = '', CODE_INVALID_ERROR_CODE = '';
 
 const SUBSCRIPTION_ARRAY = JSON_STRING_VALID ? JSON.parse(CODE_BASIC_JSON_STRING) : [];
 export const CLIENT = SUBSCRIPTION_ARRAY['client'];

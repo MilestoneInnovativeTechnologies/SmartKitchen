@@ -1,19 +1,15 @@
 <template>
-  <q-page padding class="flex-center flex">
+  <q-page padding class="flex-center flex column">
     <q-card flat>
-      <q-card-section class="q-pa-none">
+      <q-card-section v-show="errorShow && errorMsg" class="text-red-10 text-center text-uppercase text-bold">{{ errorMsg }}, Please try again</q-card-section>
+      <q-card-section class="q-pa-none" v-show="!SUBSCRIBE_HIDE_LOGIN">
         <transition appear enter-active-class="animated fadeIn" leave-active-class="animated fadeOut" mode="out-in">
-          <component :is="component" :style="secs[component][2]" />
+          <component :is="components[login]" :style="styles[login]" />
         </transition>
       </q-card-section>
-      <q-card-actions v-if="$q.screen.gt.sm">
-        <q-btn :loading="loading" color="primary" flat :label="secs[component][0]" dense @click="left" icon="keyboard_arrow_left" /><q-space />
-        <q-btn :loading="loading" color="primary" flat :label="secs[component][1]" dense @click="right" icon-right="keyboard_arrow_right" />
-      </q-card-actions>
-      <q-card-actions v-else align="center">
-        <q-btn :loading="loading" color="primary" flat :label="this.page === 'LoginPassword' ? 'PIN' : 'Password'" dense @click="page = page === 'LoginPassword' ? 'LoginPin' : 'LoginPassword'" />
-      </q-card-actions>
     </q-card>
+    <SubscriptionExpiring />
+    <div v-if="SUBSCRIBE_HIDE_LOGIN" style="font-size: 5rem" class="text-weight-bolder text-red">{{ parseInt(HIDE_ALTER_WAIT/1000) }}</div>
   </q-page>
 </template>
 
@@ -21,22 +17,23 @@
 import LoginPassword from "components/Login/LoginPassword";
 import LoginPin from "components/Login/LoginPin";
 import DisplayBoards from "components/Login/DisplayBoards";
+import SubscriptionExpiring from "components/Login/SubscriptionExpiring";
+import Subscription from "assets/mixins/Subscription";
 export default {
   name: "PageLoginIndex",
-  components: {DisplayBoards, LoginPin, LoginPassword},
+  components: {SubscriptionExpiring, DisplayBoards, LoginPin, LoginPassword},
+  mixins: [Subscription],
   data(){ return {
-    secs: { LoginPassword: ['Display','PIN',{ width:'480px' }], LoginPin: ['Password','Display',{ maxWidth:'330px',width:'90vw' }], DisplayBoards: ['PIN','Password',{ width:'680px' }] },
-    comps: { Display:'DisplayBoards',PIN:'LoginPin',Password:'LoginPassword' },
-    page: null, loading: false,
+    styles: { pin:{ maxWidth:'330px',width:'90vw' },password:{ maxWidth:'330px',width:'90vw' },display:{ width:'680px' } },
+    components: { pin:'LoginPin',password:'LoginPassword',display:'DisplayBoards' },
+    errorShow: true
   } },
   computed: {
-    screen(){ return this.$q.screen },
-    component(){ return this.page || (this.screen.lt.sm ? 'LoginPin' : (this.screen.lt.lg ? 'LoginPassword' : 'DisplayBoards')) }
+    login(){ return this.$store.state.public.login || 'pin' },
+    errorMsg(){ return (location.search && location.search.substr(0,5) === '?msg=') ? decodeURI(location.search.substr(5)) : '' }
   },
-  methods: {
-    left(){ this.loading = true; this.page = this.comps[this.secs[this.component][0]]; this.$nextTick(function(){ this.loading = false }) },
-    right(){ this.loading = true; this.page = this.comps[this.secs[this.component][1]]; this.$nextTick(function(){ this.loading = false }) },
-  },
-  mounted(){ this.page = this.component }
+  created() {
+    if(this.errorMsg) setTimeout(vm => vm.errorShow = false,7000,this)
+  }
 }
 </script>
