@@ -21,7 +21,10 @@ class SubscriptionController extends Controller
             }
         }
         return null;
+    }
 
+    public function device_serial(){
+        return response('SERIAL REQUEST',200)->header('SK-Serial',self::serial());
     }
 
     public function subscribe(Request $request){
