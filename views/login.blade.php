@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -22,12 +21,24 @@
 
     <script type="text/javascript">
         const DATA = [], BASE_URL = '{{ route('base_url') }}', MEDIA_ROOT = '{{ route('media_root') }}', _ROLE = 'Login', LOGOUT = '{!! route('logout') !!}', LOGIN = '{!! route('login') !!}';
-        const LoginSelect = @json(config('sk.login_log_section_role_key'));
+        const LoginSelect = @json(config('sk.login_log_section_role_key')), _TIME = {{ time() }};
         window.onload = function(){ localStorage.removeItem('jwt_TOKEN'); localStorage.removeItem('jwt_SECRET'); }
     </script>
 </head>
 <body>
-@if(request('msg')) <div style="margin-top: 20px; color: darkred; text-align: center; font-weight: bold">{{ request('msg') }}</div>  @endif
+@if(!sk('client_key') || !\Illuminate\Support\Facades\Storage::exists('subscription'))
+    <form method="post" action="subscribe">
+        <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; height: 90vh">
+            <div style="width: 360px; max-width: 90vw; background-color: #FFFFFF; padding: 10px; text-align: center">
+                <input name="key" type="text" style="width: 80%; height:45px; border-radius: 10px; border: 2px solid #CCCCCC; padding: 5px 8px; text-align: center; background-color: #FEFEFE" placeholder="PLEASE PROVIDE CLIENT KEY" value="{!! sk('client_key') !!}" />
+                <textarea name="code" style="width: 85%; height: 200px; margin-top: 5px; border: 2px solid #CCCCCC; border-radius: 10px; padding: 10px 8px; text-align: center; background-color: #FEFEFE" placeholder="PASTE SUBSCRIPTION CODE"></textarea>
+                <input type="submit" value="SUBMIT" style="width: 85%; padding: 10px 1px; margin-top: 1px; border-radius: 3px; background-color: #FFF; border: 2px solid #CCCCCC" name="submit" />
+            </div>
+        </div>
+    </form>
+@else
 <div id="q-app"></div>
 @include('SK::inc.includes')
+@endif
+</body>
 </html>

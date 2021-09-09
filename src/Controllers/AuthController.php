@@ -24,11 +24,11 @@ class AuthController extends Controller
     public function login(){
         if(request()->has('pin')) {
             $credentials = request(['pin']);
-            $user = User::where($credentials)->first();
+            $user = User::where(SubscriptionController::LoginCredentials($credentials))->first();
             $token = $user ? auth()->login($user) : null;
         } else {
             $credentials = request(['id', 'password']);
-            $token = auth()->attempt($credentials);
+            $token = auth()->attempt(SubscriptionController::LoginCredentials($credentials));
         }
         if (!$token) return redirect()->route('login',['msg' => 'Unauthorized Access!!']);
         $lsk = config("sk.login_log_section_role_key"); $section = null;
