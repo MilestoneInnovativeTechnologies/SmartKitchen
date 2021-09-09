@@ -14,6 +14,6 @@ export default {
     fields: { name:'text',contents:'tax_contents',items:'items_choose',status:'status' },
     filter: ['name'], validate: ['name']
   } },
-  computed: mapState('tax',{ taxes:'data' })
+  computed: mapState('tax',{ taxes({ data }){ return _.cloneDeep(_.filter(data)) } })
 }
 </script>
