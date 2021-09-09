@@ -1,5 +1,5 @@
 <template>
-  <q-card style="width: 90vw; max-width: 20rem" flat>
+  <q-card flat>
     <q-card-section>
       <GetRoleUserLogin v-if="role" :role="role" @clear="role = ''" @user="user = $event" @login="login" :loading="loading" />
       <RolesSelect v-else @role="role = $event" class="q-mx-auto" />

@@ -1,5 +1,5 @@
 <template>
-  <q-card style="width: 300px; max-width: 65vh">
+  <q-card>
     <q-card-section class="bg-grey-2">
       <div class="row q-col-gutter-x-xs">
         <div class="col-3" v-for="(dig,idx) in digs" :key="'dif-' + idx">
