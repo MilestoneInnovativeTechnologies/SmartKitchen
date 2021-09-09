@@ -2,6 +2,8 @@
 
 return [
 
+    'client_key' => env('CLIENT_KEY'),
+
     'domain' => 'sk',
 
     'timezone' => 'Asia/Kolkata',
