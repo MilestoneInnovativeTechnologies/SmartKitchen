@@ -37,7 +37,6 @@ export default {
   },
   methods: {
     hKey(control){ return h_key('alr','control',control) },
-    comp(name){ return 'ReportControl' + _.startCase(name).replace(/\s/,'') },
     print_page(){ print() },
   }
 }
