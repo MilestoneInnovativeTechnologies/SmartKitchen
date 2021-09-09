@@ -93,7 +93,7 @@ class TokenController extends Controller
             ->map(function($item) use($taxes){
                 $tax = $taxes->first(function($tax)use($item){ return in_array($item['item'],$tax->items); });
                 return collect($item)->merge([ 'tax' => $tax ? Arr::only($tax->toArray(),['id','name','contents']) : null])->all();
-            }))
+            }))->values()
             ;
     }
     public static function Amount($token, $progress = null){
