@@ -1,4 +1,5 @@
 const CryptoJS = require('crypto-js')
+import axios from 'axios'
 
 global.CryptoJS = CryptoJS;
 
@@ -6,6 +7,13 @@ const GLOBAL_FEATURES = [["GH56E","Yes/No","No"],["GH75F","Yes/No","No"],["JI36A
 const KEY = localStorage.getItem('key')
 const CODE = localStorage.getItem('code')
 const SERIAL = localStorage.getItem('serial')
+
+
+export default async () => {
+  if(SERIAL || typeof _USER !== 'undefined') return;
+  axios.post(LOGIN.replace('login','subscription/serial')).then(({ headers }) => localStorage.setItem('serial',headers['sk-serial']) || location.reload())
+}
+
 
 let CODE_VALID = true, CODE_INVALID_REASON = '', CODE_INVALID_DETAIL = '', CODE_INVALID_ERROR_CODE = '';
 
