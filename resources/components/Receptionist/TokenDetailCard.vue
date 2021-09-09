@@ -23,7 +23,7 @@
       </div>
       <div class="row justify-between items-center">
         <div class="text-caption text-bold">Tax</div>
-        <q-select v-if="!tax" label="Tax" dense :options="tax_natures" v-model="tax" outlined style="min-width: 10rem" class="q-mt-xs" />
+        <TaxNatureSelectDropDown v-if="!tax" label="Tax" dense v-model="tax" outlined style="min-width: 10rem" class="q-mt-xs" />
         <div v-else class="text-bold">{{ tax }} &nbsp; &nbsp; <q-icon name="clear" size="xs" color="negative" @click="tax = ''" class="cursor-pointer" /></div>
       </div>
     </q-card-section>
@@ -62,10 +62,11 @@ import CardImageTitle from "components/CardImageTitle";
 import {h_key, precision, time} from "assets/helpers";
 import { mapState } from "vuex";
 import OrderCustomer from "components/Order/OrderCustomer";
+import TaxNatureSelectDropDown from "components/Tax/TaxNatureSelectDropDown";
 
 export default {
   name: "TokenDetailCard",
-  components: {OrderCustomer, CardImageTitle},
+  components: {TaxNatureSelectDropDown, OrderCustomer, CardImageTitle},
   props: ['id'],
   data() { return {
     loading: false,
@@ -85,7 +86,6 @@ export default {
     items_id(){ return _.map(this.items,'item') },
     items_amount(){ return _.map(this.items, ({ item,quantity,id }) => _.zipObject(['id','item','price','quantity','amount'],[id,item,this.prices[item],quantity,this.prices[item]*quantity])) },
     total(){ return _.sumBy(this.items_amount,'amount') },
-    tax_natures(){ return this.$store.getters["tax/natures"] },
     sCustomer: {
       get(){ return _.get(this.customer,'id',null) },
       set(customer){ post('token','customer',{ token:this.id,customer }) }
