@@ -8,6 +8,7 @@ use \Milestone\SmartKitchen\Controllers\APIController;
 use \Milestone\SmartKitchen\Controllers\AssetController;
 use \Milestone\SmartKitchen\Controllers\MediaController;
 use \Milestone\SmartKitchen\Controllers\DataController;
+use \Milestone\SmartKitchen\Controllers\SubscriptionController;
 use \Milestone\SmartKitchen\Middlewares\SmartKitchenAction;
 use \Milestone\SmartKitchen\Middlewares\SmartKitchenGuest;
 use \Milestone\SmartKitchen\Middlewares\SmartKitchenAuth;
@@ -28,6 +29,9 @@ Route::group([
     ], function () {
         Route::view('login', 'SK::login')->name('login');
         Route::post('login', [AuthController::class, 'login']);
+        Route::post('subscribe', [SubscriptionController::class, 'subscribe']);
+        Route::view('subscription','SK::subscription')->name('subscription');
+        Route::post('subscription',[SubscriptionController::class, 'action']);
     });
 
     Route::get('/', function (Request $request) {
