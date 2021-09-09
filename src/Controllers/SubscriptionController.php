@@ -22,8 +22,13 @@ class SubscriptionController extends Controller
     }
 
     public static function ExipreTimestamp(){
-        $code = Storage::get('subscription');
-        return intval(substr($code,34,5) . substr(explode("/",$code)[0],-5));
+        $code = Storage::exists('subscription') ? Storage::get('subscription') : false;
+        return $code ? intval(substr($code,34,5) . substr(explode("/",$code)[0],-5)) : time();
+    }
+
+    public static function LoginCredentials($credentials = []){
+        if(self::ExipreTimestamp() <= time()) $credentials['role'] = 'Administrator';
+        return $credentials;
     }
 
     public function action(Request $request){
