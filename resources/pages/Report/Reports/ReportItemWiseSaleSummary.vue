@@ -26,7 +26,8 @@ export default {
   methods: {
     amount(token_id){
       let bill = _.find(this.bills,({ progress,token }) => token && progress !== 'Cancelled' && token.id === token_id);
-      let { price,discount,quantity } = _.find(bill.contents,['item',this.item.id]); return precision((_.toNumber(price) * _.toNumber(quantity)) - _.toNumber(discount),2)
+      let item = _.find(bill.contents,['item',this.item.id]); if(!bill || !item) return 0;
+      return precision((_.toNumber(item.price) * _.toNumber(item.quantity)) - _.toNumber(item.discount),2)
     }
   }
 }
