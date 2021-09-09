@@ -17,9 +17,9 @@
     </q-card-section>
     <q-card-actions class="bg-grey-1 q-px-md">
       <div class="col-12 q-col-gutter-xs row">
-        <div class="col-3"><q-input dense outlined v-model="fresh['name']" label="Name" /></div>
-        <div class="col-3"><q-input dense outlined v-model="fresh['nature']" label="Nature" /></div>
-        <div class="col-3"><q-input dense outlined v-model.number="fresh['percent']" type="number" label="Percent" /></div>
+        <div class="col-3"><q-input dense outlined v-model="fresh.name" label="Name" /></div>
+        <div class="col-3"><q-input dense outlined v-model="fresh.nature" label="Nature" /></div>
+        <div class="col-3"><q-input dense outlined v-model.number="fresh.percent" type="number" label="Percent" /></div>
         <div class="col-3"><q-btn dense icon="add" color="secondary" class="full-width full-height" @click="add" /></div>
       </div>
     </q-card-actions>
@@ -48,7 +48,7 @@ export default {
     },
     value: {
       deep: true, immediate: true,
-      handler(){ this.contents = this.value ? this.value : [] }
+      handler(contents){ this.contents = contents || [] }
     }
   }
 }

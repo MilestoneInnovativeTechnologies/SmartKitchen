@@ -9,7 +9,7 @@ export default {
   name: "TaxNatureSelectDropDown",
   mixins: [SelectDropDown],
   computed: {
-    options(){ return _.uniq(_.flatMap(this.$store.state.tax.data,({ contents }) => _.map(contents,'nature'))) }
+    options(){ return this.$store.getters['tax/natures'] }
   }
 }
 </script>
