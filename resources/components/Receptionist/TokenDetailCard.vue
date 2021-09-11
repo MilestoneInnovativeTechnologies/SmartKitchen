@@ -18,7 +18,7 @@
       <q-separator class="q-my-md" v-if="seating || user" />
       <div class="row justify-between items-center">
         <div class="text-caption text-bold">Customer</div>
-        <OrderCustomer v-if="!customer" v-model="sCustomer" get="id" class="q-mt-sm" />
+        <OrderCustomer v-if="!customer" v-model="sCustomer" get="id" class="q-mt-sm" outlined dense />
         <div v-else class="text-bold">{{ customer.name }} &nbsp; &nbsp; <q-icon name="clear" size="xs" color="negative" class="cursor-pointer" @click="assignCustomer({ id:null })" /></div>
       </div>
       <div class="row justify-between items-center">
