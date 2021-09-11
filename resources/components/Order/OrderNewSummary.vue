@@ -32,7 +32,7 @@
       </q-list>
     </q-card-section>
     <q-card-section>
-      <OrderCustomer get="id" v-model="v_customer" />
+      <OrderCustomer get="id" v-model="v_customer" outlined dense />
     </q-card-section>
     <q-card-actions align="right" class="bg-grey-2">
       <q-btn label="Submit" :color="clr" padding="xs md" :loading="loading" @click="$emit('process',['submit'])" />

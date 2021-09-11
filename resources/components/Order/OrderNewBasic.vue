@@ -6,7 +6,7 @@
       <SeatSelectDropDown error-message="For Dining Seat Selection is Mandatory" :error="seat_error" hide-bottom-space v-if="!hide.includes('seating') && required.includes('Seating')" outlined dense input-debounce="0" v-model="seat" label="Select Seat" />
       <PriceListSelectDropDown v-if="!hide.includes('price_list') && required.includes('PriceList')" outlined dense input-debounce="0" v-model="params.price_list" label="Select Price List" get="id" />
       <WaiterSelectDropDown v-if="!hide.includes('user') && required.includes('Waiter')" outlined dense input-debounce="0" v-model="params.user" label="Select Waiter" get="id" />
-      <OrderCustomer v-if="required.includes('Customer')" v-model="params.customer" get="id" />
+      <OrderCustomer v-if="required.includes('Customer')" v-model="params.customer" get="id" outlined dense />
     </q-card-section>
     <q-card-actions align="right" class="bg-grey-2">
       <q-btn icon-right="forward" :color="clr" padding="xs md" size="sm" label="Proceed" @click="proceed" />

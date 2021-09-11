@@ -6,7 +6,7 @@
           <q-card-section class="row q-px-none q-py-none">
             <q-card-section class="col-xs-12 col-sm-6 q-col-gutter-y-xs q-pt-none">
               <div class="text-subtitle1">Customer</div>
-              <OrderCustomer v-model="params.customer" get="id" />
+              <OrderCustomer v-model="params.customer" get="id" outlined dense />
               <PriceListSelectDropDown outlined dense input-debounce="0" v-model="params.price_list" label="Select Price List" get="id" />
               <DateTime outlined dense label="Delivery Date" :value="deliver" @input="deliver = $event" />
 <!--              <q-input type="textarea" label="Narration" outlined dense v-model="params.narration" />-->

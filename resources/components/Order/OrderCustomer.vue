@@ -1,13 +1,13 @@
 <template>
   <div>
     <q-select
-      outlined dense use-input
-      hide-selected fill-input
+      hide-selected fill-input use-input
       input-debounce="0" v-model="customer"
       :options="options" @filter="filter"
       @new-value="createCustomer"
       label="Select Customer"
       clearable
+      v-bind="$attrs"
     />
     <q-dialog v-model="create_mode"  persistent transition-show="scale" transition-hide="scale">
       <CustomerCreate :param="param" :param_value="param_value" :style="popup_width(400)" @close="closeCreate" @customer="closeCreate" />

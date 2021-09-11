@@ -21,7 +21,7 @@
       </q-item>
     </q-list>
     <q-card-section class="row q-col-gutter-xs">
-      <div class="col-12"><OrderCustomer v-model="customer" get="id" /></div>
+      <div class="col-12"><OrderCustomer v-model="customer" get="id" outlined dense /></div>
       <div class="col-7"><q-select label="Tax" dense :options="tax_natures" v-model="tax" outlined /></div>
       <div class="col-5"><q-input outlined dense class="col-5" v-model.number="discount" type="number" label="Discount" /></div>
     </q-card-section>

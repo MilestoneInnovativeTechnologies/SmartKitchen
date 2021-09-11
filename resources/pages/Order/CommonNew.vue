@@ -9,7 +9,7 @@
     </Masonry>
     <div :class="horizontal ? 'fixed-bottom' : 'fixed-right'" class="bg-white q-py-sm shadow-2 q-gutter-y-sm q-px-md" style="overflow: scroll" :style="horizontal ? { 'max-height':'60vh' } : { 'width':'400px',top:'2.5rem' }" v-if="!hide">
       <OrderSeatingInfo :seating="params.seating" />
-      <OrderCustomer v-model="params.customer" get="id" />
+      <OrderCustomer v-model="params.customer" get="id" outlined dense />
       <OrderItemsSummary :items="params.items" :price_list="params.price_list" @quantity="quantity" @update="update" @delete="remove" />
       <div><q-btn color="primary" class="full-width" label="Submit" @click="create" :disable="!params.items.length" :loading="loading" /></div>
     </div>

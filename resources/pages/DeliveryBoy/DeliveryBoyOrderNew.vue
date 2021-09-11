@@ -1,7 +1,7 @@
 <template>
   <q-page padding class="q-gutter-y-sm">
     <PriceListSelectDropDown outlined dense input-debounce="0" v-model="params.price_list" label="Select Price List" get="id" />
-    <OrderCustomer v-model="params.customer" get="id" />
+    <OrderCustomer v-model="params.customer" get="id" outlined dense />
     <q-btn label="Proceed" glossy color="primary" class="full-width" :to="{ name:'delivery_boy_order_items',params }" />
   </q-page>
 </template>
