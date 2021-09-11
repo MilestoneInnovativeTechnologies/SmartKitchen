@@ -12,6 +12,7 @@ use \Milestone\SmartKitchen\Controllers\SubscriptionController;
 use \Milestone\SmartKitchen\Middlewares\SmartKitchenAction;
 use \Milestone\SmartKitchen\Middlewares\SmartKitchenGuest;
 use \Milestone\SmartKitchen\Middlewares\SmartKitchenAuth;
+use \Milestone\SmartKitchen\Middlewares\ClientKey;
 use \Milestone\SmartKitchen\Middlewares\APIRequest;
 
 Route::group([
@@ -25,7 +26,7 @@ Route::group([
 ], function () {
 
     Route::group([
-        'middleware' => [SmartKitchenGuest::class],
+        'middleware' => [ClientKey::class,SmartKitchenGuest::class],
     ], function () {
         Route::view('login', 'SK::login')->name('login');
         Route::post('login', [AuthController::class, 'login']);
