@@ -16,7 +16,8 @@ export function options(ary,nAry,sep){ return _.map(ary,data => option(data,nAry
 export function matches(obj,keys,text){ return _.includes(_.values(_.pick(obj,keys)).join(' ').toLowerCase(),text.toString().toLowerCase()) }
 
 export function now(){ return _.toInteger(new Date().getTime()/1000) }
-export function tomorrow(){ return to_format('YYYY-MM-DD',addToDate(new Date(),{ days:1 })) }
+export function tomorrow(format){ return to_format(format || 'YYYY-MM-DD',addToDate(new Date(),{ days:1 })) }
+export function next_month(format){ return to_format(format || 'YYYY-MM-DD',addToDate(new Date(),{ days:30 })) }
 export function common_format(format){ return format || 'YYYY-MM-DD HH:mm:ss' }
 export function extract_date(datetime,format){ format = common_format(format); return extractDate(datetime,format) }
 export function time(datetime,format,sec){ format = common_format(format); return formatDate(extractDate(datetime,format),sec ? 'hh:mm:ss A' : 'hh:mm A') }
