@@ -1,7 +1,5 @@
-const CryptoJS = require('crypto-js')
+const MD5 = require('js-md5')
 import axios from 'axios'
-
-global.CryptoJS = CryptoJS;
 
 const GLOBAL_FEATURES = [["GH56E","Yes/No","No"],["GH75F","Yes/No","No"],["JI36A","Detail",null]]
 const KEY = localStorage.getItem('key')
@@ -20,7 +18,7 @@ let CODE_VALID = true, CODE_INVALID_REASON = '', CODE_INVALID_DETAIL = '', CODE_
 // E00
 if(CODE_VALID && (!KEY || !CODE || !SERIAL)) { CODE_VALID = false; CODE_INVALID_REASON = "Subscription details missing"; CODE_INVALID_DETAIL = "KEY, CODE or SERIAL is not accessible"; CODE_INVALID_ERROR_CODE = 'E00' }
 
-export const KEY_VALID = (KEY.substr(0,2) + CryptoJS.MD5(KEY.substr(0,2) + SERIAL + KEY.substr(-4)).toString() + KEY.substr(-4)) === KEY
+export const KEY_VALID = (KEY.substr(0,2) + MD5(KEY.substr(0,2) + SERIAL + KEY.substr(-4)).toString() + KEY.substr(-4)) === KEY
 const CODE_HAS_BASIC = CODE.split('/').length === 2 && !_.isEmpty(CODE.split('/')[0]) && !_.isEmpty(CODE.split('/')[1])
 const CODE_BASIC_JSON_STRING = CODE_HAS_BASIC ? atob(CODE.split("/")[1]) : ""
 let JSON_STRING_VALID = false;
@@ -60,9 +58,9 @@ function K090(){ return KEY.replace(S0IP(),'') }
 // E02
 if(CODE_VALID && (!S0IP() || !K090() || KEY !== (S0IP() + K090())))  { CODE_VALID = false; CODE_INVALID_REASON = "CODE and KEY not matches"; CODE_INVALID_DETAIL = "Code is not encoded with provided key"; CODE_INVALID_ERROR_CODE = 'E02' }
 
-function AR1P(){ return CryptoJS.MD5 }
-function RO06(){ return AR1P()(S0IP()).toString() }
-function DGV7(){ return AR1P()(K090()).toString() }
+function AR1P(){ return MD5 }
+function RO06(){ return AR1P()(S0IP()) }
+function DGV7(){ return AR1P()(K090()) }
 
 const P1 = ['XAAL','RO06','IAZP']
 const P2 = ['DGV7','LMNP']
