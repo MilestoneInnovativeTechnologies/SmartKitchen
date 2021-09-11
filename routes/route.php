@@ -26,10 +26,14 @@ Route::group([
 ], function () {
 
     Route::group([
-        'middleware' => [ClientKey::class,SmartKitchenGuest::class],
+        'middleware' => [SmartKitchenGuest::class],
     ], function () {
-        Route::view('login', 'SK::login')->name('login');
-        Route::post('login', [AuthController::class, 'login']);
+        Route::group([
+            'middleware' => [ClientKey::class],
+        ],function(){
+            Route::view('login', 'SK::login')->name('login');
+            Route::post('login', [AuthController::class, 'login']);
+        });
         Route::post('subscribe', [SubscriptionController::class, 'subscribe']);
         Route::post('subscription/serial',[SubscriptionController::class, 'device_serial']);
         Route::view('subscription','SK::subscription')->name('subscription');
