@@ -11,12 +11,11 @@
 
 <script>
 import {popup_width} from "assets/helpers";
-import OrderCustomer from "components/Order/OrderCustomer";
 import OrderNewBasic from "components/Order/OrderNewBasic";
 
 export default {
   name: "OrderNewFabDeliveryBoy",
-  components: {OrderNewBasic, OrderCustomer},
+  components: {OrderNewBasic},
   data(){ return {
     fab: true, offset: [24,24], customer: null
   } },
