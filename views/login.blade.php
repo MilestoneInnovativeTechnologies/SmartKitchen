@@ -27,7 +27,7 @@
     </script>
 </head>
 <body>
-@if(!sk('client_key') || !\Illuminate\Support\Facades\Storage::exists('subscription'))
+@if(!sk('client_key'))
     <form method="post" action="subscribe">
         <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; height: 90vh">
             <div style="width: 360px; max-width: 90vw; background-color: #FFFFFF; padding: 10px; text-align: center">

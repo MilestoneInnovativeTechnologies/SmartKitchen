@@ -17,7 +17,14 @@ class ClientKey
      */
     public function handle(Request $request, Closure $next)
     {
-        if(sk('client_key') && SubscriptionController::code()) return $next($request);
-        return redirect()->route('subscription');
+        if(!sk('client_key')){
+            if($request->routeIs('login')) return $next($request);
+            else return redirect()->route('login');
+        }
+        elseif(!SubscriptionController::code()) {
+            if($request->routeIs('subscription')) return $next($request);
+            else return redirect()->route('subscription');
+        }
+        return $next($request);
     }
 }
