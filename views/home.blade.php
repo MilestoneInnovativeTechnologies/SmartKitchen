@@ -59,6 +59,7 @@
     <script>
         const DATA = [], BASE_URL = '{{ route('base_url') }}', MEDIA_ROOT = '{{ route('media_root') }}', _COMPANY = '{{ sk('company') }}', _BRANCH = '{{ sk('branch_code') }}', _ROLE = '{{ auth()->user()->role }}', LOGOUT = '{!! route('logout') !!}', LOGIN = '{!! route('login') !!}';
         const _USER = @json(auth()->user()), _SECTION = @json(\Illuminate\Support\Arr::get(auth()->user(),'Log.section',[])), _TIME = {{ time() }};
+        const _KEY = '{{ sk('client_key') }}', _CODE = '{!! \Milestone\SmartKitchen\Controllers\SubscriptionController::code() !!}';
     </script>
 </head>
 <body style="overscroll-behavior-y: contain">

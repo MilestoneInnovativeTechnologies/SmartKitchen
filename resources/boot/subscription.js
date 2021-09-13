@@ -2,17 +2,11 @@ const MD5 = require('js-md5')
 import axios from 'axios'
 
 const GLOBAL_FEATURES = [["GH56E","Yes/No","No"],["GH75F","Yes/No","No"],["JI36A","Detail",null]]
-const KEY = localStorage.getItem('key') || ''
-const CODE = localStorage.getItem('code')
-const SERIAL = localStorage.getItem('serial')
-
-if(!KEY) location.href = LOGIN.replace('login','subscription');
+const KEY = _KEY, CODE = _CODE, SERIAL = localStorage.getItem('serial');
 
 export default () => {
-  if(SERIAL || typeof _USER !== 'undefined') return;
-  axios.post(LOGIN.replace('login','subscription/serial')).then(({ headers }) => localStorage.setItem('serial',headers['sk-serial']) || location.reload())
+  if(!SERIAL && typeof _USER === 'undefined') return axios.post(LOGIN.replace('login','subscription/serial')).then(({ headers }) => localStorage.setItem('serial',headers['sk-serial']) || location.reload())
 }
-
 
 let CODE_VALID = true, CODE_INVALID_REASON = '', CODE_INVALID_DETAIL = '', CODE_INVALID_ERROR_CODE = '';
 
@@ -34,7 +28,6 @@ if(CODE_HAS_BASIC){
     JSON_STRING_VALID = false;
   }
 }
-
 
 const SUBSCRIPTION_ARRAY = JSON_STRING_VALID ? JSON.parse(CODE_BASIC_JSON_STRING) : [];
 export const CLIENT = SUBSCRIPTION_ARRAY['client'];
