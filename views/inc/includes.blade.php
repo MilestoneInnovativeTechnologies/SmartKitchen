@@ -2,12 +2,12 @@
 $dev = (env('DEV') === 'YES');
 $files = [
     'css' => [
-        'vendor' => 'cc2d5690',
+        'vendor' => 'd40e81b1',
         'app' => '784fe0af',
     ],
     'js' => [
-        'vendor' => 'b751a15f',
-        'app' => 'dcb17fc1',
+        'vendor' => '24c557dd',
+        'app' => 'e4afc72a',
     ]
 ]
 @endphp
