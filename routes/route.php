@@ -18,6 +18,7 @@ use \Milestone\SmartKitchen\Middlewares\APIRequest;
 Route::group([
     'middleware' => 'cache.headers:public;max_age=2628000;etag',
 ], function () {
+    Route::get('assets/online/menu.js', [AssetController::class, 'OnlineMenuAssets']);
     Route::get('assets/{time}/{model}.js', [AssetController::class, 'JSAsset'])->name('asset');
 });
 
@@ -87,6 +88,8 @@ Route::group([
 
     });
 });
+
+Route::view('menu','SK::menu');
 
 Route::any('print',function(){
     return view('SK::print');
