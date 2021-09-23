@@ -7,6 +7,7 @@
           <component :is="components[login]" :style="styles[login]" />
         </transition>
       </q-card-section>
+      <q-card-section class="q-pb-none q-pt-xs text-caption text-center text-grey-4">Milestone Smart Kitchen - v{{ version }}</q-card-section>
     </q-card>
     <SubscriptionExpiring />
     <div v-if="SUBSCRIBE_HIDE_LOGIN" style="font-size: 5rem" class="text-weight-bolder text-red">{{ parseInt(HIDE_ALTER_WAIT/1000) }}</div>
@@ -19,6 +20,7 @@ import LoginPin from "components/Login/LoginPin";
 import DisplayBoards from "components/Login/DisplayBoards";
 import SubscriptionExpiring from "components/Login/SubscriptionExpiring";
 import Subscription from "assets/mixins/Subscription";
+import { version } from 'assets/constants'
 export default {
   name: "PageLoginIndex",
   components: {SubscriptionExpiring, DisplayBoards, LoginPin, LoginPassword},
@@ -26,7 +28,7 @@ export default {
   data(){ return {
     styles: { pin:{ maxWidth:'330px',width:'90vw' },password:{ maxWidth:'330px',width:'90vw' },display:{ width:'680px' } },
     components: { pin:'LoginPin',password:'LoginPassword',display:'DisplayBoards' },
-    errorShow: true
+    errorShow: true, version,
   } },
   computed: {
     login(){ return this.$store.state.public.login || 'pin' },
