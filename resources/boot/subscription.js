@@ -1,11 +1,12 @@
-const MD5 = require('js-md5')
 import axios from 'axios'
+import {KEY,CODE,TIME} from 'assets/constants'
+const MD5 = require('js-md5'), _ = require('lodash')
 
 const GLOBAL_FEATURES = [["GH56E","Yes/No","No"],["GH75F","Yes/No","No"],["JI36A","Detail",null]]
-const KEY = _KEY, CODE = _CODE, SERIAL = localStorage.getItem('serial');
+const SERIAL = localStorage.getItem('serial');
 
 export default () => {
-  if(!SERIAL && typeof _USER === 'undefined') return axios.post(LOGIN.replace('login','subscription/serial')).then(({ headers }) => localStorage.setItem('serial',headers['sk-serial']) || location.reload())
+  if(!SERIAL && typeof _USER === 'undefined' && typeof LOGIN !== 'undefined') return axios.post(LOGIN.replace('login','subscription/serial')).then(({ headers }) => localStorage.setItem('serial',headers['sk-serial']) || location.reload())
 }
 
 let CODE_VALID = true, CODE_INVALID_REASON = '', CODE_INVALID_DETAIL = '', CODE_INVALID_ERROR_CODE = '';
@@ -40,7 +41,7 @@ function QWPO(){ return UEPQ() === _.toString(_.toInteger(new Date(SUBSCRIPTION_
 
 export const VALID_UPTO = QWPO() ? SUBSCRIPTION_ARRAY['end'] : '1999-12-31 23:59:59';
 export const VALID_UPTO_UNIX = _.toInteger(new Date(VALID_UPTO).getTime()/1000);
-export const VALID_UPTO_REMAINS = VALID_UPTO_UNIX - _.toInteger(_TIME);
+export const VALID_UPTO_REMAINS = VALID_UPTO_UNIX - _.toInteger(TIME);
 
 function IAZP(){ return _.toString(UEPQ()).substr(0,5) }
 function LMNP(){ return _.toString(UEPQ()).replace(IAZP(),'') }

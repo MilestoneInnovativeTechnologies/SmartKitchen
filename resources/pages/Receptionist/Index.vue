@@ -3,6 +3,7 @@
     <ReceptionistBillSummary />
     <ReceptionistServableItems />
     <ReceptionistHomeDeliveryStatuses />
+    <OnlineOrdersPendingList color="purple" title="Pending Online Orders" />
     <ReceptionistNonDiningTokens />
     <ReceptionistRemoteTokens />
   </q-page>
@@ -14,9 +15,10 @@ import ReceptionistNonDiningTokens from "components/Receptionist/ReceptionistNon
 import ReceptionistServableItems from "components/Receptionist/ReceptionistServableItems";
 import ReceptionistRemoteTokens from "components/Receptionist/ReceptionistRemoteTokens";
 import ReceptionistHomeDeliveryStatuses from "components/Receptionist/ReceptionistHomeDeliveryStatuses";
+import OnlineOrdersPendingList from "components/Order/OnlineOrdersPendingList";
 
 export default {
   name: "PageReceptionistIndex",
-  components: {ReceptionistRemoteTokens, ReceptionistServableItems, ReceptionistNonDiningTokens, ReceptionistBillSummary, ReceptionistHomeDeliveryStatuses},
+  components: {OnlineOrdersPendingList, ReceptionistRemoteTokens, ReceptionistServableItems, ReceptionistNonDiningTokens, ReceptionistBillSummary, ReceptionistHomeDeliveryStatuses},
 }
 </script>

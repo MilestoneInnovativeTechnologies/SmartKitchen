@@ -1,12 +1,14 @@
-import firebase from "firebase/app";
-import "firebase/firestore";
-import "firebase/storage";
+import firebase from "firebase/compat/app";
+import "firebase/compat/firestore";
+import "firebase/compat/storage";
+
+const host = 'https://smart-kitchen-server-test.web.app'
 
 const ref = localStorage.getItem('remote_reference');
 let rdb, rst;
 
 if (ref && ref.trim() !== '') {
-  firebase.initializeApp({
+  const firebaseApp = firebase.initializeApp({
     apiKey: "AIzaSyCdUrQDI8jHDJHkvzpevAyX9WUlK7R4wXI",
     authDomain: "smart-kitchen-server-test.firebaseapp.com",
     projectId: "smart-kitchen-server-test",
@@ -52,4 +54,4 @@ function storage(file,url){
 
 function storage_name(fullPath){ return fullPath.replace(ref + '/','') }
 
-export { remote,storage,storage_name }
+export { remote,storage,storage_name,host }

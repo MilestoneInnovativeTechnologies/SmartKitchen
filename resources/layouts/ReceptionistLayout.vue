@@ -31,6 +31,7 @@
         <q-route-tab :to="{ name:'sale' }" label="Sale" icon="shopping_cart" />
         <q-route-tab :to="{ name:'orders' }" label="Orders" icon="add_task" />
         <q-route-tab :to="{ name:'orders_remote' }" label="Remote" icon="online_prediction" />
+        <q-route-tab :to="{ name:'orders_online' }" label="Online" icon="settings_input_antenna" v-if="online" />
       </q-tabs>
     </q-footer>
 
@@ -42,10 +43,11 @@ import ManualSync from "components/ManualSync";
 import {mapState} from "vuex";
 import {attention} from "assets/helpers";
 import Logout from "components/Logout";
+const { GH75F,GH56E } = require('boot/subscription').FEATURES
 export default {
   name: 'ReceptionistLayout',
   components: {Logout, ManualSync},
-  data(){ return { receptionist:_USER.name, logout: LOGOUT, alert:false } },
+  data(){ return { receptionist:_USER.name, logout: LOGOUT, alert:false, online: (GH75F === 'Yes' && GH56E === 'Yes') } },
   computed: mapState('tokens',{ completed({ data }){ return _.filter(data,['progress','Completed']) } }),
   watch: {
     completed(Nw,Ol){ if(!Ol || Nw.length > Ol.length) {

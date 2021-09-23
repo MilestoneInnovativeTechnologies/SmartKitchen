@@ -4,7 +4,7 @@
 
 <script>
 import {mapGetters, mapState} from "vuex";
-import firebase from "firebase/app";
+import firebase from "firebase/compat/app";
 import {remote} from "boot/remote";
 
 export default {

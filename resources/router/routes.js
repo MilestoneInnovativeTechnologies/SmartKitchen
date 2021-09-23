@@ -1,12 +1,13 @@
-const { map,set,merge,get } = require('lodash')
+const { map,set,merge,get,forEach } = require('lodash')
 
 const layout_master = {
-  Login: { path:'/', component: () => import('layouts/LoginLayout.vue')  },
-  Waiter: { path:'/', component: () => import('layouts/WaiterLayout.vue')  },
-  Chef: { path:'/', component: () => import('layouts/ChefLayout.vue')  },
-  Receptionist: { path:'/', component: () => import('layouts/ReceptionistLayout.vue')  },
-  Administrator: { path:'/', component: () => import('layouts/AdministratorLayout.vue')  },
-  'Delivery Boy': { path:'/', component: () => import('layouts/DeliveryBoyLayout.vue')  },
+  Login: { path:'/', component: () => import('layouts/LoginLayout.vue') },
+  Waiter: { path:'/', component: () => import('layouts/WaiterLayout.vue') },
+  Chef: { path:'/', component: () => import('layouts/ChefLayout.vue') },
+  Receptionist: { path:'/', component: () => import('layouts/ReceptionistLayout.vue') },
+  Administrator: { path:'/', component: () => import('layouts/AdministratorLayout.vue') },
+  'Delivery Boy': { path:'/', component: () => import('layouts/DeliveryBoyLayout.vue') },
+  Menu: { path:'/:reference/:code', component: () => import('layouts/MenuLayout.vue'), props: true, meta:{ online_menu:true } },
 }
 
 const layout_child = {
@@ -14,16 +15,18 @@ const layout_child = {
   Waiter: ['waiter_index','waiter_menu','orders','order_new','waiter_tokens','waiter_bills'],
   Chef: ['chef_index','chef_kitchens','kitchen_items','kitchen_stocks','tokens'],
   Receptionist: ['receptionist_index','seat_status','receptionist_tokens','bills','seat_status_order','receptionist_orders','order_new','orders_remote','orders_remote_new','sale',
-    'archives','archive_payments','archive_bills','archive_remote','archive_orders','archive_sales','archive_tokens'
+    'archives','archive_payments','archive_bills','archive_remote','archive_orders','archive_sales','archive_tokens',
+    'orders_online'
   ],
   Administrator: ['report_index','administration_index',
     'master_customer','master_prop','master_item','master_group','master_kitchen','master_kitchen_items','master_menu','master_price_list','master_seating','master_tax','image_customer','image_item','image_kitchen','image_seating','image_user','master_user','master_settings',
     'day_token_summary','day_sale_summary','sales_by_type','sales_summary_by_type','sales_count_by_item','item_wise_sale_summary','kitchen_stock','bill_summary','payments','payments_by_type',
     'bill_summary_tax','bill_summary_tax_nature','tax_bill_detail','tax_details','bill_summary_customer','bill_summary_user_type','bill_by_user','delivery_boy_bills',
     'orders_by_waiter','orders_by_receptionist','orders_by_delivery_boy','user_orders', 'kitchen_processing','item_processing','chef_performance',
-    'data_import',
+    'data_import','menu_qr_codes','menu_sync_data'
   ],
   'Delivery Boy': ['delivery_boy_index','delivery_boy_orders','order_new','delivery_boy_customers','delivery_boy_completed','delivery_boy_payments'],
+  Menu: ['menu_index'],
 }
 
 const route_master = {
@@ -105,6 +108,20 @@ const route_master = {
   delivery_boy_customers: { name:'delivery_boy_customers', path:'/customers', component: () => import('pages/Customer/CustomerIndex'), meta:{ title:'Customers' } },
   delivery_boy_completed: { name:'delivery_boy_completed', path:'/completed', component: () => import('pages/DeliveryBoy/DeliveryBoyCompleted'), meta:{ title:'Completed Tokens' } },
   delivery_boy_payments: { name:'delivery_boy_payments', path:'/payments', component: () => import('pages/DeliveryBoy/DeliveryBoyPayments'), meta:{ title:'Payments' } },
+  menu_index: { name:'menu_index', path:'/', component: () => import('pages/OnlineMenu/OnlineMenuIndex'), meta: { title:'Online Menu' } },
+  menu_qr_codes: { name:'menu_qr_codes', path:'menu/qr_codes', component: () => import('pages/OnlineMenu/OnlineMenuQRCodes'), meta:{ title:'Online Menu QR Code Generator' } },
+  menu_sync_data: { name:'menu_sync_data', path:'menu/sync/data', component: () => import('pages/OnlineMenu/OnlineMenuSyncData'), meta: { title:'Sync Data' } },
+  orders_online: { name:'orders_online', path:'online/orders', component: () => import('pages/OnlineMenu/OnlineMenuOrders'), meta: { title:'Online Menu Orders' } },
+}
+
+const feature_routes = {
+  GH56E: ['guest_order_labels'],
+}
+
+function route_feature(){
+  let rf = {};
+  forEach(feature_routes,(routes,feature) => forEach(routes,route => rf[route] = feature))
+  return rf;
 }
 
 function getRoutes(page) {
@@ -113,8 +130,12 @@ function getRoutes(page) {
   return [set(layout,'children',children)];
 }
 
+function featureFilterRoute(route){
+  //Route before subscription :(
+}
+
 const routes = [
-  ...getRoutes(_ROLE),
+  ...getRoutes(typeof _ROLE === 'undefined' ? 'Menu' : _ROLE),
   { path: '*', component: () => import('pages/Error404.vue') }
 ]
 

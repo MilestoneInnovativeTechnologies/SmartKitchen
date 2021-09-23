@@ -1,11 +1,12 @@
 import axios from 'axios'
+import {BASE_PATH,MEDIA_PATH} from "assets/constants";
 const jwt = require('jsonwebtoken');
 
 const aInstance = axios.create({
   /*headers:{
     Authorization: `Bearer ${new URLSearchParams(document.location.search.substring(1)).get('token')}`
   },*/
-  baseURL: BASE_URL
+  baseURL: BASE_PATH
 })
 
 const maxData = 1024
@@ -35,7 +36,7 @@ function jwt_payload(payload){
 }
 
 const aMediaInstance = axios.create({
-  baseURL: MEDIA_ROOT
+  baseURL: MEDIA_PATH
 })
 
 aMediaInstance.interceptors.request.use(function(config){
@@ -46,7 +47,7 @@ aMediaInstance.interceptors.request.use(function(config){
 })
 
 const aDataInstance = axios.create({
-  baseURL: MEDIA_ROOT.replace('media','data')
+  baseURL: MEDIA_PATH.replace('media','data')
 })
 
 

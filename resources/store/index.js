@@ -18,6 +18,7 @@ import seating from './seating'
 import bills from './bills'
 import payments from './payments'
 import settings from './settings'
+import online from './online'
 
 import research from './research'
 
@@ -27,7 +28,7 @@ export default new Vuex.Store({
     server,
     users, customers, items, groups, menus, prices, kitchens, tax, seating,
     tokens, bills, payments, settings,
-    remote,
+    remote, online,
 
     research
   },
@@ -41,7 +42,10 @@ export default new Vuex.Store({
     title(state,title){ Vue.set(state,'title',title) },
     back(state,from){ Vue.set(state,'back',from) },
     footer(state,status){ Vue.set(state,'footer',status) },
-    public(state,obj){ _.forEach(obj,(val,key) => Vue.set(state.public,key,val)) }
+    public(state,obj){ _.forEach(obj,(val,key) => Vue.set(state.public,key,val)) },
+    update(state,{ path,value }){ _.set(state.public,path,value) },
+    push(state,{ path,value }){ (_.get(state.public,path)).push(value) },
+    splice(state,{ path,start,length }){ (_.get(state.public,path)).splice(start||0,length||1) },
   },
   strict: process.env.DEBUGGING
 })

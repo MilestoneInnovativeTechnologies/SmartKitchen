@@ -16,3 +16,8 @@ export function remote({ data,items },getters,rState,rGetters){
   let items_map = _.bind(token_remote_map,this,items), remote_filter = _.bind(token_remote_filter,this,rGetters['remote/token_branch']);
   return _(data).filter(remote_filter)/*.filter(token_remote_recent)*/.map(items_map).value()
 }
+
+export function progress({ data },getters,rState){
+  const tbp = _(rState.bills.data).filter(({ progress }) => progress !== 'Cancelled').mapKeys(({ token }) => _.toInteger(token)).mapValues('progress').value();
+  return _(data).mapValues(({ progress,id }) => progress === 'Billed' ? (_.get(tbp,id) === 'Pending' ? progress : _.get(tbp,id)) : progress).value()
+}
