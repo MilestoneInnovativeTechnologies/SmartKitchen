@@ -33,6 +33,7 @@ class SmartKitchenServiceProvider extends ServiceProvider
             self::loadMigrations();
             self::publishConfigs();
             self::publishAssets();
+            self::publishUpdates();
         } else {
             self::loadRoutes();
             self::loadViews();
@@ -60,6 +61,7 @@ class SmartKitchenServiceProvider extends ServiceProvider
 
     private function publishConfigs(){ $this->publishes([self::path('config','sk.php') => config_path('sk.php')]); }
     private function publishAssets(){ $this->publishes([ self::path('assets') => public_path('/')]); }
+    private function publishUpdates(){ $this->publishes([ self::path('assets') => public_path('/')],'update'); }
     private function loadMigrations(){ $this->loadMigrationsFrom(self::path('migrations')); }
     private function loadViews(){ $this->loadViewsFrom(self::path('views'),'SK'); }
     private function loadRoutes(){ $this->loadRoutesFrom(self::path('routes/route.php')); }
