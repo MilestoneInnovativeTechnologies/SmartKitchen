@@ -5,7 +5,7 @@
 
       <q-toolbar>
         <q-toolbar-title>Login</q-toolbar-title>
-        <q-btn type="a" href="subscription" :label="MSG[count%3]" flat dense />
+        <q-btn type="a" href="subscription" :label="MSG[count%(MSG.length)]" flat dense />
       </q-toolbar>
     </q-header>
 
@@ -42,7 +42,7 @@ export default {
   data(){ return {
     CLIENT, BRANCH, SUBSCRIPTION_NAME, VALID_UPTO, count:0,
     KEY_VALID, CODE_VALID, CODE_INVALID_ERROR_CODE, CODE_INVALID_REASON,
-    MSG: [`${BRANCH}`,`Edition: ${SUBSCRIPTION_NAME}`,`Valid Till: ` + VALID_UPTO.split(' ')[0]]
+    MSG: [`${CLIENT}`,`${BRANCH}`,`${SUBSCRIPTION_NAME} Edition`,`Valid Till: ` + VALID_UPTO.split(' ')[0]]
   } },
   created() {
     setInterval(vm => vm.count++,10000,this)
