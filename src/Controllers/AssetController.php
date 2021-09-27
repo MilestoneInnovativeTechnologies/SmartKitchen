@@ -4,6 +4,7 @@ namespace Milestone\SmartKitchen\Controllers;
 
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Milestone\SmartKitchen\Models\Item;
 use Milestone\SmartKitchen\Models\ItemGroup;
@@ -34,9 +35,9 @@ class AssetController extends Controller
         $group_menus = []; foreach($_Menus as $mid => $groups) foreach($groups as $gid) $group_menus[$gid][] = $mid;
         $item_groups = []; foreach($_Groups as $gid => $items) foreach($items as $iid) $item_groups[$iid][] = $gid;
         $Groups = ItemGroup::where(['status' => "Active"])->get()->map(function($group)use($group_menus){
-            return ['id' => $group->id,'name' => $group->name,'menus' => $group_menus[$group->id]];
-        })->toArray();
-        $Items = Item::where(['status' => "Active"])->get()->map(function($item)use($item_groups){ return array_merge($item->only(['id','name','detail','image']),['groups' => $item_groups[$item->id]]); })->toArray();
+            return Arr::has($group_menus,$group->id) ? ['id' => $group->id,'name' => $group->name,'menus' => $group_menus[$group->id]] : null;
+        })->filter()->values()->toArray();
+        $Items = Item::where(['status' => "Active"])->get()->map(function($item)use($item_groups){ return Arr::has($item_groups,$item->id) ? array_merge($item->only(['id','name','detail','image']),['groups' => $item_groups[$item->id]]) : null; })->filter()->values()->toArray();
         return compact('Groups','Items','Seats','Prices');
     }
 }
