@@ -1,7 +1,7 @@
 <template>
   <q-page padding>
     <FilterInputText @text="item_filter = $event" class="q-mb-xs" />
-    <GroupItemsSelect :selected="group" :filter="item_filter" :price_list="params.price_list" @item="addItem" />
+    <GroupItemsSelect :selected="group" :filter="item_filter" :price_list="params.price_list" @item="addItem" :sale="true" />
     <GroupStickyButton v-model="group" />
     <q-dialog v-if="!price_list" :value="!price_list" persistent @hide="CFL()">
       <q-card :style="popup_width()">
