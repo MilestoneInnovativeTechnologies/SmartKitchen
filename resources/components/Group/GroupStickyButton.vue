@@ -12,13 +12,14 @@ import {mapState} from "vuex";
 
 export default {
   name: "GroupStickyButton",
-  props: ['value'],
+  props: ['value','sale'],
   data() { return {
     fab: false, xoffset: 0, width:0
   } },
   computed: {
     ...mapState('menus',{ menus:'data',selected:'s_items' }),
-    group_ids(){ return _.flatMap(_.isEmpty(this.selected) ? this.menus : _.pick(this.menus,this.selected),'groups') },
+    menu(){ return this.sale ? (this.$store.getters['menus/sale'] ? _.pick(this.menus,this.$store.getters['menus/sale']) : this.menus) : (_.isEmpty(this.selected) ? this.menus : _.pick(this.menus,this.selected)) },
+    group_ids(){ return _.flatMap(this.menu,'groups') },
     groups(){ return _(this.group_ids).uniq().map(id => this.$store.state.groups.data[parseInt(id)]).filter(['status','Active']).value() },
     max(){ return _.toInteger((this.$q.screen.height-200)/45) },
     count(){ return _.ceil(this.groups.length/this.max) },

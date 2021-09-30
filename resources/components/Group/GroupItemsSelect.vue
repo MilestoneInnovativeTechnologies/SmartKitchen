@@ -33,7 +33,7 @@ export default {
     group_items(){
       return this.selected
         ? _(_.get(this.group_master,[_.toInteger(this.selected),'items'],[])).map(iId => this.item_master[_.toInteger(iId)]).filter(['status','Active']).value()
-        : (this.sale ? _.filter(this.item_master,['status','Active'])
+        : (this.sale ? (this.sale_menu() ? this.menu_items(this.sale_menu()) : _.filter(this.item_master,['status','Active']))
           : (_.isEmpty(this.menus) ? []
             : this.menu_items(this.menus[0]))
         )
@@ -52,6 +52,7 @@ export default {
       let items = _.uniq(_.flatMap(groups,group => _.get(this.group_master,[group,'items'])))
       return _(items).map(id => _.get(this.item_master,[id])).filter(['status','Active']).value()
     },
+    sale_menu(){ return this.$store.getters['menus/sale'] },
     fab_attrs(num){ return this.page === num ? { disable:true,padding:'xs',icon:'reply_all' } : { padding:'sm' } },
     move(ev){ this.offset = [this.offset[0] - ev.delta.x, this.offset[1] - ev.delta.y] },
   },
