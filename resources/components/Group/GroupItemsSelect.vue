@@ -58,7 +58,7 @@ export default {
   watch:{
     filter(n,o){ if(!o && n) this.page = 1 },
     selected(){ this.page = 1 },
-    pages(num){ if(num < this.page) this.page = num },
+    pages(num){ if(num < this.page) this.page = num || 1 },
   }
 }
 </script>
