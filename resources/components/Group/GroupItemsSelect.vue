@@ -5,9 +5,9 @@
         <ItemSelectCard @selected="$emit('item',$event)" :id="item.id" :price_list="price_list" />
       </template>
     </Masonry>
-    <q-page-sticky position="bottom-right" :offset="[12, 96]" v-if="pages > 1">
-      <q-fab v-model="pages_show" label="Pages" vertical-actions-align="center" color="indigo" hide-icon direction="up" glossy push>
-        <q-fab-action v-for="page_num in pages" color="indigo" :label="page_num" square glossy push @click="page = page_num" />
+    <q-page-sticky position="bottom-right" :offset="offset" v-if="pages > 1">
+      <q-fab v-model="pages_show" label="Pages" vertical-actions-align="center" color="indigo" hide-icon direction="up" glossy push v-touch-pan.prevent.mouse="move">
+        <q-fab-action v-for="page_num in pages" color="indigo" :label="page_num" square glossy push @click="page = page_num" :key="'gis-p-' + page_num" v-bind="fab_attrs(page_num)" />
       </q-fab>
     </q-page-sticky>
   </div>
@@ -24,7 +24,7 @@ export default {
   components: {Masonry, ItemSelectCard},
   props: ['selected','filter','price_list','sale'],
   data(){ return {
-    items_per_page: 100,
+    items_per_page: 100, offset: [0,80],
     pages_show: true,
     page: 1
   } },
@@ -51,7 +51,9 @@ export default {
       let groups = _.get(this.$store.state.menus.data,[menu,'groups'])
       let items = _.uniq(_.flatMap(groups,group => _.get(this.group_master,[group,'items'])))
       return _(items).map(id => _.get(this.item_master,[id])).filter(['status','Active']).value()
-    }
+    },
+    fab_attrs(num){ return this.page === num ? { disable:true,padding:'xs',icon:'reply_all' } : { padding:'sm' } },
+    move(ev){ this.offset = [this.offset[0] - ev.delta.x, this.offset[1] - ev.delta.y] },
   },
   watch:{
     filter(n,o){ if(!o && n) this.page = 1 },
