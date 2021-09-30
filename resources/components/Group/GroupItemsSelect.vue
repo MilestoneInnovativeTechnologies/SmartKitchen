@@ -24,12 +24,11 @@ export default {
   components: {Masonry, ItemSelectCard},
   props: ['selected','filter','price_list','sale'],
   data(){ return {
-    items_per_page: 100, offset: [0,80],
-    pages_show: true,
-    page: 1
+    offset: [0,80], pages_show: true, page: 1
   } },
   computed: {
     ...mapState({ item_master:state => state.items.data, group_master:state => state.groups.data, menus:state => state.menus.s_items }),
+    items_per_page(){ return this.$store.getters['settings/items_per_page'] },
     group_items(){
       return this.selected
         ? _(_.get(this.group_master,[_.toInteger(this.selected),'items'],[])).map(iId => this.item_master[_.toInteger(iId)]).filter(['status','Active']).value()
