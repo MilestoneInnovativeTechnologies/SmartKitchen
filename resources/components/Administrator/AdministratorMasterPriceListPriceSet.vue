@@ -1,10 +1,13 @@
 <template>
   <q-card>
-    <q-card-section class="bg-grey-2 text-weight-bold">Items Price</q-card-section>
+    <q-card-section class="bg-grey-2 text-weight-bold flex justify-between items-center">
+      <div>Items Price</div>
+      <q-toggle v-model="all" checked-icon="check" color="red" label="Show all items" unchecked-icon="clear" />
+    </q-card-section>
     <q-card-section>
       <div class="row q-col-gutter-xs">
         <div class="col-12"><FilterInputText @text="filter = $event" /></div>
-        <div class="col-sm-3 col-md-2 col-lg-1" :class="colXSCls" v-for="({ item,price,name },idx) in items" :key="'plps-' + item" v-show="!filter || name.toLowerCase().includes(filter.toLowerCase())">
+        <div class="col-sm-3 col-md-2 col-lg-1" :class="colXSCls" v-for="({ item,price,name },idx) in items" :key="'plps-' + item" v-if="idx < 40 || all">
           <q-input :label="name" type="number" dense outlined :value="price" @input="update(item,$event)" />
         </div>
       </div>
@@ -15,19 +18,20 @@
 <script>
 import {mapState} from "vuex";
 import FilterInputText from "components/FilterInputText";
+import {matches} from "assets/helpers";
 
 export default {
   name: "AdministratorMasterPriceListPriceSet",
   components: {FilterInputText},
   props: ['list'],
   data(){ return {
-    filter: '', updates: {},
+    filter: '', updates: {}, all: false,
   } },
   computed: {
     ...mapState('items', { products: 'data' }),
     colXSCls(){ return this.$q.screen.width > 430 ? ['col-xs-4'] : ['col-xs-6'] },
     lPrice(){ return this.list ? _(this.$store.state.prices.data).filter(['price_list',this.list]).mapKeys('item').mapValues(({ price }) => _.toNumber(price)).value() : {} },
-    items(){ return _(this.products).map(({ id,name }) => Object.assign({},{ item:id,price:this.getPrice(id),name })).value() },
+    items(){ return _(this.products).filter(product => !this.filter || matches(product,['id','name','detail','prop1','prop2','prop3','prop4','prop5'],this.filter)).map(({ id,name }) => Object.assign({},{ item:id,price:this.getPrice(id),name })).value() },
     uPrice(){
       if(_.size(this.updates) === 0) return this.items;
       return _.map(this.items,(item) => _.has(this.updates,item.item) ? _.set(_.clone(item),'price',this.updates[item.item]) : item)
