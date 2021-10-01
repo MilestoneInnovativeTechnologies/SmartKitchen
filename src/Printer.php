@@ -33,7 +33,7 @@ class Printer
             return [$key => $item->value];
         })->toArray();
         $this->setPrinter($master);
-        if(!empty($master['printer']) && $template && $data) $this->print();
+        if(!empty($master['printer']) && $this->Printer && $template && $data) $this->print();
     }
 
     private function setPrinter($settings){
@@ -44,8 +44,8 @@ class Printer
                 $this->$key = Arr::get($settings,$key);
         }
         $ConnectType = '\\Mike42\\Escpos\\PrintConnectors\\' . $this->connector;
-        $connector = new $ConnectType($printer);
-        $this->Printer = self::Printer($connector,$this->capability);
+        try { $connector = new $ConnectType($printer); } catch (\Exception $e){ $connector = null; }
+        if($connector) $this->Printer = self::Printer($connector,$this->capability);
     }
 
     private static function Printer($connector,$capability = null) : P {
@@ -261,6 +261,7 @@ class Printer
  * Hi Mr [customer.name], how you doing.. You line number is [id] and time [delivery.time]
  * Thee square brackets are removed with value supplied in data array
  * Supported properties are
+ * feed
  * left
  * center
  * right
