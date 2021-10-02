@@ -6,7 +6,7 @@
     </q-card-section>
     <q-card-section>
       <FilterInputText class="q-mb-sm" @text="fTxt" />
-      <q-chip color="secondary" :outline="!chosen.includes(item.id)" clickable @click="toggle(item)" v-for="item in items" :key="'tic-' + item.id"><q-avatar v-if="ims"><q-img :src="item.image" /></q-avatar>{{ item.name }}</q-chip>
+      <q-chip color="secondary" :outline="!chosen.includes(item.id)" clickable @click="toggle(item)" v-for="(item,idx) in items" :key="'tic-' + item.id" v-if="idx < init_load || delayed"><q-avatar v-if="ims"><q-img :src="item.image" /></q-avatar>{{ item.name }}</q-chip>
     </q-card-section>
   </q-card>
 </template>
@@ -21,6 +21,7 @@ export default {
   components: {FilterInputText},
   data(){ return {
     chosen: [], filter: '', ims: false,
+    init_load: 100, delayed: false,
   } },
   props: ['label','value'],
   computed: {
@@ -43,6 +44,9 @@ export default {
       immediate: true, deep: true,
       handler(){ this.chosen = _.clone((this.value ? (_.isArray(this.value) ? this.value : [this.value]) : [])) }
     }
+  },
+  created() {
+    if(this.items && this.items.length > this.init_load) setTimeout((vm) => vm.delayed = true,1500,this)
   }
 }
 </script>
