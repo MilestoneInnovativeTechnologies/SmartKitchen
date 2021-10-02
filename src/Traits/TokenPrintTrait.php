@@ -89,13 +89,24 @@ trait TokenPrintTrait
             return null;
         })->mapWithKeys(function($contents,$name){
             if($name){
-                $contents = collect($contents); $percent = Arr::get($contents,'0.tax.percent');
+                $contents = collect($contents); $percent = Arr::get($contents,'0.tax.percent'); $percent_precise = precise($percent);
                 $taxable = $contents->sum(function($content){ return Arr::get($content,'tax.price') * Arr::get($content,'tax.quantity'); });
                 $amount = $contents->sum(function($content){ return Arr::get($content,'tax.amount'); });
                 $taxable_precise = precise($taxable);
                 $amount_precise = precise($amount);
-                return [$name => compact('name','percent','taxable','amount','taxable_precise','amount_precise')];
+                $total = $taxable + $amount; $total_precise = precise($total);
+                $detail = self::subTaxAmounts($contents);
+                return [$name => compact('name','percent','percent_precise','taxable','amount','taxable_precise','amount_precise','total','total_precise','detail')];
             } return [];
+        })->toArray();
+    }
+
+    private static function subTaxAmounts($contents){
+        $contents = $contents->flatMap(function($content){ return Arr::get($content,'tax.contents'); })->groupBy->name;
+        return $contents->mapWithKeys(function($subs,$name){
+            $percent = Arr::get($subs,'0.percent'); $amount = $subs->sum->amount;
+            $percent_precise = precise($percent); $amount_precise = precise($amount);
+            return [$name => compact('name','percent','amount','percent_precise','amount_precise')];
         })->toArray();
     }
 
