@@ -13,10 +13,12 @@ use Milestone\SmartKitchen\Models\Settings;
 class Printer
 {
     private $_template = null; private $_data = null;
-    private $master_settings = ['connector','capability','width'];
+    private $master_settings = ['connector','capability','width','timeout','port'];
     private $connector = 'FilePrintConnector';
     private $capability = null;
     private $width = 48;
+    private $timeout = 1;
+    private $port = 9100;
     private static $settings = ['width' => null];
     private $Printer = null;
 
@@ -44,7 +46,7 @@ class Printer
                 $this->$key = Arr::get($settings,$key);
         }
         $ConnectType = '\\Mike42\\Escpos\\PrintConnectors\\' . $this->connector;
-        try { $connector = new $ConnectType($printer); } catch (\Exception $e){ $connector = null; }
+        try { $connector = new $ConnectType($printer,$this->port,$this->timeout); } catch (\Exception $e){ $connector = null; }
         if($connector) $this->Printer = self::Printer($connector,$this->capability);
     }
 
