@@ -43,7 +43,7 @@
       </q-item>
       <q-item>
         <q-item-section><q-item-label>&nbsp;</q-item-label></q-item-section>
-        <q-item-section side class="text-black text-bold" style="font-size: 1.25rem"><q-input type="number" dense label="Discount" v-model.number="discount" outlined /></q-item-section>
+        <q-item-section side class="text-black text-bold" style="font-size: 1.25rem"><q-input type="number" dense label="Discount" v-model.number="discount" outlined @keypress.p="discount_percent" /></q-item-section>
       </q-item>
       <q-item class="text-center bg-grey-2">
         <q-item-section>
@@ -70,7 +70,7 @@ export default {
   props: ['id'],
   data() { return {
     loading: false,
-    tax: null, discount: 0
+    tax: null, discount: 0,
   } },
   computed: {
     tid(){ return _.toInteger(this.id) },
@@ -100,7 +100,13 @@ export default {
       this.loading = true; if(!this.id || !this.customer) return this.loading = false;
       let params = { token:this.id, customer:this.customer.id, discount:this.discount,nature:this.tax }
       post('bill','create',params).then(() => this.$store.dispatch('server/ping',null,{ root:true })).catch().finally(() => this.loading = false)
-    }
+    },
+    discount_percent(e){
+      this.$nextTick(() => {
+        this.discount = this.discount * this.total * 0.01
+        e.target.blur(); e.target.focus();
+      })
+    },
   }
 }
 </script>

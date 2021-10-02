@@ -33,9 +33,9 @@
               <div class="text-subtitle1 q-ml-md">Advance Payment</div>
               <q-card-section class="q-gutter-y-xs q-ml-xl">
                 <q-select label="Tax" dense :options="natures" v-model="params.nature" outlined />
-                <q-input type="number" dense label="Discount" v-model.number="params.discount" outlined />
+                <q-input type="number" dense label="Discount" v-model.number="params.discount" outlined @keypress.p="discount_percent" />
                 <q-select dense outlined v-model="params.advance_type" :options="payment_types" label="Payment Type" />
-                <q-input outlined dense type="number" v-model.number="params.advance_amount" label="Amount" />
+                <q-input outlined dense type="number" v-model.number="params.advance_amount" label="Amount" @keypress.p="amount_percent" />
                 <q-card-actions class="q-px-none row">
                   <q-input borderless class="col" input-class="text-weight-bold text-body1 text-primary" label-color="primary" readonly label="Order Total" :value="total" /><q-space />
                   <q-input borderless class="col" input-class="text-weight-bold text-body1 text-primary" label-color="primary" readonly label="Amount Payable" :value="total - params.discount" /><q-space />
@@ -50,7 +50,7 @@
     </q-list>
     <Masonry :items="remote_items" >
       <template #item="item">
-        <ItemSelectCard :id="item.item" :price_list="1" :remote="true" @selected="selected" />
+        <ItemSelectCard :id="item.item" :price_list="params.price_list" :remote="true" @selected="selected" />
       </template>
     </Masonry>
     <q-dialog persistent :value="edit > -1" transition-show="scale" transition-hide="scale" @hide="edit = -1">
@@ -97,6 +97,8 @@ export default {
     remove(idx){ if(this.params.items[idx].photo) storage(this.params.items[idx].photo).then(ref => ref.delete()); setTimeout(function(vm){ vm.params.items.splice(idx,1) },330,this) },
     save(){ if(!this.params.customer) return alert('Choose Customer'); this.loading = true; post('token','create',this.params).then(this.saved) },
     saved(r){ this.loading = false; this.$nextTick(function(){ this.$router.push({ name:'orders_remote' }) }) },
+    discount_percent(e){ this.$nextTick(() => { this.params.discount = this.params.discount * this.total * 0.01; e.target.blur(); e.target.focus() }) },
+    amount_percent(e){ this.$nextTick(() => { this.params.advance_amount = this.params.advance_amount * (this.total - this.params.discount) * 0.01; e.target.blur(); e.target.focus() }) },
   },
   created() {
     this.$q.notify.setDefaults({ position: 'top-right', timeout: 1000, color: 'positive', group: false, html: true, caption: 'Items Updated !!' });

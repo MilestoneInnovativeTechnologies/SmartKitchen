@@ -63,7 +63,7 @@
           <div class="col-7"><OrderCustomer get="id" v-model="params.customer" outlined dense /></div>
           <div class="col-5"><TaxNatureSelectDropDown label="Tax Nature" v-model="params.nature" outlined dense /></div>
           <div class="col-3"><PaymentTypeSelectDropDown v-model="params.advance_type" outlined dense /></div>
-          <div class="col-4"><q-input type="number" outlined dense v-model.number="params.discount" label="Discount" /></div>
+          <div class="col-4"><q-input type="number" outlined dense v-model.number="params.discount" label="Discount" @keypress.p="discount_percent" /></div>
           <div class="col-5"><q-input type="number" outlined dense v-model.number="params.advance_amount" label="Amount" /></div>
         </q-card-section>
         <q-card-actions align="right" class="q-px-md bg-grey-2"><q-btn glossy push label="Complete" :disable="params.items.length < 1" :loading="processing" color="secondary" padding="sm lg" class="full-width" @click="complete" /></q-card-actions>
@@ -139,6 +139,12 @@ export default {
         this.fabPos[1] - ev.delta.y
       ]
     },
+    discount_percent(e){
+      this.$nextTick(() => {
+        this.params.discount = this.params.discount * this.total * 0.01
+        e.target.blur(); e.target.focus();
+      })
+    }
   },
   watch: {
     'params.items': { deep:true, handler:'calculateTotal' },
