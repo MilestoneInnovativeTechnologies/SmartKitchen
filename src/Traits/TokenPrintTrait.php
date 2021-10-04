@@ -112,29 +112,32 @@ trait TokenPrintTrait
 
     public function print_template_name($props = []){
         if(Arr::hasAny($props,['template','template_name'])) return $props;
-        $role = (auth()->user() ? auth()->user()->role : ''); $type = $this->type; $token = $this->Bill ? 'Bill' : 'Token';
-        $template_name = $this->print_name_item('Print Template',$role,$type,$token);
+        $role = auth()->user() ? auth()->user()->role : ''; $type = $this->type; $token = $this->Bill ? 'Bill' : 'Token'; $user = auth()->user() ? auth()->user()->name : '';
+        $template_name = $this->print_name_item('Print Template',$role,$type,$token,$user);
         $props['template_name'] = $template_name ?: $this->print_template;
         return $props;
     }
 
     public function print_printer_name($props = []){
         if(Arr::hasAny($props,['printer','printer_name'])) return $props;
-        $role = (auth()->user() ? auth()->user()->role : ''); $type = $this->type; $token = $this->Bill ? 'Bill' : 'Token';
-        $printer_name = $this->print_name_item('Printer',$role,$type,$token);
+        $role = auth()->user() ? auth()->user()->role : ''; $type = $this->type; $token = $this->Bill ? 'Bill' : 'Token'; $user = auth()->user() ? auth()->user()->name : '';
+        $printer_name = $this->print_name_item('Printer',$role,$type,$token,$user);
         $props['printer_name'] = $printer_name ?: $this->printer_name;
         return $props;
 
     }
 
-    public function print_name_item($item,$role,$type,$token){
-        $name = self::settings(Str::snake($role . $type . $item));
-        if(!$name) $name = self::settings(Str::snake($role . $token . $item));
-        if(!$name) $name = self::settings(Str::snake($role . 'Token' . $item));
-        if(!$name) $name = self::settings(Str::snake($type . $item));
-        if(!$name) $name = self::settings(Str::snake($token . $item));
-        if(!$name) $name = self::settings(Str::snake('Token' . $item));
-        return $name;
+    public function print_name_item($item,$role,$type,$token,$user){
+        $parts = [
+            ($user.$role.$type),($user.$type.$token),($user.$type.'Token'),($user.$type),($user.$token),($user.'Token'),
+            ($role.$type.$token),($role.$type.'Token'),($role.$type),($role.$token),($role.'Token'),
+            ($type.$token),($type.'Token'),($type),($token),('Token'),
+        ];
+        foreach ($parts as $part){
+            $name = self::settings(Str::snake($part . $item));
+            if($name) return $name;
+        }
+        return null;
     }
 
 }

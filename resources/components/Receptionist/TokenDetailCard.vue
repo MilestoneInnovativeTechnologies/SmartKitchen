@@ -43,7 +43,7 @@
       </q-item>
       <q-item>
         <q-item-section><q-item-label>&nbsp;</q-item-label></q-item-section>
-        <q-item-section side class="text-black text-bold" style="font-size: 1.25rem"><q-input type="number" dense label="Discount" v-model.number="discount" outlined @keypress.p="discount_percent" /></q-item-section>
+        <q-item-section side class="text-black text-bold" style="font-size: 1.25rem"><q-input type="number" dense label="Discount" v-model.number="discount" outlined @keypress="discount_percent" /></q-item-section>
       </q-item>
       <q-item class="text-center bg-grey-2">
         <q-item-section>
@@ -102,10 +102,15 @@ export default {
       post('bill','create',params).then(() => this.$store.dispatch('server/ping',null,{ root:true })).catch().finally(() => this.loading = false)
     },
     discount_percent(e){
-      this.$nextTick(() => {
-        this.discount = this.discount * this.total * 0.01
-        e.target.blur(); e.target.focus();
-      })
+      if(e.keyCode === 46 && (this.dkp === 46 || _.includes(_.toString(this.discount),"."))) {
+        setTimeout(() => {
+          this.$nextTick(() => {
+            this.discount = this.discount * this.total * 0.01
+            e.target.blur(); e.target.focus();
+          })
+        },250)
+      }
+      this.dkp = e.keyCode;
     },
   }
 }
