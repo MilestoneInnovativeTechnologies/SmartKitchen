@@ -9,6 +9,7 @@ use \Milestone\SmartKitchen\Controllers\AssetController;
 use \Milestone\SmartKitchen\Controllers\MediaController;
 use \Milestone\SmartKitchen\Controllers\DataController;
 use \Milestone\SmartKitchen\Controllers\SubscriptionController;
+use \Milestone\SmartKitchen\Controllers\SettingsController;
 use \Milestone\SmartKitchen\Middlewares\SmartKitchenAction;
 use \Milestone\SmartKitchen\Middlewares\SmartKitchenGuest;
 use \Milestone\SmartKitchen\Middlewares\SmartKitchenAuth;
@@ -75,6 +76,8 @@ Route::group([
             Route::get('/', function () { return ''; })->name('media_root');//boot/axios is using instead of data_root
             Route::post('remove', [MediaController::class, 'remove']);
             Route::post('upload', [MediaController::class, 'upload']);
+            Route::post('file_upload', [SettingsController::class, 'file_upload']);
+            Route::post('file_remove', [SettingsController::class, 'file_remove']);
 
         });
 

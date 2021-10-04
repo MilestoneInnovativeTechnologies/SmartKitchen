@@ -68,4 +68,15 @@ export default () => {
     if(!params || !_.every(params)) return Promise.reject(!!console.error('For Import all fields are mandatory!!'))
     return aDataInstance.post('import',params)
   };
+  global.file_upload = function(name,file){
+    if(!name || !file) return Promise.reject(!!console.error('Mandatory fields are null'))
+    let formData = new FormData();
+    formData.append('name',name); formData.append('file',file);
+    return aMediaInstance.post('file_upload',formData)
+  }
+  global.file_remove = function(id){
+    if(!id) return Promise.reject(!!console.error('Mandatory fields are null'))
+    let formData = new FormData(); formData.append('id',id);
+    return aMediaInstance.post('file_remove',formData)
+  }
 }
