@@ -66,7 +66,7 @@ import ItemSelectCard from "components/Item/ItemSelectCard";
 import OrderCustomer from "components/Order/OrderCustomer";
 import PriceListSelectDropDown from "components/Price/PriceListSelectDropDown";
 import RemoteOrderItemUpdateForm from "components/Order/RemoteOrderItemUpdateForm";
-import {image, tomorrow} from "assets/helpers";
+import {image, is_period, tomorrow} from "assets/helpers";
 import DateTime from "components/DateTime";
 import {PaymentsTypes} from "assets/assets";
 import {storage} from "boot/remote";
@@ -98,7 +98,7 @@ export default {
     save(){ if(!this.params.customer) return alert('Choose Customer'); this.loading = true; post('token','create',this.params).then(this.saved) },
     saved(r){ this.loading = false; this.$nextTick(function(){ this.$router.push({ name:'orders_remote' }) }) },
     discount_percent(e){
-      if(e.keyCode === 46 && (this.dkp === 46 || _.includes(_.toString(this.params.discount),"."))) {
+      if(is_period(e.keyCode) && (this.prv_per1 || _.includes(_.toString(this.params.discount),"."))) {
         setTimeout(() => {
           this.$nextTick(() => {
             this.params.discount = this.params.discount * this.total * 0.01
@@ -106,10 +106,10 @@ export default {
           })
         },250)
       }
-      this.dkp = e.keyCode;
+      this.prv_per1 = is_period(e.keyCode);
     },
     amount_percent(e){
-      if(e.keyCode === 46 && (this.akp === 46 || _.includes(_.toString(this.params.advance_amount),"."))) {
+      if(is_period(e.keyCode) && (this.prv_per2 || _.includes(_.toString(this.params.advance_amount),"."))) {
         setTimeout(() => {
           this.$nextTick(() => {
             this.params.advance_amount = this.params.advance_amount * (this.total - this.params.discount) * 0.01
@@ -117,7 +117,7 @@ export default {
           })
         },250)
       }
-      this.akp = e.keyCode;
+      this.prv_per2 = is_period(e.keyCode);
     },
   },
   created() {

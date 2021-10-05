@@ -63,7 +63,7 @@
           <div class="col-7"><OrderCustomer get="id" v-model="params.customer" outlined dense /></div>
           <div class="col-5"><TaxNatureSelectDropDown label="Tax Nature" v-model="params.nature" outlined dense /></div>
           <div class="col-3"><PaymentTypeSelectDropDown v-model="params.advance_type" outlined dense /></div>
-          <div class="col-4"><q-input type="number" outlined dense v-model.number="params.discount" label="Discount" @keypress="discount_percent" /></div>
+          <div class="col-4"><q-input type="number" outlined dense v-model.number="params.discount" label="Discount" @keyup="discount_percent" /></div>
           <div class="col-5"><q-input type="number" outlined dense v-model.number="params.advance_amount" label="Amount" /></div>
         </q-card-section>
         <q-card-actions align="right" class="q-px-md bg-grey-2"><q-btn glossy push label="Complete" :disable="params.items.length < 1" :loading="processing" color="secondary" padding="sm lg" class="full-width" @click="complete" /></q-card-actions>
@@ -75,7 +75,7 @@
 <script>
 import FilterInputText from "components/FilterInputText";
 import {mapGetters, mapState} from "vuex";
-import {h_key, popup_width} from "assets/helpers";
+import {h_key, is_period, popup_width} from "assets/helpers";
 import PriceListSelectDropDown from "components/Price/PriceListSelectDropDown";
 import OrderCustomer from "components/Order/OrderCustomer";
 import TaxNatureSelectDropDown from "components/Tax/TaxNatureSelectDropDown";
@@ -140,7 +140,7 @@ export default {
       ]
     },
     discount_percent(e){
-      if(e.keyCode === 46 && (this.dkp === 46 || _.includes(_.toString(this.params.discount),"."))) {
+      if(is_period(e.keyCode) && (this.prv_per || _.includes(_.toString(this.params.discount),"."))) {
         setTimeout(() => {
           this.$nextTick(() => {
             this.params.discount = this.params.discount * this.total * 0.01
@@ -148,7 +148,7 @@ export default {
           })
         },250)
       }
-      this.dkp = e.keyCode;
+      this.prv_per = is_period(e.keyCode);
     }
   },
   watch: {

@@ -43,7 +43,7 @@
       </q-item>
       <q-item>
         <q-item-section><q-item-label>&nbsp;</q-item-label></q-item-section>
-        <q-item-section side class="text-black text-bold" style="font-size: 1.25rem"><q-input type="number" dense label="Discount" v-model.number="discount" outlined @keypress="discount_percent" /></q-item-section>
+        <q-item-section side class="text-black text-bold" style="font-size: 1.25rem"><q-input type="number" dense label="Discount" v-model.number="discount" outlined @keyup="discount_percent" /></q-item-section>
       </q-item>
       <q-item class="text-center bg-grey-2">
         <q-item-section>
@@ -59,7 +59,7 @@
 
 <script>
 import CardImageTitle from "components/CardImageTitle";
-import {h_key, precision, time} from "assets/helpers";
+import {h_key,precision,time,is_period} from "assets/helpers";
 import { mapState } from "vuex";
 import OrderCustomer from "components/Order/OrderCustomer";
 import TaxNatureSelectDropDown from "components/Tax/TaxNatureSelectDropDown";
@@ -102,7 +102,7 @@ export default {
       post('bill','create',params).then(() => this.$store.dispatch('server/ping',null,{ root:true })).catch().finally(() => this.loading = false)
     },
     discount_percent(e){
-      if(e.keyCode === 46 && (this.dkp === 46 || _.includes(_.toString(this.discount),"."))) {
+      if(is_period(e.keyCode) && (this.prv_per || _.includes(_.toString(this.discount),"."))) {
         setTimeout(() => {
           this.$nextTick(() => {
             this.discount = this.discount * this.total * 0.01
@@ -110,7 +110,7 @@ export default {
           })
         },250)
       }
-      this.dkp = e.keyCode;
+      this.prv_per = is_period(e.keyCode);
     },
   }
 }
