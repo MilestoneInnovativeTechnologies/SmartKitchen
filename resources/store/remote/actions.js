@@ -96,7 +96,7 @@ export function remoteUpdate_kitchens({ state,commit,getters,rootState,dispatch 
   })
   _.forEach(['status','users'],function(key){
     if(_.has(data,key) && _.has(lData,key) && _.isEqual(lData[key],data[key])) return true;
-    let statusCommit = { status:data.online ? 'Active' : 'Inactive', users:data.users, kitchen:id }
+    let statusCommit = { status:(data && data.online) ? 'Active' : 'Inactive', users:(data && data.users) ? data.users : [], kitchen:id }
     setTimeout(commit,2000,'kitchens/status',statusCommit,{ root:true });
     return false;
   })
