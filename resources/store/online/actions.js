@@ -49,8 +49,9 @@ export function remove(ctx,{ reference,progress }){
 
 export function subWatch({ dispatch,rootState,rootGetters },{ id,reference }){
   const store = this;
+  if(!_.has(rootState.tokens.data,id)) return Promise.resolve(dispatch('remove',{ reference }) || true)
   return new Promise(function (resolve){
-    store.watch(rootState => _.assign({},rootState.tokens.data[id],{ items:_.get(rootState.tokens.items,id) },{ progress:rootGetters['tokens/progress'][id] }),function(data){
+    store.watch(rootState => _.assign({},_.get(rootState.tokens.data,id),{ items:_.get(rootState.tokens.items,id,[]) },{ progress:rootGetters['tokens/progress'][id] }),function(data){
       dispatch('update',{ id:reference,data:token2online(data,rootState.items.data,rootGetters['prices/items'][data.price_list]) });
       resolve(true)
     },{ deep:true,immediate:true })
