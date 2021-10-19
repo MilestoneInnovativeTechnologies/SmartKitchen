@@ -10,8 +10,7 @@ export function init ({ dispatch }) {
 
 export function init_remote({ commit,dispatch }){
   if(typeof _BRANCH === "undefined") return;
-  const reference = JI36A, branch = _BRANCH;
-  onSnapshot(ordersQuery(reference,branch),function(qSnap){
+  onSnapshot(ordersQuery(JI36A,_BRANCH),function(qSnap){
     qSnap.docChanges().forEach(function(change){
       let TYPE =  change.type, ID = change.doc.id, DATA = change.doc.data();
 
