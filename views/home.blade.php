@@ -55,7 +55,7 @@
     <meta name=msapplication-TileImage content=icons/ms-icon-144x144.png>
     <meta name=msapplication-TileColor content=#000000>
 
-    @php cache()->put(ck(),'2000-01-01 00:00:01',now()->addDays(7)) @endphp
+    @php \Milestone\SmartKitchen\Jobs\InitializeCache::dispatch() @endphp
     <script>
         const DATA = [], BASE_URL = '{{ route('base_url') }}', MEDIA_ROOT = '{{ route('media_root') }}', _COMPANY = '{{ sk('company') }}', _BRANCH = '{{ sk('branch_code') }}', _ROLE = '{{ auth()->user()->role }}', LOGOUT = '{!! route('logout') !!}', LOGIN = '{!! route('login') !!}';
         const _USER = @json(auth()->user()), _SECTION = @json(\Illuminate\Support\Arr::get(auth()->user(),'Log.section',[])), _TIME = {{ time() }};
