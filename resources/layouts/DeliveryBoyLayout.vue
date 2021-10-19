@@ -33,12 +33,14 @@
 import ManualSync from "components/ManualSync";
 import Logout from "components/Logout";
 import {attention} from "assets/helpers";
+import {mapState} from "vuex";
 export default {
   name: 'DeliveryBoyLayout',
   components: {Logout, ManualSync},
   data () { return { name:_USER.name, logout: LOGOUT } },
   computed: {
-    billable(){ return _(this.$store.state.tokens.data).filter({ type:'Home Delivery',progress:'Processing' }).filter(({ id }) => is_all_completed(this.$store.state.tokens.items[parseInt(id)])).filter(({ id }) => !_.find(this.$store.state.bills.data,['token',parseInt(id)])).value() }
+    ...mapState('tokens',{ tokens:'data',items:'items' }), ...mapState({ bills:state => state.bills.data }),
+    billable(){ return _(this.tokens).filter({ type:'Home Delivery',progress:'Processing' }).filter(({ id }) => _.has(this.items,parseInt(id)) && is_all_completed(this.items[parseInt(id)])).filter(({ id }) => !_.find(this.bills,['token',parseInt(id)])).value() }
   },
   watch: {
     billable(Nw,Ol){ if(!Ol || Nw.length > Ol.length) { attention(); } },
