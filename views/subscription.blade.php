@@ -20,10 +20,10 @@ $array = ($code && stripos($code,"/")) ? json_decode(base64_decode(explode("/",$
         <div style="font-weight: bold">Branch</div>
         <div style="margin-bottom: 8px">{{ $array['branch'] ?? '' }}</div>
         <div style="font-weight: bold">Subscription Package</div>
-        <div style="margin-bottom: 8px">{{ $array['sub'] ?? '' }}</div>
+        <div style="margin-bottom: 8px">{{ $array['edition'] ?? '' }}</div>
         <div style="font-weight: bold">Subscription Valid Till</div>
-        <div style="margin-bottom: 8px">{{ $array['end'] ?? '' }}</div>
-        <div style="margin-top: 15px; color: #565656; font-weight: bold">Remaining: {{ \Illuminate\Support\Carbon::parse($array['end'] ?? time()+10)->fromNow() }}</div>
+        <div style="margin-bottom: 8px">{{ $array['expiry'] ?? '' }}</div>
+        <div style="margin-top: 15px; color: #565656; font-weight: bold">Remaining: {{ \Illuminate\Support\Carbon::parse($array['expiry'] ?? time()+10)->fromNow() }}</div>
     </div>
     <div style="width: 360px; max-width: 90vw; margin-top: 10px;">
         <form method="post">

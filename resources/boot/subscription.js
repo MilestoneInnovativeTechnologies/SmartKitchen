@@ -33,13 +33,15 @@ if(CODE_HAS_BASIC){
 const SUBSCRIPTION_ARRAY = JSON_STRING_VALID ? JSON.parse(CODE_BASIC_JSON_STRING) : [];
 export const CLIENT = SUBSCRIPTION_ARRAY['client'];
 export const BRANCH = SUBSCRIPTION_ARRAY['branch'];
-export const SUBSCRIPTION_NAME = SUBSCRIPTION_ARRAY['sub'];
+export const CLIENT_CODE = SUBSCRIPTION_ARRAY['client_code'];
+export const BRANCH_CODE = SUBSCRIPTION_ARRAY['branch_code'];
+export const EDITION = SUBSCRIPTION_ARRAY['edition'];
 
 function KJDU(){ return CODE_VALID ? CODE.split("/")[0] : '' }
 function UEPQ(){ return KJDU().substr(34,5) + "" + KJDU().substr(-5); }
-function QWPO(){ return UEPQ() === _.toString(_.toInteger(new Date(SUBSCRIPTION_ARRAY['end']).getTime()/1000)) }
+function QWPO(){ return UEPQ() === _.toString(_.toInteger(new Date(SUBSCRIPTION_ARRAY['expiry']).getTime()/1000)) }
 
-export const VALID_UPTO = QWPO() ? SUBSCRIPTION_ARRAY['end'] : '1999-12-31 23:59:59';
+export const VALID_UPTO = QWPO() ? SUBSCRIPTION_ARRAY['expiry'] : '1999-12-31 23:59:59';
 export const VALID_UPTO_UNIX = _.toInteger(new Date(VALID_UPTO).getTime()/1000);
 export const VALID_UPTO_REMAINS = VALID_UPTO_UNIX - _.toInteger(TIME);
 

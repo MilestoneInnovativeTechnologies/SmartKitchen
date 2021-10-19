@@ -28,12 +28,12 @@ class AssetController extends Controller
     }
 
     public static function OnlineMenuAssets(){
-        $_Menus = Menu::where(['status' => "Active"])->pluck('groups','id')->toArray();
-        $_Groups = ItemGroup::where(['status' => "Active"])->pluck('items','id')->toArray();
+        $_Menus = Menu::where(['status' => "Active"])->pluck('groups','id')->toArray() ?: [];
+        $_Groups = ItemGroup::where(['status' => "Active"])->pluck('items','id')->toArray() ?: [];
         $Seats = Seating::where(['status' => "Active"])->get()->map(function($seat){ return $seat->only(['id','price_list']); })->toArray();
         $Prices = Price::get()->map(function($price){ return array_merge($price->only(['item','price']),['list' => $price->price_list]); })->toArray();
-        $group_menus = []; foreach($_Menus as $mid => $groups) foreach($groups as $gid) $group_menus[$gid][] = $mid;
-        $item_groups = []; foreach($_Groups as $gid => $items) foreach($items as $iid) $item_groups[$iid][] = $gid;
+        $group_menus = []; foreach($_Menus as $mid => $groups) foreach((array) $groups as $gid) $group_menus[$gid][] = $mid;
+        $item_groups = []; foreach($_Groups as $gid => $items) foreach((array) $items as $iid) $item_groups[$iid][] = $gid;
         $Groups = ItemGroup::where(['status' => "Active"])->get()->map(function($group)use($group_menus){
             return Arr::has($group_menus,$group->id) ? ['id' => $group->id,'name' => $group->name,'menus' => $group_menus[$group->id]] : null;
         })->filter()->values()->toArray();

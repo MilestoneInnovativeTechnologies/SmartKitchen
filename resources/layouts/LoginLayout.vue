@@ -35,14 +35,14 @@
 </template>
 
 <script>
-import { CLIENT,BRANCH,SUBSCRIPTION_NAME,VALID_UPTO,KEY_VALID,CODE_VALID,CODE_INVALID_ERROR_CODE,CODE_INVALID_REASON } from "boot/subscription";
+import { CLIENT,BRANCH,EDITION,VALID_UPTO,KEY_VALID,CODE_VALID,CODE_INVALID_ERROR_CODE,CODE_INVALID_REASON } from "boot/subscription";
 
 export default {
   name: 'LoginLayout',
   data(){ return {
-    CLIENT, BRANCH, SUBSCRIPTION_NAME, VALID_UPTO, count:0,
+    CLIENT, BRANCH, EDITION, VALID_UPTO, count:0,
     KEY_VALID, CODE_VALID, CODE_INVALID_ERROR_CODE, CODE_INVALID_REASON,
-    MSG: [`${CLIENT}`,`${BRANCH}`,`${SUBSCRIPTION_NAME} Edition`,`Valid Till: ` + VALID_UPTO.split(' ')[0]]
+    MSG: [`${CLIENT}`,`BRANCH: ${BRANCH}`,`${EDITION} Edition`,`Valid Till: ` + VALID_UPTO.split(' ')[0]]
   } },
   created() {
     setInterval(vm => vm.count++,10000,this)
