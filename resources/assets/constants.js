@@ -1,5 +1,6 @@
 export { version } from './../../package.json'
 
+export const BEARER_VAL_MAX_SIZE = 1024
 export const MEDIA_PATH = typeof MEDIA_ROOT === 'undefined' ? '/media' : MEDIA_ROOT
 export const BASE_PATH = typeof BASE_URL === 'undefined' ? '/api/v1' : BASE_URL
 export const KEY = typeof _KEY === 'undefined' ? '' : _KEY

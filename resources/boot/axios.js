@@ -1,21 +1,16 @@
 import axios from 'axios'
-import {BASE_PATH,MEDIA_PATH} from "assets/constants";
+import {BASE_PATH,MEDIA_PATH,BEARER_VAL_MAX_SIZE} from "assets/constants";
 const jwt = require('jsonwebtoken');
 
 const aInstance = axios.create({
-  /*headers:{
-    Authorization: `Bearer ${new URLSearchParams(document.location.search.substring(1)).get('token')}`
-  },*/
   baseURL: BASE_PATH
 })
 
-const maxData = 1024
-
 aInstance.interceptors.request.use(function(config){
-  if(_.size(JSON.stringify(config.data)) > maxData){
+  if(_.size(JSON.stringify(config.data)) > BEARER_VAL_MAX_SIZE){
     let bearer = {};
     _.forEach(config.data,(val,key) => {
-      if(_.size(JSON.stringify(val)) < maxData) {
+      if(_.size(JSON.stringify(val)) < BEARER_VAL_MAX_SIZE) {
         bearer[key] = val; delete config.data[key];
       }
     })
@@ -49,7 +44,6 @@ aMediaInstance.interceptors.request.use(function(config){
 const aDataInstance = axios.create({
   baseURL: MEDIA_PATH.replace('media','data')
 })
-
 
 export default () => {
   global.api = aInstance.post;
