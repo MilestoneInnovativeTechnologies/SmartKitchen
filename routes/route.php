@@ -65,6 +65,7 @@ Route::group([
             Route::group([
                 'middleware' => [APIRequest::class, SmartKitchenAction::class],
             ], function () {
+                Route::post('{item}/records', [AssetController::class, 'records'])->withoutMiddleware(SmartKitchenAction::class);
                 Route::post('{item}/{action}', [APIController::class, 'ping']);
             });
 

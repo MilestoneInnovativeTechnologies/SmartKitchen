@@ -68,7 +68,7 @@ class APIController extends Controller
     public function ping(){
         $after = cache()->get(ck()); $before = now()->toDateTimeString();
         $asset = ($after === '2000-01-01 00:00:01') ? 'NO' : 'YES';
-        $data = []; $cache_headers = ['SK-Ping-After' => $after,'SK-Ping-Before' => $before,'SK-Ping-Asset' => $asset];
+        $data = []; $cache_headers = ['SK-Ping-After' => $after,'SK-Ping-Before' => $before,'SK-Ping-Asset-Fetch' => $asset];
         foreach (self::$Models as $model){
             if(in_array($model,self::$Assets) && $asset === 'NO') continue;
             $modelObj = new $model;
@@ -81,7 +81,7 @@ class APIController extends Controller
             }
         }
         cache()->put(ck(),$before);
-        return $data;//\response($data,200,$cache_headers);
+        return $data;//response($data,200,$cache_headers);
     }
 
     public static function recordsExists($modelObj,$after,$before,$lid){

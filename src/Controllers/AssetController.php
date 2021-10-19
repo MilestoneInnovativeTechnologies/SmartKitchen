@@ -5,6 +5,7 @@ namespace Milestone\SmartKitchen\Controllers;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Milestone\SmartKitchen\Models\Item;
 use Milestone\SmartKitchen\Models\ItemGroup;
@@ -17,13 +18,13 @@ class AssetController extends Controller
 {
 
     public static function AssetRoute($model){
-        $class = Str::replaceLast('Model',ucfirst($model),Model::class);
+        $class = self::ClassName($model);
         $time = Carbon::parse($class::max('updated_at') ?? '2000-01-01 00:00:01')->unix();
         return route('asset',compact('time','model'));
     }
 
     public static function JSAsset($time,$model){
-        $class = Str::replaceLast('Model',ucfirst($model),Model::class);
+        $class = self::ClassName($model);
         return response('const _ASSET_' . ucfirst($model) . ' = ' . $class::all()->toJson())->withHeaders(['Content-Type' => 'text/javascript']);
     }
 
@@ -40,4 +41,15 @@ class AssetController extends Controller
         $Items = Item::where(['status' => "Active"])->get()->map(function($item)use($item_groups){ return Arr::has($item_groups,$item->id) ? array_merge($item->only(['id','name','detail','image']),['groups' => $item_groups[$item->id]]) : null; })->filter()->values()->toArray();
         return compact('Groups','Items','Seats','Prices');
     }
+
+    private static function ClassName($item){
+        return Str::replaceLast('Model',ucfirst($item),Model::class);
+    }
+
+    public function records($table,Request $request){
+        $ids = $request->input('ids');
+        $ids = is_array($ids) ? $ids : [$ids]; $key = $request->input('key','id');
+        return [$table => DB::table($table)->whereIn($key,$ids)->get()];
+    }
+
 }

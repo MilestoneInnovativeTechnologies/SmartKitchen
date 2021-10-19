@@ -6,5 +6,6 @@ export default async ({ store,router }) => {
       store.dispatch('server/post',{ item,action,data },{ root:true }).then(resolve)
     })
   }
+  global.fetch_records = function(item,ids,key){ return post(item,'records',{ ids:_.isArray(ids) ? ids : [ids], key:key || 'id' }) }
   if(!get(router,['options','routes',0,'meta','online_menu'],false)) _.forEach(store._actions,(action,name) => (name.substr(-4) === 'init') ? store.dispatch(name,null,{ root:true }) : null);
 }
