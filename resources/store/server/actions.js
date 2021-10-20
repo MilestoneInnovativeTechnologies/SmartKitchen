@@ -1,3 +1,5 @@
+const verified = { tokens:[],bills:[],payments:[] }
+
 export function post ({ state:{ map,interval },commit,dispatch },{ item,action,data }) {
   let url = `${item}/${action}`;
   return new Promise(resolve => {
@@ -9,15 +11,14 @@ export function post ({ state:{ map,interval },commit,dispatch },{ item,action,d
           resolve(null)
         }
       }
-      process(data,map,commit)
-      if(_.intersection(_.keys(data),['tokens','token_items','bills','payments']).length) dispatch('verify')
+      dispatch('process',data)
     })
   })
 }
 
-export function ping ({ state:{ map,interval },commit,dispatch }) {
+export function ping ({ state:{ interval },commit,dispatch }) {
   api('ping')
-    .then(({ data }) => process(data,map,commit))
+    .then(({ data }) => dispatch('process',data))
     .catch(() => null)
     .then(() => commit('sync',setTimeout(dispatch,interval,'ping')))
 }
@@ -27,7 +28,19 @@ export function init ({ commit,dispatch }){
   commit('sync',setTimeout(dispatch,1000,'ping'))
 }
 
-const verified = { tokens:[],bills:[],payments:[] }
+export function process({ state:{ map },commit,dispatch },data){
+  if(!data || _.isEmpty(data)) return;
+  _.forEach(data, (records,table) => {
+    if(!_.has(map,table) || _.isEmpty(_.get(map,table))) return true;
+    let mutation = _.get(map,table), action = null;
+    if(_.isString(mutation)) { action = 'add'; }
+    else { action = mutation[1]; mutation = mutation[0] }
+    let $commit = `${mutation}/${action}`;
+    commit($commit,records,{ root:true })
+  })
+  if(_.intersection(_.keys(data),['tokens','token_items','bills','payments']).length) dispatch('verify')
+}
+
 export function verify({ rootState }){
   const token_ids = _.map(_.keys(rootState.tokens.data),_.toInteger),
     token_item_token_ids = _.map(_.keys(rootState.tokens.items),_.toInteger),
@@ -75,16 +88,4 @@ export function verify({ rootState }){
   else if(gettable.bills.length) fetch_records('bills',gettable.bills);
   else if(gettable.payments_of_bill.length) fetch_records('payments',gettable.payments_of_bill,'bill');
   else if(gettable.payments.length) fetch_records('payments',gettable.payments);
-}
-
-function process(data,map,commit){
-  if(!data || _.isEmpty(data)) return;
-  _.forEach(data, (records,table) => {
-    if(!_.has(map,table) || _.isEmpty(_.get(map,table))) return true;
-    let mutation = _.get(map,table), action = null;
-    if(_.isString(mutation)) { action = 'add'; }
-    else { action = mutation[1]; mutation = mutation[0] }
-    let $commit = `${mutation}/${action}`;
-    commit($commit,records,{ root:true })
-  })
 }
