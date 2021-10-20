@@ -11,8 +11,8 @@ class TokenItem extends Model
 
     protected static function booted(){
         static::addGlobalScope('token',function(Builder $builder){
-            if(auth()->user() && auth()->user()->role === 'Waiter') $builder->whereHas('Token',function($Q){ return $Q->own()->recent()->active(); });
-            else $builder->whereHas('Token',function($Q){ return $Q->recent()->active(); });
+            if(auth()->user() && auth()->user()->role === 'Waiter') $builder->whereHas('Token',function($Q){ return $Q->own()->active(); });
+            else $builder->whereHas('Token',function($Q){ return $Q->active(); });
         });
         static::creating(function ($Item){ $Item->progress_timing = [[ 'status' => 'New', 'time' => time(),'user' => $Item->user, 'auth' => Auth::id()]]; });
         static::updating(function ($Item){
