@@ -12,7 +12,9 @@ const layout_master = {
 
 const layout_child = {
   Login: ['login_index'],
-  Waiter: ['waiter_index','waiter_menu','orders','order_new','waiter_tokens','waiter_bills'],
+  Waiter: ['waiter_index','waiter_menu','orders','order_new','waiter_tokens','waiter_bills',
+    'orders_online'
+  ],
   Chef: ['chef_index','chef_kitchens','kitchen_items','kitchen_stocks','tokens'],
   Receptionist: ['receptionist_index','seat_status','receptionist_tokens','bills','seat_status_order','receptionist_orders','order_new','orders_remote','orders_remote_new','sale',
     'archives','archive_payments','archive_bills','archive_remote','archive_orders','archive_sales','archive_tokens',
