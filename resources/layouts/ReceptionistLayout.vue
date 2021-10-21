@@ -47,8 +47,11 @@ const { GH75F,GH56E } = require('boot/subscription').FEATURES
 export default {
   name: 'ReceptionistLayout',
   components: {Logout, ManualSync},
-  data(){ return { receptionist:_USER.name, logout: LOGOUT, alert:false, online: (GH75F === 'Yes' && GH56E === 'Yes') } },
-  computed: mapState('tokens',{ completed({ data }){ return _.filter(data,['progress','Completed']) } }),
+  data(){ return { receptionist:_USER.name, logout: LOGOUT, alert:false, online_enabled: (GH75F === 'Yes' && GH56E === 'Yes') } },
+  computed: {
+    ...mapState('tokens',{ completed({ data }){ return _.filter(data,['progress','Completed']) } }),
+    online(){ return this.online_enabled && !(settings('online_order_receptionist_handle') !== undefined && _.includes([0,'0','No','no',false,'false','False',null],settings('online_order_receptionist_handle'))) },
+  },
   watch: {
     completed(Nw,Ol){ if(!Ol || Nw.length > Ol.length) {
       attention(); this.alert = 'amber'; setTimeout(vm => vm.alert = false,15000,this)

@@ -23,6 +23,7 @@
         <q-route-tab :to="{ name:'orders' }" label="Orders" icon="add_task" />
         <q-route-tab :to="{ name:'waiter_tokens' }" label="Tokens" icon="receipt" />
         <q-route-tab :to="{ name:'waiter_bills' }" label="Bills" icon="pending_actions" />
+        <q-route-tab :to="{ name:'orders_online' }" label="Online" icon="settings_input_antenna" v-if="online" />
       </q-tabs>
     </q-footer>
 
@@ -32,9 +33,13 @@
 <script>
 import ManualSync from "components/ManualSync";
 import Logout from "components/Logout";
+const { GH75F,GH56E } = require('boot/subscription').FEATURES
 export default {
   name: 'WaiterLayout',
   components: {Logout, ManualSync},
-  data () { return { waiter:_USER.name } },
+  data () { return { waiter:_USER.name, online_enabled: (GH75F === 'Yes' && GH56E === 'Yes') } },
+  computed: {
+    online(){ return this.online_enabled && !(settings('online_order_waiter_handle') !== undefined && _.includes([0,'0','No','no',false,'false','False',null],settings('online_order_waiter_handle'))) }
+  }
 }
 </script>
