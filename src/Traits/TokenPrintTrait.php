@@ -129,9 +129,9 @@ trait TokenPrintTrait
 
     public function print_name_item($item,$role,$type,$token,$user){
         $parts = [
-            ($user.$role.$type),($user.$type.$token),($user.$type.'Token'),($user.$type),($user.$token),($user.'Token'),
-            ($role.$type.$token),($role.$type.'Token'),($role.$type),($role.$token),($role.'Token'),
-            ($type.$token),($type.'Token'),($type),($token),('Token'),
+            ($user.$role.$type),($user.$type.$token),($user.$type.'Token'),($user.$type),($user.$token),($user.'Token'),($user),
+            ($role.$type.$token),($role.$type.'Token'),($role.$type),($role.$token),($role.'Token'),($role),
+            ($type.$token),($type.'Token'),($type),($token),('Token'),('')
         ];
         foreach ($parts as $part){
             $name = self::settings(Str::snake($part . $item));
