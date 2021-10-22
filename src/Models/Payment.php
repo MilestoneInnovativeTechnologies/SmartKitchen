@@ -2,8 +2,7 @@
 
 namespace Milestone\SmartKitchen\Models;
 
-use Illuminate\Support\Carbon;
-use Illuminate\Support\Str;
+use Illuminate\Support\Arr;
 use Milestone\SmartKitchen\Scopes\ActiveOnlyScope;
 
 class Payment extends Model
@@ -32,9 +31,10 @@ class Payment extends Model
     }
 
     public function print($props = []){
-        $printer_name = Str::snake((auth()->user() ? auth()->user()->role : '') . 'Payment Printer');
-        $printer_name = Settings::where('name',$printer_name)->exists() ? $printer_name : $this->printer_name;
-        $props['printer_name'] = $printer_name;
+        $role = $name = ''; $Token = new Token();
+        if(auth()->user()){ $user = auth()->user(); $role = $user->role; $name = $user->name; }
+        if(!Arr::hasAny($props,['printer','printer_name'])) $props['printer_name'] = $Token->print_name_item('Printer',$role,'Payment','',$name);
+        if(!Arr::hasAny($props,['template','template_name'])) $props['template_name'] = $Token->print_name_item('Print Template',$role,'Payment','',$name);
         return parent::print($props);
     }
 

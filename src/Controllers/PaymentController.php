@@ -10,7 +10,8 @@ use Milestone\SmartKitchen\Requests\CreatePaymentRequest;
 class PaymentController extends Controller
 {
     public function create(CreatePaymentRequest $createPaymentRequest){
-        $createPaymentRequest->store();
+        $payment = $createPaymentRequest->store();
+        if(request()->route('item') === 'payment' && request()->route('action') === 'create') $payment->print();
     }
 
     public function cancel(Request $request){
