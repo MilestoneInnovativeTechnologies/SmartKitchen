@@ -22,7 +22,7 @@ import {mapState} from "vuex";
 export default {
   name: "GroupItemsSelect",
   components: {Masonry, ItemSelectCard},
-  props: ['selected','filter','price_list','sale'],
+  props: ['selected','filter','price_list','type'],
   data(){ return {
     offset: [0,80], pages_show: true, page: 1
   } },
@@ -32,7 +32,7 @@ export default {
     group_items(){
       return this.selected
         ? _(_.get(this.group_master,[_.toInteger(this.selected),'items'],[])).map(iId => this.item_master[_.toInteger(iId)]).filter(['status','Active']).value()
-        : (this.sale ? (this.sale_menu() ? this.menu_items(this.sale_menu()) : _.filter(this.item_master,['status','Active']))
+        : (this.type === 'Sale' ? (this.sale_menu() ? this.menu_items(this.sale_menu()) : _.filter(this.item_master,['status','Active']))
           : (_.isEmpty(this.menus) ? []
             : this.menu_items(this.menus[0]))
         )

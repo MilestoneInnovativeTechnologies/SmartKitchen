@@ -5,7 +5,7 @@
     </q-card-section>
     <q-card-section class="q-px-none" v-else>
       <FilterInputText @text="item_filter = $event" class="q-mb-xs" />
-      <GroupItemsSelect :selected="active_group" :filter="item_filter" :price_list="params.price_list" @item="item" />
+      <GroupItemsSelect :selected="active_group" :filter="item_filter" :price_list="params.price_list" @item="item" :type="params.type" />
     </q-card-section>
     <q-tabs v-model="tab" align="justify" dense class="fixed-bottom bg-primary">
       <q-tab v-if="seat" class="text-white" name="seating" icon="event_seat" label="Seat" />
