@@ -52,3 +52,10 @@ online_order_receptionist_handle
 When the feature Online Menu is enabled and also enabled Online Menu Ordering, then that orders are normally arrive at Receptionist and Waiter.
 While setting this menu name to either of these
 0,false,False,no,No then receptionist can't confirm the online orders
+
+
+items_search_fields
+Default is id,name,detail
+These are the fields of an item, where the search/filter string  to be compared with. When any matches found, that items are only get displayed
+Item props can also be given, Be sure the case of props are exactly same.
+sale_items_search_fields, dining_items_search_fields, take_away_items_search_fields etc have higher priority, if them present as settings.
