@@ -37,9 +37,10 @@ export default {
             : this.menu_items(this.menus[0]))
         )
     },
+    filter_search_keys(){ return settings('items_search_fields',this.type) },
     filtered_items(){
       return this.filter
-        ? _.filter(this.group_items,item => matches(item,['id','name','detail'],this.filter))
+        ? _.filter(this.group_items,item => matches(item,this.filter_search_keys,this.filter))
         : this.group_items
     },
     pages(){ return _.ceil(_.size(this.filtered_items)/this.items_per_page) },
