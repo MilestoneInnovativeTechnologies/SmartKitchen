@@ -9,7 +9,7 @@
         </q-toolbar-title>
         <q-btn flat round dense icon="archive" class="lt-md" :to="{ name:'archives' }" />
         <q-btn flat round dense icon="batch_prediction" class="lt-md" :to="{ name:'seat_status' }" />
-        <q-btn flat round dense icon="switch_account" :to="{ name:'customers' }" />
+        <q-btn flat round dense icon="switch_account" :to="{ name:'customers' }" v-if="customer_manage" />
         <q-btn flat round dense icon="receipt" class="lt-sm" :to="{ name:'receptionist_tokens' }" ><q-badge color="red" :label="completed.length" transparent floating v-show="completed.length>0" /></q-btn>
         <q-btn flat round dense icon="receipt_long" class="lt-sm" :to="{ name:'bills' }" />
         <q-btn flat round dense label="---" :disable="true" color="primary" />
@@ -52,6 +52,7 @@ export default {
   computed: {
     ...mapState('tokens',{ completed({ data }){ return _.filter(data,['progress','Completed']) } }),
     online(){ return this.online_enabled && !(settings('online_order_receptionist_handle') !== undefined && _.includes([0,'0','No','no',false,'false','False',null],settings('online_order_receptionist_handle'))) },
+    customer_manage(){ return settings('manage_customer',_USER.role) },
   },
   watch: {
     completed(Nw,Ol){ if(!Ol || Nw.length > Ol.length) {

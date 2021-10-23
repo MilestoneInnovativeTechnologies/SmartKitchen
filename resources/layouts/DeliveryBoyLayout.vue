@@ -7,7 +7,7 @@
           <q-btn v-if="$store.state.back" :to="$store.state.back" flat round dense icon="arrow_back_ios" />
           {{ $store.state.title || name }}
         </q-toolbar-title>
-        <q-btn flat round dense icon="switch_account" :to="{ name:'customers' }" />
+        <q-btn flat round dense icon="switch_account" :to="{ name:'customers' }" v-if="customer_manage" />
         <ManualSync />
         <Logout />
       </q-toolbar>
@@ -40,7 +40,8 @@ export default {
   data () { return { name:_USER.name, logout: LOGOUT } },
   computed: {
     ...mapState('tokens',{ tokens:'data',items:'items' }), ...mapState({ bills:state => state.bills.data }),
-    billable(){ return _(this.tokens).filter({ type:'Home Delivery',progress:'Processing' }).filter(({ id }) => _.has(this.items,parseInt(id)) && is_all_completed(this.items[parseInt(id)])).filter(({ id }) => !_.find(this.bills,['token',parseInt(id)])).value() }
+    billable(){ return _(this.tokens).filter({ type:'Home Delivery',progress:'Processing' }).filter(({ id }) => _.has(this.items,parseInt(id)) && is_all_completed(this.items[parseInt(id)])).filter(({ id }) => !_.find(this.bills,['token',parseInt(id)])).value() },
+    customer_manage(){ return settings('manage_customer',_USER.role) },
   },
   watch: {
     billable(Nw,Ol){ if(!Ol || Nw.length > Ol.length) { attention(); } },

@@ -67,3 +67,10 @@ Default is id,name,detail
 These are the fields of an item, where the search/filter string  to be compared with. When any matches found, that items are only get displayed
 Item props can also be given, Be sure the case of props are exactly same.
 sale_items_search_fields, dining_items_search_fields, take_away_items_search_fields etc have higher priority, if them present as settings.
+
+
+waiter_manage_customer, receptionist_manage_customer, delivery_boy_manage_customer
+By default, delivery_boy and receptionist can only manage customers. Manage means adding & edition customers.
+If waiter too need to manage, then add setting of waiter_manage_customer to any of true,1,True,yes,Yes
+Similarly, delivery boy or receptionist don't need this option, then add and make delivery_boy_manage_customer/receptionist_manage_customer setting value to any of 0,false,False,no,No
+

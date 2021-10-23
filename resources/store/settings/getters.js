@@ -30,3 +30,12 @@ export function menu(state,{ settings },rState){
     return _.find(rState.menus.data,{ status:'Active',name })
   }
 }
+
+export function manage_customer(state,{ settings }){
+  return function(name){ let def = !(name === 'Waiter' || name === 'waiter'); if(!name) return def;
+    let s_name = _.snakeCase((name || '') + ' Manage Customer');
+    if(!_.has(settings,s_name)) return def
+    let val = _.get(settings,s_name);
+    return _.includes([0,'false','False','no','No'],val) ? false : (_.includes([1,'true','True','yes','Yes'],val) ? true : def)
+  }
+}

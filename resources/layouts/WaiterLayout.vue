@@ -8,7 +8,7 @@
           {{ $store.state.title || waiter }}
         </q-toolbar-title>
         <q-btn flat round dense icon="menu_book" :to="{ name:'waiter_menu' }" />
-        <q-btn flat round dense icon="switch_account" :to="{ name:'customers' }" />
+        <q-btn flat round dense icon="switch_account" :to="{ name:'customers' }" v-if="customer_manage" />
         <ManualSync />
         <Logout />
       </q-toolbar>
@@ -40,7 +40,8 @@ export default {
   components: {Logout, ManualSync},
   data () { return { waiter:_USER.name, online_enabled: (GH75F === 'Yes' && GH56E === 'Yes') } },
   computed: {
-    online(){ return this.online_enabled && !(settings('online_order_waiter_handle') !== undefined && _.includes([0,'0','No','no',false,'false','False',null],settings('online_order_waiter_handle'))) }
+    online(){ return this.online_enabled && !(settings('online_order_waiter_handle') !== undefined && _.includes([0,'0','No','no',false,'false','False',null],settings('online_order_waiter_handle'))) },
+    customer_manage(){ return settings('manage_customer',_USER.role) },
   }
 }
 </script>
