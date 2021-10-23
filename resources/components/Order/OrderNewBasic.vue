@@ -41,8 +41,8 @@ export default {
     setPriceList(type){
       if(type === 'Dining') return; let type_name = _.snakeCase(type), state_name = type_name + '_price_list';
       if(!_.has(this.$store.state.public,state_name)){
-        let price_list_id = _.get(this.$store.getters[('prices/' + type_name)],'id',null)
-        this.$store.commit('public',{ [state_name]:price_list_id })
+        let price_list_id = _.get(settings('price_list',type),'id',null)
+        if(price_list_id) this.$store.commit('public',{ [state_name]:price_list_id })
       }
       this.params.price_list = this.$store.state.public[state_name];
     },
@@ -54,6 +54,7 @@ export default {
   watch: {
     seat({ id,price_list }){ this.params.seating = id; this.params.price_list = price_list },
     'params.type': { immediate:true,handler:'setPriceList' },
+    'params.price_list': function(id){ let s_name = _.snakeCase(this.params.type+' Price List'); if(this.$store.state.public[s_name] !== parseInt(id)) this.$store.commit('public',{ [s_name]:parseInt(id) }) },
     attrs: { immediate:true, deep:true, handler:'init' },
   }
 }

@@ -2,12 +2,12 @@
   <q-page padding>
     <FilterInputText @text="item_filter = $event" class="q-mb-xs" />
     <GroupItemsSelect :selected="group" :filter="item_filter" :price_list="params.price_list" @item="addItem" type="Sale" />
-    <GroupStickyButton v-model="group" :sale="true" />
+    <GroupStickyButton v-model="group" :type="params.type" />
     <q-dialog v-if="!price_list" :value="!price_list" persistent @hide="CFL()">
       <q-card :style="popup_width()">
         <q-bar class="text-white bg-info q-py-lg items-center"><q-icon name="receipt" color="white" left /><span>Select Price List</span><q-space /><q-btn icon="clear" v-close-popup flat round color="white" /></q-bar>
         <q-card-section>
-          <PriceListSelectDropDown outlined dense input-debounce="0" v-model="price_list" label="Select Price List" get="id" />
+          <PriceListSelectDropDown outlined dense input-debounce="0" v-model="price_list" label="Select Price List" get="id" clearable />
         </q-card-section>
       </q-card>
     </q-dialog>
@@ -85,8 +85,7 @@ import GroupStickyButton from "components/Group/GroupStickyButton";
 import GroupItemsSelect from "components/Group/GroupItemsSelect";
 export default {
   name: 'PageSale',
-  components: { GroupItemsSelect, GroupStickyButton, PaymentTypeSelectDropDown, TaxNatureSelectDropDown, OrderCustomer,
-    PriceListSelectDropDown, FilterInputText },
+  components: { GroupItemsSelect, GroupStickyButton, PaymentTypeSelectDropDown, TaxNatureSelectDropDown, OrderCustomer, PriceListSelectDropDown, FilterInputText },
   data(){ return {
     group: 0, item_filter: '', fab: true, offset: [12,12], payment_mode: false, processing: false,
     params: {
@@ -99,12 +98,8 @@ export default {
     price_list: {
       get(){
         if(!_.has(this.$store.state.public,'sale_price_list')){
-          let sale_price_list = _.get(this.$store.getters['settings/settings'],'sale_price_list')
+          let sale_price_list = _.get(settings('price_list',this.params.type),'id')
           if(sale_price_list) this.$store.commit('public',{ sale_price_list })
-          else {
-            sale_price_list = _.get(this.$store.getters[('prices/sale')],'id',null)
-            if(sale_price_list) this.$store.commit('public',{ sale_price_list })
-          }
         }
         return _.get(this.$store.state.public,'sale_price_list',undefined)
       },

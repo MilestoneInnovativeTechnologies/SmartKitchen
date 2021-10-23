@@ -31,23 +31,21 @@
 
 <script>
 import { mapState } from 'vuex'
-import {h_key} from "assets/helpers";
+import {active, h_key} from "assets/helpers";
 import CardImageTitle from "components/CardImageTitle";
 export default {
 name: "WaiterMenuManage",
   components: {CardImageTitle},
   data(){ return { m_groups:{},m_items: {} } },
   computed: {
-    ...mapState('menus',{ menus:'data',selected:'s_items' }),
-    ...mapState('groups',{ groups:'data' }),
-    ...mapState('items',{ items:'data' }),
+    ...mapState('menus',{ menus:({ data }) => active(data),selected: state => state.s_items }),
+    ...mapState('groups',{ groups:({ data }) => active(data) }),
+    ...mapState('items',{ items:({ data }) => active(data) }),
   },
   methods: {
     is_selected({ id }){ return this.selected.includes(id) },
     hKey({ id }){ return h_key('waiter','menu','manage',id) },
-    toggle({ id }){
-      this.$store.dispatch('menus/toggle',id)
-    },
+    toggle({ id }){ this.$store.dispatch('menus/toggle',id) },
     populate({ id }){
       this.m_groups = _.pick(this.groups,this.menus[id].groups)
       this.m_items = _.mapValues(this.m_groups,({ items }) => _.map(items,item => _.truncate(this.items[item].name,{ length:7,omission:'...' })).join(', ') )

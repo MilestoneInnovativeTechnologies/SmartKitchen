@@ -9,37 +9,40 @@
 
 <script>
 import {mapState} from "vuex";
+import {active, of_ids} from "assets/helpers";
 
 export default {
   name: "GroupStickyButton",
-  props: ['value','sale'],
+  props: ['value','type'],
   data() { return {
     fab: false, xoffset: 0, width:0
   } },
   computed: {
-    ...mapState('menus',{ menus:'data',selected:'s_items' }),
-    menu(){ return this.sale ? (this.$store.getters['menus/sale'] ? _.pick(this.menus,this.$store.getters['menus/sale']) : this.menus) : (_.isEmpty(this.selected) ? this.menus : _.pick(this.menus,this.selected)) },
-    group_ids(){ return _.flatMap(this.menu,'groups') },
-    groups(){ return _(this.group_ids).uniq().map(id => this.$store.state.groups.data[parseInt(id)]).filter(['status','Active']).value() },
+    ...mapState({ menus:state => active(state.menus.data),selected:state => state.menus.s_items,group_master:state => active(state.groups.data) }),
+    group_ids(){
+      let sel = this.selected || [], sel_groups = sel.length > 0 ? _.flatMap(_.filter(this.menus,({ id }) => _.includes(sel,id)),'groups') : []
+      return _.get(settings('menu',this.type),'groups',sel_groups);
+    },
+    groups(){ return of_ids(this.group_master,this.group_ids) },
     max(){ return _.toInteger((this.$q.screen.height-200)/45) },
     count(){ return _.ceil(this.groups.length/this.max) },
   },
   methods: {
     is_sel({ id }){ return _.toSafeInteger(this.value) === _.toInteger(id) },
+    rearrange(){
+      let vm = this;
+      let sWidth = vm.$q.screen.width; vm.xoffset = sWidth-50;
+      let tWidth = _.reduce(_.range(1,vm.count+1),function(sum,num){ return sum + vm.$refs['fab'+num][0].$el.clientWidth },0);
+      vm.width = tWidth + 5 + 'px';
+    },
     attrs(i){
       return { color:i === 1 ? 'indigo' : 'white',glossy:i === 1,push:i === 1,icon:'keyboard_arrow_down' ,label:'Groups',unelevated: i !== 1,padding: i === 1 ? 'md md' : 'xs md' }
     }
   },
-  mounted(){
-    setTimeout(function(vm){
-      let sWidth = vm.$q.screen.width; vm.xoffset = sWidth-50;
-      let tWidth = _.reduce(_.range(1,vm.count+1),function(sum,num){ return sum + vm.$refs['fab'+num][0].$el.clientWidth },0);
-      vm.width = tWidth + 5 + 'px';
-    },500,this);
-
-  },
+  mounted(){ let $vm = this; this.$nextTick(function(){ setTimeout($vm.rearrange,500) }) },
   watch: {
     fab(fab){ this.xoffset = fab ? 0 : (this.$q.screen.width - 50) },
+    group_ids(ids){ if(ids && _.isArray(ids) && _.size(ids)>0) setTimeout(this.rearrange,500) }
   }
 }
 </script>

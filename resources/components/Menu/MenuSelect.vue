@@ -28,11 +28,11 @@ export default {
     loading: false,
   } },
   computed: {
-    ...mapState('menus',{ menus:'data',assigned:'s_items' }),
+    ...mapState('menus',{ menus:state => _.filter(state.data,['status','Active']),assigned:'s_items' }),
     menus_count(){ return _.size(this.menus) },
     selected: {
       get(){ return this.assigned },
-      set({ id }){ this.loading = true; this.$store.dispatch('menus/toggle',id) }
+      set({ id }){ this.loading = true; this.$store.dispatch('menus/toggle',parseInt(id),{ root:true }) }
     }
   },
   methods: {

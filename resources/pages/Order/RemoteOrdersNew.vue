@@ -76,12 +76,12 @@ export default {
   components: { DateTime, RemoteOrderItemUpdateForm, PriceListSelectDropDown, OrderCustomer, ItemSelectCard, Masonry },
   data(){ return {
     expanded: true, payment_types: PaymentsTypes, loading: false, deliver: null,
-    params: { type:'remote',price_list:1,customer:null,items:[],nature:null,discount:0,advance_type:PaymentsTypes[0],advance_amount:0 },
+    params: { type:'Remote',price_list:null,customer:null,items:[],nature:null,discount:0,advance_type:PaymentsTypes[0],advance_amount:0 },
     edit: -1,
   } },
   computed: {
-    ...mapGetters({ remote_items:'kitchens/remote_items',natures:'tax/natures' }), ...mapState('items',{ items:'data' }),
-    ...mapState('prices',{ prices({ data }){ return _(data).mapKeys(({ item,price_list }) => _.toInteger(price_list) === _.toInteger(this.params.price_list) ? _.toInteger(item) : 0).mapValues(({ price }) => _.toNumber(price)).value() } }),
+    ...mapGetters({ remote_items:'kitchens/remote_items',natures:'tax/natures',price_items:'prices/items' }), ...mapState('items',{ items:'data' }),
+    prices(){ return _.get(this.price_items,this.params.price_list) },
     total(){ let prices = this.prices; return _.reduce(this.params.items,function(sum,{ item,quantity }){ return (prices[parseInt(item)] * parseInt(quantity)) + sum },0) }
   },
   methods: {
@@ -124,10 +124,13 @@ export default {
     this.$q.notify.setDefaults({ position: 'top-right', timeout: 1000, color: 'positive', group: false, html: true, caption: 'Items Updated !!' });
     this.deliver = tomorrow();
     if(!_.has(this.$store.state.public,'remote_price_list')){
-      let remote_price_list = _.get(this.$store.getters['prices/remote'],'id',null)
-      this.$store.commit('public',{ remote_price_list })
+      let remote_price_list = _.get(settings('price_list',this.params.type),'id',null)
+      if(remote_price_list) this.$store.commit('public',{ remote_price_list })
     }
-    this.params.price_list = this.$store.state.public['remote_price_list'] || 1
+    this.params.price_list = _.get(this.$store.state.public,'remote_price_list',1)
+  },
+  watch: {
+    'params.price_list': function(id){ let s_name = _.snakeCase(this.params.type+' Price List'); if(this.$store.state.public[s_name] !== parseInt(id)) this.$store.commit('public',{ [s_name]:parseInt(id) }) },
   }
 }
 </script>
