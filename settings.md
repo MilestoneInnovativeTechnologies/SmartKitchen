@@ -3,7 +3,7 @@ Printer and Printing Template can be selected according to the following priorit
 If have any settings in the name
 
 <user_name>_<role>_<type>_<item>
-here the <user_name> is the name of logged in user... Everything will be snake case letters
+here the <user_name> is the name of logged in user. Everything will be snake case letters
 <role> is the role of logged in user
 <type> is dining, sale, take_away etc etc
 <item> is either printer or print_template
@@ -36,10 +36,18 @@ This is the setting who controls the maximum amount of items that should be disp
 Default is 100
 
 
-sale_menu
+sale_menu, home_delivery_menu, take_away_menu
 This should be the name of a menu.
-The purpose of this settings is, In Sales of items (Direct Selling By Receptionist) all items and items groups are displayed.. This can be limited to any specified menu..
-That menu name is given here.. The name should be exactly same as what in Menus..
+The purpose of these settings is, In Sales or any type of Order of items all items and items groups are displayed. This can be limited to any specified menu.
+That menu name is given here. The name should be exactly same as what in Menus.
+If there is a menu of name exactly same of any type or order, then this menu will be taken for that type of order. This have lesser priority than that of having in settings 
+
+
+sale_price_list, home_delivery_price_list, take_away_price_list
+This should be the name of a price list.
+The purpose of these settings is, In any type of Order which price list should be taken is decided by this setting.
+The price list name should be exactly same as what in Price lists
+If there is a price list of name exactly same of any type or order, then this price list will be taken for that type of order. This have lesser priority than that of having in settings
 
 
 online_order_waiter_handle
