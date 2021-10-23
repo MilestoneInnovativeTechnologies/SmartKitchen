@@ -9,6 +9,7 @@
         </q-toolbar-title>
         <q-btn flat round dense icon="archive" class="lt-md" :to="{ name:'archives' }" />
         <q-btn flat round dense icon="batch_prediction" class="lt-md" :to="{ name:'seat_status' }" />
+        <q-btn flat round dense icon="switch_account" :to="{ name:'customers' }" />
         <q-btn flat round dense icon="receipt" class="lt-sm" :to="{ name:'receptionist_tokens' }" ><q-badge color="red" :label="completed.length" transparent floating v-show="completed.length>0" /></q-btn>
         <q-btn flat round dense icon="receipt_long" class="lt-sm" :to="{ name:'bills' }" />
         <q-btn flat round dense label="---" :disable="true" color="primary" />

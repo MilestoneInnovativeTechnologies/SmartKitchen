@@ -8,6 +8,7 @@
           {{ $store.state.title || waiter }}
         </q-toolbar-title>
         <q-btn flat round dense icon="menu_book" :to="{ name:'waiter_menu' }" />
+        <q-btn flat round dense icon="switch_account" :to="{ name:'customers' }" />
         <ManualSync />
         <Logout />
       </q-toolbar>

@@ -7,7 +7,7 @@
           <q-btn v-if="$store.state.back" :to="$store.state.back" flat round dense icon="arrow_back_ios" />
           {{ $store.state.title || name }}
         </q-toolbar-title>
-        <q-btn flat round dense icon="switch_account" :to="{ name:'delivery_boy_customers' }" />
+        <q-btn flat round dense icon="switch_account" :to="{ name:'customers' }" />
         <ManualSync />
         <Logout />
       </q-toolbar>
