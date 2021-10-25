@@ -38,6 +38,7 @@ Route::group([
         });
         Route::post('subscribe', [SubscriptionController::class, 'subscribe']);
         Route::post('subscription/serial',[SubscriptionController::class, 'device_serial']);
+        Route::post('subscription/key',[SubscriptionController::class, 'key']);
         Route::view('subscription','SK::subscription')->name('subscription');
         Route::post('subscription',[SubscriptionController::class, 'action']);
     });

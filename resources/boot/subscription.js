@@ -1,23 +1,37 @@
 import axios from 'axios'
 import {KEY,CODE,TIME} from 'assets/constants'
+import {GLOBAL_FEATURES} from "assets/features";
 const MD5 = require('js-md5'), _ = require('lodash')
-
-const GLOBAL_FEATURES = [["GH56E","Yes/No","No"],["GH75F","Yes/No","No"],["JI36A","Detail",null]]
-const SERIAL = localStorage.getItem('serial');
-
-export default () => {
-  if(!SERIAL && typeof _USER === 'undefined' && typeof LOGIN !== 'undefined') return axios.post(LOGIN.replace('login','subscription/serial')).then(({ headers }) => localStorage.setItem('serial',headers['sk-serial']) || location.reload())
-}
 
 let CODE_VALID = true, CODE_INVALID_REASON = '', CODE_INVALID_DETAIL = '', CODE_INVALID_ERROR_CODE = '';
 
+const SERIAL = localStorage.getItem('serial');
+
+export const KEY_VALID = SERIAL ? (KEY.substr(0,2) + MD5(KEY.substr(0,2) + SERIAL + KEY.substr(-4)).toString() + KEY.substr(-4)) === KEY : false;
 // E00
-if(CODE_VALID && (!KEY || !CODE || !SERIAL)) { CODE_VALID = false; CODE_INVALID_REASON = "Subscription details missing"; CODE_INVALID_DETAIL = "KEY, CODE or SERIAL is not accessible"; CODE_INVALID_ERROR_CODE = 'E00' }
+if(!KEY_VALID) { CODE_VALID = false; CODE_INVALID_REASON = "Key is not Valid"; CODE_INVALID_DETAIL = "The provided key string is not arranged as per the expected way"; CODE_INVALID_ERROR_CODE = 'E00' }
+/*
+The key is composed of branch reg date and serial of the device in a distinct order. The key provided doesn't follows the said order. It may be because of SERIAL have changed and key have not updated.
+*/
+
+export default () => {
+  // if(SERIAL && !KEY_VALID && typeof _USER === 'undefined' && typeof LOGIN !== 'undefined') return axios.post(LOGIN.replace('login','subscription/key')).then(() => location.reload())
+  if(!SERIAL && typeof _USER === 'undefined' && typeof LOGIN !== 'undefined') return axios.post(LOGIN.replace('login','subscription/serial')).then(({ headers }) => localStorage.setItem('serial',headers['sk-serial']) || location.reload())
+}
+
+export function KEY_MOVE(){
+  return axios.post(LOGIN.replace('login','subscription/key')).then(() => location.reload())
+}
 
 // E01
-if(CODE_VALID && !CODE.indexOf('/')) { CODE_VALID = false; CODE_INVALID_REASON = "Code is corrupted"; CODE_INVALID_DETAIL = "Code have no separator for basic."; CODE_INVALID_ERROR_CODE = 'E01' }
+if(CODE_VALID && (!KEY || !CODE || !SERIAL)) { CODE_VALID = false; CODE_INVALID_REASON = "Subscription details missing"; CODE_INVALID_DETAIL = "KEY, CODE or SERIAL is not accessible"; CODE_INVALID_ERROR_CODE = 'E01' }
 
-export const KEY_VALID = (KEY.substr(0,2) + MD5(KEY.substr(0,2) + SERIAL + KEY.substr(-4)).toString() + KEY.substr(-4)) === KEY
+// E02
+if(CODE_VALID && !CODE.indexOf('/')) { CODE_VALID = false; CODE_INVALID_REASON = "Code is corrupted"; CODE_INVALID_DETAIL = "Code have no separator for basic."; CODE_INVALID_ERROR_CODE = 'E02' }
+/*
+Subscription code must have "/" between feature encrypted section and base64 encoded basic details of company.. If there is no "/" means code is some what got corrupted
+*/
+
 const CODE_HAS_BASIC = CODE_VALID && CODE.split('/').length === 2 && !_.isEmpty(CODE.split('/')[0]) && !_.isEmpty(CODE.split('/')[1])
 const CODE_BASIC_JSON_STRING = CODE_HAS_BASIC ? atob(CODE.split("/")[1]) : ""
 let JSON_STRING_VALID = false;
@@ -41,6 +55,12 @@ function KJDU(){ return CODE_VALID ? CODE.split("/")[0] : '' }
 function UEPQ(){ return KJDU().substr(34,5) + "" + KJDU().substr(-5); }
 function QWPO(){ return UEPQ() === _.toString(_.toInteger(new Date(SUBSCRIPTION_ARRAY['expiry']).getTime()/1000)) }
 
+// E03
+if(!QWPO()) { CODE_VALID = false; CODE_INVALID_REASON = "Code is corrupted"; CODE_INVALID_DETAIL = "Expiry date mismatches"; CODE_INVALID_ERROR_CODE = 'E03' }
+/*
+The first portion and second portion have timestamp of expiry date.. These are not matching in the provided code..
+*/
+
 export const VALID_UPTO = QWPO() ? SUBSCRIPTION_ARRAY['expiry'] : '1999-12-31 23:59:59';
 export const VALID_UPTO_UNIX = _.toInteger(new Date(VALID_UPTO).getTime()/1000);
 export const VALID_UPTO_REMAINS = VALID_UPTO_UNIX - _.toInteger(TIME);
@@ -49,14 +69,21 @@ function IAZP(){ return _.toString(UEPQ()).substr(0,5) }
 function LMNP(){ return _.toString(UEPQ()).replace(IAZP(),'') }
 function XAAL(){ return KJDU().substr(0,2) }
 
-// E02
-if(CODE_VALID && !_.toNumber(XAAL())) { CODE_VALID = false; CODE_INVALID_REASON = "CODE is invalid"; CODE_INVALID_DETAIL = "Separator is corrupted"; CODE_INVALID_ERROR_CODE = 'E02' }
+// E04
+if(CODE_VALID && !_.toNumber(XAAL())) { CODE_VALID = false; CODE_INVALID_REASON = "Code is invalid"; CODE_INVALID_DETAIL = "Separator is corrupted"; CODE_INVALID_ERROR_CODE = 'E04' }
+/*
+The first 2 characters of code is some placing information in numbers, which created from key.. Its is not identified as number in the provided code..
+*/
 
 function S0IP(){ return KEY.substr(0,_.toNumber(XAAL())) }
 function K090(){ return KEY.replace(S0IP(),'') }
 
-// E03
-if(CODE_VALID && (!S0IP() || !K090() || KEY !== (S0IP() + K090())))  { CODE_VALID = false; CODE_INVALID_REASON = "CODE and KEY not matches"; CODE_INVALID_DETAIL = "Code is not encoded with provided key"; CODE_INVALID_ERROR_CODE = 'E03' }
+// E05
+if(CODE_VALID && (!S0IP() || !K090() || KEY !== (S0IP() + K090())))  { CODE_VALID = false; CODE_INVALID_REASON = "Code and Key not matches"; CODE_INVALID_DETAIL = "Code is not encoded with provided key"; CODE_INVALID_ERROR_CODE = 'E05' }
+/*
+The code have key arranged in a distinct order.. While segregating and checking with code, it does not matches.
+May be code created with key which is not updated in env or this code is not for this client
+*/
 
 function AR1P(){ return MD5 }
 function RO06(){ return AR1P()(S0IP()) }
@@ -73,8 +100,12 @@ function TA00(){ return KJDU().indexOf(W93M()) === 0 }
 function TB11(){ return KJDU().split("/")[0].substr(0-KXY3()).indexOf(M39W()) === 0 }
 function CFAD(){ return KJDU().replace(W93M(),'').replace(M39W(),'') }
 
-// E04
-if(CODE_VALID && (!TA00() || !TB11()))  { CODE_VALID = false; CODE_INVALID_REASON = "CODE corrupted"; CODE_INVALID_DETAIL = "Code initial part and final part are not matching"; CODE_INVALID_ERROR_CODE = 'E04' }
+// E06
+if(CODE_VALID && (!TA00() || !TB11()))  { CODE_VALID = false; CODE_INVALID_REASON = "Code corrupted"; CODE_INVALID_DETAIL = "Code initial part and final part are not matching"; CODE_INVALID_ERROR_CODE = 'E06' }
+/*
+The features are hashed and included in between of some key arrangements. The key is extracted from code and checked with the key provided and it fails
+May be code created with key which is not updated in env or this code is not for this client
+ */
 
 function N8EJ(key){
   let T = 0;
@@ -106,23 +137,21 @@ function N8EJ(key){
   return [atob(A).split("|"),atob(B).split("|")]
 }
 
-// E05
-if(CODE_VALID && !CFAD()) {
-  CODE_VALID = false; CODE_INVALID_REASON = "No Features"; CODE_INVALID_DETAIL = "Features are empty"; CODE_INVALID_ERROR_CODE = 'E05'
-}
+// E07
+if(CODE_VALID && !CFAD()) { CODE_VALID = false; CODE_INVALID_REASON = "No Features"; CODE_INVALID_DETAIL = "Features are empty"; CODE_INVALID_ERROR_CODE = 'E07' }
 
 const YZB6 = CODE_VALID ? N8EJ(CFAD()) : false
 
-// E06
+// E08
 if(CODE_VALID && (!_.isArray(YZB6) || !_.isArray(YZB6[0]) || !_.isArray(YZB6[1]) || YZB6[0].length !==  YZB6[1].length)){
-  CODE_VALID = false; CODE_INVALID_REASON = "Features corrupted"; CODE_INVALID_DETAIL = "Features corrupted"; CODE_INVALID_ERROR_CODE = 'E06'
+  CODE_VALID = false; CODE_INVALID_REASON = "Features corrupted"; CODE_INVALID_DETAIL = "Features corrupted"; CODE_INVALID_ERROR_CODE = 'E08'
 }
 
 function MJ78(){ return _.zipObject(YZB6[0],YZB6[1]) }
 
-// E07
+// E09
 if(CODE_VALID && !MJ78()){
-  CODE_VALID = false; CODE_INVALID_REASON = "Features Corrupted"; CODE_INVALID_DETAIL = "Features compile error"; CODE_INVALID_ERROR_CODE = 'E07'
+  CODE_VALID = false; CODE_INVALID_REASON = "Features Corrupted"; CODE_INVALID_DETAIL = "Features compile error"; CODE_INVALID_ERROR_CODE = 'E09'
 }
 
 const FEATURES = {}
@@ -133,9 +162,11 @@ function DF00(){
   return true;
 }
 
-// E08
+// E10
 if(CODE_VALID && !DF00()){
-  CODE_VALID = false; CODE_INVALID_REASON = "Final Stage"; CODE_INVALID_DETAIL = "Final Stage unknown error"; CODE_INVALID_ERROR_CODE = 'E08'
+  CODE_VALID = false; CODE_INVALID_REASON = "Final Stage"; CODE_INVALID_DETAIL = "Final Stage unknown error"; CODE_INVALID_ERROR_CODE = 'E10'
 }
 
-export { CODE_VALID,CODE_INVALID_ERROR_CODE,CODE_INVALID_DETAIL,CODE_INVALID_REASON,FEATURES }
+const KEY_CHANGE_ERRORS = ['E00','E04','E05','E06','E10']
+const KEY_CHANGE_REQUIRED = KEY_CHANGE_ERRORS.includes(CODE_INVALID_ERROR_CODE)
+export { CODE_VALID,CODE_INVALID_ERROR_CODE,CODE_INVALID_DETAIL,CODE_INVALID_REASON,KEY_CHANGE_REQUIRED,FEATURES }

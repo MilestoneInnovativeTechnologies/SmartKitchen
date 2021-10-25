@@ -40,6 +40,20 @@ class SubscriptionController extends Controller
         return redirect()->route('login');
     }
 
+    public function key(Request $request){
+        if($request->getMethod() === 'POST'){
+            $env = file_get_contents(base_path('.env'));
+            preg_match('/CLIENT_KEY=(.*)/',$env,$matches);
+            if(!empty($matches)){
+                file_put_contents(base_path('.env'),rtrim(preg_replace('/CLIENT_KEY\=.*/','',$env)) . "\n");
+            }
+            if(Storage::exists('subscription')){ Storage::delete('subscription'); }
+            if(Storage::exists('subscription.undo')){ Storage::delete('subscription.undo'); }
+            return redirect()->route('subscription');
+        }
+        return redirect()->route('login');
+    }
+
     public static function ExipreTimestamp(){
         $code = self::code();
         return $code ? intval(substr($code,34,5) . substr(explode("/",$code)[0],-5)) : time();
