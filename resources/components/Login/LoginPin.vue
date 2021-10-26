@@ -27,6 +27,8 @@
 </template>
 
 <script>
+import {tap} from "assets/helpers";
+
 export default {
   name: "LoginPin",
   data(){ return {
@@ -41,6 +43,9 @@ export default {
   methods: {
     backspace(){ this.pin = this.pin.substr(0,_.size(this.pin)-1) },
     login(){ this.loading = true; this.$refs['login_form'].submit() }
+  },
+  watch: {
+    pin(){ tap() }
   }
 }
 </script>

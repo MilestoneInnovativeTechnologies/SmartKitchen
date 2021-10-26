@@ -1,8 +1,10 @@
 import { MEDIA_PATH } from './constants'
 const { formatDate,extractDate,isSameDate,startOfDate,subtractFromDate,addToDate,isBetweenDates } = require('quasar').date
 const AttentionAudio = new Audio(MEDIA_PATH + '/attention.mp3')
+const TapAudio = new Audio(MEDIA_PATH + '/tap.mp3')
 
 export function attention(){ AttentionAudio.play() }
+export function tap(){ TapAudio.play() }
 
 export function h_key(){ return Array.from(arguments).join('-') }
 
