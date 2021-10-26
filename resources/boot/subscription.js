@@ -131,8 +131,8 @@ function N8EJ(key){
     if(F > I) { D.push(D1); if(E1 !== "") D.push(E1); continue }
     if(G > I) { E.push(D1); if(E1 !== "") E.push(E1); continue }
   }
-  D[F-1] = (D[D.length - 1]).replaceAll("$","");
-  E[G-1] = (E[E.length - 1]).replaceAll("$","");
+  D[F-1] = D.length ? (D[D.length - 1]).replaceAll("$","") : "";
+  E[G-1] = E.length ? (E[E.length - 1]).replaceAll("$","") : "";
   let A = D.join(""), B = E.join("");
   return [atob(A).split("|"),atob(B).split("|")]
 }
