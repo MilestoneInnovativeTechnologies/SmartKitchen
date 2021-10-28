@@ -45,13 +45,13 @@ class RemoteController extends Controller
 
     public function tokens(Request $request){
         $items = $request->items;
+        if(empty($items)) return 'NO ITEMS';
         foreach($items as $idx => $req){
             $ki_ref = $req['kitchen_item_reference'];
             $item = self::ki_ref_item($ki_ref);
             if(!$item) unset($items[$idx]);
             else $items[$idx]['item'] = $item;
         }
-        if(empty($items)) return 'NO ITEMS';
         $request->merge(['type' => 'Remote','price_list' => 1, 'items' => $items]);
         $token_ref = $request->input('reference'); $location = $request->input('_location'); $extra = $request->input('extra',[]) ?: [];
         if(Remote::where('reference',$token_ref)->exists()) return 'ALREADY EXISTS';
@@ -61,7 +61,7 @@ class RemoteController extends Controller
         $token->items->each(function($TokenItem) use($items,$location){
             foreach($items as $rTI){
                 if($TokenItem->item === $rTI['item'] && $TokenItem->quantity === $rTI['quantity'] && $TokenItem->narration === $rTI['narration'] && $TokenItem->deliver === $rTI['deliver']){
-                    Remote::updateOrCreate(['item' => 'token_items','local_id' => $TokenItem->id],['reference' => $rTI['reference'], 'location' => $location, 'monitor' => 'Yes', 'extra' => $rTI['extra']]);
+                    Remote::updateOrCreate(['item' => 'token_items','local_id' => $TokenItem->id],['reference' => $rTI['reference'], 'location' => $location, 'monitor' => 'Yes', 'extra' => Arr::get($rTI,'extra')]);
                 }
             }
         });
