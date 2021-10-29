@@ -20,7 +20,7 @@ import {mapState} from "vuex";
 import { debounce } from 'quasar'
 import Masonry from "components/Masonry";
 export default {
-  name: 'PageOrders',
+  name: 'PageDiningOrders',
   components: {Masonry, OrderSummaryWaiterItem},
   data(){ return {
     fab: true, timeout: 0, offset: [24,24],
@@ -28,7 +28,7 @@ export default {
   } },
   computed: {
     ...mapState('tokens',{
-      tokens({ data }){ return _(data).filter(({ progress }) => this.progresses.includes(progress)).value() },
+      tokens({ data }){ return _(data).filter(({ progress,type }) => this.progresses.includes(progress) && type === 'Dining').value() },
     })
   },
   methods: {
