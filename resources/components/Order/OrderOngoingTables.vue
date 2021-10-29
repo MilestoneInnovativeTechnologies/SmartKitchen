@@ -57,9 +57,9 @@ export default {
       items({ items:{ data } }){ return _(data).mapValues('name').value() },
       kitchens({ kitchens:{ data } }){ return _(data).mapValues('name').value() },
       tokens({ tokens:{ data,items },seating,customers }){
-        return _(data).filter(({ progress }) => this.fProgress.includes(progress)).map(token => Object.assign({},token,
+        return _(data).filter(({ progress,type }) => this.fProgress.includes(progress) && type === 'Dining').map(token => Object.assign({},token,
           { items: this.iNameAttach(items[token.id]) },
-          { seating: _.get(seating,['data',token.seating]) },
+          { seating: _.get(seating,['data',token.seating],{}) },
           { customer: _.get(customers,['data',token.customer]) },
         )).value()
       }
@@ -68,7 +68,7 @@ export default {
   methods: {
     iNameAttach(items){ return _(items).map(item => Object.assign({},item,{ name: _.get(this.items,[item.item]),kitchen: _.get(this.kitchens,[item.kitchen],null) })).value() },
     hKey(token,idx,item){ return h_key('order','ongoing','tables','order',token,'item','index',idx,'item',item) },
-    media(link){ return image(link) }
+    media(link){ return link ? image(link) : undefined }
   },
 }
 </script>
