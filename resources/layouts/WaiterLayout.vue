@@ -34,13 +34,14 @@
 <script>
 import ManualSync from "components/ManualSync";
 import Logout from "components/Logout";
+import {settings_boolean} from "assets/helpers";
 const { GH75F,GH56E } = require('boot/subscription').FEATURES
 export default {
   name: 'WaiterLayout',
   components: {Logout, ManualSync},
   data () { return { waiter:_USER.name, online_enabled: (GH75F === 'Yes' && GH56E === 'Yes') } },
   computed: {
-    online(){ return this.online_enabled && !(settings('online_order_waiter_handle') !== undefined && _.includes([0,'0','No','no',false,'false','False',null],settings('online_order_waiter_handle'))) },
+    online(){ return this.online_enabled && settings_boolean(settings('online_order_waiter_handle')) !== false },
     customer_manage(){ return settings('manage_customer',_USER.role) },
   }
 }

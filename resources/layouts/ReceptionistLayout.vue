@@ -42,7 +42,7 @@
 <script>
 import ManualSync from "components/ManualSync";
 import {mapState} from "vuex";
-import {attention} from "assets/helpers";
+import {attention, settings_boolean} from "assets/helpers";
 import Logout from "components/Logout";
 const { GH75F,GH56E } = require('boot/subscription').FEATURES
 export default {
@@ -51,7 +51,7 @@ export default {
   data(){ return { receptionist:_USER.name, logout: LOGOUT, alert:false, online_enabled: (GH75F === 'Yes' && GH56E === 'Yes') } },
   computed: {
     ...mapState('tokens',{ completed({ data }){ return _.filter(data,['progress','Completed']) } }),
-    online(){ return this.online_enabled && !(settings('online_order_receptionist_handle') !== undefined && _.includes([0,'0','No','no',false,'false','False',null],settings('online_order_receptionist_handle'))) },
+    online(){ return this.online_enabled && settings_boolean(settings('online_order_waiter_handle')) !== false },
     customer_manage(){ return settings('manage_customer',_USER.role) },
   },
   watch: {

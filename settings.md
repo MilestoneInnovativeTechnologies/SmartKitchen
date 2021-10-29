@@ -50,16 +50,11 @@ The price list name should be exactly same as what in Price lists
 If there is a price list of name exactly same of any type or order, then this price list will be taken for that type of order. This have lesser priority than that of having in settings
 
 
-online_order_waiter_handle
+online_order_waiter_handle, online_order_receptionist_handle
 When the feature Online Menu is enabled and also enabled Online Menu Ordering, then that orders are normally arrive at Receptionist and Waiter.
 While setting this menu name to either of these
-0,false,False,no,No then waiter can't confirm the online orders
-
-
-online_order_receptionist_handle
-When the feature Online Menu is enabled and also enabled Online Menu Ordering, then that orders are normally arrive at Receptionist and Waiter.
-While setting this menu name to either of these
-0,false,False,no,No then receptionist can't confirm the online orders
+0,false,False,no,No then the corresponding users can't confirm the online orders
+1,true,True,yes,Yes then the corresponding users can confirm the online orders
 
 
 items_search_fields

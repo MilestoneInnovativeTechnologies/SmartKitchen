@@ -64,3 +64,4 @@ export function active(records){ return _.filter(records,({ status }) => status 
 export function of_ids(records,ids){ return _.filter(records,({ id }) => ids.includes(id)) }
 
 export function popup_width(width){ return new Object({ width:(width || 360)+'px','max-width':'90vw' }) }
+export function settings_boolean(value){ return _.includes([0,'0','No','no',false,'false','False',null],value) ? false : (_.includes([1,'1','Yes','yes',true,'true','True'],value) ? true : undefined) }
