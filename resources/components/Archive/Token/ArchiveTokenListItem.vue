@@ -30,6 +30,7 @@ import ItemDetailStack from "components/ItemDetailStack";
 import ItemDetailStackLeft from "components/ItemDetailStackLeft";
 import ImageViewCard from "components/ImageViewCard";
 import TokenItemChangeProgress from "components/Tokens/TokenItemChangeProgress";
+import {storage_url} from "assets/modules/Remote";
 
 export default {
   name: "ArchiveTokenListItem",
@@ -46,7 +47,7 @@ export default {
   methods: {
     photo(name){
       if(_.has(this.img_cache,name)) return this.image_show = !!(this.image_url = this.img_cache[name]);
-      storage(name,true).then(url => this.photo(name,this.$store.commit('tokens/image',{ name,url },{ root:true })))
+      storage_url(name).then(url => this.photo(name,this.$store.commit('tokens/image',{ name,url },{ root:true })))
     }
   }
 }

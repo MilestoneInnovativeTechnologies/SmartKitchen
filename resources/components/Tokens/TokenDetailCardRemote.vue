@@ -25,6 +25,7 @@ import {mapState} from "vuex";
 import TokenDetailCardItem from "components/Tokens/TokenDetailCardItem";
 import {h_key} from "assets/helpers";
 import {token_delivery_readable} from "assets/module_helpers";
+import {storage_url} from "assets/modules/Remote";
 
 export default {
   name: "TokenDetailCardRemote",
@@ -50,7 +51,7 @@ export default {
     hKey({ token,item,id }){ return h_key('token',token,'item','detail',item,'id',id) },
     photo(name){
       if(_.has(this.img_cache,name)) return this.view_image = !!(this.image_url = this.img_cache[name]);
-      storage(name,true).then(url => this.photo(name,this.$store.commit('tokens/image',{ name,url },{ root:true })))
+      storage_url(name).then(url => this.photo(name,this.$store.commit('tokens/image',{ name,url },{ root:true })))
     }
   }
 }

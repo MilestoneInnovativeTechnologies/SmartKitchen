@@ -16,7 +16,7 @@
 
 <script>
 import { uid } from 'quasar'
-import {storage, storage_name} from "boot/remote";
+import { delete_file,storage_name,upload_file } from "assets/modules/Remote";
 
 export default {
   name: 'StorageImageUpload',
@@ -29,16 +29,21 @@ export default {
   } },
   methods: {
     storage_name,
-    remove(){ this.deleting = true; storage(this.value).then(ref => ref.delete().finally(() => this.$emit('input',this.deleting = false,this.image = null))) },
+    remove(){ this.deleting = true; delete_file(this.value).then(() => this.$emit('input',this.deleting = false,this.image = null)) },
     name(){ return _BRANCH + '/' + uid() },
     upload(file,name){
       this.uploading = true;
       if(!file) return this.uploading = false; let vm = this;
-      storage(name).then(function(ref){
-        let task = ref.put(file);
+      upload_file(file,name).then(taskFn => {
+        let task = taskFn();
         task.then(function(snap){ vm.$emit('input',name); vm.uploading = false; });
         task.on('state_changed',function({ bytesTransferred,totalBytes }){ vm.progress = ((bytesTransferred / totalBytes) * 100).toFixed(1) + '%' })
       })
+      /*storage(name).then(function(ref){
+        let task = ref.put(file);
+        task.then(function(snap){ vm.$emit('input',name); vm.uploading = false; });
+        task.on('state_changed',function({ bytesTransferred,totalBytes }){ vm.progress = ((bytesTransferred / totalBytes) * 100).toFixed(1) + '%' })
+      })*/
     }
   },
   watch: {

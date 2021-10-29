@@ -69,7 +69,7 @@ import RemoteOrderItemUpdateForm from "components/Order/RemoteOrderItemUpdateFor
 import {image, is_period, tomorrow} from "assets/helpers";
 import DateTime from "components/DateTime";
 import {PaymentsTypes} from "assets/assets";
-import {storage} from "boot/remote";
+import {delete_file} from "assets/modules/Remote";
 
 export default {
   name: 'PageRemoteOrdersNew',
@@ -94,7 +94,7 @@ export default {
     },
     image({ item }){ return image(this.items[parseInt(item)].image) },
     update(item){ _.forEach(item,(val,key) => this.params.items[this.edit][key] = val); this.edit = -1 },
-    remove(idx){ if(this.params.items[idx].photo) storage(this.params.items[idx].photo).then(ref => ref.delete()); setTimeout(function(vm){ vm.params.items.splice(idx,1) },330,this) },
+    remove(idx){ if(this.params.items[idx].photo) delete_file(this.params.items[idx].photo); setTimeout(function(vm){ vm.params.items.splice(idx,1) },330,this) },
     save(){ if(!this.params.customer) return alert('Choose Customer'); this.loading = true; post('token','create',this.params).then(this.saved) },
     saved(r){ this.loading = false; this.$nextTick(function(){ this.$router.push({ name:'orders_remote' }) }) },
     discount_percent(e){

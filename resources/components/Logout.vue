@@ -4,8 +4,8 @@
 
 <script>
 import {mapGetters, mapState} from "vuex";
-import firebase from "firebase/compat/app";
-import {remote} from "boot/remote";
+// import {remote} from "boot/remote";
+import {arrayRemove, remote_query, remote_update} from "assets/modules/Remote";
 
 export default {
   name: 'Logout',
@@ -26,7 +26,14 @@ export default {
         let vm = this, rKitchens = _(this.assign[this.me]).mapKeys().mapKeys(kid => _.get(_.find(this.data,({ item,location,local_id }) => location === _BRANCH && item === 'kitchens' && local_id === kid),'reference',null)).value();
         let rRefs = _(rKitchens).keys().filter(a => a && a !== 'null').value(), full_timer = this.kitchen_full_timer;
         if(!rRefs.length) return vm.nav();
-        remote('kitchens')
+        remote_query('kitchens',{ '__name__':rRefs,operand:'in' }).then(function(snaps){
+          snaps.forEach(function(snap){
+            let users = snap.get('users'), k_ref = snap.id;
+            if(_.has(rKitchens,k_ref) && _.has(full_timer,rKitchens[k_ref]) && full_timer[rKitchens[k_ref]] === vm.me) return (--size) ? true : vm.nav();
+            else remote_update(snap.ref,{ users: arrayRemove(vm.me),online:users.length > 1 }).then(() => (--size) ? null : vm.nav())
+          });
+        }).catch(this.nav)
+        /*remote('kitchens')
           .then(function(ref){
             ref.where('__name__','in',rRefs).get().then(function(snaps){
               if(snaps.empty) return vm.nav(); let size = snaps.size;
@@ -37,7 +44,7 @@ export default {
               });
             })
           })
-          .catch(this.nav)
+          .catch(this.nav)*/
       }
       else this.nav()
     },
