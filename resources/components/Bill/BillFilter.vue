@@ -72,6 +72,7 @@ export default {
       immediate: true,
       handler(){ this.$emit('input',this.has_filter ? this.filtered : this.tokens) }
     },
+    tokens(){ this.$emit('input',this.has_filter ? this.filtered : this.tokens) },
     has_filter(){ this.drawer = false }
   }
 }
