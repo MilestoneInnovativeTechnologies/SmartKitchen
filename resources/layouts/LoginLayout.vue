@@ -46,7 +46,7 @@ export default {
   data(){ return {
     CLIENT, BRANCH, EDITION, VALID_UPTO, count:0,
     KEY_VALID, CODE_VALID, CODE_INVALID_ERROR_CODE, CODE_INVALID_REASON,
-    MSG: [`${CLIENT}`,`BRANCH: ${BRANCH}`,`${EDITION} Edition`,`Valid Till: ` + VALID_UPTO.split(' ')[0]],
+    MSG: [`${CLIENT}`,`${BRANCH}`,`${EDITION} Edition`,`Valid Upto: ` + VALID_UPTO.split(' ')[0]],
     KEY_MOVE, KEY_CHANGE_REQUIRED
   } },
   created() {
