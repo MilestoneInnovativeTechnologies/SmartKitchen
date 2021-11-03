@@ -4,7 +4,7 @@
       <q-list class="q-my-xl full-width">
         <q-item style="font-size: 0.75rem" class="q-px-none items-center">
           <q-item-section side class="text-white">{{ bill.id }} ({{ token.id }})</q-item-section>
-          <q-item-section side class="text-white">{{ date(token.date) }}</q-item-section>
+          <q-item-section side class="text-white" style="font-size: 0.70rem">{{ date(token.date) }}</q-item-section>
           <q-item-section class="text-white">{{ token.type }}</q-item-section>
           <q-item-section side class="text-white">{{ token.customer.name }}</q-item-section>
 <!--          <q-item-section side><q-btn icon="close" color="white" rounded flat dense v-close-popup class="q-mt-xs" /></q-item-section>-->
