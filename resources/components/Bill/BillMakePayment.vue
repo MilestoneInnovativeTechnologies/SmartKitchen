@@ -33,7 +33,7 @@
       </q-card-section>
     </q-card-section><q-separator />
     <q-item-section class="text-center q-py-md">
-      <q-item-label style="font-size: 1.5rem; line-height: 1rem !important;" class="text-weight-bolder">{{ precision(bill.payable) }}</q-item-label>
+      <q-item-label style="font-size: 1.5rem; line-height: 1rem !important;" class="text-weight-bolder">{{ precision(to_pay) }}</q-item-label>
       <q-item-label caption class="text-capitalize">Payable</q-item-label>
     </q-item-section>
     <q-list class="bg-grey-2" bordered >
