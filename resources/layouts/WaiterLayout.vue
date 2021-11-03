@@ -22,8 +22,7 @@
       <q-tabs align="left">
         <q-route-tab :to="{ name:'waiter_index' }" label="Home" icon="home"  />
         <q-route-tab :to="{ name:'orders' }" label="Orders" icon="add_task" />
-        <q-route-tab :to="{ name:'waiter_tokens' }" label="Tokens" icon="receipt" />
-        <q-route-tab :to="{ name:'waiter_bills' }" label="Bills" icon="pending_actions" />
+        <q-route-tab :to="{ name:'waiter_bills' }" label="Bills" icon="pending_actions" v-if="bop_enabled" />
         <q-route-tab :to="{ name:'orders_online' }" label="Online" icon="settings_input_antenna" v-if="online" />
       </q-tabs>
     </q-footer>
@@ -39,10 +38,14 @@ const { GH75F,GH56E } = require('boot/subscription').FEATURES
 export default {
   name: 'WaiterLayout',
   components: {Logout, ManualSync},
-  data () { return { waiter:_USER.name, online_enabled: (GH75F === 'Yes' && GH56E === 'Yes') } },
+  data () { return {
+    waiter:_USER.name,
+    online_enabled: (GH75F === 'Yes' && GH56E === 'Yes'),
+  } },
   computed: {
     online(){ return this.online_enabled && settings_boolean(settings('online_order_waiter_handle')) !== false },
     customer_manage(){ return settings('manage_customer',_USER.role) },
+    bop_enabled(){ return (settings_boolean(settings('waiter_generate_bills')) !== false || settings_boolean(settings('waiter_make_payments')) !== false) },
   }
 }
 </script>

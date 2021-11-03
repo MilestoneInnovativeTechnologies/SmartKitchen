@@ -12,11 +12,11 @@ const layout_master = {
 
 const layout_child = {
   Login: ['login_index'],
-  Waiter: ['waiter_index','waiter_menu','orders','order_new','waiter_tokens','waiter_bills',
+  Waiter: ['waiter_index','waiter_menu','orders','order_new','waiter_bills',
     'orders_online','customers'
   ],
   Chef: ['chef_index','chef_kitchens','kitchen_items','kitchen_stocks','tokens'],
-  Receptionist: ['receptionist_index','seat_status','receptionist_tokens','bills','seat_status_order','receptionist_orders','order_new','orders_remote','orders_remote_new','sale',
+  Receptionist: ['receptionist_index','seat_status','receptionist_bills','seat_status_order','receptionist_orders','order_new','orders_remote','orders_remote_new','sale',
     'archives','archive_payments','archive_bills','archive_remote','archive_orders','archive_sales','archive_tokens',
     'orders_online','customers'
   ],
@@ -37,16 +37,14 @@ const route_master = {
   waiter_menu: { name:'waiter_menu', path:'/menu', component: () => import('pages/Waiter/Menu'), meta:{ title:'Menu' } },
   orders: { name:'orders', path:'/orders', component: () => import('pages/Order/DiningOrders'), meta:{ title:'Order' } },
   order_new: { name:'order_new', path:'/order/new', component: () => import('pages/Order/New'), props:true, meta:{ title:'New Order',back:true,footer:false } },
-  waiter_tokens: { name:'waiter_tokens', path:'/tokens', component: () => import('pages/Waiter/Tokens'), meta:{ title:'Completed Tokens' } },
-  waiter_bills: { name:'waiter_bills', path:'/bills/pending', component: () => import('pages/Bill/PendingWaiter'), meta:{ title:'Pending Bills' } },
+  waiter_bills: { name:'waiter_bills', path:'/bills', component: () => import('pages/Bill/Waiter'), meta:{ title:'Bills' } },
   chef_index: { name:'chef_index', path:'/', component: () => import('pages/Chef/Index'), meta:{ title:'' } },
   chef_kitchens: { name:'chef_kitchens', path:'/kitchens', component: () => import('pages/Chef/ChefKitchens'), meta:{ title:'Kitchens' } },
   kitchen_items: { name:'kitchen_items', path:'/kitchen/:id/items', component: () => import('pages/Kitchen/KitchenItems'), props:true, meta:{ title:'Items',back:true,footer:false } },
   kitchen_stocks: { name:'kitchen_stocks', path:'/kitchen/:id/stocks', component: () => import('pages/Kitchen/KitchenStocks'), props:true, meta:{ title:'Stock',back:true,footer:false } },
   tokens: { name:'tokens', path:'/tokens', component: () => import('pages/Token/Tokens'), meta:{ title:'Tokens',footer:false } },
   receptionist_index: { name:'receptionist_index', path:'/', component: () => import('pages/Receptionist/Index'), meta:{ title:'' } },
-  receptionist_tokens: { name:'receptionist_tokens', path:'/tokens', component: () => import('pages/Receptionist/Tokens'), meta:{ title:'Completed Tokens' } },
-  bills: { name:'bills', path:'/bills/pending', component: () => import('pages/Bill/Pending'), meta:{ title:'Pending Bills' } },
+  receptionist_bills: { name:'bills', path:'/bills', component: () => import('pages/Bill/Receptionist'), meta:{ title:'Bills' } },
   seat_status: { name:'seat_status', path:'/seating/status', component: () => import('pages/Seating/SeatingStatus'), meta:{ title:'Seat Status' } },
   seat_status_order: { name:'seat_status_order', path:'/seating/status/order', component: () => import('pages/Order/CommonNew'), props: true, meta:{ title:'New Order' } },
   receptionist_orders: { name:'orders', path:'/orders', component: () => import('pages/Order/ReceptionistOrders'), meta:{ title:'Orders' } },
