@@ -69,3 +69,21 @@ By default, delivery_boy and receptionist can only manage customers. Manage mean
 If waiter too need to manage, then add setting of waiter_manage_customer to any of true,1,True,yes,Yes
 Similarly, delivery boy or receptionist don't need this option, then add and make delivery_boy_manage_customer/receptionist_manage_customer setting value to any of 0,false,False,no,No
 
+
+waiter_remote_orders, receptionist_remote_orders
+When a branch have the feature, Remote Kitchen & Remote Kitchen Client, enabled then that branch Receptionist can take orders and manage it. By default Receptionist can have options for these but not for Waiter.
+When this settings value made either of these
+0,false,False,no,No then the corresponding users can't have options of remote orders
+1,true,True,yes,Yes then the corresponding users can have options of remote orders
+
+
+waiter_generate_bills
+By default generating bills from completed tokens are can be done by receptionist and waiter. If the branch doesn't want the waiter to generate bills, then add a setting in this name having value either of these
+0,false,False,no,No
+If no settings in this name or the value is not any of above, then the waiter is able to generate bills from completed tokens
+
+
+waiter_make_payments
+By default making payments from bills are can be done by receptionist and waiter. If the branch doesn't want the waiter to be able to add payments, then add a setting in this name having value either of these
+0,false,False,no,No
+If no settings in this name or the value is not any of above, then the waiter is able to add payments from bills
