@@ -4,6 +4,7 @@ namespace Milestone\SmartKitchen\Models;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
+use Milestone\SmartKitchen\Jobs\TryMakingBillAsCancelled;
 use Milestone\SmartKitchen\Scopes\NotCancelledScope;
 
 class Bill extends Model
@@ -12,7 +13,10 @@ class Bill extends Model
 
     protected static function booted(){
         static::addGlobalScope(new NotCancelledScope);
-        static::creating(function ($Bill){ $Bill->progress_timing = [['progress' => 'Pending','time' => time(),'user' => $Bill->user ?? Auth::id(), 'auth' => Auth::id()]]; });
+        static::creating(function ($Bill){
+            $Bill->progress_timing = [['progress' => 'Pending','time' => time(),'user' => $Bill->user ?? Auth::id(), 'auth' => Auth::id()]];
+            Bill::where('token',$Bill->token)->where('progress','!=','Cancelled')->get()->each(function($bill){ TryMakingBillAsCancelled::dispatch($bill->id); });
+        });
         static::updating(function ($Bill){
             if($Bill->isDirty('progress')){
                 $timings = $Bill->progress_timing ?: [];
