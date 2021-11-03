@@ -7,7 +7,7 @@ $files = [
     ],
     'js' => [
         'vendor' => '859de9c2',
-        'app' => '561390ae',
+        'app' => '59d27ff2',
     ]
 ]
 @endphp
