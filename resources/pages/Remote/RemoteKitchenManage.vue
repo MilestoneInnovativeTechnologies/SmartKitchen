@@ -20,9 +20,8 @@
                 </q-item-label>
               </q-item-section>
               <q-item-section side class="text-center"><q-icon name="forward" color="primary" /></q-item-section>
-<!--              <q-item-section>&nbsp;</q-item-section>-->
-              <q-item-section :v-bind="{ top:local_records.hasOwnProperty(ref) }">
-                <template v-if="local_records.hasOwnProperty(ref)">
+              <q-item-section v-bind="{ top:kitchen_item_locally_exists(ref,item.id) }">
+                <template v-if="kitchen_item_locally_exists(ref,item.id)">
                   <q-item-label class="text-positive text-bold">{{ kitchen_item_name(ref,item.id) }}</q-item-label>
                   <q-item-label caption>
                     <div class="flex justify-between" v-for="(price,list,idx2) in kitchen_item_prices(ref,item.id)" :key="'rkm-rk-'+ref+'-ki-idx-'+idx+'-pr-'+idx2"><div>{{ list }}</div><div>{{ price }}</div></div>
@@ -30,7 +29,7 @@
                 </template>
                 <div v-else class="text-center"><q-btn label="Add" color="secondary" @click="manage = {ref,item}" /></div>
               </q-item-section>
-              <q-item-section side v-show="local_records.hasOwnProperty(ref)"><q-btn icon="edit" round dense flat color="primary" @click="manage = {ref,item}" /></q-item-section>
+              <q-item-section side v-show="kitchen_item_locally_exists(ref,item.id)"><q-btn icon="edit" round dense flat color="primary" @click="manage = {ref,item}" /></q-item-section>
             </q-item>
           </q-list>
         </q-card>
@@ -82,6 +81,7 @@ export default {
           itemsSnaps.forEach(snap => $vm.remote_records[snap.get('kitchen')].items.push({ ...(snap.data()),id:snap.id }))
         })
     },
+    kitchen_item_locally_exists(kitchen,item){ return _.has(this.local_records,[kitchen,'items',item]) },
     kitchen_item_details(kitchen){ return _(_.get(this.kitchen_items,kitchen)).map(({ id,item }) => Object.assign({},_.get(this.item_master,item),{ reference:_.get(this.kitchen_item_reference,id) },{ prices: _.mapKeys(_.get(this.prices,item),(r,pid) => _.get(this.price_master,[pid,'name'])) })).mapKeys('reference').value(); },
     kitchen_item_name(k_ref,i_ref){ return _.get(this.local_records,[k_ref,'items',i_ref,'name']) },
     kitchen_item_prices(k_ref,i_ref){ return _.get(this.local_records,[k_ref,'items',i_ref,'prices']) },
