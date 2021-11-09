@@ -50,6 +50,25 @@ The price list name should be exactly same as what in Price lists
 If there is a price list of name exactly same of any type or order, then this price list will be taken for that type of order. This have lesser priority than that of having in settings
 
 
+remote_<branch_code>_price_list, remote_<branch_code>, <branch_code>_price_list, <branch_code>
+This should be the name of a price list.
+If remote kitchen function is enabled and have a kitchen as cloud, the orders will be received & creates corresponding token and token items locally.
+For creating a token, price list is mandatory. If there is a setting in this name then while creating token, that price list will be considered.
+If there is no such settings, then remote_price_list value will have next priority. If that is also not available, then first active price list will be considered
+Each branch can have separate price list. Suppose a branch have branch code as CKD, then remote_ckd_price_list is considered first then remote_ckd then ckd_price_list then ckd.
+Similarly, branch code WISMA => remote_wisma_price_list or remote_wisma or wisma_price_list or wisma and so on.
+Settings name will be always small letters. ie, wisma_price_list is correct and WISMA_price_list is not correct.
+
+
+remote_<branch_code>_customer
+This should be the name of a customer.
+If remote kitchen function is enabled and have a kitchen as cloud, the orders will be received & creates corresponding token and token items locally.
+For creating a token, customer is required. If there is a setting in this name then while creating token, that customer will be considered.
+If this not exists, then search for the customer having branch_code as Customer name.
+If both fails, then a customer will be created with the name of branch_code and use this customer
+Setting name will be always small letter, while value can be any, but it must exactly same as what in customer.
+
+
 online_order_waiter_handle, online_order_receptionist_handle
 When the feature Online Menu is enabled and also enabled Online Menu Ordering, then that orders are normally arrive at Receptionist and Waiter.
 While setting this menu name to either of these
