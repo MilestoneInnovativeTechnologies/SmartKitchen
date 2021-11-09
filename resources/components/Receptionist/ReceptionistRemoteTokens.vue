@@ -16,13 +16,14 @@ import Tokens from "assets/mixins/Tokens";
 import {h_key} from "assets/helpers";
 import OrderSummaryReceptionistOrder from "components/Order/OrderSummaryReceptionistOrder";
 import Masonry from "components/Masonry";
+const { CC71V,DP71V,KK99V } = require('boot/subscription').FEATURES
 
 export default {
   name: "ReceptionistRemoteTokens",
   components: {Masonry, OrderSummaryReceptionistOrder},
   mixins: [Tokens],
   data(){ return {
-
+    remote_client: (CC71V === 'Yes' && _.trim(DP71V) !== '' && KK99V === 'Yes'),
   } },
   computed: {
     rTokens(){ return _(this.tokens_remote).filter(({ items }) => _.some(items,({ progress }) => progress === 'Completed')).value() }

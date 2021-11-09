@@ -25,7 +25,7 @@ const layout_child = {
     'day_token_summary','day_sale_summary','sales_by_type','sales_summary_by_type','sales_count_by_item','item_wise_sale_summary','kitchen_stock','bill_summary','payments','payments_by_type',
     'bill_summary_tax','bill_summary_tax_nature','tax_bill_detail','tax_details','bill_summary_customer','bill_summary_user_type','bill_by_user','delivery_boy_bills',
     'orders_by_waiter','orders_by_receptionist','orders_by_delivery_boy','user_orders', 'kitchen_processing','item_processing','chef_performance',
-    'data_import','menu_qr_codes','menu_sync_data'
+    'data_import','menu_qr_codes','menu_sync_data','remote_kitchen_manage'
   ],
   'Delivery Boy': ['delivery_boy_index','delivery_boy_orders','order_new','customers','delivery_boy_completed','delivery_boy_payments'],
   Menu: ['menu_index'],
@@ -112,6 +112,7 @@ const route_master = {
   menu_qr_codes: { name:'menu_qr_codes', path:'menu/qr_codes', component: () => import('pages/OnlineMenu/OnlineMenuQRCodes'), meta:{ title:'Online Menu QR Code Generator' } },
   menu_sync_data: { name:'menu_sync_data', path:'menu/sync/data', component: () => import('pages/OnlineMenu/OnlineMenuSyncData'), meta: { title:'Sync Data' } },
   orders_online: { name:'orders_online', path:'online/orders', component: () => import('pages/OnlineMenu/OnlineMenuOrders'), meta: { title:'Online Menu Orders' } },
+  remote_kitchen_manage: { name:'remote_kitchen_manage', path:'remote/kitchen/manage', component: () => import('pages/Remote/RemoteKitchenManage'), meta: { title:'Remote Kitchens' } },
 }
 
 const feature_routes = {

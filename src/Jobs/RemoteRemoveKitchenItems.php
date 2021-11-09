@@ -11,7 +11,7 @@ use Illuminate\Support\Arr;
 use Milestone\SmartKitchen\Models\KitchenItem;
 use Milestone\SmartKitchen\Models\Remote;
 
-class RemoteAddKitchenItems
+class RemoteRemoveKitchenItems
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -23,7 +23,7 @@ class RemoteAddKitchenItems
     }
 
     public function handle(){
-        $RemoteKitchenReference = Arr::get(Remote::where(['item' => 'kitchens', 'local_id' => $this->kitchen])->orderBy('id','desc')->first(),'reference');
+        $RemoteKitchenReference = Arr::get(Remote::where(['item' => 'kitchens', 'local_id' => $this->kitchen, 'location' => sk('branch_code')])->orderBy('id','desc')->first(),'reference');
         if(!$RemoteKitchenReference) return;
         $KitchenItems = KitchenItem::with('Item')->where('kitchen',$this->kitchen)->get();
         $Remotes = Remote::where('item','kitchen_items')->pluck('local_id')->toArray();
@@ -32,8 +32,7 @@ class RemoteAddKitchenItems
             return (in_array($id,$Remotes)) ? $id : false;
         })->each(function($kitchenItem){
             $where = ['item' => 'kitchen_items','local_id' => $kitchenItem];
-            if($this->location) $where['location'] = $this->location;
-            if($kitchenItem) Remote::updateOrCreate($where,['monitor' => 'Yes']);
+            if($kitchenItem) Remote::updateOrCreate($where,['monitor' => 'No']);
         });
     }
 }

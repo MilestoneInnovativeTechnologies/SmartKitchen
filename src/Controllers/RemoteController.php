@@ -8,6 +8,7 @@ use Milestone\SmartKitchen\Models\Item;
 use Milestone\SmartKitchen\Models\KitchenItem;
 use Milestone\SmartKitchen\Models\KitchenStatus;
 use Milestone\SmartKitchen\Models\Remote;
+use Milestone\SmartKitchen\Models\Token;
 
 class RemoteController extends Controller
 {
@@ -36,36 +37,42 @@ class RemoteController extends Controller
 
     public function kitchen_items(Request $request){
         $kitchen = Arr::get(Remote::where(['item' => 'kitchens', 'reference' => $request->kitchen])->first(),'local_id'); if(!$kitchen) return 'No Kitchen';
-        $item = Arr::get(Item::create(['name' => $request->item, 'detail' => $request->detail, 'status' => $request->status]),'id'); if(!$item) return 'No Item';
-        $kiData = array_merge($request->only(['stock','duration','auto_process','auto_complete']),compact('kitchen','item'));
-        $kitchen_item = KitchenItem::create($kiData); if(!$kitchen_item) return 'no ki';
-        $remote = Remote::updateOrCreate(['item' => 'kitchen_items','local_id' => $kitchen_item->id],['reference' => $request->reference, 'location' => $request->_location, 'monitor' => $request->_monitor ? 'Yes' : 'No']);
+        self::remove_kitchen_item_records($request->reference);
+        if($request->isNotFilled('id')){
+            $rPrices = $request->prices;
+            $Item = Item::create(['name' => $request->item, 'detail' => $request->detail, 'status' => $request->status]);
+            $Item->Price->each(function($price) use($rPrices){ $price->price = $rPrices[$price->price_list]; $price->save(); });
+            $item = $Item->id;
+        } else $item = $request->id;
+        $kitchen_item = KitchenItem::updateOrCreate(compact('kitchen','item'),$request->only(['stock','duration','auto_process','auto_complete'])); if(!$kitchen_item) return 'no ki';
+        $remote = $request->filled('reference') ? Remote::updateOrCreate(['item' => 'kitchen_items','local_id' => $kitchen_item->id],['reference' => $request->reference, 'location' => $request->_location, 'monitor' => $request->_monitor ? 'Yes' : 'No']) : null;
         return compact('kitchen_item','remote');
     }
 
     public function tokens(Request $request){
-        $items = $request->items;
-        if(empty($items)) return 'NO ITEMS';
-        foreach($items as $idx => $req){
-            $ki_ref = $req['kitchen_item_reference'];
-            $item = self::ki_ref_item($ki_ref);
-            if(!$item) unset($items[$idx]);
-            else $items[$idx]['item'] = $item;
+        if(!$request->token_reference) return Log::error('Requested to create token by remote controller without token reference');
+        usleep(rand(700,3000));
+        if(Remote::where(['item' => 'tokens','reference' => $request->token_reference])->exists()){
+            $token_id = Arr::get(Remote::where(['item' => 'tokens','reference' => $request->token_reference])->first(),'local_id');
+            $Token = Token::with('Items')->find($token_id);
+        } else {
+            $request->merge($request->token)->merge(['type' => 'Remote','customer' => $request->customer_id])->merge(['items' => [array_merge($request->item,['item' => $request->item_id])]]);
+            $Token = app()->call(TokenController::class . "@create"); $Token->load('Items');
+            Remote::updateOrCreate(['item' => 'tokens','location' => $request->_location, 'local_id' => $Token->id],['reference' => $request->token_reference]);
         }
-        $request->merge(['type' => 'Remote','price_list' => 1, 'items' => $items]);
-        $token_ref = $request->input('reference'); $location = $request->input('_location'); $extra = $request->input('extra',[]) ?: [];
-        if(Remote::where('reference',$token_ref)->exists()) return 'ALREADY EXISTS';
-        $token = app()->call(TokenController::class,[],'create');
-        $token_id = $token->id;
-        Remote::updateOrCreate(['item' => 'tokens','local_id' => $token_id],['reference' => $token_ref, 'location' => $location, 'monitor' => $request->_monitor ? 'Yes' : 'No', 'extra' => $extra]);
-        $token->items->each(function($TokenItem) use($items,$location){
-            foreach($items as $rTI){
-                if($TokenItem->item === $rTI['item'] && $TokenItem->quantity === $rTI['quantity'] && $TokenItem->narration === $rTI['narration'] && $TokenItem->deliver === $rTI['deliver']){
-                    Remote::updateOrCreate(['item' => 'token_items','local_id' => $TokenItem->id],['reference' => $rTI['reference'], 'location' => $location, 'monitor' => 'Yes', 'extra' => Arr::get($rTI,'extra')]);
-                }
-            }
+        $request_item = $request->item;
+        $token_item_id = null; $TokenItem = null;
+        $Token->Items->each(function($TokenItem) use($request_item,$request,&$token_item_id){
+            if($TokenItem->item !== $request->item_id || $TokenItem->quantity !== $request_item['quantity'] || $TokenItem->narration !== $request_item['narration'] || $TokenItem->deliver !== $request_item['deliver']) return true;
+            $token_item_id = $TokenItem->id; return false;
         });
-        return $token->fresh()->load('Items');
+        if(!$token_item_id){
+            $request->merge($request->item)->merge(['item' => $request->item_id,'token' => $Token->id]);
+            $TokenItem = app()->call(TokenController::class . "@item");
+            $token_item_id = $TokenItem->id;
+        }
+        Remote::updateOrCreate(['item' => 'token_items','location' => $request->item['_location'], 'local_id' => $token_item_id],['reference' => $request->item_reference]);
+        return ['token' => $Token, 'token_item' => $TokenItem];
     }
     public function token_items(Request $request){
         return $request->all();
@@ -75,6 +82,12 @@ class RemoteController extends Controller
         $remote = Remote::where(['item' => 'kitchen_items','reference' => $reference])->first();
         if(!$remote) return null; $ki_local_id = Arr::get($remote,'local_id');
         return Arr::get(KitchenItem::find($ki_local_id),'item',null);
+    }
+
+    static function remove_kitchen_item_records($ki_reference){
+        if(!$ki_reference) return;
+        KitchenItem::destroy(Remote::where(['item' => 'kitchen_items','reference' => $ki_reference])->pluck('local_id')->toArray());
+        Remote::where(['item' => 'kitchen_items','reference' => $ki_reference])->delete();
     }
 
     public function readReference(Request $request){

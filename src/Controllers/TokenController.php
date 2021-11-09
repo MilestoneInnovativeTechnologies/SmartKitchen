@@ -48,6 +48,7 @@ class TokenController extends Controller
         $kitchen = $request->input('kitchen');
         $user = $request->input('user',Auth::id());
         TokenItemController::Accept($tokenItem,$kitchen,$user);
+        return TokenItem::find($tokenItem);
     }
 
     public function reset(Request $request){
@@ -55,18 +56,21 @@ class TokenController extends Controller
         $kitchen = $request->input('kitchen');
         $user = $request->input('user',Auth::id());
         TokenItemController::Reset($tokenItem,$kitchen,$user);
+        return TokenItem::find($tokenItem);
     }
 
     public function process(Request $request){
         $tokenItem = $request->input('id');
         $user = $request->input('user',Auth::id());
         TokenItemController::Process($tokenItem,$user);
+        return TokenItem::find($tokenItem);
     }
 
     public function complete(Request $request){
         $tokenItem = $request->input('id');
         $user = $request->input('user',Auth::id());
         TokenItemController::Complete($tokenItem,$user);
+        return TokenItem::find($tokenItem);
     }
 
     public function served(Request $request){
@@ -80,6 +84,7 @@ class TokenController extends Controller
         $tokenItem = $request->input('id');
         $user = $request->input('user',Auth::id());
         TokenItemController::Cancel($tokenItem,$user);
+        return TokenItem::find($tokenItem);
     }
 
     public static function Items($token, $progress = null){
@@ -106,7 +111,7 @@ class TokenController extends Controller
 
     public function item(Request $request){
         if(!$request->has('user')) $request->merge(['user' => auth()->id()]);
-        $ti_data = $request->only(['item','quantity','delay','narration','user']);
+        $ti_data = $request->only(['item','quantity','delay','narration','user','deliver','photo']);
         if(array_key_exists('delay',$ti_data)){ $delay = intval($ti_data['delay']) * 60; $delay += time(); $ti_data['delay'] = $delay; }
         if($request->has('token')){
             $token_id = $request->input('token');

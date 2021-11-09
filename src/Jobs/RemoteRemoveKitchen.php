@@ -9,18 +9,19 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Milestone\SmartKitchen\Models\Remote;
 
-class RemoteDeleteKitchenItem
+class RemoteRemoveKitchen
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    private $ki;
+    private $id, $location;
 
-    public function __construct($ki){
-        $this->ki = $ki;
+    public function __construct($id,$location = null){
+        $this->id = $id;
+        $this->location = $location;
     }
 
     public function handle(){
-//        Remote::where(['local_id' => $this->ki, 'item' => 'kitchen_items'])->update(['monitor' => 'No']);
-        Remote::where(['local_id' => $this->ki, 'item' => 'kitchen_items'])->delete();
+        $where = ['item' => 'kitchens','local_id' => $this->id,'location' => sk('branch_code')];
+        Remote::updateOrCreate($where,['monitor' => 'No']);
     }
 }

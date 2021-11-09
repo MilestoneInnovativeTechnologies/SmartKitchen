@@ -13,7 +13,7 @@ export default function () {
       tokens: ['date','narration','progress'],
       token_items: ['quantity','narration','deliver','photo','kitchen','progress'],
     },
-    token_item_next_progress: { New:'accept', Accepted:'process', Processing:'complete' },
+    token_item_next_progress: { New:'accept', Accepted:'process', Processing:'complete', Completed:'served' },
     token_item_progress: ['New','Accepted','Processing','Completed','Served','Cancelled'],
     token_item_progress_action: { New:'reset',Accepted:'accept',Processing:'process',Completed:'complete',Served:'served' },
     syncRemoteEdits: ['token_items'],

@@ -25,7 +25,7 @@ export function kitchen_items(state,getters,rootState,rootGetters) {
 export function tokens(state,getters,rootState) {
   return function(id){ if(!id) return;
     let picks = state.picks.tokens, token = _.get(rootState,['tokens','data',parseInt(id)]);
-    if(!token || ['Billed','Cancelled'].includes(_.get(token,'progress'))) return false;
+    if(!token) return false;
     return Object.assign({},_.pick(token,picks),/*{ ['_id_' + _BRANCH]:token.id }*/);
   }
 }
@@ -35,7 +35,7 @@ export function token_items(state,getters,rootState,rootGetters) {
     let map = rootGetters["tokens/map"][id]; if(!map) return;
     let ti = rootState.tokens.items[map[0]][map[1]];
     if(!ti) return false; let picks = state.picks.token_items, token_item = _.pick(ti,picks), progress_timing = _.get(ti,'progress_timing');
-    if(state.token_item_progress.indexOf(ti.progress) > state.token_item_progress.indexOf('Completed')) return false;
+    //if(state.token_item_progress.indexOf(ti.progress) > state.token_item_progress.indexOf('Completed')) return false;
     let kitchen = _.get(_.find(state.data,({ item,local_id }) => item === 'kitchens' && parseInt(local_id) === parseInt(ti.kitchen)),'reference','');
     // let kitchen_item_reference = getters["token_item_kitchen_item_reference"][id];
     let { reference,location } = _.get(getters["token_item_kitchen_item_reference_location"],id);
@@ -84,6 +84,11 @@ export function token_item_token(state,getters,rootState,rootGetters){
   return function(token_item){
     return _.find(state.data,{ item:'tokens',local_id:rootGetters['tokens/map'][parseInt(token_item)][0] })
   }
+}
+
+export function item_id_of_kitchen_item(state,getters,rootState){
+  const ki_item = _(rootState.kitchens.items).flatMap().keyBy(({ id }) => _.toInteger(id)).mapValues(({ item }) => _.toInteger(item)).value()
+  return (local_id) => _.get(ki_item,local_id,null)
 }
 
 function ti_item(items,map){ return parseInt(_.get(items,[...map,'item'])) }

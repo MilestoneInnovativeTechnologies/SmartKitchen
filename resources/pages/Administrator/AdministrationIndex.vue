@@ -40,7 +40,12 @@
       <div class="row q-col-gutter-xs q-mt-xs">
         <AdministratorMenuItem :color="color[4]" :route="{ name:'menu_qr_codes' }" icon="qr_code" text="Label" />
         <AdministratorMenuItem :color="color[4]" :route="{ name:'menu_sync_data' }" icon="sync" text="Sync Data" v-if="JI36A" />
-
+      </div>
+    </template>
+    <template v-if="CC71V === 'Yes'">
+      <div class="col-12 text-bold q-mt-md">Remote Kitchen</div>
+      <div class="row q-col-gutter-xs q-mt-xs">
+        <AdministratorMenuItem :color="color[5]" :route="{ name:'remote_kitchen_manage' }" icon="account_tree" text="Kitchen & Items" />
       </div>
     </template>
   </q-page>
@@ -50,13 +55,13 @@
 import AdministratorDashboardMetricsMain from "components/Administrator/AdministratorDashboardMetricsMain";
 import Jumbotron from "components/Jumbotron";
 import AdministratorMenuItem from "components/Administrator/AdministratorMenuItem";
-const { GH56E,JI36A } = require('boot/subscription').FEATURES
+const { GH56E,JI36A,CC71V,DP71V } = require('boot/subscription').FEATURES
 export default {
   name: 'PageAdministratorIndex',
   components: {AdministratorMenuItem, Jumbotron, AdministratorDashboardMetricsMain},
   data(){ return {
-    color: ['accent','info','secondary','brown','deep-orange'],
-    GH56E,JI36A
+    color: ['accent','info','secondary','brown','deep-orange','teal-14'],
+    GH56E,JI36A,CC71V,DP71V
   } },
   created(){ this.$store.commit('public',{ mode:'administration' }) }
 }

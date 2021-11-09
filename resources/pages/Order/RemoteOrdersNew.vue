@@ -80,7 +80,7 @@ export default {
     edit: -1,
   } },
   computed: {
-    ...mapGetters({ remote_items:'kitchens/remote_items',natures:'tax/natures',price_items:'prices/items' }), ...mapState('items',{ items:'data' }),
+    ...mapGetters({ remote_items:'kitchens/cloud_items',natures:'tax/natures',price_items:'prices/items' }), ...mapState('items',{ items:'data' }),
     prices(){ return _.get(this.price_items,this.params.price_list) },
     total(){ let prices = this.prices; return _.reduce(this.params.items,function(sum,{ item,quantity }){ return (prices[parseInt(item)] * parseInt(quantity)) + sum },0) }
   },

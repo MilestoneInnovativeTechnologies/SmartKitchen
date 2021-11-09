@@ -20,7 +20,7 @@ export function map({ items }){
 
 export function live({ status }){ return _(status).filter(['status','Active']).map(({ kitchen }) => _.toInteger(kitchen)).value() }
 
-export function cloud({ data },getters,rState,rGetters){ return _.filter(data,({ cloud,id }) => cloud === 'Yes' && rGetters['remote/is']('kitchens',id)) }
+export function cloud({ data },getters,rState,rGetters){ return _.filter(data,({ cloud }) => cloud === 'Yes') }
 export function cloud_items({ items },{ cloud }){ return _(items).pick(_.map(cloud,'id')).flatMap().value() }
 export function remote({ data },getters,rState,rGetters){ return _.filter(data,kitchen => kitchen.cloud === 'Yes' && rGetters["remote/is"]('kitchens',kitchen.id)) }
 export function remote_items({ items },{ remote }){ return _(items).pick(_.map(remote,'id')).flatMap().value() }

@@ -115,7 +115,8 @@ class Subscribers
             \Milestone\SmartKitchen\Events\KitchenStatusUpdated::class => [],
 
             \Milestone\SmartKitchen\Events\KitchenSaved::class => [
-                CheckAndProcessRemoteKitchenAdd::class
+                CheckAndProcessRemoteKitchenAdd::class,
+                CheckAndProcessRemoteKitchenRemove::class
             ],
             \Milestone\SmartKitchen\Events\KitchenItemSaved::class => [
                 CheckAndProcessRemoteKitchenItemAdd::class

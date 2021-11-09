@@ -32,9 +32,9 @@ class RemoteAddTokenItems
             return (in_array($id,$Remotes)) ? false : $id;
         })->each(function($tokenItem){
             if(!$tokenItem) return;
-            $where = ['item' => 'token_items','local_id' => $tokenItem];
-            if($this->location) $where['location'] = $this->location;
-            Remote::updateOrCreate($where,['monitor' => 'Yes']);
+            $data = ['item' => 'token_items','local_id' => $tokenItem, 'monitor' => 'Yes'];
+            if($this->location) $data['location'] = $this->location;
+            Remote::create($data);
         });
     }
 }
