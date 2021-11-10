@@ -225,18 +225,24 @@ export function monitorOrders({ state,dispatch }){
     if(change.type !== 'added' || !!_.find(state.data,{ item:'token_items',reference:change.doc.id })) return;
     let doc = change.doc, reference = doc.id, data = cache[reference] = doc.data();
     if(_.has(cache,data.token)) dispatch('remoteAdd',{ token:_.get(cache,data.token),item:data,item_reference:reference })
-    else remote_doc('tokens',data.token).then(snap => dispatch('remoteAdd',{ token:snap.data(),item:data,item_reference:reference }))
+    else remote_doc('tokens',data.token).then(snap => dispatch('remoteAdd',{ token:(cache[data.token] = snap.data()),item:data,item_reference:reference }))
   })))
 }
+let remoteAddAdding = false;
 export function remoteAdd({ state,rootState,getters,dispatch },args){
+  if(remoteAddAdding) return setTimeout(dispatch,2000,'remoteAdd',args);
   let location = args.token._location, token_reference = args.item.token, kitchen_item_reference = args.item.kitchen_item_reference;
   let remote_customer_name = settings(_.snakeCase('Remote '+location+' Customer')) || _.get(_.find(rootState.customers.data,{ name:location,status:'Active' }),'name');
-  if(!remote_customer_name) return post('customer','create',{ name:location,address:'Automatically created while creating token for remote order from branch - ' + location }).then(r => dispatch('remoteAdd',args))
+  if(!remote_customer_name) return location ? post('customer','create',{ name:location,address:'Automatically created while creating token for remote order from branch - ' + location }).then(r => dispatch('remoteAdd',args)) : console.warn('NO LOCATION',args)
   let customer_id = _.get(_.find(rootState.customers.data,{ name:location,status:'Active' }),'id')
   let PL = settings('price_list','Remote ' + location) || settings('price_list',location) || _.find(rootState.prices.list,{ status:'Active' });
   let price_list = _.get(PL,'id',1)
   let item_id = getters['item_id_of_kitchen_item'](_.get(_.find(state.data,{ item:'kitchen_items',reference:kitchen_item_reference }),'local_id'))
-  post('remote','tokens',Object.assign({},args,{ token_reference,price_list,item_id,customer_id })).then(console.log)
+  if(item_id && customer_id && price_list) {
+    remoteAddAdding = true; let tmtOut = setTimeout(() => remoteAddAdding = false,10000)
+    post('remote','tokens',Object.assign({},args,{ token_reference,price_list,item_id,customer_id,location }))
+      .then(() => remoteAddAdding = clearTimeout(tmtOut) && false)
+  }
 }
 
 

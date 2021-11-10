@@ -54,6 +54,7 @@ function proper_query(arg){
   const proper = [];
   _.forEach(arg,function(obj){
     let operand = _.get(obj,'operand','==');
-    _.forEach(obj,(value,field) => (field && operand && value !== undefined) ? proper.push([field,operand,value]) : null)
+    _.forEach(obj,(value,field) => (field && operand && value !== undefined && field !== 'operand') ? proper.push([field,operand,value]) : null)
   })
+  return proper;
 }

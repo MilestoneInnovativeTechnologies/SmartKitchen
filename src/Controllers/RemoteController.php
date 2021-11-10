@@ -58,7 +58,7 @@ class RemoteController extends Controller
         } else {
             $request->merge($request->token)->merge(['type' => 'Remote','customer' => $request->customer_id])->merge(['items' => [array_merge($request->item,['item' => $request->item_id])]]);
             $Token = app()->call(TokenController::class . "@create"); $Token->load('Items');
-            Remote::updateOrCreate(['item' => 'tokens','location' => $request->_location, 'local_id' => $Token->id],['reference' => $request->token_reference]);
+            Remote::updateOrCreate(['item' => 'tokens','location' => $request->location, 'local_id' => $Token->id],['reference' => $request->token_reference]);
         }
         $request_item = $request->item;
         $token_item_id = null; $TokenItem = null;
@@ -71,7 +71,7 @@ class RemoteController extends Controller
             $TokenItem = app()->call(TokenController::class . "@item");
             $token_item_id = $TokenItem->id;
         }
-        Remote::updateOrCreate(['item' => 'token_items','location' => $request->item['_location'], 'local_id' => $token_item_id],['reference' => $request->item_reference]);
+        Remote::updateOrCreate(['item' => 'token_items','location' => $request->location, 'local_id' => $token_item_id],['reference' => $request->item_reference]);
         return ['token' => $Token, 'token_item' => $TokenItem];
     }
     public function token_items(Request $request){

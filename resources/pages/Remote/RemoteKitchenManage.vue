@@ -4,7 +4,8 @@
     <Jumbotron text="Remote Kitchen Reference is missing in subscription" class="text-center text-red" v-if="!reference" />
     <Jumbotron text="Remote kitchen client is not enabled" class="text-center text-red" v-if="!client" />
     <template v-if="remote && reference && client">
-      <div class="text-center" v-if="Object.keys(remote_records).length === 0"><q-btn label="Load from Server" color="primary" icon="file_download" @click="load_data"/></div>
+      <div class="text-center text-negative text-bold" v-if="no_data">No Data Available</div>
+      <div class="text-center" v-else-if="Object.keys(remote_records).length === 0"><q-btn label="Load from Server" color="primary" icon="file_download" @click="load_data" :loading="loading" /></div>
       <div v-else class="q-gutter-y-sm">
         <q-card v-for="(r_kitchen,ref) in remote_records" :key="ref">
           <q-card-section class="text-bold bg-secondary text-white flex justify-between items-center"><div><q-icon name="done_all" color="white" size="xs" v-show="local_records.hasOwnProperty(ref)" /> {{ r_kitchen.name }} (Auto Accept: {{ r_kitchen.auto_accept }})</div><div>{{ r_kitchen._location }}</div></q-card-section>
@@ -53,8 +54,9 @@ export default {
   components: {RemoteKitchenItemManage, Jumbotron},
   data(){ return {
     remote:CC71V === 'Yes',reference:_.trim(DP71V),client:KK99V === 'Yes',
+    no_data: false, loading: false,
     remote_records: {},
-    v_manage: null
+    v_manage: null,
   } },
   computed: {
     ...mapState({ remotes:state => state.remote.data, kitchen_master:state => state.kitchens.data, kitchen_items:state => state.kitchens.items, item_master:state => state.items.data, price_master:state => state.prices.list }),
@@ -73,10 +75,11 @@ export default {
   methods: {
     popup_width,
     load_data(){
-      let $vm = this;
+      let $vm = this; $vm.loading = true;
       Promise.all([remote_query('kitchens',[{ _monitor:true },{ _location:_BRANCH, operand: '!=' }],true),remote_query('kitchen_items',[{ _monitor:true },{ _location:_BRANCH, operand: '!=' }],true)])
         .then(function(snapsArray){
           let kitchensSnaps = snapsArray[0], itemsSnaps = snapsArray[1];
+          $vm.loading = false; if(kitchensSnaps.size === 0) return $vm.no_data = true;
           kitchensSnaps.forEach(snap => $vm.$set($vm.remote_records,snap.id,{ ...(snap.data()),id:snap.id,items:[] }))
           itemsSnaps.forEach(snap => $vm.remote_records[snap.get('kitchen')].items.push({ ...(snap.data()),id:snap.id }))
         })

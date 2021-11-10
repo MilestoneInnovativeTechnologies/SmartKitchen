@@ -123,7 +123,7 @@ class TokenController extends Controller
             $token_item->save();
             TokenItemsSaved::dispatch(Token::find($token_id)->Items,$request->input('user'),$token_id);
             TokenItemAdded::dispatch($token_item->fresh(),$request->input('user'),$ti_data);
-            return TokenItem::where(['token' => $token_id, 'item' => $ti_data['item'], 'progress' => 'New'])->first();
+            return $token_item->fresh();
         }
         elseif($request->has('id')){
             $id = $request->input('id');
@@ -131,7 +131,7 @@ class TokenController extends Controller
             TokenItemUpdating::dispatch($id,$ti_data,$old);
             $token_item->update($ti_data);
             TokenItemUpdated::dispatch($id,$ti_data,$old);
-            return $token_item;
+            return $token_item->fresh();
         }
         return [];
     }

@@ -1,9 +1,9 @@
-export function assign({ status }){
+export function assign({ status },getters,rState,rGetters){
   let user_kitchens = {};
   _.forEach(status,({ users },kitchen) => _.forEach(users,user => {
     user = _.toInteger(user); kitchen = _.toInteger(kitchen);
     if(!_.has(user_kitchens,user)) user_kitchens[user] = [];
-    user_kitchens[user].push(kitchen);
+    if(!rGetters['remote/is']('kitchens',kitchen)) user_kitchens[user].push(kitchen);
   }))
   return user_kitchens;
 }
