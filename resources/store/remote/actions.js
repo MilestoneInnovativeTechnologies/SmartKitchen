@@ -16,8 +16,8 @@ export function init ({ commit,dispatch }) {
   // }
 }
 
-export function uploadFirebaseRecord({ commit,dispatch },{ item,record,id }){ remote_add(item,record).then(ref => dispatch('addReference',{ id,reference:ref.id }).then(() => { commit('process',false); cache[ref.id] = record })) }
-export function updateFirebaseRecord({ commit,dispatch },{ item,record,reference }){ remote_update(item,reference,record).then(() => cache[reference] = record) }
+export function uploadFirebaseRecord({ commit,dispatch },{ item,record,id }){ return new Promise(resolve => remote_add(item,record).then(ref => dispatch('addReference',{ id,reference:ref.id }).then(() => resolve(cache[ref.id] = record)))) }
+export function updateFirebaseRecord({ commit,dispatch },{ item,record,reference }){ return new Promise(resolve => remote_update(item,reference,record).then(() => resolve(cache[reference] = record))) }
 
 const syncingKitchens = [];
 export function uploadKitchen({ state,dispatch,commit,getters },data){
@@ -27,7 +27,7 @@ export function uploadKitchen({ state,dispatch,commit,getters },data){
   if(store_data && (store_data.reference || store_data.location !== _BRANCH)) return commit('process',false);
   let record = getters[item](data.local_id); if(!record) return commit('process',false);
   record._location = _BRANCH; record._monitor = true;
-  dispatch('uploadFirebaseRecord',{ item,record,id:data.id });
+  dispatch('uploadFirebaseRecord',{ item,record,id:data.id }).then(() => commit('process',false));
 }
 export function monitorKitchen({ state,commit,rootState,dispatch,getters },id){
   let remote_record = _.get(state.data,id); if(!remote_record || remote_record.monitor !== 'Yes' || syncingKitchens.includes(remote_record.local_id)) return;
@@ -77,7 +77,7 @@ export function uploadKitchenItem({ state,dispatch,commit,getters },data){
   if(store_data && (store_data.reference || store_data.location !== _BRANCH)) return commit('process',false);
   let record = getters[item](data.local_id); if(!record) return commit('process',false);
   record._location = _BRANCH; record._monitor = true;
-  dispatch('uploadFirebaseRecord',{ item,record,id:data.id });
+  dispatch('uploadFirebaseRecord',{ item,record,id:data.id }).then(() => commit('process',false));
 }
 export function monitorKitchenItem({ state,commit,rootState,dispatch,getters,rootGetters },id){
   let remote_record = _.get(state.data,id); if(!remote_record || remote_record.monitor !== 'Yes' || syncingKitchenItems.includes(remote_record.local_id)) return;
@@ -86,7 +86,11 @@ export function monitorKitchenItem({ state,commit,rootState,dispatch,getters,roo
     let map = rootGetters["kitchens/map"][kitchen_item_id], kitchen_id = map[0], idx = map[1], item_id = _.get(rootState.kitchens.items,[kitchen_id,idx,'item']);
     let watchFn = rootState => Object.assign({},rootState.kitchens.items[kitchen_id][idx],rootState.items.data[item_id])
     let listener = function(kitchen_item){
-      if(!kitchen_item) return dispatch('deleteRemoteEntry', { id });
+      if(!kitchen_item) {
+        dispatch('deleteRemoteEntry', { id });
+        dispatch('updateFirebaseRecord',{ item:'kitchen_items',reference,record:{ _monitor:false } });
+        return
+      }
       const kitchen_item_data = getters['kitchen_items'](kitchen_item_id);
       if(cache[reference] && is_same(kitchen_item_data,cache[reference])) return;
       dispatch('updateFirebaseRecord',{ item:'kitchen_items',reference,record:kitchen_item_data });
@@ -128,7 +132,7 @@ export function uploadToken({ state,dispatch,commit,getters },data){
   if(store_data && (store_data.reference || store_data.location !== _BRANCH)) return commit('process',false);
   let record = getters[item](data.local_id); if(!record) return commit('process',false);
   record._location = _BRANCH; record._monitor = true;
-  dispatch('uploadFirebaseRecord',{ item,record,id:data.id });
+  dispatch('uploadFirebaseRecord',{ item,record,id:data.id }).then(() => commit('process',false));
 }
 export function monitorToken({ state,commit,rootState,dispatch,getters,rootGetters },id){
   let remote_record = _.get(state.data,id); if(!remote_record || remote_record.monitor !== 'Yes' || syncingTokens.includes(remote_record.local_id)) return;
@@ -162,23 +166,22 @@ export function uploadTokenItem({ state,dispatch,commit,getters },data){
   commit('process'); const item = 'token_items';
   let store_data = _.find(state.data,(rmt) => rmt.item === item && parseInt(rmt.local_id) === parseInt(data.local_id));
   if(store_data && (store_data.reference || store_data.location !== _BRANCH)) return commit('process',false);
-  let record = getters[item](data.local_id); if(!record) return commit('process',false);
+  let record = getters[item](store_data.local_id); if(!record) return commit('process',false);
   record._location = _BRANCH; record._monitor = true;
-  dispatch('uploadFirebaseRecord',{ item,record,id:data.id });
+  dispatch('uploadFirebaseRecord',{ item,record,id:data.id }).then(() => commit('process',false));
 }
 export function monitorTokenItem({ state,commit,rootState,dispatch,getters,rootGetters },id){
   let remote_record = _.get(state.data,id); if(!remote_record || remote_record.monitor !== 'Yes' || syncingTokenItems.includes(remote_record.local_id)) return;
-  let reference = remote_record.reference;//, location = remote_record.location;
+  let reference = remote_record.reference, location = remote_record.location;
   let map = rootGetters["tokens/map"][remote_record.local_id], token_id = map[0], idx = map[1], token_item = rootState.tokens.items[token_id][idx], token_item_id = token_item.id;
   let progresses = state.token_item_progress;
-  let kitchen_id = token_item.kitchen ? _.get(_.find(state.data,{ item:'tokens',local_id:token_id }),'local_id') : '';
   let watchFn = rootState => rootState.tokens.items[token_id][idx]
   let listener = function(token_item_data){
     if(!token_item_data) return dispatch('deleteRemoteEntry', { id });
     const store_data = getters['token_items'](token_item_data.id);
     if(!store_data || ['Served','Cancelled'].includes(store_data.progress)) {
       dispatch('deleteRemoteEntry', { id });
-      dispatch('updateFirebaseRecord',{ item:'token_items',reference,record:Object.assign({},store_data,{ _monitor:false }) });
+      if(location === _BRANCH) dispatch('updateFirebaseRecord',{ item:'token_items',reference,record:Object.assign({},store_data,{ _monitor:false }) });
       return ;
     }
     if(cache[reference] && is_same(store_data,cache[reference])) return;
@@ -193,9 +196,9 @@ export function monitorTokenItem({ state,commit,rootState,dispatch,getters,rootG
     let unsub = onSnapshot(ref,function(snap){
       if(!snap.exists()) return dispatch('deleteRemoteEntry',{ id });
       let cache_data = cache[reference] = snap.data(), store_data = getters['token_items'](token_item_id)
+      let kitchen_id = _.get(_.find(state.data,{ item:'kitchens',reference:cache_data.kitchen }),'local_id')
       if(['Served','Cancelled'].includes(cache_data.progress) && cache_data._location !== _BRANCH){
         if(store_data) {
-          if(!kitchen_id) kitchen_id = _.get(_.find(state.data,{ item:'kitchens',reference:cache_data.kitchen }),'local_id')
           increment_token_progress(state.token_item_next_progress,token_item_id,kitchen_id,cache_data.progress,store_data.progress)
         }
         dispatch('deleteRemoteEntry',{ id });
@@ -203,7 +206,6 @@ export function monitorTokenItem({ state,commit,rootState,dispatch,getters,rootG
       }
       if(store_data){
         if(progresses.indexOf(cache_data.progress) > progresses.indexOf(store_data.progress)) {
-          if(!kitchen_id) kitchen_id = _.get(_.find(state.data,{ item:'kitchens',reference:cache_data.kitchen }),'local_id')
           increment_token_progress(state.token_item_next_progress,token_item_id,kitchen_id,cache_data.progress,store_data.progress);
         }
       } else dispatch('deleteRemoteEntry',{ id });
@@ -231,9 +233,9 @@ export function monitorOrders({ state,dispatch }){
 let remoteAddAdding = false;
 export function remoteAdd({ state,rootState,getters,dispatch },args){
   if(remoteAddAdding) return setTimeout(dispatch,2000,'remoteAdd',args);
-  let location = args.token._location, token_reference = args.item.token, kitchen_item_reference = args.item.kitchen_item_reference;
+  let location = _.get(args,['token','_location'],_.get(args,['item','_location'])), token_reference = args.item.token, kitchen_item_reference = args.item.kitchen_item_reference;
   let remote_customer_name = settings(_.snakeCase('Remote '+location+' Customer')) || _.get(_.find(rootState.customers.data,{ name:location,status:'Active' }),'name');
-  if(!remote_customer_name) return location ? post('customer','create',{ name:location,address:'Automatically created while creating token for remote order from branch - ' + location }).then(r => dispatch('remoteAdd',args)) : console.warn('NO LOCATION',args)
+  if(!remote_customer_name) return location ? post('customer','create',{ name:location,address:'Automatically created while creating token for remote order from branch - ' + location }).then(r => dispatch('remoteAdd',args)) : console.error('NO LOCATION',args)
   let customer_id = _.get(_.find(rootState.customers.data,{ name:location,status:'Active' }),'id')
   let PL = settings('price_list','Remote ' + location) || settings('price_list',location) || _.find(rootState.prices.list,{ status:'Active' });
   let price_list = _.get(PL,'id',1)
@@ -287,10 +289,11 @@ export function deleteRemoteEntry({ state,commit,dispatch },payload){
     if (!rEntry || !_.has(state.monitoring, rEntry.reference) || deleted.includes(rEntry.id)) return commit('process',false);
     deleted.push(id);
     post('remote', 'remove',{ id }).then(function ({ id }) {
-      commit('remove', id); let update = { _monitor:false }; if(rEntry.item === 'tokens') update['progress'] = 'Completed'
-      remote_update(rEntry.item, rEntry.reference, update).then(() => commit('process',false))
+      commit('remove', id);
+      // let update = { _monitor:false }; if(rEntry.item === 'tokens') update['progress'] = 'Completed'
+      // remote_update(rEntry.item, rEntry.reference, update).then(() => commit('process',false))
       // remote(rEntry.item, rEntry.reference).then(ref => ref.update(update).then(() => commit('process',false)))
-    })
+    }).catch().then(() => commit('process',false))
   } else setTimeout(dispatch,state.pending * 1000,'deleteRemoteEntry',payload);
 }
 
