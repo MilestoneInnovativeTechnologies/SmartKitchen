@@ -21,7 +21,7 @@ export default {
     items(){ let bill_tokens = _.map(this.date_bills,'token.id'); return _(this.tokens).filter(({ id }) => bill_tokens.includes(id)).flatMap(({ items,type,customer,date }) => _.map(items,ti => ti.item.id === this.item.id ? Object.assign({},ti, { type,customer,date }) : null)).filter().value() },
     table(){ return _(this.items).sortBy(({ date }) => extract_date(date).getTime()).map(ti => _.zipObject(['Date','Token','Type','Customer','Quantity','Amount'],[to_format('DD/MMM hh:mm a',ti.date),ti.token,ti.type,_.get(ti,['customer','name'],''),ti.quantity,this.amount(ti.token)])).value() },
     type_summary(){ return _(this.table).groupBy('Type').mapValues(tis => `(${_.sumBy(tis,'Quantity')}), ${precision(_.sumBy(tis,({ Amount }) => _.toNumber(Amount)),2)}`).value() },
-    foot(){ return Object.assign({},this.type_summary,{ Total: `(${_.sumBy(this.table,'Quantity')}), ${precision(_.sumBy(this.table,({ Amount }) => _.toNumber(Amount)),2)}`}) }
+    foot(){ return Object.assign({},this.type_summary,{ 'Total Quantities': _.sumBy(this.table,'Quantity'), Total: `${precision(_.sumBy(this.table,({ Amount }) => _.toNumber(Amount)),2)}`}) }
   },
   methods: {
     amount(token_id){
