@@ -1,5 +1,6 @@
 <template>
   <q-page padding class="q-gutter-y-md">
+    <FilterInputText label="Filter for orders" @text="filter = $event" />
     <div v-show="delivery_today_pending.length">
       <div class="text-h6 q-px-xs text-subtitle1">Today Deliverable Orders</div>
       <RemoteTokensList name="dpo" :tokens="delivery_today_pending" :customers="customers" :items="items" :kitchens="kitchens" :bills="token_bills" />
@@ -26,19 +27,22 @@
 
 <script>
 import {mapGetters, mapState} from "vuex";
-import {is_today, is_past_day, is_tomorrow, is_future_day, extract_date} from "assets/helpers";
+import {is_today, is_past_day, is_tomorrow, is_future_day, extract_date, matches} from "assets/helpers";
 import RemoteTokensList from "components/Order/RemoteTokensList";
+import FilterInputText from "components/FilterInputText";
 
 export default {
   name: 'PageRemoteOrders',
-  components: {RemoteTokensList},
+  components: {FilterInputText, RemoteTokensList},
   data(){ return {
     fab: true, offset: [24,24],
+    filter: '',
   } },
   computed: {
     ...mapState({ customers:state => state.customers.data,items:state => state.items.data,kitchens:state => state.kitchens.data }),
     ...mapState({ token_bills:state => _(state.bills.data).filter(({ progress }) => progress !== 'Cancelled').keyBy(({ token }) => _.toInteger(token)).value() }),
-    ...mapGetters({ orders:'tokens/remote',progresses:'bills/token_progresses' }),
+    ...mapGetters({ remote_orders:'tokens/remote',progresses:'bills/token_progresses' }),
+    orders(){ return this.filter ? _.filter(this.remote_orders,this.do_filter) : this.remote_orders },
     delivery_today_pending(){ return _.filter(this.orders,({ items,id }) => _.some(items,({ deliver }) => is_today(deliver)) && (!this.is_paid(id) || have_non_served(items))) },
     delivery_past_pending(){ return _.filter(this.orders,({ items,id }) => _.some(items,({ deliver,progress }) => is_past_day(deliver,8)) && (!this.is_paid(id) || have_non_served(items))) },
     delivery_tomorrow(){ return _.filter(this.orders,({ items,id }) => _.some(items,({ deliver,progress }) => is_tomorrow(deliver)) && (!this.is_paid(id) || have_non_served(items))) },
@@ -46,7 +50,8 @@ export default {
   },
   methods: {
     move(ev){ this.offset = [this.offset[0] - ev.delta.x, this.offset[1] - ev.delta.y] },
-    is_paid(id){ return _.get(this.progresses,id) === 'Paid' }
+    is_paid(id){ return _.get(this.progresses,id) === 'Paid' },
+    do_filter({ customer,items }){ return matches(_.get(this.customers,customer),['name'],this.filter) || _.some(items,({ item }) => matches(_.get(this.items,item),['name'],this.filter)) }
   }
 }
 
