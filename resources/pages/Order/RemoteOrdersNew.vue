@@ -131,6 +131,7 @@ export default {
   },
   watch: {
     'params.price_list': function(id){ let s_name = _.snakeCase(this.params.type+' Price List'); if(this.$store.state.public[s_name] !== parseInt(id)) this.$store.commit('public',{ [s_name]:parseInt(id) }) },
+    deliver(date){ if(date) _.forEach(this.params.items,(item,idx) => this.$set(this.params.items[idx],'deliver',date)) }
   }
 }
 </script>
