@@ -25,7 +25,8 @@ const layout_child = {
     'day_token_summary','day_sale_summary','sales_by_type','sales_summary_by_type','sales_count_by_item','item_wise_sale_summary','kitchen_stock','bill_summary','payments','payments_by_type',
     'bill_summary_tax','bill_summary_tax_nature','tax_bill_detail','tax_details','bill_summary_customer','bill_summary_user_type','bill_by_user','delivery_boy_bills',
     'orders_by_waiter','orders_by_receptionist','orders_by_delivery_boy','user_orders', 'kitchen_processing','item_processing','chef_performance',
-    'data_import','menu_qr_codes','menu_sync_data','remote_kitchen_manage'
+    'data_import','menu_qr_codes','menu_sync_data','remote_kitchen_manage',
+    'remote_orders_by_customer','remote_order_summary_by_customer','day_wise_remote_order_summary','day_wise_remote_order_delivery','remote_order_by_item','remote_order_summary_by_item'
   ],
   'Delivery Boy': ['delivery_boy_index','delivery_boy_orders','order_new','customers','delivery_boy_completed','delivery_boy_payments'],
   Menu: ['menu_index'],
@@ -113,6 +114,12 @@ const route_master = {
   menu_sync_data: { name:'menu_sync_data', path:'menu/sync/data', component: () => import('pages/OnlineMenu/OnlineMenuSyncData'), meta: { title:'Sync Data' } },
   orders_online: { name:'orders_online', path:'online/orders', component: () => import('pages/OnlineMenu/OnlineMenuOrders'), meta: { title:'Online Menu Orders' } },
   remote_kitchen_manage: { name:'remote_kitchen_manage', path:'remote/kitchen/manage', component: () => import('pages/Remote/RemoteKitchenManage'), meta: { title:'Remote Kitchens' } },
+  remote_orders_by_customer: { name:'remote_orders_by_customer', path:'/report/ro/customer', component: () => import('pages/Report/Reports/ReportRemoteOrdersByCustomer'), meta:{ title:'Remote Orders by Customer',controls:['range'] } },
+  remote_order_summary_by_customer: { name:'remote_order_summary_by_customer', path:'/report/ro/customer/summary', component: () => import('pages/Report/Reports/ReportRemoteOrderSummaryByCustomer'), meta:{ title:'Remote Order Summary by Customer',controls:['customer','range'] } },
+  day_wise_remote_order_summary: { name:'day_wise_remote_order_summary', path:'/report/day/ro/summary', component: () => import('pages/Report/Reports/ReportDayWiseRemoteOrderSummary'), meta:{ title:'Day Wise Remote Order Summary',controls:['date'] } },
+  day_wise_remote_order_delivery: { name:'day_wise_remote_order_delivery', path:'/report/day/ro/delivery/summary', component: () => import('pages/Report/Reports/ReportDayWiseRemoteOrderDelivery'), meta:{ title:'Day Wise Remote Order Delivery',controls:['date'] } },
+  remote_order_by_item: { name:'remote_order_by_item', path:'/report/ro/item', component: () => import('pages/Report/Reports/ReportRemoteOrdersByItem'), meta:{ title:'Remote Order by Item',controls:['range'] } },
+  remote_order_summary_by_item: { name:'remote_order_summary_by_item', path:'/report/ro/item/summary', component: () => import('pages/Report/Reports/ReportRemoteOrdersSummaryByItem'), meta:{ title:'Remote Order Summary by Item',controls:['cloud_item','range'] } },
 }
 
 const feature_routes = {

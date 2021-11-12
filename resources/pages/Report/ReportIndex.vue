@@ -25,6 +25,7 @@ export default {
       Token: [0,14,19,20,15],
       Sales: [1,2,3,4,5],
       Bill: [7,8,9,10,21,22,23,24],
+      Remote: [25,26,27,28,29,30],
       Tax: [8,9,10,13],
       Kitchen: [6,16],
       Stock: [6],
@@ -61,6 +62,12 @@ export default {
       ['Bill Summary - User Type', 'bill_summary_user_type'],//22
       ['Bill by User', 'bill_by_user'],//23
       ['Delivery Boy Bills', 'delivery_boy_bills'],//24
+      ['Remote Orders by Customer', 'remote_orders_by_customer'],//25
+      ['Remote Order Summary by Customer', 'remote_order_summary_by_customer'],//26
+      ['Day Wise Remote Order Summary', 'day_wise_remote_order_summary'],//27
+      ['Day Wise Remote Order Delivery', 'day_wise_remote_order_delivery'],//28
+      ['Remote Order by Item', 'remote_order_by_item'],//29
+      ['Remote Order Summary by Item', 'remote_order_summary_by_item'],//30
     ]
   } },
   methods: {
