@@ -90,10 +90,10 @@ class RemoteController extends Controller
         Remote::where(['item' => 'kitchen_items','reference' => $ki_reference])->delete();
     }
 
-    public function readReference(Request $request){
+    public function offlineReference(Request $request){
         if($request->filled(['id','reference'])){
             $remote = Remote::find($request->input('id'));
-            $remote->extra = array_merge($remote->extra ?: [], ['r_ref' => $request->input('reference')]);
+            $remote->extra = array_merge($remote->extra ?: [], ['offline_reference' => $request->input('reference')]);
             $remote->save();
             if($request->input('kitchen')) TokenItemController::Accept($remote->local_id,$request->input('kitchen'),auth()->id());
             return $remote;
