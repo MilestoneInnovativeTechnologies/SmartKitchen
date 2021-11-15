@@ -62,7 +62,7 @@ export function is(state){
 
 export function token_branch({ data }){ return _(data).filter(['item','tokens']).mapKeys(({ local_id }) => _.toInteger(local_id)).mapValues('location').value() }
 
-export function read_reference(state,getters,rootState,rootGetters){
+export function offline_reference(state,getters,rootState,rootGetters){
   return function(id,extra){ id = parseInt(id); extra = extra || {};
     let map = rootGetters['tokens/map'][id]; if(!id || !map || !map[0]) return {};
     let ti = _.find(state.data,{ item:'token_items',local_id:parseInt(id) }), tk = _.find(state.data,{ item:'tokens',local_id:parseInt(map[0]) });

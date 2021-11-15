@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getFirestore, doc, getDoc, collection, getDocs, query, where, updateDoc, addDoc } from "firebase/firestore";
+import { getFirestore, doc, getDoc, collection, getDocs, query, where, updateDoc, addDoc, disableNetwork, enableNetwork } from "firebase/firestore";
 import { getStorage,ref,getDownloadURL,deleteObject,uploadBytesResumable } from "firebase/storage";
 
 
@@ -18,6 +18,8 @@ export function storage_name(fullPath){ return (fullPath || '').replace(((DP71V 
 export function remote(item,prop){
   if(CC71V !== 'Yes' || DP71V.trim() === '') return Promise.reject('Remote Kitchen not enabled or no remote reference provided...');
   if(!FDB) FDB = getFirestore(firebaseApp); const reference = DP71V.trim();
+  if(!global.enNet) global.enNet = function(){ enableNetwork(FDB) }
+  if(!global.disNet) global.disNet = function(){ disableNetwork(FDB) }
   return new Promise(async function (resolve,reject){
     company_defined = (company_defined === null) ? await new Promise(function(resolve){ getDoc(doc(FDB,'companies',reference)).then(snap => resolve(snap.get('name') && snap.get('name') === _COMPANY)) }) : company_defined;
     if(!company_defined) return reject('Company not defined!!');
@@ -58,3 +60,4 @@ function proper_query(arg){
   })
   return proper;
 }
+

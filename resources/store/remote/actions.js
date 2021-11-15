@@ -1,4 +1,4 @@
-const { CC71V,DP71V,JX99V,KK99V } = require('boot/subscription').FEATURES
+const { CC71V,DP71V,JX99V,KK99V,SK85W } = require('boot/subscription').FEATURES
 import { onSnapshot, remote_add, remote_doc, remote_query, remote_ref, remote_update, setDoc } from "assets/modules/Remote";
 
 const cache = {},deleted = [];
@@ -153,6 +153,16 @@ export function monitorToken({ state,commit,rootState,dispatch,getters,rootGette
     let unwatch = this.watch(watchFn,listener,{ deep:true })
     commit('monitor',{ reference,unwatch }); syncingTokens.push(token_id);
     listener(watchFn(rootState))
+  } else {
+    remote_ref('tokens',reference).then(function(ref){
+      let unsub = onSnapshot(ref,function(snap){
+        if(!snap.exists()) return dispatch('deleteRemoteEntry',{ id });
+        let reference = snap.id, fb_data = cache[reference] = snap.data(), store_data = _.find(state.data,{ item:'tokens',reference });
+        if(!store_data) return dispatch('deleteRemoteEntry',{ id });
+        if(!fb_data._monitor || !fb_data.progress || ['Completed','Billed','Cancelled'].includes(_.get(fb_data,'progress'))) return dispatch('deleteRemoteEntry',{ id:store_data.id });
+      })
+      commit('monitor',{ reference,unsub }); syncingTokens.push(token_id)
+    })
   }
 }
 
@@ -165,9 +175,12 @@ export function uploadTokenItem({ state,dispatch,commit,getters },data){
   if(state.processing) return setTimeout(dispatch,state.pending * 1000,'uploadTokenItem',data);
   commit('process'); const item = 'token_items';
   let store_data = _.find(state.data,(rmt) => rmt.item === item && parseInt(rmt.local_id) === parseInt(data.local_id));
-  if(store_data && (store_data.reference || store_data.location !== _BRANCH)) return commit('process',false);
+  if(store_data && (store_data.reference || store_data.location !== _BRANCH)) {
+    if(!store_data.reference && store_data.location !== _BRANCH && !!_.get(store_data,['extra','offline_reference'],null)) dispatch('handleOfflineReference',store_data.id)
+    return commit('process',false);
+  }
   let record = getters[item](store_data.local_id); if(!record) return commit('process',false);
-  record._location = _BRANCH; record._monitor = true;
+  record = Object.assign({},record,{ _location:_BRANCH,_monitor:true,offline_reference:null });
   dispatch('uploadFirebaseRecord',{ item,record,id:data.id }).then(() => commit('process',false));
 }
 export function monitorTokenItem({ state,commit,rootState,dispatch,getters,rootGetters },id){
@@ -175,7 +188,7 @@ export function monitorTokenItem({ state,commit,rootState,dispatch,getters,rootG
   let reference = remote_record.reference, location = remote_record.location;
   let map = rootGetters["tokens/map"][remote_record.local_id], token_id = map[0], idx = map[1], token_item = rootState.tokens.items[token_id][idx], token_item_id = token_item.id;
   let progresses = state.token_item_progress;
-  let watchFn = rootState => rootState.tokens.items[token_id][idx]
+  let watchFn = rootState => Object.assign({},rootState.tokens.items[token_id][idx],_.get(state.data,[id,'extra'],null))
   let listener = function(token_item_data){
     if(!token_item_data) return dispatch('deleteRemoteEntry', { id });
     const store_data = getters['token_items'](token_item_data.id);
@@ -184,9 +197,10 @@ export function monitorTokenItem({ state,commit,rootState,dispatch,getters,rootG
       if(location === _BRANCH) dispatch('updateFirebaseRecord',{ item:'token_items',reference,record:Object.assign({},store_data,{ _monitor:false }) });
       return ;
     }
-    if(cache[reference] && is_same(store_data,cache[reference])) return;
-    if(cache[reference] && progresses.indexOf(cache[reference].progress) > progresses.indexOf(store_data.progress)) return;
-    dispatch('updateFirebaseRecord',{ item:'token_items',reference,record:store_data });
+    const update_data = Object.assign({},store_data,_.pick(token_item_data,'offline_reference'))
+    if(cache[reference] && is_same(update_data,cache[reference])) return;
+    if(cache[reference] && progresses.indexOf(cache[reference].progress) > progresses.indexOf(update_data.progress)) return;
+    dispatch('updateFirebaseRecord',{ item:'token_items',reference,record:update_data });
   }
   let unwatch = this.watch(watchFn,listener,{ deep:true })
   commit('monitor',{ reference,unwatch }); syncingTokens.push(token_id);
@@ -198,9 +212,7 @@ export function monitorTokenItem({ state,commit,rootState,dispatch,getters,rootG
       let cache_data = cache[reference] = snap.data(), store_data = getters['token_items'](token_item_id)
       let kitchen_id = _.get(_.find(state.data,{ item:'kitchens',reference:cache_data.kitchen }),'local_id')
       if(['Served','Cancelled'].includes(cache_data.progress) && cache_data._location !== _BRANCH){
-        if(store_data) {
-          increment_token_progress(state.token_item_next_progress,token_item_id,kitchen_id,cache_data.progress,store_data.progress)
-        }
+        if(store_data) increment_token_progress(state.token_item_next_progress,token_item_id,kitchen_id,cache_data.progress,store_data.progress)
         dispatch('deleteRemoteEntry',{ id });
         return;
       }
@@ -209,9 +221,21 @@ export function monitorTokenItem({ state,commit,rootState,dispatch,getters,rootG
           increment_token_progress(state.token_item_next_progress,token_item_id,kitchen_id,cache_data.progress,store_data.progress);
         }
       } else dispatch('deleteRemoteEntry',{ id });
+      if(!cache_data._monitor) dispatch('deleteRemoteEntry',{ id });
     })
     commit('monitor',{ reference,unsub }); syncingTokenItems.push(token_item_id)
   })
+}
+const offlineSyncing = {};
+export function handleOfflineReference({ state,dispatch },id){
+  let store_data = state.data[id]; if(SK85W !== 'Yes' || !store_data || !_.get(store_data,['extra','offline_reference']) || !!store_data.reference) return;
+  let offline_reference = _.get(store_data,['extra','offline_reference']);
+  remote_query('token_items',{ offline_reference,_monitor:true }).then(qRef => offlineSyncing[offline_reference] = onSnapshot(qRef,qSnaps => qSnaps.docChanges().foreach(function(change){
+    if(change.type !== 'added') return; let doc = change.doc, reference = doc.id, fb_data = cache[reference] = doc.data(), offline_reference = _.get(fb_data,'offline_reference');
+    let store_data = offline_reference ? _.find(state.data,({ item,extra }) => extra && item === 'token_items' && _.get(extra,'offline_reference') === offline_reference) : null;
+    if(store_data && store_data.id)
+      dispatch('addReference',{ id:store_data.id,reference }).then(reference => offlineSyncing[offline_reference] ? (offlineSyncing[offline_reference])() : reference);
+  })))
 }
 
 function increment_token_progress(next_progress,token_item_id,kitchen,target,current){
@@ -233,6 +257,8 @@ export function monitorOrders({ state,dispatch }){
 let remoteAddAdding = false;
 export function remoteAdd({ state,rootState,getters,dispatch },args){
   if(remoteAddAdding) return setTimeout(dispatch,2000,'remoteAdd',args);
+  let offline_reference = _.get(args,['item','offline_reference'])
+  if(SK85W === 'Yes' && offline_reference && !_.isEmpty(_.filter(state.data,({ item,extra }) => extra && item === 'token_items' && _.get(extra,'offline_reference') === offline_reference))) return;
   let location = _.get(args,['token','_location'],_.get(args,['item','_location'])), token_reference = args.item.token, kitchen_item_reference = args.item.kitchen_item_reference;
   let remote_customer_name = settings(_.snakeCase('Remote '+location+' Customer')) || _.get(_.find(rootState.customers.data,{ name:location,status:'Active' }),'name');
   if(!remote_customer_name) return location ? post('customer','create',{ name:location,address:'Automatically created while creating token for remote order from branch - ' + location }).then(r => dispatch('remoteAdd',args)) : console.error('NO LOCATION',args)
