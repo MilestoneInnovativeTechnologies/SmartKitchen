@@ -6,11 +6,7 @@
         <q-item-label>{{ item.quantity }} x {{ item_master[item.item].name }}</q-item-label>
         <q-item-label caption>Delivery On: {{ item.deliver_human }}</q-item-label>
         <q-item-label caption v-if="item.kitchen">Kitchen: {{ kitchen_master[item.kitchen].name }}</q-item-label>
-        <q-item-label caption>
-          Read Ref:
-          <q-btn v-if="read_refs && read_refs.hasOwnProperty(item.id) && read_refs[item.id]" :label="read_refs[item.id]" size="sm" padding="none" color="light-blue" flat dense @click="readRef(item)" />
-          <q-btn v-else label="Add Read Reference" size="sm" padding="none" color="light-blue" flat dense @click="rRef(item)" />
-        </q-item-label>
+        <RemoteOrderOfflineViewItemLabel :token_item="item" />
       </q-item-section>
       <q-item-section side><q-badge :color="tipc[item.progress]" :label="item.progress" class="q-px-sm q-py-xs" /></q-item-section>
       <q-item-section side v-if="cancelable.includes(item.progress)"><q-btn icon="close" color="red" dense round size="sm" @click="cancel(item,false)" /></q-item-section>
@@ -35,27 +31,18 @@
         </q-card-actions>
       </q-card>
     </q-dialog>
-    <q-dialog persistent v-model="add_ref">
-      <q-card style="width: 22rem">
-        <q-bar class="bg-teal text-white"><span class="text-caption">Add Read Reference</span><q-space /><q-btn flat round dense icon="close" v-close-popup /></q-bar>
-        <q-card-section class="q-gutter-y-sm"><q-input outlined label="Reference" v-model="r_ref" /></q-card-section>
-        <q-card-actions align="right" class="q-px-md q-pt-none"><q-btn color="teal" class="q-px-md" push label="Add" @click="addRef" :loading="loading" /></q-card-actions>
-      </q-card>
-    </q-dialog>
-    <q-dialog persistent v-model="view_read_ref">
-      <ReadReferenceCard v-if="view_read_ref && r_ref_id" :id="r_ref_id" style="width: 22rem" />
-    </q-dialog>
   </q-list>
 </template>
 
 <script>
 import {h_key, image} from "assets/helpers";
 import {TokenItemProgressColor} from "assets/assets";
-import ReadReferenceCard from "components/Remote/ReadReferenceCard";
+import ReadReferenceCard from "components/Remote/OfflineReferenceCard";
+import RemoteOrderOfflineViewItemLabel from "components/Remote/RemoteOrderOfflineViewItemLabel";
 
 export default {
   name: "RemoteTokenItemsList",
-  components: {ReadReferenceCard},
+  components: {RemoteOrderOfflineViewItemLabel, ReadReferenceCard},
   props: ['token','items','item_master','kitchen_master','customer_master'],
   data(){ return {
     tipc: TokenItemProgressColor,
