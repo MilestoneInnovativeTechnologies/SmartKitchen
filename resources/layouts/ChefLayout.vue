@@ -17,7 +17,7 @@
         <q-toolbar-title class="row">
           <q-space />
           <KitchenTokenDisplayMode v-model="mode" dark borderless />
-          <q-btn rounded color="white" icon="undo" text-color="red" @click="reset = true" class="q-mx-sm self-center" />
+          <q-btn round color="white" icon="undo" text-color="red" @click="reset = true" dense class="gt-sm q-mx-sm self-center" />
           <ManualSync />
         </q-toolbar-title>
 

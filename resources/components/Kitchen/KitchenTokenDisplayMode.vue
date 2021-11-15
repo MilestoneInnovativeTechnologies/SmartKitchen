@@ -8,7 +8,7 @@ export default {
   name: "KitchenTokenDisplayMode",
   props: ['value'],
   computed: {
-    append(){ return this.$q.screen.width < 500 ? '' : ' Mode' },
+    append(){ return this.$q.screen.width < 768 ? '' : ' Mode' },
     modes(){ return KitchenTokensDisplayMode.map(mode => mode + this.append) },
     mode: {
       get(){ return this.value ? this.value + this.append : _.first(this.modes) },
