@@ -15,6 +15,7 @@ import ReportControlTax from "components/Report/Control/ReportControlTax";
 import ReportControlUser from "components/Report/Control/ReportControlUser";
 import ReportControlDeliveryBoy from "components/Report/Control/ReportControlDeliveryBoy";
 import ReportControlDownloadTemplate from "components/Report/Control/ReportControlDownloadTemplate";
+import ReportControlPaymentType from "components/Report/Control/ReportControlPaymentType";
 
 export default {
   name: "ReportControlElement",
@@ -22,7 +23,7 @@ export default {
   components: {
     ReportControlUser, ReportControlTax, ReportControlTaxNature, ReportControlKitchen, ReportControlItem, ReportControlCustomer,
     ReportControlSaleType, ReportControlRange, ReportControlDate, ReportControlDownloadTemplate, ReportControlDeliveryBoy,
-    ReportControlCloudItem
+    ReportControlCloudItem, ReportControlPaymentType
   },
   computed: {
     component(){ return 'ReportControl' + _.startCase(this.name).replace(/\s/g,'') }
