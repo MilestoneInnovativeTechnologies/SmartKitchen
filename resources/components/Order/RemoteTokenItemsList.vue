@@ -63,7 +63,7 @@ export default {
     cancel(item,confirm){
       this.prop = 'cancel';
       if(!confirm) return this.confirm = Object.assign({},this.token,item,{ token:this.token.id }); this.loading = true; let vm = this;
-      post('token','cancel',{ id:item.id }).then(() => vm.confirm = false).catch().then(() => this.loading = false);
+      post('token','cancel',{ id:item.id }).then(() => vm.$store.commit('tokens/cancel_item',item.id)).then(() => vm.confirm = vm.loading = false).catch();
     },
     serve(item,confirm){
       this.prop = 'serve';

@@ -32,18 +32,14 @@ export function tokens(state,getters,rootState) {
 
 export function token_items(state,getters,rootState,rootGetters) {
   return function(id){ if(!id) return; id = parseInt(id);
-    let map = rootGetters["tokens/map"][id]; if(!map) return;
-    let ti = rootState.tokens.items[map[0]][map[1]];
-    if(!ti) return false; let picks = state.picks.token_items, token_item = _.pick(ti,picks), progress_timing = _.get(ti,'progress_timing');
-    //if(state.token_item_progress.indexOf(ti.progress) > state.token_item_progress.indexOf('Completed')) return false;
+    let ti = rootGetters['tokens/item'](id), offline_reference = _.get(_.find(state.data,{ item:'token_items',local_id:id }),['extra','offline_reference'],null);
+    if(!ti) return false; let picks = state.picks.token_items, token_item = _.pick(ti,picks);//, progress_timing = _.get(ti,'progress_timing');
     let kitchen = _.get(_.find(state.data,({ item,local_id }) => item === 'kitchens' && parseInt(local_id) === parseInt(ti.kitchen)),'reference','');
-    // let kitchen_item_reference = getters["token_item_kitchen_item_reference"][id];
     let { reference,location } = _.get(getters["token_item_kitchen_item_reference_location"],id);
     let item = _.pick(_.get(rootState,['items','data',parseInt(ti.item)]),state.picks.items);
     item.item = item.name; delete item.name;
-    let token_id = parseInt(ti.token), token = _.get(_.find(state.data,({ item,local_id }) => item === 'tokens' && local_id === token_id),'reference');
-    if(!token) return;
-    return Object.assign({},token_item,{ token,kitchen },item,{ kitchen_item_reference:reference,kitchen_item_location:location },{ /*[`progress_timing_${_BRANCH}`]:progress_timing,['_id_' + _BRANCH]:ti.id,['_id_token_' + _BRANCH]:token_id,['_id_item_' + _BRANCH]:parseInt(ti.item) }*/ })
+    let token_id = parseInt(ti.token), remote_token_data = _.find(state.data,({ item,local_id }) => item === 'tokens' && local_id === token_id);
+    return Object.assign({},token_item,{ token:_.get(remote_token_data,'reference'),kitchen },item,{ kitchen_item_reference:reference,kitchen_item_location:location,offline_reference })
   }
 }
 
@@ -64,17 +60,17 @@ export function token_branch({ data }){ return _(data).filter(['item','tokens'])
 
 export function offline_reference(state,getters,rootState,rootGetters){
   return function(id,extra){ id = parseInt(id); extra = extra || {};
-    let map = rootGetters['tokens/map'][id]; if(!id || !map || !map[0]) return {};
-    let ti = _.find(state.data,{ item:'token_items',local_id:parseInt(id) }), tk = _.find(state.data,{ item:'tokens',local_id:parseInt(map[0]) });
+    let ti = rootGetters['tokens/item'](id), tk = _.find(state.data,{ item:'tokens',local_id:parseInt(ti.token) });
     let ki_refs = _.mapKeys(getters['token_item_kitchen_item_reference_location'][id],(v,key) => 'kitchen_item_' + key);
+    let s_token = getters['tokens'](ti.token), s_item = getters['token_items'](id);
+    let token_date = _.get(s_token,'date',''), token_date_code = (token_date || '').replace(/\D/g,'')
     return new Object({
       local: [tk,ti],
-      server: [getters['tokens'](map[0]),getters['token_items'](id)],
-      // tokens: [_.get(rootState.tokens.data,parseInt(map[0]))],
-      // token_items: [_.get(rootState.tokens.items,map)],
+      server: [s_token,s_item],
+      token_date,token_date_code,
       ...ki_refs,
       token_reference: _.get(tk,'reference'), token_item_reference: _.get(ti,'reference'),
-      token_source_location: _BRANCH, token_source_id: map[0], token_item_source_id: id,
+      token_source_location: _BRANCH, token_source_id: ti.token, token_item_source_id: id,
       ...extra
     })
   }
@@ -83,6 +79,14 @@ export function offline_reference(state,getters,rootState,rootGetters){
 export function token_item_token(state,getters,rootState,rootGetters){
   return function(token_item){
     return _.find(state.data,{ item:'tokens',local_id:rootGetters['tokens/map'][parseInt(token_item)][0] })
+  }
+}
+
+export function remote_record_from_token_date(state,getters,rootState){
+  let local_id_to_record = _(state.data).filter(['item','tokens']).keyBy(({ local_id }) => _.toInteger(local_id)).value()
+  return function(date,loc){
+    let token = _.find(rootState.tokens.data,tkn => tkn.date === date && _.has(local_id_to_record,tkn.id) && _.get(local_id_to_record,[tkn.id,'location']) === loc)
+    return token ? _.get(local_id_to_record,token.id,null) : null
   }
 }
 

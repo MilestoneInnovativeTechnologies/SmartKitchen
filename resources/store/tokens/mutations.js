@@ -28,6 +28,12 @@ export function items (state,records) {
   })
 }
 
+export function cancel_item (state,id) {
+  let token_item = _(state.items).flatMap().find({ id:parseInt(id) }), token_id = _.get(token_item,'token'), items = state.items[token_id], item_index = _.findIndex(items,{ id:parseInt(id) });
+  if(_.size(items) === 1) Vue.delete(state.data,token_id);
+  Vue.delete(state.items[token_id],item_index);
+}
+
 export function image(state,{ name,url }){
   if(!_.has(state.img,name)) Vue.set(state.img,name,'');
   state.img[name] = url;

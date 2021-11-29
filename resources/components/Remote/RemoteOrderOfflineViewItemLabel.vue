@@ -45,7 +45,7 @@ export default {
     addRef(){
       let id = _.get(this.store_remote_record,'id'), reference = this.generated_offline_ref, kitchen = this.preparing_kitchen; this.loading = true;
       if(!id || !reference || !kitchen) return this.loading = false;
-      post('remote','offlineReference',{ id,reference,kitchen }).then(() => this.loading = this.generated_offline_ref = null)
+      post('remote','offlineReference',{ id,reference,kitchen }).then(() => this.readRef(this.loading = this.generated_offline_ref = null))
     },
   }
 }

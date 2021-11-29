@@ -8,7 +8,7 @@
       </q-card-section>
       <q-card-section class="col">
         <div class="flex justify-between items-center text-caption text-positive text-bold"><div>Total Paid</div><div>{{ precision(paid) }}</div></div>
-        <div class="flex justify-between items-center text-positive text-bold"><div>Balance</div><div>{{ precision(balance) }}</div></div>
+        <div class="flex justify-between items-center text-warning text-bold"><div>Balance</div><div>{{ precision(balance) }}</div></div>
         <div class="flex justify-between items-center text-caption text-secondary"><div>Status</div><div>{{ bill.progress }}</div></div>
       </q-card-section>
     </q-card-section>

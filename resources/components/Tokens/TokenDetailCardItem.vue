@@ -2,14 +2,14 @@
   <q-item :disable="!eligible" v-if="item.progress !== 'Cancelled'">
     <q-item-section>
       <q-item-label caption v-if="item.deliver" class="text-red text-bold">Delivery: {{ item.deliver_human }}</q-item-label>
-      <q-item-label caption v-if="item.say" class="text-red text-bold">{{ item.say }}</q-item-label>
+      <q-item-label caption v-if="item.say" class="text-red text-bold"><span style="visibility:hidden">Delivery: </span>{{ item.say }}</q-item-label>
       <q-item-label v-if="eligible && wait" class="text-weight-bolder text-red" style="font-size: 0.8rem">Wait {{ item.delay - now }} seconds</q-item-label>
-      <q-item-label v-if="eligible && item.narration && !wait" class="text-weight-bolder text-red" style="font-size: 0.8rem">{{ item.narration }}</q-item-label>
-      <q-item-label v-if="read_ref" class="text-bold text-cyan" style="font-size: 0.65rem">{{ read_ref }}</q-item-label>
+      <q-item-label v-if="offline_reference" class="text-bold text-cyan" style="font-size: 0.65rem">{{ offline_reference }}</q-item-label>
       <q-item-label><span class="text-weight-bolder">{{ item.quantity }}</span> x {{ name }}</q-item-label>
+      <q-item-label caption v-if="eligible && item.narration && !wait" class="text-weight-bolder text-red" style="font-size: 0.8rem">{{ item.narration }}</q-item-label>
       <q-item-label caption :temp="next">{{ time }} {{ unit }} ago</q-item-label>
       <q-item-label caption v-if="item.kitchen && item.kitchen !== kitchen">Kitchen: {{ kName(item.kitchen) }}</q-item-label>
-      <q-item-label caption v-if="item.photo"><q-btn type="a" padding="none" label="Photo Attached: Click to View" color="blue" flat size="sm" @click="$emit('photo',item.photo)" /></q-item-label>
+      <q-item-label caption v-if="item.photo"><q-btn type="a" padding="none" label="Photo Attached" icon-right="launch" color="blue" flat size="sm" @click="$emit('photo',item.photo)" /></q-item-label>
     </q-item-section>
     <q-item-section side v-if="item.progress === 'Processing' && eligible && !loading && !wait"><q-spinner-dots color="primary" size="2em" /></q-item-section>
     <q-item-section side>
@@ -31,7 +31,7 @@ import { TokenItemProgressColor } from "assets/assets";
 
 export default {
   name: "TokenDetailCardItem",
-  props: ['token','item','kitchen','read_ref'],
+  props: ['token','item','kitchen','offline_reference'],
   data(){ return {
     color: TokenItemProgressColor,
     action: { New:'accept', Accepted:'process', Processing:'complete' },

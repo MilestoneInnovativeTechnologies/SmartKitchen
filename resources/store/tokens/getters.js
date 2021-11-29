@@ -21,3 +21,8 @@ export function progress({ data },getters,rState){
   const tbp = _(rState.bills.data).filter(({ progress }) => progress !== 'Cancelled').mapKeys(({ token }) => _.toInteger(token)).mapValues('progress').value();
   return _(data).mapValues(({ progress,id }) => progress === 'Billed' ? (_.get(tbp,id) === 'Pending' ? progress : _.get(tbp,id)) : progress).value()
 }
+
+export function item(state,getters){
+  let ti_map = getters['map'];
+  return (ti) => _.get(state.items,ti_map[parseInt(ti)])
+}

@@ -10,8 +10,8 @@ export function add (state,records) {
     let remote = _.find(state.data,(rmt) => rmt.item === item && parseInt(rmt.local_id) === local_id );
     let id = remote ? parseInt(remote.id) : parseInt(data.id);
     Vue.set(state.data,id,data);
-    if(!state.data[id].reference && !_.has(state.data[id].extra,'r_ref')) state.uploadFn({item,data});
-    else state.monitorFn({ item,reference:state.data[id].reference,item_id:state.data[id].local_id,id })
+    if(!state.data[id].reference) state.uploadFn({item,data});
+    else state.monitorFn({ item,reference:state.data[id].reference,id })
   })
 }
 
