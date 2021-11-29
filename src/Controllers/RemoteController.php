@@ -9,6 +9,7 @@ use Milestone\SmartKitchen\Models\KitchenItem;
 use Milestone\SmartKitchen\Models\KitchenStatus;
 use Milestone\SmartKitchen\Models\Remote;
 use Milestone\SmartKitchen\Models\Token;
+use Milestone\SmartKitchen\Models\TokenItem;
 
 class RemoteController extends Controller
 {
@@ -51,7 +52,7 @@ class RemoteController extends Controller
 
     public function tokens(Request $request){
         if(!$request->token_reference) return Log::error('Requested to create token by remote controller without token reference');
-        usleep(rand(700,3000));
+        usleep(rand(1000,3000));
         if(Remote::where(['item' => 'tokens','reference' => $request->token_reference])->exists()){
             $token_id = Arr::get(Remote::where(['item' => 'tokens','reference' => $request->token_reference])->first(),'local_id');
             $Token = Token::with('Items')->find($token_id);
@@ -78,6 +79,34 @@ class RemoteController extends Controller
         return $request->all();
     }
 
+    public function offline_order(Request $request){
+        if(!$request->filled(['token','item'])) return 'Token or Item missing';
+        $token_date = $request->input('token.date'); $token_location = $request->input('token._location');
+        $request->merge(['customer' => $request->customer_id,'_location' => $token_location,'kitchen' => $request->input('item.kitchen_id')]);
+        usleep(rand(700,3000));
+        $token = self::TokensOfDateLocation($token_date,$token_location);
+        if(!$token){
+            $request->merge($request->token)->merge(['type' => 'Remote'])->merge(['items' => [array_merge($request->item,['item' => $request->item_id])]]);
+            $Token = app()->call(TokenController::class . "@create");
+            $token_item_id = Arr::get($Token->Items->first(),'id');
+        } else {
+            $Token = Token::find($token['local_id']); $request_item = $request->input('item');
+            if($Token->Items()->where(['item' => $request->item_id,'quantity' => $request_item['quantity'],'deliver' => $request_item['deliver'], 'narration' => $request_item['narration']])->exists()) return 'Token and Item already exists';
+            $ti_data = array_merge(Arr::only($request_item,['quantity','deliver','narration']),['item' => $request->item_id,'token' => $token['local_id']]); $request->merge($ti_data);
+            $token_item_id = Arr::get(app()->call(TokenController::class . "@item"),'id');
+        }
+        $request->merge(['reference' => $request->input('offline_reference'),'id' => Arr::get(Remote::where(['item' => 'token_items','local_id' => $token_item_id])->first(),'id')]);
+        app()->call(self::class . "@offlineReference");
+        return $Token->load('Items');
+    }
+
+    public static function TokensOfDateLocation($date,$location){
+        $date_tokens = Token::where('date',$date)->get();
+        return Remote::where(['item' => 'tokens', 'location' => $location])->whereIn('local_id',$date_tokens->pluck('id')->toArray())->get()->map(function($remote_record)use($date_tokens){
+            return array_merge($remote_record->toArray(),$date_tokens->firstWhere('id',$remote_record->local_id)->toArray());
+        })->first();
+    }
+
     static function ki_ref_item($reference){
         $remote = Remote::where(['item' => 'kitchen_items','reference' => $reference])->first();
         if(!$remote) return null; $ki_local_id = Arr::get($remote,'local_id');
@@ -95,7 +124,7 @@ class RemoteController extends Controller
             $remote = Remote::find($request->input('id'));
             $remote->extra = array_merge($remote->extra ?: [], ['offline_reference' => $request->input('reference')]);
             $remote->save();
-            if($request->input('kitchen')) TokenItemController::Accept($remote->local_id,$request->input('kitchen'),auth()->id());
+            if($request->input('kitchen') && TokenItem::where(['id' => $remote->local_id,'progress' => 'New'])->exists()) TokenItemController::Accept($remote->local_id,$request->input('kitchen'),auth()->id());
             return $remote;
         }
         return null;
