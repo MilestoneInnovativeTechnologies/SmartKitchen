@@ -26,7 +26,8 @@ const layout_child = {
     'bill_summary_tax','bill_summary_tax_nature','tax_bill_detail','tax_details','bill_summary_customer','bill_summary_user_type','bill_by_user','delivery_boy_bills',
     'orders_by_waiter','orders_by_receptionist','orders_by_delivery_boy','user_orders', 'kitchen_processing','item_processing','chef_performance',
     'data_import','menu_qr_codes','menu_sync_data','remote_kitchen_manage',
-    'remote_orders_by_customer','remote_order_summary_by_customer','day_wise_remote_order_summary','day_wise_remote_order_delivery','remote_order_by_item','remote_order_summary_by_item'
+    'remote_orders_by_customer','remote_order_summary_by_customer','day_wise_remote_order_summary','day_wise_remote_order_delivery','remote_order_by_item','remote_order_summary_by_item',
+    'bill_by_customer','bill_payments','bill_payments_by_type','bills_unpaid','bills_unpaid_customer','bills_unpaid_type','bills_unpaid_user'
   ],
   'Delivery Boy': ['delivery_boy_index','delivery_boy_orders','order_new','customers','delivery_boy_completed','delivery_boy_payments'],
   Menu: ['menu_index'],
@@ -120,6 +121,13 @@ const route_master = {
   day_wise_remote_order_delivery: { name:'day_wise_remote_order_delivery', path:'/report/day/ro/delivery/summary', component: () => import('pages/Report/Reports/ReportDayWiseRemoteOrderDelivery'), meta:{ title:'Day Wise Remote Order Delivery',controls:['date'] } },
   remote_order_by_item: { name:'remote_order_by_item', path:'/report/ro/item', component: () => import('pages/Report/Reports/ReportRemoteOrdersByItem'), meta:{ title:'Remote Order by Item',controls:['range'] } },
   remote_order_summary_by_item: { name:'remote_order_summary_by_item', path:'/report/ro/item/summary', component: () => import('pages/Report/Reports/ReportRemoteOrdersSummaryByItem'), meta:{ title:'Remote Order Summary by Item',controls:['cloud_item','range'] } },
+  bill_by_customer: { name:'bill_by_customer', path:'/report/bill/customer', component: () => import('pages/Report/Reports/ReportBillCustomer'), meta:{ title:'Bill By Customer',controls:['range','customer'] } },
+  bill_payments: { name:'bill_payments', path:'/report/bill/payments', component: () => import('pages/Report/Reports/ReportBillPayments'), meta:{ title:'Payments',controls:['range'] } },
+  bill_payments_by_type: { name:'bill_payments_by_type', path:'/report/bill/payments/type', component: () => import('pages/Report/Reports/ReportBillPaymentsType'), meta:{ title:'Payments by Type',controls:['range','payment_type'] } },
+  bills_unpaid: { name:'bills_unpaid', path:'/report/bill/unpaid', component: () => import('pages/Report/Reports/ReportBillUnpaid'), meta:{ title:'Unpaid Bills',controls:['date'] } },
+  bills_unpaid_customer: { name:'bills_unpaid_customer', path:'/report/bill/unpaid/customer', component: () => import('pages/Report/Reports/ReportBillUnpaidCustomer'), meta:{ title:'Unpaid Bills by Customer',controls:['range','customer'] } },
+  bills_unpaid_type: { name:'bills_unpaid_type', path:'/report/bill/unpaid/type', component: () => import('pages/Report/Reports/ReportBillUnpaidType'), meta:{ title:'Unpaid Bills by Type',controls:['range','sale_type'] } },
+  bills_unpaid_user: { name:'bills_unpaid_user', path:'/report/bill/unpaid/user', component: () => import('pages/Report/Reports/ReportBillUnpaidUser'), meta:{ title:'Unpaid Bills by User',controls:['range','user'] } },
 }
 
 const feature_routes = {
