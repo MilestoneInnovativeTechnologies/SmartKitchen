@@ -24,7 +24,8 @@ export default {
     reports: {
       Token: [0,14,19,20,15],
       Sales: [1,2,3,4,5],
-      Bill: [7,8,9,10,21,22,23,24],
+      Bill: [7,8,9,10,21,22,23,24,33,31,34,35,36,37],
+      Payments: [31,32,34,35,36,37],
       Remote: [25,26,27,28,29,30],
       Tax: [8,9,10,13],
       Kitchen: [6,16],
@@ -34,6 +35,7 @@ export default {
       Chef: [18],
       Receptionist: [19],
       'Delivery Boy': [20,24],
+      Customer: [21,25,26,33],
       Performance: [14,15,16,17,18]
     },
     masters: [
@@ -68,6 +70,13 @@ export default {
       ['Day Wise Remote Order Delivery', 'day_wise_remote_order_delivery'],//28
       ['Remote Order by Item', 'remote_order_by_item'],//29
       ['Remote Order Summary by Item', 'remote_order_summary_by_item'],//30
+      ['Bill Payments', 'bill_payments'],//31
+      ['Payments by Type', 'bill_payments_by_type'],//32
+      ['Bill by Customer', 'bill_by_customer'],//33
+      ['Unpaid Bills', 'bills_unpaid'],//34
+      ['Unpaid Bills by Customer', 'bills_unpaid_customer'],//35
+      ['Unpaid Bills by Type', 'bills_unpaid_type'],//36
+      ['Unpaid User Bills', 'bills_unpaid_user'],//37
     ]
   } },
   methods: {
