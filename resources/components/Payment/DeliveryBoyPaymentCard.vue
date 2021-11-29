@@ -30,9 +30,10 @@
         <div class="col-4 text-bold text-subtitle1 text-right">{{ precision(Bill.payable) }}</div>
       </q-card-section>
     </q-card-section>
-    <q-card-actions class="row items-center q-col-gutter-x-sm q-px-md">
-      <q-input class="col-grow" v-model.number="amount" type="number" dense outlined label="Amount" />
-      <div><q-btn class="" color="positive" label="Pay" @click="deliver" :loading="loading" /></div>
+    <q-card-actions class="row items-center q-col-gutter-x-sm">
+      <q-select class="col" outlined v-model="type" :options="PaymentsTypes" label="Type" />
+      <q-input class="col" v-model.number="amount" type="number" outlined label="Amount" />
+      <div><q-btn color="positive" label="Pay" padding="md lg" @click="deliver" :loading="loading" /></div>
     </q-card-actions>
   </q-card>
 </template>
@@ -41,13 +42,15 @@
 import Tokens from "assets/mixins/Tokens";
 import Bills from "assets/mixins/Bills";
 import {image,precision,human_date2,time} from "assets/helpers";
+import {PaymentsTypes} from "assets/assets";
 
 export default {
   name: "DeliveryBoyPaymentCard",
   props: ['token'],
   mixins: [Tokens,Bills],
   data(){ return {
-    loading: false, amount: 0
+    loading: false, amount: 0, type: 'Cash',
+    PaymentsTypes
   } },
   computed: {
     Token(){ return _.find(this.tokens,['id',parseInt(this.token)]) },
@@ -62,7 +65,7 @@ export default {
       post('token','served',{ id:this.token_item_ids }).then().catch().then(this.pay)
     },
     pay(){
-      let params = { bill:_.get(this.Bill,'id'), amount:this.amount, type:'Cash' }
+      let params = { bill:_.get(this.Bill,'id'), amount:this.amount, type:this.type }
       post('payment','create',params).then().catch().then(this.paid)
     },
     paid(){ this.loading = false; this.$emit('paid') }
