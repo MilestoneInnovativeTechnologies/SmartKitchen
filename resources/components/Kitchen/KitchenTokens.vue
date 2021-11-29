@@ -25,14 +25,14 @@
         </Masonry>
       </q-card-section>
     </q-card-section>
-    <q-dialog persistent v-model="reset"><KitchenItemCancel :kitchen="id"  style="width: 80vw; max-width: 330px" @cancel="doReset" :cancelling="cancelling" /></q-dialog>
+    <q-dialog persistent v-model="reset"><KitchenItemCancel :kitchen="id"  :style="popup_width()" @cancel="doReset" :cancelling="cancelling" /></q-dialog>
   </q-card>
 </template>
 
 <script>
 import TokenDetailCard from "components/Tokens/TokenDetailCard";
 import {mapState,mapGetters} from "vuex";
-import {attention, h_key} from "assets/helpers";
+import {attention, h_key, popup_width} from "assets/helpers";
 import KitchenTokenBundle from "components/Kitchen/KitchenTokenBundle";
 import KitchenTokenDisplayMode from "components/Kitchen/KitchenTokenDisplayMode";
 import KitchenItemCancel from "components/Kitchen/KitchenItemCancel";
@@ -71,6 +71,7 @@ export default {
     sTokens(){ return _.sortBy(this.Tokens,({ items }) => tokens_sort_item_delivery_fn(items)) },
   },
   methods: {
+    popup_width,
     hKey({ id },item){ return h_key('kitchen',this.id,item,'detail',id) },
     isAct({ item:{ id },progress,kitchen }){ return (progress === 'New' && _.includes(this.kItems,id)) || (kitchen && kitchen.id === this.kitchen.id && this.processing.includes(progress)) },
     doReset(selected){ if(selected.length) this.cancelling = true; this.post(0,selected,this.id) },
