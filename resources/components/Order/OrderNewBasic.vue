@@ -38,8 +38,12 @@ export default {
   },
   methods: {
     init(attrs){ let vm = this; _.forEach(attrs,function(val,key){ if(val !== undefined) vm.hide.push(key); vm.params[key] = val }) },
+    typeChange(type){
+      this.params.seating = _.get(this.attrs,'seating',null); this.params.user = _.get(this.attrs,'user',null)
+      if(type !== 'Dining') this.setPriceList(type);
+    },
     setPriceList(type){
-      if(type === 'Dining') return; let type_name = _.snakeCase(type), state_name = type_name + '_price_list';
+      let type_name = _.snakeCase(type), state_name = type_name + '_price_list';
       if(!_.has(this.$store.state.public,state_name)){
         let price_list_id = _.get(settings('price_list',type),'id',null)
         if(price_list_id) this.$store.commit('public',{ [state_name]:price_list_id })
@@ -53,7 +57,7 @@ export default {
   },
   watch: {
     seat({ id,price_list }){ this.params.seating = id; this.params.price_list = price_list },
-    'params.type': { immediate:true,handler:'setPriceList' },
+    'params.type': { immediate:true,handler:'typeChange' },
     'params.price_list': function(id){ let s_name = _.snakeCase(this.params.type+' Price List'); if(this.$store.state.public[s_name] !== parseInt(id)) this.$store.commit('public',{ [s_name]:parseInt(id) }) },
     attrs: { immediate:true, deep:true, handler:'init' },
   }
