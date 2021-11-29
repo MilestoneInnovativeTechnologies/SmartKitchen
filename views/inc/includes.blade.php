@@ -1,5 +1,5 @@
 @php
-$dev = (env('DEV') === 'YES');
+$dev = env('DEV') === 'YES';
 $files = [
     'css' => [
         'vendor' => 'd40e81b1',
