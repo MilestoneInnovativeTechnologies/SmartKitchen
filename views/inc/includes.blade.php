@@ -1,15 +1,6 @@
 @php
 $dev = env('DEV') === 'YES';
-$files = [
-    'css' => [
-        'vendor' => 'd40e81b1',
-        'app' => '784fe0af',
-    ],
-    'js' => [
-        'vendor' => '0ccfe876',
-        'app' => 'fe39340b',
-    ]
-]
+$files = json_decode(@file_get_contents(public_path('pack.json')),true);
 @endphp
 @if($dev)
     <base href="http://sk:8080">
