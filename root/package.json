@@ -1,0 +1,50 @@
+{
+  "name": "smart-kitchen",
+  "version": "1.6.5",
+  "description": "Kitchen Order Token as its simple way",
+  "productName": "Smart Kitchen",
+  "author": "Milestone Innovative Technologies <info@milestoneit.net>",
+  "private": true,
+  "scripts": {
+    "test": "echo \"No test specified\" && exit 0",
+    "pack": "php .\\milestone\\smartkitchen\\pack.php",
+    "dev": "quasar dev",
+    "dev:pwa": "quasar dev -m pwa",
+    "build": "quasar build",
+    "build:pwa": "quasar build -m pwa && npm run pack",
+    "firebase:deploy": "firebase deploy"
+  },
+  "dependencies": {
+    "@quasar/extras": "^1.0.0",
+    "axios": "^0.18.1",
+    "core-js": "^3.6.5",
+    "firebase": "^9.0.2",
+    "js-md5": "^0.7.3",
+    "jsonwebtoken": "^8.5.1",
+    "lodash": "^4.17.20",
+    "qrcode.vue": "^1.7.0",
+    "quasar": "^1.0.0"
+  },
+  "devDependencies": {
+    "@quasar/app": "^2.0.0",
+    "cors": "^2.8.5",
+    "vuex": "^3.6.2",
+    "workbox-webpack-plugin": "^5.1.4"
+  },
+  "browserslist": [
+    "last 10 Chrome versions",
+    "last 10 Firefox versions",
+    "last 4 Edge versions",
+    "last 7 Safari versions",
+    "last 8 Android versions",
+    "last 8 ChromeAndroid versions",
+    "last 8 FirefoxAndroid versions",
+    "last 10 iOS versions",
+    "last 5 Opera versions"
+  ],
+  "engines": {
+    "node": ">= 10.18.1",
+    "npm": ">= 6.13.4",
+    "yarn": ">= 1.21.1"
+  }
+}
