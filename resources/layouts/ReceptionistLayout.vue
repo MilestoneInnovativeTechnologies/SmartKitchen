@@ -27,7 +27,7 @@
         <q-route-tab :to="{ name:'seat_status' }" label="Seating" icon="batch_prediction" class="gt-sm" />
         <q-route-tab :to="{ name:'archives' }" label="Archive" icon="archive" class="gt-sm" />
         <q-route-tab :to="{ name:'bills' }" label="Bills" icon="receipt_long" class="gt-xs"  :alert="alert || completed.length>0" alert-icon="new_releases" />
-        <q-route-tab :to="{ name:'sale' }" label="Sale" icon="shopping_cart" />
+        <q-route-tab :to="{ name:'sale' }" label="Sale" icon="shopping_cart" v-if="sale_enabled" />
         <q-route-tab :to="{ name:'orders' }" label="Orders" icon="add_task" />
         <q-route-tab :to="{ name:'orders_remote' }" label="Remote" icon="online_prediction" v-if="remote_manage" />
         <q-route-tab :to="{ name:'orders_online' }" label="Online" icon="settings_input_antenna" v-if="online" />
@@ -42,13 +42,14 @@ import ManualSync from "components/ManualSync";
 import {mapState} from "vuex";
 import {attention, settings_boolean} from "assets/helpers";
 import Logout from "components/Logout";
-const { GH75F,GH56E,CC71V,DP71V,KK99V } = require('boot/subscription').FEATURES
+const { GH75F,GH56E,CC71V,DP71V,KK99V,CZ03Y } = require('boot/subscription').FEATURES
 export default {
   name: 'ReceptionistLayout',
   components: {Logout, ManualSync},
   data(){ return { receptionist:_USER.name, logout: LOGOUT, alert:false,
     online_enabled: (GH75F === 'Yes' && GH56E === 'Yes'),
     remote_enabled: (CC71V === 'Yes' && _.trim(DP71V) !== '' ),
+    sale_enabled: (CZ03Y === 'Yes'),
   } },
   computed: {
     ...mapState('tokens',{ completed({ data }){ return _.filter(data,({ progress }) => ['Completed'].includes(progress)) } }),
