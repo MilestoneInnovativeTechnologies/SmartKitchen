@@ -1,8 +1,18 @@
 <template>
   <q-page padding>
-    <FilterInputText @text="item_filter = $event" class="q-mb-xs" />
-    <GroupItemsSelect :selected="group" :filter="item_filter" :price_list="params.price_list" @item="addItem" type="Sale" />
-    <GroupStickyButton v-model="group" :type="params.type" />
+    <template v-if="quick">
+      <QuickOrder @item="addItem" :items="params.items" :price_list="params.price_list" @done="payment_mode = true" ref="quick_order" />
+    </template>
+    <template v-else>
+      <FilterInputText @text="item_filter = $event" class="q-mb-xs" />
+      <GroupItemsSelect :selected="group" :filter="item_filter" :price_list="params.price_list" @item="addItem" type="Sale" />
+      <GroupStickyButton v-model="group" :type="params.type" />
+      <q-page-sticky position="bottom-right" :offset="offset">
+        <transition appear enter-active-class="animated zoomIn" leave-active-class="animated zoomOut">
+          <q-fab v-show="!payment_mode" icon="reply_all" active-icon="reply_all" color="indigo" glossy @click="payment_mode = true" class="flip-horizontal" v-touch-pan.prevent.mouse="move" />
+        </transition>
+      </q-page-sticky>
+    </template>
     <q-dialog v-if="!price_list" :value="!price_list" persistent @hide="CFL()">
       <q-card :style="popup_width()">
         <q-bar class="text-white bg-info q-py-lg items-center"><q-icon name="receipt" color="white" left /><span>Select Price List</span><q-space /><q-btn icon="clear" v-close-popup flat round color="white" /></q-bar>
@@ -11,11 +21,6 @@
         </q-card-section>
       </q-card>
     </q-dialog>
-    <q-page-sticky position="bottom-right" :offset="offset">
-      <transition appear enter-active-class="animated zoomIn" leave-active-class="animated zoomOut">
-        <q-fab v-show="!payment_mode" icon="reply_all" active-icon="reply_all" color="indigo" glossy @click="payment_mode = true" class="flip-horizontal" v-touch-pan.prevent.mouse="move" />
-      </transition>
-    </q-page-sticky>
     <q-dialog v-model="payment_mode" persistent @show="calculateTotal">
       <q-card :style="popup_width()">
         <q-bar class="bg-secondary text-white q-py-lg"><q-icon name="account_balance" /><div>Customer & Payments Details</div><q-space /><q-btn dense flat icon="close" v-close-popup><q-tooltip>Close</q-tooltip></q-btn></q-bar>
@@ -83,9 +88,12 @@ import PaymentTypeSelectDropDown from "components/Payment/PaymentTypeSelectDropD
 import {PaymentsTypes} from "assets/assets";
 import GroupStickyButton from "components/Group/GroupStickyButton";
 import GroupItemsSelect from "components/Group/GroupItemsSelect";
+import QuickOrder from "components/Order/QuickOrder";
+import QuickMode from "assets/mixins/QuickMode";
 export default {
   name: 'PageSale',
-  components: { GroupItemsSelect, GroupStickyButton, PaymentTypeSelectDropDown, TaxNatureSelectDropDown, OrderCustomer, PriceListSelectDropDown, FilterInputText },
+  components: {QuickOrder, GroupItemsSelect, GroupStickyButton, PaymentTypeSelectDropDown, TaxNatureSelectDropDown, OrderCustomer, PriceListSelectDropDown, FilterInputText },
+  mixins: [QuickMode],
   data(){ return {
     group: 0, item_filter: '', fab: true, offset: [12,12], payment_mode: false, processing: false,
     params: {
@@ -116,7 +124,7 @@ export default {
       let itemIndex = _.findIndex(this.params.items, ['item', parseInt(id)]);
       if (itemIndex === -1) itemIndex = this.params.items.push({item: id, quantity: 0}) - 1;
       this.params.items[itemIndex].quantity++;
-      this.$q.notify(`${this.params.items.length} x Items <br>${_.sumBy(this.params.items,'quantity')} x Quantities`)
+      if(!this.quick) this.$q.notify(`${this.params.items.length} x Items <br>${_.sumBy(this.params.items,'quantity')} x Quantities`)
     },
     calculateTotal(){ this.params.advance_amount = this.total - this.params.discount; if(!this.params.items.length) this.params.discount = 0 },
     removeItem(idx){ this.params.items.splice(idx,1) },
@@ -126,7 +134,7 @@ export default {
       if(ids.length) post('token','served',{ id:ids }).then(vm.completed)
       else vm.completed();
     },750,this) },
-    completed(){ this.payment_mode = false; this.params.items.splice(0,this.params.items.length); this.processing = false },
+    completed(){ this.payment_mode = false; this.params.items.splice(0,this.params.items.length); this.processing = false; if(_.has(this,['$refs','quick_order','$data','code'])) this.$refs['quick_order'].$data.code = 0 },
     moveFab (ev) {
       this.draggingFab = ev.isFirst !== true && ev.isFinal !== true
       this.fabPos = [

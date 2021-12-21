@@ -1,4 +1,6 @@
 import { ItemsPerPageDefault, ItemsPerPageSettingName, ItemsSearchFieldsDefault, ItemsSearchFieldsSettingName } from "assets/constants";
+const true_values = [1,'1','true','True','yes','Yes','YES','ON','on','On'];
+const false_values = [0,'0','false','False','no','No','NO','Off','OFF','off'];
 
 export function settings ({ data }) {
   return _(data).keyBy('name').mapValues('value').value()
@@ -36,6 +38,15 @@ export function manage_customer(state,{ settings }){
     let s_name = _.snakeCase((name || '') + ' Manage Customer');
     if(!_.has(settings,s_name)) return def
     let val = _.get(settings,s_name);
-    return _.includes([0,'false','False','no','No'],val) ? false : (_.includes([1,'true','True','yes','Yes'],val) ? true : def)
+    return _.includes(false_values,val) ? false : (_.includes(true_values,val) ? true : def)
+  }
+}
+
+export function quick(state,{ settings }){
+  return function(name){
+    if(!name) return _.includes(true_values,_.get(settings,'quick_mode','No'));
+    if(name === 'item_prop') return _.get(settings,'quick_mode_item_prop','id')
+    let s_name = _.snakeCase('Quick Mode ' + name);
+    return _.includes(true_values,_.get(settings,s_name))
   }
 }

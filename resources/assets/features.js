@@ -1,1 +1,1 @@
-export const GLOBAL_FEATURES = [["GH56E","Yes\/No","No"],["GH75F","Yes\/No","No"],["JI36A","Detail",null],["CC71V","Yes\/No","No"],["DP71V","Detail",null],["JX99V","Yes\/No","No"],["KK99V","Yes\/No","Yes"],["SK85W","Yes\/No","Yes"],["CZ03Y","Yes\/No","No"]]
+export const GLOBAL_FEATURES = [["GH56E","Yes\/No","No"],["GH75F","Yes\/No","No"],["JI36A","Detail",null],["CC71V","Yes\/No","No"],["DP71V","Detail",null],["JX99V","Yes\/No","No"],["KK99V","Yes\/No","Yes"],["SK85W","Yes\/No","Yes"],["CZ03Y","Yes\/No","No"],["RS44Z","Yes\/No","Yes"]]

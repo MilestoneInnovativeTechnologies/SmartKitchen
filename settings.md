@@ -106,3 +106,17 @@ waiter_make_payments
 By default making payments from bills are can be done by receptionist and waiter. If the branch doesn't want the waiter to be able to add payments, then add a setting in this name having value either of these
 0,false,False,no,No
 If no settings in this name or the value is not any of above, then the waiter is able to add payments from bills
+
+quick_mode
+If the feature Quick Mode is enabled, then toggle switch will be displayed on header bar on create order windows. The Quick mode can be made ON/OFF from there itself.
+And if there have a settings in the name quick_mode with value any of 1,true,True,yes,Yes,YES,ON,on,On the by default, quick mode will be enabled. This can be turned off using header bar toggle switch
+
+quick_mode_item_prop
+This settings decides which property if an item to be used as code in quick mode. The item can have upto 5 properties that can be enabled by admin in settings > item props
+The settings value could exactly match with item prop name (case-sensitive)
+
+quick_mode_quantity_fix
+Normally the quick mode work like, at first item code to be entered, then tap ENTER key, then enter quantity, then tap ENTER key again next item code then its quantity and so on...
+If this settings have added with any of these values 1,true,True,yes,Yes,YES,ON,on,On, then quantity will be locked at 1.
+Each time item code entered and on tapping ENTER key, quantity will be taken as 1, and it gets added. On tapping ENTER key multiple times, quantity will also add consequently
+

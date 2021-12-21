@@ -7,6 +7,7 @@
           <q-btn v-if="$store.state.back" :to="$store.state.back" flat round dense icon="arrow_back_ios" />
           {{ $store.state.title || receptionist }}
         </q-toolbar-title>
+        <QuickToggle v-if="quick_enabled" />
         <q-btn flat round dense icon="archive" class="lt-md" :to="{ name:'archives' }" />
         <q-btn flat round dense icon="batch_prediction" class="lt-md" :to="{ name:'seat_status' }" />
         <q-btn flat round dense icon="switch_account" :to="{ name:'customers' }" v-if="customer_manage" />
@@ -42,10 +43,11 @@ import ManualSync from "components/ManualSync";
 import {mapState} from "vuex";
 import {attention, settings_boolean} from "assets/helpers";
 import Logout from "components/Logout";
-const { GH75F,GH56E,CC71V,DP71V,KK99V,CZ03Y } = require('boot/subscription').FEATURES
+import QuickToggle from "components/QuickToggle";
+const { GH75F,GH56E,CC71V,DP71V,KK99V,CZ03Y,RS44Z } = require('boot/subscription').FEATURES
 export default {
   name: 'ReceptionistLayout',
-  components: {Logout, ManualSync},
+  components: {QuickToggle, Logout, ManualSync},
   data(){ return { receptionist:_USER.name, logout: LOGOUT, alert:false,
     online_enabled: (GH75F === 'Yes' && GH56E === 'Yes'),
     remote_enabled: (CC71V === 'Yes' && _.trim(DP71V) !== '' ),
@@ -56,6 +58,7 @@ export default {
     online(){ return this.online_enabled && settings_boolean(settings('online_order_waiter_handle')) !== false },
     customer_manage(){ return settings('manage_customer',_USER.role) },
     remote_manage(){ return this.remote_enabled && KK99V === 'Yes' && settings_boolean(settings('receptionist_remote_orders')) !== false },
+    quick_enabled(){ return RS44Z === 'Yes' && ['order_new','sale'].includes(this.$route.name) },
   },
   watch: {
     completed(Nw,Ol){ if(!Ol || Nw.length > Ol.length) {
