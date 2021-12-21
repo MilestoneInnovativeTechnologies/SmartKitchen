@@ -7,6 +7,7 @@
           <q-btn v-if="$store.state.back" :to="$store.state.back" flat round dense icon="arrow_back_ios" />
           {{ $store.state.title || name }}
         </q-toolbar-title>
+        <QuickToggle v-if="quick_enabled" />
         <q-btn flat round dense icon="switch_account" :to="{ name:'customers' }" v-if="customer_manage" />
         <ManualSync />
         <Logout />
@@ -34,14 +35,17 @@ import ManualSync from "components/ManualSync";
 import Logout from "components/Logout";
 import {attention} from "assets/helpers";
 import {mapState} from "vuex";
+import QuickToggle from "components/QuickToggle";
+const { RS44Z } = require('boot/subscription').FEATURES
 export default {
   name: 'DeliveryBoyLayout',
-  components: {Logout, ManualSync},
+  components: {QuickToggle, Logout, ManualSync},
   data () { return { name:_USER.name, logout: LOGOUT } },
   computed: {
     ...mapState('tokens',{ tokens:'data',items:'items' }), ...mapState({ bills:state => state.bills.data }),
     billable(){ return _(this.tokens).filter({ type:'Home Delivery',progress:'Processing' }).filter(({ id }) => _.has(this.items,parseInt(id)) && is_all_completed(this.items[parseInt(id)])).filter(({ id }) => !_.find(this.bills,['token',parseInt(id)])).value() },
     customer_manage(){ return settings('manage_customer',_USER.role) },
+    quick_enabled(){ return RS44Z === 'Yes' && ['order_new'].includes(this.$route.name) },
   },
   watch: {
     billable(Nw,Ol){ if(!Ol || Nw.length > Ol.length) { attention(); } },
