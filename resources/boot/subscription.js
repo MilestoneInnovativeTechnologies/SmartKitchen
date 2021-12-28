@@ -20,6 +20,7 @@ export default () => {
 }
 
 export function KEY_MOVE(){
+  ['key','code','serial'].forEach(key => localStorage.removeItem(key));
   return axios.post(LOGIN.replace('login','subscription/key')).then(() => location.reload())
 }
 
