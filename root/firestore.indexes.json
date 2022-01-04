@@ -1,0 +1,127 @@
+{
+  "indexes": [
+    {
+      "collectionGroup": "data",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "_location",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "kitchen_item_location",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "progress",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "data",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "_location",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "progress",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "kitchen_item_location",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "data",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "_monitor",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "_location",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "data",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "kitchen_item_location",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "_location",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "progress",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "data",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "kitchen_item_location",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "progress",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "_location",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "data",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "progress",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "_location",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "kitchen_item_location",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "data",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "progress",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "kitchen_item_location",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "_location",
+          "order": "ASCENDING"
+        }
+      ]
+    }
+  ],
+  "fieldOverrides": []
+}
