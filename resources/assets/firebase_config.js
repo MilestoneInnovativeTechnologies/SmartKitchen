@@ -1,12 +1,12 @@
+const { UG30A:apiKey,UH30A:authDomain,UF30A:projectId,UK30A:storageBucket,UM30A:messagingSenderId,UO30A:appId,UP30A:measurementId,UQ30A:iHost } = require('boot/subscription').FEATURES
 export default {
-  apiKey: "AIzaSyCdUrQDI8jHDJHkvzpevAyX9WUlK7R4wXI",
-  authDomain: "smart-kitchen-server-test.firebaseapp.com",
-  projectId: "smart-kitchen-server-test",
-  storageBucket: "smart-kitchen-server-test.appspot.com",
-  messagingSenderId: "502388406873",
-  appId: "1:502388406873:web:21b1896ec46833711d0f48",
-  measurementId: "G-C916FMYVX9",
+  apiKey,
+  authDomain,
+  projectId,
+  storageBucket,
+  messagingSenderId,
+  appId,
+  measurementId
 }
 
-export const host = 'https://smart-kitchen-server-test.web.app'
-
+export const host = iHost;
