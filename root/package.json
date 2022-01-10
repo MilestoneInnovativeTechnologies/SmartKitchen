@@ -1,6 +1,6 @@
 {
   "name": "smart-kitchen",
-  "version": "1.6.7",
+  "version": "1.6.8",
   "description": "Kitchen Order Token as its simple way",
   "productName": "Smart Kitchen",
   "author": "Milestone Innovative Technologies <info@milestoneit.net>",
@@ -8,10 +8,10 @@
   "scripts": {
     "test": "echo \"No test specified\" && exit 0",
     "pack": "php .\\milestone\\smartkitchen\\pack.php",
-    "dev": "quasar dev",
-    "dev:pwa": "quasar dev -m pwa",
-    "build": "quasar build",
-    "build:pwa": "quasar build -m pwa && npm run pack",
+    "dev": "quasar dev -m pwa",
+    "dev:spa": "quasar dev -m spa",
+    "build": "quasar build -m pwa && npm run pack",
+    "build:spa": "quasar build -m spa",
     "firebase:deploy": "firebase deploy"
   },
   "dependencies": {

@@ -74,6 +74,7 @@
         <q-card-actions align="right" class="q-px-md bg-grey-2"><q-btn glossy push label="Complete" :disable="params.items.length < 1" :loading="processing" color="secondary" padding="sm lg" class="full-width" @click="complete" /></q-card-actions>
       </q-card>
     </q-dialog>
+    <q-dialog :value="m_show" persistent><MenuSelect :style="popup_width()" /></q-dialog>
   </q-page>
 </template>
 
@@ -90,9 +91,10 @@ import GroupStickyButton from "components/Group/GroupStickyButton";
 import GroupItemsSelect from "components/Group/GroupItemsSelect";
 import QuickOrder from "components/Order/QuickOrder";
 import QuickMode from "assets/mixins/QuickMode";
+import MenuSelect from "components/Menu/MenuSelect";
 export default {
   name: 'PageSale',
-  components: {QuickOrder, GroupItemsSelect, GroupStickyButton, PaymentTypeSelectDropDown, TaxNatureSelectDropDown, OrderCustomer, PriceListSelectDropDown, FilterInputText },
+  components: { MenuSelect, QuickOrder, GroupItemsSelect, GroupStickyButton, PaymentTypeSelectDropDown, TaxNatureSelectDropDown, OrderCustomer, PriceListSelectDropDown, FilterInputText },
   mixins: [QuickMode],
   data(){ return {
     group: 0, item_filter: '', fab: true, offset: [12,12], payment_mode: false, processing: false,
@@ -103,11 +105,16 @@ export default {
   } },
   computed: {
     ...mapGetters({ prices:'prices/items' }), ...mapState({ items_data:({ items }) => items.data }),
+    ...mapState('menus',{ m_show:state => !state.s_items.length }),
     price_list: {
       get(){
         if(!_.has(this.$store.state.public,'sale_price_list')){
           let sale_price_list = _.get(settings('price_list',this.params.type),'id')
           if(sale_price_list) this.$store.commit('public',{ sale_price_list })
+          else {
+            let active_pls = _(this.$store.state.prices.list).filter(['status','Active']).map('id').value();
+            if(active_pls.length === 1) this.$store.commit('public',{ sale_price_list:active_pls[0] })
+          }
         }
         return _.get(this.$store.state.public,'sale_price_list',undefined)
       },
