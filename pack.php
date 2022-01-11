@@ -8,8 +8,6 @@ exec('XCOPY "dist/pwa/js" "milestone/smartkitchen/assets/js" /EHRYI');
 exec('XCOPY "dist/pwa/css" "milestone/smartkitchen/assets/css" /EHRYI');
 exec('XCOPY "dist/pwa/fonts" "milestone/smartkitchen/assets/fonts" /EHRYI');
 
-exec('COPY dist\pwa\favicon.ico milestone\smartkitchen\assets\favicon.ico /Y');
-exec('COPY "dist\pwa\Import Data Template.xlsx" "milestone\smartkitchen\assets\Import Data Template.xlsx" /Y');
 exec('COPY dist\pwa\*.js* milestone\smartkitchen\assets /Y');
 
 $json = [];
