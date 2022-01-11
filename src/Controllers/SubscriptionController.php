@@ -20,7 +20,7 @@ class SubscriptionController extends Controller
                 if(count($cols) === 2 && trim($cols[0]) === "Serial") return trim($cols[1]);
             }
         }
-        return null;
+        return sk('web_serial') ?: env('DEMO_SERIAL');
     }
 
     public function device_serial(){
