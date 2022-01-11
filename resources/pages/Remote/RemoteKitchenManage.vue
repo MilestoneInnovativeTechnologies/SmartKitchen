@@ -48,6 +48,7 @@ import {remote_query} from "assets/modules/Remote";
 import {mapGetters, mapState} from "vuex";
 import {popup_width} from "assets/helpers";
 import RemoteKitchenItemManage from "components/Remote/RemoteKitchenItemManage";
+import {BRANCH_CODE} from "boot/subscription";
 const { CC71V,DP71V,KK99V } = require('boot/subscription').FEATURES
 export default {
   name: 'PageRemoteKitchenManage',
@@ -76,7 +77,7 @@ export default {
     popup_width,
     load_data(){
       let $vm = this; $vm.loading = true;
-      Promise.all([remote_query('kitchens',[{ _monitor:true },{ _location:_BRANCH, operand: '!=' }],true),remote_query('kitchen_items',[{ _monitor:true },{ _location:_BRANCH, operand: '!=' }],true)])
+      Promise.all([remote_query('kitchens',[{ _monitor:true },{ _location:BRANCH_CODE, operand: '!=' }],true),remote_query('kitchen_items',[{ _monitor:true },{ _location:BRANCH_CODE, operand: '!=' }],true)])
         .then(function(snapsArray){
           let kitchensSnaps = snapsArray[0], itemsSnaps = snapsArray[1];
           $vm.loading = false; if(kitchensSnaps.size === 0) return $vm.no_data = true;

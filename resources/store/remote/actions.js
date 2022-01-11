@@ -2,6 +2,7 @@ import {token_item_token} from "src/store/remote/getters";
 
 const { CC71V,DP71V,JX99V,KK99V,SK85W } = require('boot/subscription').FEATURES
 import { onSnapshot, remote_add, remote_doc, remote_query, remote_ref, remote_update } from "assets/modules/Remote";
+import {BRANCH_CODE} from "boot/subscription";
 
 const cache = {},deleted = [];
 
@@ -9,7 +10,7 @@ export function init ({ commit,dispatch }) {
   if(CC71V === 'Yes' && DP71V.trim() !== ''){
     commit('uploadFn',_.bind(dispatch,this,'upload'))
     commit('monitorFn',_.bind(dispatch,this,'monitor'))
-    if(JX99V === 'Yes' && typeof _BRANCH !== "undefined") setTimeout(dispatch,3000,'monitorOrders')
+    if(JX99V === 'Yes' && typeof BRANCH_CODE !== "undefined") setTimeout(dispatch,3000,'monitorOrders')
   }
 }
 
@@ -51,15 +52,15 @@ export function uploadKitchen({ state,dispatch,commit,getters },data){
   if(state.processing) return setTimeout(dispatch,state.pending * 1000,'uploadKitchen',data);
   commit('process'); const item = 'kitchens';
   let store_data = _.find(state.data,(rmt) => rmt.item === item && parseInt(rmt.local_id) === parseInt(data.local_id));
-  if(store_data && (store_data.reference || store_data.location !== _BRANCH)) return commit('process',false);
+  if(store_data && (store_data.reference || store_data.location !== BRANCH_CODE)) return commit('process',false);
   let record = getters[item](data.local_id); if(!record) return commit('process',false);
-  record._location = _BRANCH; record._monitor = true;
+  record._location = BRANCH_CODE; record._monitor = true;
   dispatch('uploadFirebaseRecord',{ item,record,id:data.id }).then(() => commit('process',false));
 }
 export function monitorKitchen({ state,commit,rootState,dispatch,getters },id){
   let remote_record = _.get(state.data,id); if(!remote_record || remote_record.monitor !== 'Yes' || syncingKitchens.includes(remote_record.local_id)) return;
   let kitchen_id = _.toNumber(remote_record.local_id), reference = remote_record.reference, location = remote_record.location;
-  if(location === _BRANCH){
+  if(location === BRANCH_CODE){
     let watchFn = rootState => Object.assign({},rootState.kitchens.data[kitchen_id],rootState.kitchens.status[kitchen_id])
     let listener = function(kitchens){
       if(!kitchens) return dispatch('deleteRemoteEntry', { id });
@@ -101,15 +102,15 @@ export function uploadKitchenItem({ state,dispatch,commit,getters },data){
   if(state.processing) return setTimeout(dispatch,state.pending * 1000,'uploadKitchenItem',data);
   commit('process'); const item = 'kitchen_items';
   let store_data = _.find(state.data,(rmt) => rmt.item === item && parseInt(rmt.local_id) === parseInt(data.local_id));
-  if(store_data && (store_data.reference || store_data.location !== _BRANCH)) return commit('process',false);
+  if(store_data && (store_data.reference || store_data.location !== BRANCH_CODE)) return commit('process',false);
   let record = getters[item](data.local_id); if(!record) return commit('process',false);
-  record._location = _BRANCH; record._monitor = true;
+  record._location = BRANCH_CODE; record._monitor = true;
   dispatch('uploadFirebaseRecord',{ item,record,id:data.id }).then(() => commit('process',false));
 }
 export function monitorKitchenItem({ state,commit,rootState,dispatch,getters,rootGetters },id){
   let remote_record = _.get(state.data,id); if(!remote_record || remote_record.monitor !== 'Yes' || syncingKitchenItems.includes(remote_record.local_id)) return;
   let kitchen_item_id = _.toNumber(remote_record.local_id), reference = remote_record.reference, location = remote_record.location;
-  if(location === _BRANCH){
+  if(location === BRANCH_CODE){
     let map = rootGetters["kitchens/map"][kitchen_item_id], kitchen_id = map[0], idx = map[1], item_id = _.get(rootState.kitchens.items,[kitchen_id,idx,'item']);
     let watchFn = rootState => Object.assign({},rootState.kitchens.items[kitchen_id][idx],rootState.items.data[item_id])
     let listener = function(kitchen_item){
@@ -156,15 +157,15 @@ export function uploadToken({ state,dispatch,commit,getters },data){
   if(state.processing) return setTimeout(dispatch,state.pending * 1000,'uploadToken',data);
   commit('process'); const item = 'tokens';
   let store_data = _.find(state.data,(rmt) => rmt.item === item && parseInt(rmt.local_id) === parseInt(data.local_id));
-  if(store_data && (store_data.reference || store_data.location !== _BRANCH)) return commit('process',false);
+  if(store_data && (store_data.reference || store_data.location !== BRANCH_CODE)) return commit('process',false);
   let record = getters[item](data.local_id); if(!record) return commit('process',false);
-  record._location = _BRANCH; record._monitor = true;
+  record._location = BRANCH_CODE; record._monitor = true;
   dispatch('uploadFirebaseRecord',{ item,record,id:data.id }).then(() => commit('process',false));
 }
 export function monitorToken({ state,commit,rootState,dispatch,getters,rootGetters },id){
   let remote_record = _.get(state.data,id); if(!remote_record || remote_record.monitor !== 'Yes' || syncingTokens.includes(remote_record.local_id)) return;
   let token_id = _.toNumber(remote_record.local_id), reference = remote_record.reference, location = remote_record.location;
-  if(location === _BRANCH){
+  if(location === BRANCH_CODE){
     let watchFn = rootState => rootState.tokens.data[token_id]
     let listener = function(token_data){
       if(!token_data) return dispatch('deleteRemoteEntry', { id });
@@ -202,12 +203,12 @@ export function uploadTokenItem({ state,dispatch,commit,getters },data){
   if(state.processing) return setTimeout(dispatch,state.pending * 1000,'uploadTokenItem',data);
   commit('process'); const item = 'token_items';
   let store_data = _.find(state.data,(rmt) => rmt.item === item && parseInt(rmt.local_id) === parseInt(data.local_id));
-  if(store_data && (store_data.reference || store_data.location !== _BRANCH)) {
-    if(!store_data.reference && store_data.location !== _BRANCH && !!_.get(store_data,['extra','offline_reference'],null)) dispatch('handleOfflineReference',store_data.id)
+  if(store_data && (store_data.reference || store_data.location !== BRANCH_CODE)) {
+    if(!store_data.reference && store_data.location !== BRANCH_CODE && !!_.get(store_data,['extra','offline_reference'],null)) dispatch('handleOfflineReference',store_data.id)
     return commit('process',false);
   }
   let record = getters[item](store_data.local_id); if(!record) return commit('process',false);
-  record = Object.assign({},record,{ _location:_BRANCH,_monitor:true });
+  record = Object.assign({},record,{ _location:BRANCH_CODE,_monitor:true });
   dispatch('uploadFirebaseRecord',{ item,record,id:data.id }).then(() => commit('process',false));
 }
 export function monitorTokenItem({ state,commit,rootState,dispatch,getters,rootGetters },id){
@@ -221,7 +222,7 @@ export function monitorTokenItem({ state,commit,rootState,dispatch,getters,rootG
     if(!token_item_data || !remote_data) return dispatch('deleteRemoteEntry', { id });
     const store_data = getters['token_items'](token_item_data.id), update_data = {}
     if(!store_data || ['Served','Cancelled'].includes(store_data.progress)) {
-      if(location === _BRANCH) {
+      if(location === BRANCH_CODE) {
         update_data['_monitor'] = false;
         if(['Served','Cancelled'].includes(store_data.progress)) update_data['progress'] = store_data.progress;
         if(store_data.offline_reference) update_data['offline_reference'] = store_data.offline_reference;
@@ -233,7 +234,7 @@ export function monitorTokenItem({ state,commit,rootState,dispatch,getters,rootG
     let cache_data = _.get(cache,remote_data.reference);
     if(!cache_data || is_same(store_data,cache_data)) return;
     if(progresses.indexOf(cache_data.progress) < progresses.indexOf(store_data.progress)) update_data['progress'] = store_data.progress;
-    if(location === _BRANCH && !cache_data.offline_reference && store_data.offline_reference) update_data['offline_reference'] = store_data.offline_reference;
+    if(location === BRANCH_CODE && !cache_data.offline_reference && store_data.offline_reference) update_data['offline_reference'] = store_data.offline_reference;
     if(_.size(update_data)) dispatch('updateFirebaseRecord',{ item:'token_items',reference,record:store_data });
   }
   let unwatch = this.watch(watchFn,listener,{ deep:true })
@@ -245,7 +246,7 @@ export function monitorTokenItem({ state,commit,rootState,dispatch,getters,rootG
       if(!snap.exists()) return dispatch('deleteRemoteEntry',{ id });
       let reference = snap.id, cache_data = cache[reference] = snap.data(), remote_data = _.find(state.data,{ item:'token_items',reference }), store_data = getters['token_items'](remote_data.local_id);
       let kitchen_id = _.get(_.find(state.data,{ item:'kitchens',reference:cache_data.kitchen }),'local_id')
-      if(cache_data && cache_data.location !== _BRANCH){
+      if(cache_data && cache_data.location !== BRANCH_CODE){
         if(store_data && cache_data.offline_reference && !store_data.offline_reference) attach_offline_reference(remote_data.id,cache_data.offline_reference,kitchen_id).then(() => null)
         if(['Served','Cancelled'].includes(cache_data.progress) && store_data) {
           increment_token_progress(state.token_item_next_progress,remote_data.local_id,kitchen_id,cache_data.progress,store_data.progress)
@@ -289,7 +290,7 @@ function attach_offline_reference(id,offline_reference,kitchen){
 
 
 export function monitorOrders({ state,dispatch }){
-  remote_query('token_items',{ kitchen_item_location:_BRANCH,_monitor:true }).then(ref => onSnapshot(ref,qSnaps => qSnaps.docChanges().forEach(function(change){
+  remote_query('token_items',{ kitchen_item_location:BRANCH_CODE,_monitor:true }).then(ref => onSnapshot(ref,qSnaps => qSnaps.docChanges().forEach(function(change){
     if(change.type !== 'added' || !!_.find(state.data,{ item:'token_items',reference:change.doc.id })) return;
     let doc = change.doc, reference = doc.id, data = cache[reference] = doc.data();
     if(_.has(cache,data.token)) dispatch('remoteAdd',{ token:_.get(cache,data.token),item:data,item_reference:reference })

@@ -17,6 +17,7 @@
 <script>
 import { uid } from 'quasar'
 import { delete_file,storage_name,upload_file } from "assets/modules/Remote";
+import {BRANCH_CODE} from "boot/subscription";
 
 export default {
   name: 'StorageImageUpload',
@@ -30,7 +31,7 @@ export default {
   methods: {
     storage_name,
     remove(){ this.deleting = true; delete_file(this.value).then(() => this.$emit('input',this.deleting = false,this.image = null)) },
-    name(){ return _BRANCH + '/' + uid() },
+    name(){ return BRANCH_CODE + '/' + uid() },
     upload(file,name){
       this.uploading = true;
       if(!file) return this.uploading = false; let vm = this;

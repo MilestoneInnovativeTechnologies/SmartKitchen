@@ -54,6 +54,7 @@
 import {mapGetters, mapState} from "vuex";
 import DateTime from "components/DateTime";
 import {to_format} from "assets/helpers";
+import {BRANCH_CODE} from "boot/subscription";
 
 export default {
   name: "AddRemoteOrder",
@@ -67,7 +68,7 @@ export default {
   computed: {
     ...mapGetters('remote',['item_id_of_kitchen_item']),
     ...mapState({
-      items({ items,remote }){ return _(remote.data).filter({ item:'kitchen_items',location:_BRANCH }).map(rmt => Object.assign({},{ kitchen_item_id:rmt.local_id,kitchen_item_reference:rmt.reference,kitchen_item_location:rmt.location,item_id:this.item_id_of_kitchen_item(rmt.local_id) })).map(obj => Object.assign({},obj,_.get(items.data,obj.item_id))).value() },
+      items({ items,remote }){ return _(remote.data).filter({ item:'kitchen_items',location:BRANCH_CODE }).map(rmt => Object.assign({},{ kitchen_item_id:rmt.local_id,kitchen_item_reference:rmt.reference,kitchen_item_location:rmt.location,item_id:this.item_id_of_kitchen_item(rmt.local_id) })).map(obj => Object.assign({},obj,_.get(items.data,obj.item_id))).value() },
       offline_remotes({ remote }){ return _(remote.data).filter(({ extra }) => _.has(extra,'r_ref')).keyBy('extra.r_ref').value() },
     }),
     kitchen_reference(){ return _.get(_.find(this.$store.state.remote.data,{ item:'kitchens',local_id:this.kitchen }),'reference') },
@@ -82,7 +83,7 @@ export default {
     verifyReference(){
       if(!this.reference) return this.verified = 0;
       if(this.kitchen_reference !== _.get(this.reference,['server',1,'kitchen'])) return this.verified = 1;
-      if(this.reference.kitchen_item_location !== _BRANCH || !this.kitchen_item_references.includes(this.reference.kitchen_item_reference)) return this.verified = 2;
+      if(this.reference.kitchen_item_location !== BRANCH_CODE || !this.kitchen_item_references.includes(this.reference.kitchen_item_reference)) return this.verified = 2;
       if(!this.reference.name) return this.verified = 3;
       if(this.reference_exists) return this.verified = 4;
     },

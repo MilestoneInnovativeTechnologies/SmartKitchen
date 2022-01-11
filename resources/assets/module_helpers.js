@@ -1,4 +1,5 @@
 import {extract_date, now} from "assets/helpers";
+import {BRANCH_CODE} from "boot/subscription";
 const TdRC = require("assets/assets").TokenDeliveryReadableChecks;
 
 export function bill_payable({ amount,discount,round }){ return _.toNumber(amount) - _.toNumber(discount) - _.toNumber(round) }
@@ -57,11 +58,11 @@ export function token_timing_average(ary,qty){
   },_.cloneDeep(def_times))
 }
 
-export function token_remote_filter(token_branch,{ progress,type,id }){ return type === "Remote" && ['New','Processing','Completed','Billed'].includes(progress) && token_branch[_.toInteger(id)] === _BRANCH }
+export function token_remote_filter(token_branch,{ progress,type,id }){ return type === "Remote" && ['New','Processing','Completed','Billed'].includes(progress) && token_branch[_.toInteger(id)] === BRANCH_CODE }
 export function token_remote_map(items,token){ return Object.assign({}, token,{ items:items[parseInt(token.id)] }) }
 export function token_remote_recent({ progress_timing }){ return (now() - _.get(_.last(progress_timing),'time',now()) < 36*60*60); }
 
-export function remote_is_remote(remotes,item,id){ return !!_.find(remotes,({ item:rItem,local_id,location }) => rItem === item && local_id === id && location !== _BRANCH) }
+export function remote_is_remote(remotes,item,id){ return !!_.find(remotes,({ item:rItem,local_id,location }) => rItem === item && local_id === id && location !== BRANCH_CODE) }
 
 export function token_delivery_readable(datetime){
   for(let x in TdRC){

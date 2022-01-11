@@ -18,6 +18,7 @@
 <script>
 import OfflineReferenceCard from "components/Remote/OfflineReferenceCard";
 import {mapState} from "vuex";
+import {BRANCH_CODE} from "boot/subscription";
 export default {
   name: "RemoteOrderOfflineViewItemLabel",
   components: {OfflineReferenceCard},
@@ -35,7 +36,7 @@ export default {
   },
   methods: {
     prepareRef(){
-      this.generated_offline_ref = _BRANCH + 'TI' + _.padStart(this.token_item.id,6,"0")
+      this.generated_offline_ref = BRANCH_CODE + 'TI' + _.padStart(this.token_item.id,6,"0")
       if(!this.preparing_kitchen){
         let k_ref_loc = this.$store.getters['remote/token_item_kitchen_item_reference_location'][this.token_item.id];
         this.preparing_kitchen = k_ref_loc ? _.get(this.$store.getters['kitchens/map'],[_.get(_.find(this.remote_data,k_ref_loc),'local_id'),0],null) : null;

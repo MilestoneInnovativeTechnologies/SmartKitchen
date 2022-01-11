@@ -1,4 +1,5 @@
 import {remote_is_remote} from "assets/module_helpers";
+import {BRANCH_CODE} from "boot/subscription";
 
 export function kitchens(state,getters,rootState) {
   return function(id){ if(!id) return;
@@ -6,7 +7,7 @@ export function kitchens(state,getters,rootState) {
     if(!kitchen) return false;
     let local_id = parseInt(kitchen.id), ks = rootState.kitchens.status[local_id];
     let users = ks ? ks.users : [], online = ks && ks.status === 'Active';
-    return Object.assign({},_.pick(kitchen,picks),{ online,users },/*{ ['_id_' + _BRANCH]:local_id }*/);
+    return Object.assign({},_.pick(kitchen,picks),{ online,users },/*{ ['_id_' + BRANCH_CODE]:local_id }*/);
   }
 }
 
@@ -18,7 +19,7 @@ export function kitchen_items(state,getters,rootState,rootGetters) {
     let item = _.cloneDeep(_.pick(_.get(rootState,['items','data',parseInt(ki.item)]),state.picks.items));
     item.item = item.name; delete item.name;
     let kitchen_id = parseInt(ki.kitchen), kitchen = _.get(_.find(state.data,({ item,local_id }) => item === 'kitchens' && local_id === kitchen_id),'reference'); if(!kitchen) return;
-    return Object.assign({},kitchen_item,{ kitchen },item,/*{ ['_id_' + _BRANCH]:ki.id,['_id_kitchen_' + _BRANCH]:kitchen_id,['_id_item_' + _BRANCH]:parseInt(ki.item) }*/)
+    return Object.assign({},kitchen_item,{ kitchen },item,/*{ ['_id_' + BRANCH_CODE]:ki.id,['_id_kitchen_' + BRANCH_CODE]:kitchen_id,['_id_item_' + BRANCH_CODE]:parseInt(ki.item) }*/)
   }
 }
 
@@ -26,7 +27,7 @@ export function tokens(state,getters,rootState) {
   return function(id){ if(!id) return;
     let picks = state.picks.tokens, token = _.get(rootState,['tokens','data',parseInt(id)]);
     if(!token) return false;
-    return Object.assign({},_.pick(token,picks),/*{ ['_id_' + _BRANCH]:token.id }*/);
+    return Object.assign({},_.pick(token,picks),/*{ ['_id_' + BRANCH_CODE]:token.id }*/);
   }
 }
 
@@ -70,7 +71,7 @@ export function offline_reference(state,getters,rootState,rootGetters){
       token_date,token_date_code,
       ...ki_refs,
       token_reference: _.get(tk,'reference'), token_item_reference: _.get(ti,'reference'),
-      token_source_location: _BRANCH, token_source_id: ti.token, token_item_source_id: id,
+      token_source_location: BRANCH_CODE, token_source_id: ti.token, token_item_source_id: id,
       ...extra
     })
   }

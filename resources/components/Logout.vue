@@ -4,8 +4,8 @@
 
 <script>
 import {mapGetters, mapState} from "vuex";
-// import {remote} from "boot/remote";
 import {arrayRemove, remote_query, remote_update} from "assets/modules/Remote";
+import {BRANCH_CODE} from "boot/subscription";
 
 export default {
   name: 'Logout',
@@ -23,7 +23,7 @@ export default {
         if(arr && arr[1]) arr[1]();
       })
       if(_USER.role === 'Chef'){
-        let vm = this, rKitchens = _(this.assign[this.me]).mapKeys().mapKeys(kid => _.get(_.find(this.data,({ item,location,local_id }) => location === _BRANCH && item === 'kitchens' && local_id === kid),'reference',null)).value();
+        let vm = this, rKitchens = _(this.assign[this.me]).mapKeys().mapKeys(kid => _.get(_.find(this.data,({ item,location,local_id }) => location === BRANCH_CODE && item === 'kitchens' && local_id === kid),'reference',null)).value();
         let rRefs = _(rKitchens).keys().filter(a => a && a !== 'null').value(), full_timer = this.kitchen_full_timer;
         if(!rRefs.length) return vm.nav();
         remote_query('kitchens',{ '__name__':rRefs,operand:'in' }).then(function(snaps){

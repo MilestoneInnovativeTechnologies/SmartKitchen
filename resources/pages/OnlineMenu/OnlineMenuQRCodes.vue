@@ -41,6 +41,7 @@ import DateTime from "components/DateTime";
 import {next_month} from "assets/helpers";
 import {mapState} from "vuex";
 import { host } from 'assets/firebase_config'
+import {BRANCH_CODE} from "boot/subscription";
 const { GH75F,JI36A } = require('boot/subscription').FEATURES
 export default {
   name: 'PageOnlineMenuQRCodes',
@@ -53,7 +54,7 @@ export default {
   } },
   computed: mapState({ seats: state => state.seating.data, customers: state => state.customers.data, menus: state => state.menus.data, pls: state => state.prices.list }),
   methods: {
-    encode(data){ return this.url + encodeURI(btoa(JSON.stringify(Object.assign({},data,{ validity:this.validity,branch:_BRANCH })))) },
+    encode(data){ return this.url + encodeURI(btoa(JSON.stringify(Object.assign({},data,{ validity:this.validity,branch:BRANCH_CODE })))) },
     generate(){ this.qr_codes.splice(0,this.qr_codes.length)
       if(!this.enable_order || GH75F === 'No') this.qr_codes.push([_.get(this.menus,[this.menu,'name'],"").replaceAll('menu','') + ' Menu QR Code',this.encode({ menu:this.menu,price_list:this.price_list })])
       else {

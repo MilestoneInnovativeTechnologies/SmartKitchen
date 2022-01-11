@@ -39,6 +39,7 @@ import {h_key, image} from "assets/helpers";
 import {TokenItemProgressColor} from "assets/assets";
 import ReadReferenceCard from "components/Remote/OfflineReferenceCard";
 import RemoteOrderOfflineViewItemLabel from "components/Remote/RemoteOrderOfflineViewItemLabel";
+import {BRANCH_CODE} from "boot/subscription";
 
 export default {
   name: "RemoteTokenItemsList",
@@ -54,7 +55,6 @@ export default {
   } },
   computed: {
     ti_ids(){ return _.map(this.items,({ id }) => parseInt(id)) },
-    read_refs(){ return _(this.$store.state.remote.data).filter(({ item,local_id }) => item === 'token_items' && this.ti_ids.includes(parseInt(local_id))).mapKeys(({ local_id }) => parseInt(local_id)).mapValues(({ extra }) => _.get(extra,'r_ref')).value() },
     ti_kitchens(){ return _(this.items).mapKeys(({ id }) => parseInt(id)).mapValues(({ item }) => _.findKey(this.$store.state.kitchens.items,(items) => _.find(items,['item',item]))).mapValues(_.toInteger).value(); },
   },
   methods: {
@@ -71,7 +71,7 @@ export default {
       post('token','served',{ id:item.id }).then(() => vm.confirm = false).catch().then(() => this.loading = false);
     },
     remote(id){ return _.find(this.$store.state.remote.data,{ item:'token_items',local_id:parseInt(id) }) },
-    rRef({ id }){ this.r_ref = _BRANCH + 'TI' + _.padStart(id,6,"0"); this.r_ref_id = parseInt(id); this.add_ref = true; },
+    rRef({ id }){ this.r_ref = BRANCH_CODE + 'TI' + _.padStart(id,6,"0"); this.r_ref_id = parseInt(id); this.add_ref = true; },
     addRef(){
       let id = _.get(this.remote(this.r_ref_id),'id'), reference = this.r_ref, kitchen = this.ti_kitchens[this.r_ref_id], vm = this; this.loading = true;
       if(!id || !reference || !kitchen) return this.loading = false;

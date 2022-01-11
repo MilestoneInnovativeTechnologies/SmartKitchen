@@ -1,5 +1,6 @@
 import {onSnapshot, orderRef, ordersQuery, updateDoc} from "assets/modules/OnlineMenu";
 import {now} from "assets/helpers";
+import {BRANCH_CODE} from "boot/subscription";
 
 const { GH56E,GH75F,JI36A } = require('boot/subscription').FEATURES
 export function init ({ dispatch }) {
@@ -9,8 +10,8 @@ export function init ({ dispatch }) {
 }
 
 export function init_remote({ commit,dispatch }){
-  if(typeof _BRANCH === "undefined") return;
-  onSnapshot(ordersQuery(JI36A,_BRANCH),function(qSnap){
+  if(typeof BRANCH_CODE === "undefined") return;
+  onSnapshot(ordersQuery(JI36A,BRANCH_CODE),function(qSnap){
     qSnap.docChanges().forEach(function(change){
       let TYPE =  change.type, ID = change.doc.id, DATA = change.doc.data();
 
@@ -26,13 +27,13 @@ export function init_remote({ commit,dispatch }){
 }
 
 export function update({ dispatch },params) {
-  if (GH56E !== 'Yes' || GH75F !== 'Yes' || typeof _BRANCH === 'undefined') return;
+  if (GH56E !== 'Yes' || GH75F !== 'Yes' || typeof BRANCH_CODE === 'undefined') return;
   if (JI36A) dispatch('update_remote', params)
   else dispatch('update')
 }
 
 export function update_remote(ctx,{ id,data }){
-  updateDoc(orderRef(JI36A,_BRANCH,id),data)
+  updateDoc(orderRef(JI36A,BRANCH_CODE,id),data)
 }
 
 export function create({ dispatch },{ reference,params }){
@@ -42,8 +43,8 @@ export function create({ dispatch },{ reference,params }){
 }
 
 export function remove(ctx,{ reference,progress }){
-  if (GH56E !== 'Yes' || GH75F !== 'Yes' || typeof _BRANCH === 'undefined') return;
-  if (JI36A) updateDoc(orderRef(JI36A,_BRANCH,reference),{ progress:progress || 'Cancelled',active:false })
+  if (GH56E !== 'Yes' || GH75F !== 'Yes' || typeof BRANCH_CODE === 'undefined') return;
+  if (JI36A) updateDoc(orderRef(JI36A,BRANCH_CODE,reference),{ progress:progress || 'Cancelled',active:false })
 }
 
 export function subWatch({ dispatch,rootState,rootGetters },{ id,reference }){

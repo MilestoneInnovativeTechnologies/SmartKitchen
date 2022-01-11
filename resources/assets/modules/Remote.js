@@ -4,6 +4,7 @@ import { getStorage,ref,getDownloadURL,deleteObject,uploadBytesResumable } from 
 
 
 const { CC71V,DP71V } = require('boot/subscription').FEATURES
+import { CLIENT_CODE } from "boot/subscription";
 
 import firebaseConfig from 'assets/firebase_config'
 export { arrayRemove,onSnapshot,setDoc,getDoc,documentId } from "firebase/firestore";
@@ -19,7 +20,7 @@ export function remote(item,prop){
   if(CC71V !== 'Yes' || DP71V.trim() === '') return Promise.reject('Remote Kitchen not enabled or no remote reference provided...');
   if(!FDB) FDB = getFirestore(firebaseApp); const reference = DP71V.trim();
   return new Promise(async function (resolve,reject){
-    company_defined = (company_defined === null) ? await new Promise(function(resolve){ getDoc(doc(FDB,'companies',reference)).then(snap => resolve(snap.get('name') && snap.get('name') === _COMPANY)) }) : company_defined;
+    company_defined = (company_defined === null) ? await new Promise(function(resolve){ getDoc(doc(FDB,'companies',reference)).then(snap => resolve(snap.get('name') && snap.get('name') === CLIENT_CODE)) }) : company_defined;
     if(!company_defined) return reject('Company not defined!!');
     if(prop === undefined) return resolve(collection(FDB,reference + '/' + item + '/data'));
     if(prop === 'get' || prop === true) return getDocs(collection(FDB,reference + '/' + item + '/data')).then(resolve).catch(reject)
@@ -32,7 +33,7 @@ export function storage(file,url){
   const reference = DP71V.trim();
   if(!RST) RST = getStorage(firebaseApp); if(!FDB) FDB = getFirestore(firebaseApp);
   return new Promise(async function (resolve,reject){
-    company_defined = (company_defined === null) ? await new Promise(function(resolve){ getDoc(doc(FDB,'companies',reference)).then(snap => resolve(snap.get('name') && snap.get('name') === _COMPANY)) }) : company_defined;
+    company_defined = (company_defined === null) ? await new Promise(function(resolve){ getDoc(doc(FDB,'companies',reference)).then(snap => resolve(snap.get('name') && snap.get('name') === CLIENT_CODE)) }) : company_defined;
     if(!company_defined) return reject('Company not defined!!');
     let s_ref = ref(RST,reference + '/' + storage_name(file));
     return (!url) ? resolve(s_ref) : getDownloadURL(s_ref).then(resolve).catch(() => reject('File not exists!!'));
