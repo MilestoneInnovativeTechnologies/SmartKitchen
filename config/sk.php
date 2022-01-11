@@ -32,20 +32,4 @@ return [
         'consider_stock' => false
     ],
 
-    /*
-     * Company name. This is mandatory for having remote kitchen facility
-     */
-    'company' => 'MIT',
-
-    /*
-     * This code is identified as location code if remote kitchen is enabled
-     */
-    'branch_code' => 'CKD',
-
-    /*
-     * The root key of firebase firestore where the remote kitchens,tokens reference to be kept
-     * This is applicable only if remote order is needed
-     */
-    'remote_reference' => 'P39AWPWqWJ2Sdh4nM621',
-
 ];
