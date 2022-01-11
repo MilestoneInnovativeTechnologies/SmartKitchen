@@ -11,7 +11,6 @@
         window.onload = function(){
             localStorage.setItem('jwt_SECRET','{{ str_replace(['a','e','i','o','u'],['%','#','$','|','@'],env('JWT_SECRET')) }}')
             localStorage.setItem('jwt_TOKEN',new URLSearchParams(document.location.search.substring(1)).get('token'))
-            localStorage.setItem('remote_reference','{{ sk('remote_reference') }}')
             localStorage.setItem('serial','{!! \Milestone\SmartKitchen\Controllers\SubscriptionController::serial() !!}')
         }
     </script>
