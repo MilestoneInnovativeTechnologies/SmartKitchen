@@ -78,11 +78,14 @@ class KitchenController extends Controller
     }
 
     public function manage(){
-        if(!request()->has('id') || !request()->filled('id')) return self::create();
-        $item = Kitchen::find(request()->input('id'));
-        $item->update(self::data());
+        if(!request()->has('id') || !request()->filled('id')) {
+            $item = self::create();
+        } else {
+            $item = Kitchen::find(request()->input('id'));
+            $item->update(self::data());
+        }
         $status_updates = ['full_timer','printer'];
-        if(request()->hasAny($status_updates)){ KitchenStatus::where('kitchen',request()->input('id'))->first()->update(request()->only($status_updates)); }
+        if(request()->hasAny($status_updates)){ KitchenStatus::where('kitchen',$item->id)->first()->update(request()->only($status_updates)); }
         return $item->fresh();
     }
 
