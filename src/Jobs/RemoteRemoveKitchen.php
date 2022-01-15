@@ -15,13 +15,12 @@ class RemoteRemoveKitchen
 
     private $id, $location;
 
-    public function __construct($id,$location = null){
+    public function __construct($id){
         $this->id = $id;
-        $this->location = $location;
     }
 
     public function handle(){
-        $where = ['item' => 'kitchens','local_id' => $this->id,'location' => sk('branch_code')];
+        $where = ['item' => 'kitchens','local_id' => $this->id];
         Remote::updateOrCreate($where,['monitor' => 'No']);
     }
 }

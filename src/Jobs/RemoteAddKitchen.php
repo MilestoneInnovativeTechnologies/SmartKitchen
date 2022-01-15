@@ -22,7 +22,8 @@ class RemoteAddKitchen
 
     public function handle(){
         $where = ['item' => 'kitchens','local_id' => $this->id];
-        if($this->location) $where['location'] = $this->location;
-        Remote::updateOrCreate($where,['monitor' => 'Yes']);
+        $update = ['monitor' => 'Yes'];
+        if($this->location) $update['location'] = $this->location;
+        Remote::updateOrCreate($where,$update);
     }
 }

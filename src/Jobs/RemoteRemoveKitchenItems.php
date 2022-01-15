@@ -23,7 +23,7 @@ class RemoteRemoveKitchenItems
     }
 
     public function handle(){
-        $RemoteKitchenReference = Arr::get(Remote::where(['item' => 'kitchens', 'local_id' => $this->kitchen, 'location' => sk('branch_code')])->orderBy('id','desc')->first(),'reference');
+        $RemoteKitchenReference = Arr::get(Remote::where(['item' => 'kitchens', 'local_id' => $this->kitchen])->orderBy('id','desc')->first(),'reference');
         if(!$RemoteKitchenReference) return;
         $KitchenItems = KitchenItem::with('Item')->where('kitchen',$this->kitchen)->get();
         $Remotes = Remote::where('item','kitchen_items')->pluck('local_id')->toArray();

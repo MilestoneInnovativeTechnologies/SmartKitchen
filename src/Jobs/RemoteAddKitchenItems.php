@@ -32,8 +32,9 @@ class RemoteAddKitchenItems
             return (in_array($id,$Remotes)) ? $id : false;
         })->each(function($kitchenItem){
             $where = ['item' => 'kitchen_items','local_id' => $kitchenItem];
-            if($this->location) $where['location'] = $this->location;
-            if($kitchenItem) Remote::updateOrCreate($where,['monitor' => 'Yes']);
+            $update = ['monitor' => 'Yes'];
+            if($this->location) $update['location'] = $this->location;
+            if($kitchenItem) Remote::updateOrCreate($where,$update);
         });
     }
 }
