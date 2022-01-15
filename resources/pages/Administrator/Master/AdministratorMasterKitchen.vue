@@ -6,12 +6,13 @@
 
 <script>
 import AdministratorMasterCommon from "components/Administrator/AdministratorMasterCommon";
-import {mapGetters, mapState} from "vuex";
+import {mapGetters} from "vuex";
+const { CC71V,JX99V,DP71V } = require('boot/subscription').FEATURES
 export default {
   name: "PageAdministratorMasterKitchen",
   components: {AdministratorMasterCommon},
   data(){ return {
-    fields: { name:'text',detail:'textarea',auto_accept:'noyes',cloud:'noyes',full_timer:'chef',printer:'text',status:'status' },
+    fields: Object.assign({ name:'text',detail:'textarea',auto_accept:'noyes' },(CC71V === 'Yes' && JX99V === 'Yes' && DP71V.trim() !== "") ? { cloud:'noyes' } : {},{ full_timer:'chef',printer:'text',status:'status' }),
     filter: ['name','detail'], validate: ['name']
   } },
   computed: {
