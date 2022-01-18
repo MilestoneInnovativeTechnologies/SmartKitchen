@@ -14,6 +14,7 @@
 <script>
 import KitchenTokens from "components/Kitchen/KitchenTokens";
 import AddRemoteOrder from "components/Remote/AddRemoteOrder";
+const { SK85W } = require('boot/subscription').FEATURES
 export default {
   name: 'PageTokens',
   components: {AddRemoteOrder, KitchenTokens},
@@ -22,7 +23,7 @@ export default {
   } },
   computed: {
     kitchen(){ return _.get(this.$store.state.kitchens.data,_.toInteger(this.$store.state.public.kitchen),null) },
-    cloud(){ return _.get(this.kitchen,'cloud') === 'Yes' },
+    cloud(){ return _.get(this.kitchen,'cloud') === 'Yes' && SK85W === 'Yes' },
     reset: {
       get(){ return !!_.get(this.$store.state,['public','reset'],false) },
       set(reset){ this.$store.commit('public',{ reset: !!reset }) }
