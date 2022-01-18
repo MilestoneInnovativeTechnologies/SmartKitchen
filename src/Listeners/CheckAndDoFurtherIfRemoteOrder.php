@@ -23,9 +23,10 @@ class CheckAndDoFurtherIfRemoteOrder
     {
         $Token = Token::find($event->token);
         if(!$Token || $Token->type !== 'Remote') return;
+        if(!request()->filled('_location')) return;
         request()->merge(['token' => $event->token]);
-        $branch = request()->input('_location',sk('branch_code'));
-        if($branch === sk('branch_code')) app()->call(BillController::class,[],'create');
+        $branch = request()->input('_location');
+        if($branch) app()->call(BillController::class,[],'create');
         RemoteAddToken::dispatch($event->token,$branch);
         RemoteAddTokenItems::dispatch($event->token,$branch);
     }

@@ -70,13 +70,14 @@ import {image, is_period, tomorrow} from "assets/helpers";
 import DateTime from "components/DateTime";
 import {PaymentsTypes} from "assets/assets";
 import {delete_file} from "assets/modules/Remote";
+import {BRANCH_CODE} from "boot/subscription";
 
 export default {
   name: 'PageRemoteOrdersNew',
   components: { DateTime, RemoteOrderItemUpdateForm, PriceListSelectDropDown, OrderCustomer, ItemSelectCard, Masonry },
   data(){ return {
     expanded: true, payment_types: PaymentsTypes, loading: false, deliver: null,
-    params: { type:'Remote',price_list:null,customer:null,items:[],nature:null,discount:0,advance_type:PaymentsTypes[0],advance_amount:0 },
+    params: { type:'Remote',price_list:null,customer:null,items:[],nature:null,discount:0,advance_type:PaymentsTypes[0],advance_amount:0,_location:BRANCH_CODE },
     edit: -1,
   } },
   computed: {
@@ -96,7 +97,7 @@ export default {
     update(item){ _.forEach(item,(val,key) => this.params.items[this.edit][key] = val); this.edit = -1 },
     remove(idx){ if(this.params.items[idx].photo) delete_file(this.params.items[idx].photo); setTimeout(function(vm){ vm.params.items.splice(idx,1) },330,this) },
     save(){ if(!this.params.customer) return alert('Choose Customer'); this.loading = true; post('token','create',this.params).then(this.saved) },
-    saved(r){ this.loading = false; this.$nextTick(function(){ this.$router.push({ name:'orders_remote' }) }) },
+    saved(){ this.loading = false; this.$nextTick(function(){ this.$router.push({ name:'orders_remote' }) }) },
     discount_percent(e){
       if(is_period(e.keyCode) && (this.prv_per1 || _.includes(_.toString(this.params.discount),"."))) {
         setTimeout(() => {

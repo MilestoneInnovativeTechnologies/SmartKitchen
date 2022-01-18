@@ -12,7 +12,7 @@ class Remote extends Model
 
     protected static function booted() {
         static::addGlobalScope(new MonitoringOnlyScope);
-        static::saving(function($remote){ if(!$remote->location) $remote->setAttribute('location',sk('branch_code')); });
+        static::saving(function($remote){ if(!$remote->location) if(request()->filled('_location')) $remote->setAttribute('location',request('_location')); });
         static::saved(function($remote){
             if($remote->item === 'kitchens'){
                 $kis = KitchenItem::where('kitchen',$remote->local_id)->pluck('item')->toArray();
