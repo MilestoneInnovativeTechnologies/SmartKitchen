@@ -15,8 +15,11 @@ trait TokenPrintTrait
         return Arr::has(self::$Settings,$name) ? $name : $not_has_value;
     }
 
-    public function print_data($data){
-        $data->load(['Items' => function($Q){ $Q->withoutGlobalScopes()->with(['Item','User','Kitchen']); },'User','Seating','Customer','Bill.Payments']);
+    public function print_data($data,$extra = []){
+        $data->load(['Items' => function($Q)use($extra){
+            if(is_array($extra) && array_key_exists('kitchen',$extra)) $Q->withoutGlobalScopes()->where('kitchen',intval($extra['kitchen']))->with(['Item','User','Kitchen']);
+            else $Q->withoutGlobalScopes()->with(['Item','User','Kitchen']);
+        },'User','Seating','Customer','Bill.Payments']);
         $data->setAttribute('total_items',$data->Items->count());
         $data->setAttribute('total_quantities',$data->Items->sum->quantity);
         $data->setAttribute('date_human',human_date($data->date));
