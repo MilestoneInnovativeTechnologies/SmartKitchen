@@ -4,7 +4,7 @@ import {BRANCH_CODE} from "boot/subscription";
 
 const { GH56E,GH75F,JI36A } = require('boot/subscription').FEATURES
 export function init ({ dispatch }) {
-  if(GH56E !== 'Yes' || GH75F !== 'Yes') return;
+  if(typeof _USER === "undefined" || GH56E !== 'Yes' || GH75F !== 'Yes') return;
   if(JI36A) dispatch('init_remote')
   else dispatch('local')
 }
