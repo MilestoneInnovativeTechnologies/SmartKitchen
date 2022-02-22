@@ -2,6 +2,7 @@
   <q-page padding class="q-gutter-y-sm" v-scroll="scrolled">
     <OrderWaiterSummary class="q-mt-md" />
     <OrderWaiterServable class="q-mt-md" />
+    <OnlineOrdersPendingList color="indigo" title="Pending Online Orders" />
     <OrderOngoingTables class="q-mt-md" />
     <transition appear enter-active-class="animated fadeIn" leave-active-class="animated fadeOut">
       <q-page-sticky v-show="fab" position="bottom-right" :offset="offset">
@@ -17,9 +18,10 @@ import OrderWaiterServable from "components/Order/OrderWaiterServable";
 import DigitMetric from "components/Metric/DigitMetric";
 import OrderOngoingTables from "components/Order/OrderOngoingTables";
 import {debounce} from "quasar";
+import OnlineOrdersPendingList from "components/Order/OnlineOrdersPendingList";
 export default {
   name: 'PageWaiterIndex',
-  components: {OrderOngoingTables, DigitMetric, OrderWaiterServable, OrderWaiterSummary},
+  components: {OnlineOrdersPendingList, OrderOngoingTables, DigitMetric, OrderWaiterServable, OrderWaiterSummary},
   data(){ return {
     token: new URLSearchParams(document.location.search.substring(1)).get('token'),
     fab: true,  offset: [24,24],
