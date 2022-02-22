@@ -33,18 +33,6 @@ export default {
             else remote_update(snap.ref,{ users: arrayRemove(vm.me),online:users.length > 1 }).then(() => (--size) ? null : vm.nav())
           });
         }).catch(this.nav)
-        /*remote('kitchens')
-          .then(function(ref){
-            ref.where('__name__','in',rRefs).get().then(function(snaps){
-              if(snaps.empty) return vm.nav(); let size = snaps.size;
-              snaps.forEach(function(snap){
-                let users = snap.get('users'), k_ref = snap.id;
-                if(_.has(rKitchens,k_ref) && _.has(full_timer,rKitchens[k_ref]) && full_timer[rKitchens[k_ref]] === vm.me) return (--size) ? true : vm.nav();
-                else snap.ref.update({ users: firebase.firestore.FieldValue.arrayRemove(vm.me),online:users.length > 1 }).then(() => (--size) ? null : vm.nav())
-              });
-            })
-          })
-          .catch(this.nav)*/
       }
       else this.nav()
     },
