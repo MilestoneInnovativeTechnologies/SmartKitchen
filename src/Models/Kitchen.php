@@ -30,6 +30,8 @@ class Kitchen extends Model implements HasMedia
         $Token = Token::find($token_id);
         $data = $Token->print_data($Token);
         $data->setAttribute('kitchen',is_array($kitchen) ? $kitchen : $kitchen->toArray());
+        $data = $data->toArray();
+        $data['items'] = collect($data['items'])->filter(function($item)use($kitchen){ return Arr::get($item,'kitchen.id') === Arr::get($kitchen,'id'); })->toArray();
         return $data;
     }
 
