@@ -20,7 +20,7 @@
     </q-page-container>
     <q-page-container v-else>
       <q-page padding>
-        <div class="row q-col-gutter-sm"><div class="col-xs-6 col-sm-4 col-md-3 col-lg-2 col-xl-1" v-for="i in 5" :key="'om-s-' + i"><OnlineMenuItemSkeleton /></div></div>
+        <div class="row q-col-gutter-sm"><div class="col-xs-6 col-sm-4 col-md-3 col-lg-2 col-xl-1" v-for="i in 12" :key="'om-s-' + i"><OnlineMenuItemSkeleton /></div></div>
       </q-page>
     </q-page-container>
 
@@ -113,7 +113,8 @@ export default {
     quantities(){ return _.sumBy(this.cart,'quantity') },
     order(){ return this.$store.state.public.order },
     order_total(){ return this.order ? _.sumBy(this.order.items,({ rate,quantity }) => _.toNumber(rate)*_.toNumber(quantity)) : 0 },
-    order_status(){ let { status,progress } = this.order; if(!progress) return status; return (progress === 'New') ? 'Order Confirmed' : (progress === 'Processing' ? 'Confirmed - Preparing' : (progress === 'Completed' ? 'Items Served' : (progress === 'Billed' ? 'Served - Bill Generated' : (progress === 'Partial' ? 'Paid Partially' : progress)))) },
+    items_completed(){ let items = _.get(this.order,'items',[]); return _.every(items, ({ progress }) => _.includes(['Completed','Served','Cancelled'],progress)) },
+    order_status(){ let { status,progress } = this.order; if(!progress) return status; return (progress === 'New') ? 'Order Confirmed' : (progress === 'Processing' ? (this.items_completed ? 'All Items Prepared' : 'Confirmed - Preparing') : (progress === 'Completed' ? 'Items Served' : (progress === 'Billed' ? 'Served - Bill Generated' : (progress === 'Partial' ? 'Paid Partially' : progress)))) },
     popup(){ return popup_width() },
   },
   methods: {
@@ -126,7 +127,7 @@ export default {
       return new Promise(async function(resolve){
         localStorage.setItem(vm.reference,
           vm.reference === 'local'
-            ? JSON.stringify(_.get(await axios.get('http://sk/assets/online/menu.js?_=' + Math.random()),'data'))
+            ? JSON.stringify(_.get(await axios.get(location.origin + '/assets/online/menu.js?_=' + Math.random()),'data'))
             : JSON.stringify(_.get(await axios.get(await asset_url(vm.reference)),'data'))
         );
         vm.public(JSON.parse(localStorage.getItem(vm.reference))); resolve(vm)

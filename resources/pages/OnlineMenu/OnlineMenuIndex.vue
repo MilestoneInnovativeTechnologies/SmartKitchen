@@ -1,10 +1,17 @@
 <template>
   <q-page padding>
     <q-input outlined v-model="filter" class="q-mb-xs" label="Search Items" />
-    <q-scroll-area style="height: calc(100vh - 126px)">
+    <q-scroll-area style="height: calc(100vh - 126px)" v-if="can_order">
       <div class="row q-col-gutter-sm">
         <div :class="view === 'grid' ? 'col-xs-6 col-sm-4 col-md-3 col-lg-2 col-xl-1' : 'col-xs-12 col-sm-6 col-md-4 col-lg-3 col-xl-2'" v-for="item in filter_items" :key="'omli-i-' + item.id">
-          <OnlineMenuItem v-bind="item" :price="prices[item.id]" :image="getImage(item)" :order="can_order" @click.native="can_order ? add(item) : null" />
+          <OnlineMenuItem v-bind="item" :price="prices[item.id]" :image="getImage(item)" :order="true" @click.native="add(item)" />
+        </div>
+      </div>
+    </q-scroll-area>
+    <q-scroll-area style="height: calc(100vh - 126px)" v-else>
+      <div class="row q-col-gutter-sm">
+        <div :class="view === 'grid' ? 'col-xs-6 col-sm-4 col-md-3 col-lg-2 col-xl-1' : 'col-xs-12 col-sm-6 col-md-4 col-lg-3 col-xl-2'" v-for="item in filter_items" :key="'omli-i-' + item.id">
+          <OnlineMenuItem v-bind="item" :price="prices[item.id]" :image="getImage(item)" />
         </div>
       </div>
     </q-scroll-area>

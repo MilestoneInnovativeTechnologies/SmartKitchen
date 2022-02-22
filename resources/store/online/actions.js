@@ -29,11 +29,15 @@ export function init_remote({ commit,dispatch }){
 export function update({ dispatch },params) {
   if (GH56E !== 'Yes' || GH75F !== 'Yes' || typeof BRANCH_CODE === 'undefined') return;
   if (JI36A) dispatch('update_remote', params)
-  else dispatch('update')
+  else dispatch('update_local')
 }
 
 export function update_remote(ctx,{ id,data }){
-  updateDoc(orderRef(JI36A,BRANCH_CODE,id),data)
+  updateDoc(orderRef(JI36A,BRANCH_CODE,id),_.assign({},data,{ time:now() }))
+}
+
+export function update_local(ctx){
+  console.error('OnlineMenu - Update local - Need to be implemented!!')
 }
 
 export function create({ dispatch },{ reference,params }){

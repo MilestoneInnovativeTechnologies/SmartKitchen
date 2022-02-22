@@ -6,8 +6,6 @@ export const BASE_PATH = typeof BASE_URL === 'undefined' ? '/api/v1' : BASE_URL
 export const KEY = typeof _KEY === 'undefined' ? '' : _KEY
 export const CODE = typeof _CODE === 'undefined' ? '' : _CODE
 export const TIME = typeof _TIME === 'undefined' ? parseInt(new Date().getTime()/1000) : _TIME
-export const OnlineMenuAssetsFile = 'menu/assets.json'
-export const OnlineMenuItemImagePath = 'menu/items/'
 export const ItemsPerPageSettingName = 'items_per_page'
 export const ItemsPerPageDefault = 50
 export const ItemsSearchFieldsSettingName = 'items_search_fields'

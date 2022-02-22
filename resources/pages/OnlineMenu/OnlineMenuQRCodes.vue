@@ -41,6 +41,7 @@ import DateTime from "components/DateTime";
 import {next_month} from "assets/helpers";
 import {mapState} from "vuex";
 import { host } from 'assets/firebase_config'
+import firebaseConfigs from 'assets/firebase_config'
 import {BRANCH_CODE} from "boot/subscription";
 const { GH75F,JI36A } = require('boot/subscription').FEATURES
 export default {
@@ -50,7 +51,7 @@ export default {
     GH75F,
     menu: null, type: null, customer: null, price_list: null, seating: null, size: 300,
     validity: next_month('YYYY-MM-DD HH:mm:ss'), enable_order: false, all_tables: 'Yes',
-    qr_codes: [], url: [(JI36A ? host : _.trimEnd(LOGIN.replace('login','menu'),'/')),('#'),(JI36A || 'local'),""].join('/')
+    qr_codes: [], url: [(JI36A ? host : _.trimEnd(LOGIN.replace('login','menu'),'/')),('#'),(JI36A || 'local'),btoa(JSON.stringify(firebaseConfigs)),""].join('/')
   } },
   computed: mapState({ seats: state => state.seating.data, customers: state => state.customers.data, menus: state => state.menus.data, pls: state => state.prices.list }),
   methods: {

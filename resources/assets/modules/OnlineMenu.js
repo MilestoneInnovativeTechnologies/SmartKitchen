@@ -3,15 +3,22 @@ import { getDownloadURL, getStorage, ref, StringFormat, uploadString, uploadByte
 import { doc, addDoc, collection, getFirestore, onSnapshot, query, where, updateDoc } from "firebase/firestore";
 
 import firebaseConfig from 'assets/firebase_config'
-import {OnlineMenuAssetsFile, OnlineMenuItemImagePath} from "assets/constants";
+
+let BRANCH_CODE = null
+import {BRANCH_CODE as BRANCH} from "boot/subscription";
+try {
+  BRANCH_CODE = BRANCH || _.get(JSON.parse(atob(location.hash.split('/').pop())),'branch')
+} catch (e){
+  BRANCH_CODE = null
+}
 
 const firebaseApp = initializeApp(firebaseConfig);
 const storage = getStorage(firebaseApp);
 
 const image_cache = {}
 
-function full_path(reference){ return reference + '/' + OnlineMenuAssetsFile }
-function image_path(reference,id){ return reference + '/' + OnlineMenuItemImagePath + id }
+function full_path(reference){ return reference + '/menu/' + BRANCH_CODE + '.json' }
+function image_path(reference,id){ return reference + '/menu/' + BRANCH_CODE + '/' + id }
 function asset_ref(reference){ return ref(storage,full_path(reference)) }
 function image_ref(reference,img_id){ return ref(storage,image_path(reference,img_id)) }
 
@@ -81,3 +88,4 @@ function ordersQuery(reference,branch){
 
 export { asset_url,image_url,upload_assets,upload_image,upload_image_progress,all_images }
 export { orderPost,onSnapshot,orderRef,ordersQuery,updateDoc }
+

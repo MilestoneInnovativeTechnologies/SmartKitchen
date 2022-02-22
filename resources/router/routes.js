@@ -7,7 +7,7 @@ const layout_master = {
   Receptionist: { path:'/', component: () => import('layouts/ReceptionistLayout.vue') },
   Administrator: { path:'/', component: () => import('layouts/AdministratorLayout.vue') },
   'Delivery Boy': { path:'/', component: () => import('layouts/DeliveryBoyLayout.vue') },
-  Menu: { path:'/:reference/:code', component: () => import('layouts/MenuLayout.vue'), props: true, meta:{ online_menu:true } },
+  Menu: { path:'/:reference/:online/:code', component: () => import('layouts/MenuLayout.vue'), props: true, meta:{ online_menu:true } },
 }
 
 const layout_child = {
