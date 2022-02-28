@@ -12,7 +12,7 @@
       </template>
       <q-card class="bg-grey-1">
         <q-card-section class="q-py-xs">
-          <RemoteTokenItemsList :token="token" :items="token.items" :item_master="items" :kitchen_master="kitchens" :customer_master="customers" />
+          <RemoteTokenItemsList :token="token" :items="token.items" :item_master="items" :kitchen_master="kitchens" :customer_master="customers" :offline_facility="offline_facility" />
         </q-card-section>
       </q-card>
       <RemoteTokenPayment :bill="bills[token.id]" />
@@ -25,6 +25,7 @@ import {h_key} from "assets/helpers";
 import {TokenProgressColor} from "assets/assets";
 import RemoteTokenItemsList from "components/Order/RemoteTokenItemsList";
 import RemoteTokenPayment from "components/Order/RemoteTokenPayment";
+const { SK85W } = require('boot/subscription').FEATURES
 
 export default {
   name: "RemoteTokensList",
@@ -32,6 +33,7 @@ export default {
   props: ['name','tokens','customers','items','kitchens','bills'],
   data(){ return {
     tpc: TokenProgressColor,
+    offline_facility: SK85W === 'Yes',
   } },
   methods: {
     hKey(item,{ id }){ return h_key(item,id) },

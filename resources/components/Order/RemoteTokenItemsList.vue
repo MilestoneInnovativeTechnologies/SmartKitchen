@@ -6,7 +6,7 @@
         <q-item-label>{{ item.quantity }} x {{ item_master[item.item].name }}</q-item-label>
         <q-item-label caption>Delivery On: {{ item.deliver_human }}</q-item-label>
         <q-item-label caption v-if="item.kitchen">Kitchen: {{ kitchen_master[item.kitchen].name }}</q-item-label>
-        <RemoteOrderOfflineViewItemLabel :token_item="item" />
+        <RemoteOrderOfflineViewItemLabel :token_item="item" v-if="offline_facility" />
       </q-item-section>
       <q-item-section side><q-badge :color="tipc[item.progress]" :label="item.progress" class="q-px-sm q-py-xs" /></q-item-section>
       <q-item-section side v-if="cancelable.includes(item.progress)"><q-btn icon="close" color="red" dense round size="sm" @click="cancel(item,false)" /></q-item-section>
@@ -44,7 +44,7 @@ import {BRANCH_CODE} from "boot/subscription";
 export default {
   name: "RemoteTokenItemsList",
   components: {RemoteOrderOfflineViewItemLabel, ReadReferenceCard},
-  props: ['token','items','item_master','kitchen_master','customer_master'],
+  props: ['token','items','item_master','kitchen_master','customer_master','offline_facility'],
   data(){ return {
     tipc: TokenItemProgressColor,
     cancelable: ['New','Accepted'], serve_able: ['Completed'],
