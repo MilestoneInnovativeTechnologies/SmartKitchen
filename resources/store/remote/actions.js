@@ -7,7 +7,7 @@ import {BRANCH_CODE} from "boot/subscription";
 const cache = {},deleted = [];
 
 export function init ({ commit,dispatch }) {
-  if(CC71V === 'Yes' && DP71V.trim() !== ''){
+  if(typeof _USER !== "undefined" && CC71V === 'Yes' && DP71V.trim() !== ''){
     commit('uploadFn',_.bind(dispatch,this,'upload'))
     commit('monitorFn',_.bind(dispatch,this,'monitor'))
     if(JX99V === 'Yes' && typeof BRANCH_CODE !== "undefined") setTimeout(dispatch,3000,'monitorOrders')
@@ -310,13 +310,13 @@ export function remoteAdd({ state,rootState,getters,dispatch },args){
 }
 
 export function tokenData({ state,rootState,getters,dispatch },args){
-  let location = _.get(args,['token','_location'],_.get(args,['item','_location'])), token_reference = args.item.token, kitchen_item_reference = args.item.kitchen_item_reference;
-  let remote_customer_name = settings(_.snakeCase('Remote '+location+' Customer')) || _.get(_.find(rootState.customers.data,{ name:location,status:'Active' }),'name');
+  let location = _.get(args,['token','_location'],_.get(args,['item','_location'])), token_reference = args.item.token, kitchen_item_reference = args.item.kitchen_item_reference, customer = location + ' - Remote';
+  let remote_customer_name = settings(_.snakeCase('Remote '+location+' Customer')) || _.get(_.find(rootState.customers.data,{ name:customer,status:'Active' }),'name');
   if(!remote_customer_name)
     return new Promise((resolve, reject) => location
-      ? post('customer','create',{ name:location,address:'Automatically created while creating token for remote order from branch - ' + location }).then(r => dispatch('tokenData',args).then(resolve))
+      ? post('customer','create',{ name:customer,address:'Automatically created while creating token for remote order from branch - ' + location }).then(r => dispatch('tokenData',args).then(resolve))
       : reject('No Location'));
-  let customer_id = _.get(_.find(rootState.customers.data,{ name:location,status:'Active' }),'id')
+  let customer_id = _.get(_.find(rootState.customers.data,{ name:customer,status:'Active' }),'id')
   let PL = settings('price_list','Remote ' + location) || settings('price_list',location) || _.find(rootState.prices.list,{ status:'Active' });
   let price_list = _.get(PL,'id',1)
   let item_id = getters['item_id_of_kitchen_item'](_.get(_.find(state.data,{ item:'kitchen_items',reference:kitchen_item_reference }),'local_id'))
