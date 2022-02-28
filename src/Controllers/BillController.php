@@ -36,7 +36,7 @@ class BillController extends Controller
     public static function Contents($token, $nature = null, $discount = 0){
         $Items = TokenController::Items($token);
         $total = $Items->sum(function($item){ return doubleval(($item['quantity'] ?? 1) * ($item['price'] ?? 0)); });
-        $discount_percent = doubleval($discount) === 0 ? 0 : (($discount/$total) * 100);
+        $discount_percent = (doubleval($discount) === 0 || !$total) ? 0 : (($discount/$total) * 100);
         return $Items->map(function($item) use($nature, $discount_percent){
             $contents = Arr::get($item,'tax.contents',[]);
             $contents = array_filter($contents,function($content) use($nature){ return ($nature) ?  ($content['nature'] === $nature || $content['nature'] === null) : ($content['nature'] === null); });
