@@ -55,6 +55,7 @@ class RemoteController extends Controller
         usleep(rand(1000,3000));
         if(Remote::where(['item' => 'tokens','reference' => $request->token_reference])->exists()){
             $token_id = Arr::get(Remote::where(['item' => 'tokens','reference' => $request->token_reference])->first(),'local_id');
+            $request->merge($request->token)->merge(['type' => 'Remote','customer' => $request->customer_id])->merge(['items' => [array_merge($request->item,['item' => $request->item_id])]]);
             $Token = Token::with('Items')->find($token_id);
         } else {
             if(Remote::withoutGlobalScopes()->where(['item' => 'tokens','reference' => $request->token_reference])->exists()) return Log::warning('Requested to create token which is already cancelled or inaccessible');
