@@ -39,7 +39,7 @@
                 <q-card-actions class="q-px-none row">
                   <q-input borderless class="col" input-class="text-weight-bold text-body1 text-primary" label-color="primary" readonly label="Order Total" :value="total" /><q-space />
                   <q-input borderless class="col" input-class="text-weight-bold text-body1 text-primary" label-color="primary" readonly label="Amount Payable" :value="total - params.discount" /><q-space />
-                  <q-btn label="Submit" color="primary" padding="sm lg" @click="save" :loading="loading" />
+                  <q-btn label="Submit" color="primary" padding="sm lg" @click="save" :disable="loading" :loading="loading" />
                 </q-card-actions>
               </q-card-section>
             </q-card-section>
