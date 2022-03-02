@@ -52,29 +52,29 @@ class RemoteController extends Controller
 
     public function tokens(Request $request){
         if(!$request->token_reference) return Log::error('Requested to create token by remote controller without token reference');
-        usleep(rand(1000,3000));
-        if(Remote::where(['item' => 'tokens','reference' => $request->token_reference])->exists()){
-            $token_id = Arr::get(Remote::where(['item' => 'tokens','reference' => $request->token_reference])->first(),'local_id');
-            $request->merge($request->token)->merge(['type' => 'Remote','customer' => $request->customer_id])->merge(['items' => [array_merge($request->item,['item' => $request->item_id])]]);
+        usleep(rand(1000000,3000000)); $req = $request->only(['token','token_reference','item','item_id','item_reference','customer_id','location']);
+        if(Remote::where(['item' => 'tokens','reference' => $req['token_reference']])->exists()){
+            $token_id = Arr::get(Remote::where(['item' => 'tokens','reference' => $req['token_reference']])->first(),'local_id');
+            $request->merge($req['token'])->merge(['type' => 'Remote','customer' => $req['customer_id']])->merge(['items' => [array_merge($req['item'],['item' => $req['item_id']])]]);
             $Token = Token::with('Items')->find($token_id);
         } else {
-            if(Remote::withoutGlobalScopes()->where(['item' => 'tokens','reference' => $request->token_reference])->exists()) return Log::warning('Requested to create token which is already cancelled or inaccessible');
-            $request->merge($request->token)->merge(['type' => 'Remote','customer' => $request->customer_id])->merge(['items' => [array_merge($request->item,['item' => $request->item_id])]]);
+            if(Remote::withoutGlobalScopes()->where(['item' => 'tokens','reference' => $req['token_reference']])->exists()) return Log::warning('Requested to create token which is already cancelled or inaccessible');
+            $request->merge($req['token'])->merge(['type' => 'Remote','customer' => $req['customer_id']])->merge(['items' => [array_merge($req['item'],['item' => $req['item_id']])]]);
             $Token = app()->call(TokenController::class . "@create"); $Token->load('Items');
-            Remote::updateOrCreate(['item' => 'tokens','location' => $request->location, 'local_id' => $Token->id],['reference' => $request->token_reference]);
+            Remote::updateOrCreate(['item' => 'tokens','location' => $req['location'], 'local_id' => $Token->id],['reference' => $req['token_reference']]);
         }
-        $request_item = $request->item;
+        $request_item = $req['item'];
         $token_item_id = null; $TokenItem = null;
-        $Token->Items->each(function($TokenItem) use($request_item,$request,&$token_item_id){
-            if($TokenItem->item !== $request->item_id || $TokenItem->quantity !== $request_item['quantity'] || $TokenItem->narration !== $request_item['narration'] || $TokenItem->deliver !== $request_item['deliver']) return true;
+        $Token->Items->each(function($TokenItem) use($request_item,$req,&$token_item_id){
+            if($TokenItem->item !== $req['item_id'] || $TokenItem->quantity !== $request_item['quantity'] || $TokenItem->narration !== $request_item['narration'] || $TokenItem->deliver !== $request_item['deliver']) return true;
             $token_item_id = $TokenItem->id; return false;
         });
         if(!$token_item_id){
-            $request->merge($request->item)->merge(['item' => $request->item_id,'token' => $Token->id]);
+            $request->merge($req['item'])->merge(['item' => $req['item_id'],'token' => $Token->id]);
             $TokenItem = app()->call(TokenController::class . "@item");
             $token_item_id = $TokenItem->id;
         }
-        Remote::updateOrCreate(['item' => 'token_items','location' => $request->location, 'local_id' => $token_item_id],['reference' => $request->item_reference]);
+        Remote::updateOrCreate(['item' => 'token_items','location' => $req['location'], 'local_id' => $token_item_id],['reference' => $req['item_reference']]);
         return ['token' => $Token, 'token_item' => $TokenItem];
     }
     public function token_items(Request $request){
