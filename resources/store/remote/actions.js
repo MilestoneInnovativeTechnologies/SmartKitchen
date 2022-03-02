@@ -291,7 +291,7 @@ function attach_offline_reference(id,offline_reference,kitchen){
 
 export function monitorOrders({ state,dispatch }){
   remote_query('token_items',{ kitchen_item_location:BRANCH_CODE,_monitor:true }).then(ref => onSnapshot(ref,qSnaps => qSnaps.docChanges().forEach(function(change){
-    if(change.type !== 'added' || !!_.find(state.data,{ item:'token_items',reference:change.doc.id })) return;
+    if(change.type !== 'added' || !!_.find(state.data,{ item:'token_items',reference:change.doc.id })) return ;
     let doc = change.doc, reference = doc.id, data = cache[reference] = doc.data();
     if(_.has(cache,data.token)) dispatch('remoteAdd',{ token:_.get(cache,data.token),item:data,item_reference:reference })
     else remote_doc('tokens',data.token).then(snap => dispatch('remoteAdd',{ token:(cache[data.token] = snap.data()),item:data,item_reference:reference }))
@@ -301,11 +301,15 @@ let remoteAddAdding = false, RATmeOut = 0;
 export function remoteAdd({ state,rootState,getters,dispatch },args){
   if(remoteAddAdding) return setTimeout(dispatch,2000,'remoteAdd',args);
   remoteAddAdding = true;  RATmeOut = setTimeout(() => remoteAddAdding = false,10000)
-  let offline_reference = _.get(args,['item','offline_reference'])
-  if(SK85W === 'Yes' && offline_reference && _.find(state.data,({ item,extra }) => extra && item === 'token_items' && _.get(extra,'offline_reference') === offline_reference)) return remoteAddAdding = false;
+  let offline_reference = _.get(args,['item','offline_reference']),
+    store_data = _.find(state.data,({ item,extra }) => extra && item === 'token_items' && _.get(extra,'offline_reference') === offline_reference)
+  if(SK85W === 'Yes' && offline_reference && store_data) {
+    dispatch('checkAndAddReferenceForOffline',args)
+    return remoteAddAdding = false;
+  }
   dispatch('tokenData',args).then(tokenData => {
     post('remote','tokens',tokenData)
-      .then(() => remoteAddAdding = clearTimeout(RATmeOut) && false)
+      .then(() => remoteAddAdding = clearTimeout(RATmeOut) || false)
   })
 }
 
@@ -336,6 +340,20 @@ export function addOffline({ state,dispatch,rootState,getters },{ offline_refere
     let addition = { _monitor:true,_location:token_source_location }
     let token = Object.assign({},server[0],addition), item = Object.assign({},server[1],addition,{ kitchen_id:kitchen });
     dispatch('tokenData',{ token,item,offline_reference }).then(request => post('remote','offline_order',request))
+  }
+}
+
+export function checkAndAddReferenceForOffline({ state,getters,dispatch },args){
+  let offline_reference = _.get(args,['item','offline_reference']),
+    store_data = _.find(state.data,({ item,extra }) => extra && item === 'token_items' && _.get(extra,'offline_reference') === offline_reference);
+  if(store_data){
+    let store_data_reference = _.get(store_data,'reference',null);
+    if(!store_data_reference){
+      let store_data_token = getters['token_item_token'](parseInt(_.get(store_data,'local_id')))
+      let store_data_token_ref = _.get(store_data_token,'reference')
+      if(!store_data_token_ref) dispatch('addReference',{ id:_.get(store_data_token,'id'),reference:_.get(args,['item','token']) })
+      dispatch('addReference',{ id:_.get(store_data,'id'),reference:_.get(args,['item_reference']) })
+    }
   }
 }
 
