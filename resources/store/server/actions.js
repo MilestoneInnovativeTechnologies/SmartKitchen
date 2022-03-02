@@ -1,6 +1,6 @@
 const verified = { tokens:[],bills:[],payments:[] }
 
-export function post ({ state:{ map,interval },commit,dispatch },{ item,action,data }) {
+export function post ({ dispatch },{ item,action,data }) {
   let url = `${item}/${action}`;
   return new Promise(resolve => {
     api(url,data).then(({ headers,data }) => {
