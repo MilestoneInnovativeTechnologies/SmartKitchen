@@ -74,7 +74,7 @@
         <q-card-actions align="right" class="q-px-md bg-grey-2"><q-btn glossy push label="Complete" :disable="params.items.length < 1" :loading="processing" color="secondary" padding="sm lg" class="full-width" @click="complete" /></q-card-actions>
       </q-card>
     </q-dialog>
-    <q-dialog :value="m_show" persistent><MenuSelect :style="popup_width()" /></q-dialog>
+    <q-dialog :value="m_show" persistent><MenuSelect :style="popup_width()" :type="params.type" /></q-dialog>
   </q-page>
 </template>
 
@@ -104,8 +104,8 @@ export default {
     }
   } },
   computed: {
-    ...mapGetters({ prices:'prices/items' }), ...mapState({ items_data:({ items }) => items.data }),
-    ...mapState('menus',{ m_show:state => !state.s_items.length }),
+    ...mapGetters({ prices:'prices/items' }),
+    ...mapState({ items_data:({ items }) => items.data, m_show:state => !(_.get(state.public,'sale_menu',[]).length) }),
     price_list: {
       get(){
         if(!_.has(this.$store.state.public,'sale_price_list')){
