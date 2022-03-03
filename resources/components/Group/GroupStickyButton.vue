@@ -18,7 +18,8 @@ export default {
     fab: false, xoffset: 0, width:0
   } },
   computed: {
-    ...mapState({ menus:state => active(state.menus.data),selected:state => state.menus.s_items,group_master:state => active(state.groups.data) }),
+    type_name(){ return (this.type && this.type !== 'Dining') ? _.snakeCase([this.type,'Menu'].join(' ')) : null },
+    ...mapState({ menus:state => active(state.menus.data),selected(state){ return this.type_name ? _.get(state.public,this.type_name,[]) : state.menus.s_items },group_master:state => active(state.groups.data) }),
     group_ids(){
       let sel = this.selected || [], sel_groups = sel.length > 0 ? _.flatMap(_.filter(this.menus,({ id }) => _.includes(sel,id)),'groups') : []
       return _.get(settings('menu',this.type),'groups',sel_groups);

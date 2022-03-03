@@ -17,7 +17,7 @@
 import {matches} from "assets/helpers";
 import ItemSelectCard from "components/Item/ItemSelectCard";
 import Masonry from "components/Masonry";
-import {mapState} from "vuex";
+import {mapGetters, mapState} from "vuex";
 
 export default {
   name: "GroupItemsSelect",
@@ -27,15 +27,13 @@ export default {
     offset: [0,80], pages_show: true, page: 1
   } },
   computed: {
-    ...mapState({ item_master:state => state.items.data, group_master:state => state.groups.data, menus:state => state.menus.s_items }),
+    type_name(){ return (this.type && this.type !== 'Dining') ? _.snakeCase([this.type,'Menu'].join(' ')) : null },
+    ...mapState({ item_master:state => state.items.data, group_master:state => state.groups.data, menus(state){ return this.type_name ? _.get(state.public,this.type_name,[]) : state.menus.s_items } }),
     items_per_page(){ return this.$store.getters['settings/items_per_page'] },
     group_items(){
       return this.selected
         ? _(_.get(this.group_master,[_.toInteger(this.selected),'items'],[])).map(iId => this.item_master[_.toInteger(iId)]).filter(['status','Active']).value()
-        : (this.type === 'Sale' ? (this.sale_menu() ? this.menu_items(this.sale_menu()) : _.filter(this.item_master,['status','Active']))
-          : (_.isEmpty(this.menus) ? []
-            : this.menu_items(this.menus[0]))
-        )
+        : (_.isEmpty(this.menus) ? [] : this.menu_items(this.menus[0]))
     },
     filter_search_keys(){ return settings('items_search_fields',this.type) },
     filtered_items(){
@@ -52,7 +50,6 @@ export default {
       let items = _.uniq(_.flatMap(groups,group => _.get(this.group_master,[group,'items'])))
       return _(items).map(id => _.get(this.item_master,[id])).filter(['status','Active']).value()
     },
-    sale_menu(){ return this.$store.getters['menus/sale'] },
     fab_attrs(num){ return this.page === num ? { disable:true,padding:'xs',icon:'reply_all' } : { padding:'sm' } },
     move(ev){ this.offset = [this.offset[0] - ev.delta.x, this.offset[1] - ev.delta.y] },
   },
