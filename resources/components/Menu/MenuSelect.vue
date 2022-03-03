@@ -24,15 +24,22 @@ import {h_key} from "assets/helpers";
 
 export default {
   name: "MenuSelect",
+  props: ['type'],
   data(){ return {
     loading: false,
   } },
   computed: {
     ...mapState('menus',{ menus:state => _.filter(state.data,['status','Active']),assigned:'s_items' }),
     menus_count(){ return _.size(this.menus) },
+    type_name(){ return this.type ? _.snakeCase([this.type,'Menu'].join(' ')) : null },
     selected: {
-      get(){ return this.assigned },
-      set({ id }){ this.loading = true; this.$store.dispatch('menus/toggle',parseInt(id),{ root:true }) }
+      get(){ return this.type_name ? _.get(this.$store.state.public,this.type_name,[]) : this.assigned },
+      set({ id }){
+        this.loading = true;
+        return (this.type_name)
+          ? this.$store.commit('public',{ [this.type_name]:[id] })
+          : this.$store.dispatch('menus/toggle',parseInt(id),{ root:true })
+      }
     }
   },
   methods: {
@@ -40,9 +47,8 @@ export default {
     hKey({ id }){ return h_key('waiter','menu','select',id) },
   },
   created() {
-    if(!this.selected.length && this.menus_count === 1) {
-      this.selected = _.head(_.values(this.menus));
-    }
+    if(!this.selected.length && this.menus_count === 1){ this.selected = _.head(_.values(this.menus)); }
+    if(this.type === 'Sale'){ let id = this.$store.getters['menus/sale']; if(id) this.selected = { id } }
   },
   watch: {
     selected(s_menus){ if(s_menus && !_.isEmpty(s_menus)) return this.$emit('selected') }
