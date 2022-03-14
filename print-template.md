@@ -3,11 +3,16 @@ Smart Kitchen support infinite number of printers.<br>
 Each printer address need to be given in settings.<br>
 _Setting Name_ should be _Printer Name_ Ex: `Printer01`, `KitchenPrinter`, `CounterPrinter` etc <br>
 _Setting Value_ should be its address EX: `192.168.1.200`, `\\localhost\epson`, `\dev\usb\lp0` etc <br>
-Additional settings like `connector`,`capability`,`width` can be given in the format `<printer_name>_<setting_name>`<br>
-Ex: `Printer01_connector`,`CounterPrinter_capability`,`KitchenPrinter_width` etc<br>
+Additional settings like `connector`,`capability`,`width`,`timeout`,`port`,`cut`,`feed`,`pulse` can be given in the format `<printer_name>_<setting_name>`<br>
+Ex: `Printer01_connector`,`CounterPrinter_capability`,`KitchenPrinter_width` etc.<br>
 Details regarding `capability` and `connector` are available at https://github.com/mike42/escpos-php <br>
 1. `width` is just number of characters a line can include Ex: `32`, `48`. Default set as `48`
-2. `connector` should be any of `FilePrintConnector` (For windows shared printer & linux/raspberry usb printer), `WindowsPrintConnector` (For windows printer), `NetworkPrintConnector` (For network) etc 
+2. `connector` should be any of `FilePrintConnector` (For windows shared printer & linux/raspberry usb printer), `WindowsPrintConnector` (For windows printer), `NetworkPrintConnector` (For network) etc
+3. `timeout` If connector is NetworkPrintConnector then only this has effect. It is the timeout for network query.
+4. `port` Port for network printer, usually it is `9100`
+5. `cut` Some thermal printer supports AUTO CUT facility, this setting is only applicable for such printers. Mention this setting as `full`, `partial` for cutting mode or `no` to disable cutting. Default is `full`
+6. `feed` This is the amount of lines to be feed by the printer even after printing. Default is 3. It can be any integer number.
+7. `pulse` This is used when the printer is attached to cash drawer. If the value is any other than `no` then the cash drawer (if connected) will be open after each print.
 
 _In model file the method accepts 3 arguments, Printer Name, Template, Data respectively_
 

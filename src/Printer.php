@@ -14,12 +14,15 @@ use Milestone\SmartKitchen\Models\Settings;
 class Printer
 {
     private $_template = null; private $_data = null;
-    private $master_settings = ['connector','capability','width','timeout','port'];
+    private $master_settings = ['connector','capability','width','timeout','port','cut','feed','pulse'];
     private $connector = 'FilePrintConnector';
     private $capability = null;
-    private $width = 48;
+    private $width = 32;
     private $timeout = 1;
     private $port = 9100;
+    private $cut = 'full'; //no, partial
+    private $feed = 3; //1, 2, 3
+    private $pulse = 'yes'; //no
     private static $settings = ['width' => null];
     private $Printer = null;
 
@@ -65,10 +68,14 @@ class Printer
         foreach (self::$settings as $key => $val) self::$settings[$key] = $this->$key;
         if(!$this->_template || !$this->_data) return $this;
         $this->reset();
-        foreach ($this->_template as $content)
-            call_user_func([$this,'Process'],$content);
-        $this->Printer->cut(P::CUT_FULL,1); $this->Printer->pulse(); $this->Printer->close();
-        $this->done = true;
+        foreach ($this->_template as $content) call_user_func([$this,'Process'],$content);
+        if($this->feed) $this->Printer->feed($this->feed);
+        if(strtolower($this->cut) !== 'no') {
+            if(strtolower($this->cut) === 'partial') $this->Printer->cut(P::CUT_PARTIAL,1);
+            else $this->Printer->cut(P::CUT_FULL,1);
+        }
+        if(strtolower($this->pulse) !== 'no') $this->Printer->pulse();
+        $this->Printer->close(); $this->done = true;
         return $this;
     }
 
@@ -243,7 +250,7 @@ class Printer
     private static function upiUrl($content,$data){
         list($id,$amount) = array_map(function($template)use($data){ return self::exec_template($template,$data); },explode("|",$content));
         $data = array_merge(Settings::where('name','like','upi_%')->get()->mapWithKeys(function($item){ return [str_replace('upi_','',$item->name) => $item->value]; })->toArray(),compact('id','amount'));
-        return Arr::has($data,['address','name','id','amount']) ? self::exec_template(self::$upi_addr,$data) : null;
+        return Arr::has($data,['address','name','id','amount']) ? self::exec_template(self::$upi_addr,$data) : Log::info('For printing UPI, upi_address and upi_name should ne there in settings and id|amount should be provided via template!!');
     }
 
 }
