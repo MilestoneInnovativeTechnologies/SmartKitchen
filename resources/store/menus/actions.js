@@ -4,5 +4,8 @@ export function init ({ commit }) {
 }
 
 export function toggle({ state,commit },menu){
-  post('menu','toggle',{ menu }).then(r => commit('section',{ menu:r }))
+  post('menu','toggle',{ menu }).then(r => {
+    commit('public',{ dining_menu:r },{ root:true })
+    commit('section',{ menu:r })
+  })
 }

@@ -19,7 +19,6 @@
 </template>
 
 <script>
-import {mapState} from "vuex";
 import {h_key} from "assets/helpers";
 
 export default {
@@ -29,16 +28,15 @@ export default {
     loading: false,
   } },
   computed: {
-    ...mapState('menus',{ menus:state => _.filter(state.data,['status','Active']),assigned:'s_items' }),
+    menus(){ return _.filter(this.$store.state.menus.data,['status','Active']) },
     menus_count(){ return _.size(this.menus) },
-    type_name(){ return this.type ? _.snakeCase([this.type,'Menu'].join(' ')) : null },
+    type_name(){ return _.snakeCase([(this.type || 'Dining'),'Menu'].join(' ')) },
     selected: {
-      get(){ return this.type_name ? _.get(this.$store.state.public,this.type_name,[]) : this.assigned },
+      get(){ return _.get(this.$store.state.public,this.type_name,[]) },
       set({ id }){
         this.loading = true;
-        return (this.type_name)
-          ? this.$store.commit('public',{ [this.type_name]:[id] })
-          : this.$store.dispatch('menus/toggle',parseInt(id),{ root:true })
+        this.$store.commit('public',{ [this.type_name]:[id] })
+        if(!this.type || this.type === 'Dining') this.$store.dispatch('menus/toggle',parseInt(id),{ root:true })
       }
     }
   },
@@ -47,6 +45,9 @@ export default {
     hKey({ id }){ return h_key('waiter','menu','select',id) },
   },
   created() {
+    let sState = this.$store.state;
+    if(sState.menus.s_items.length && this.type === 'Dining' && !_.size(_.get(sState.public,'dining_menu',[])))
+      this.$store.commit('public',{ dining_menu:sState.menus.s_items })
     if(!this.selected.length && this.menus_count === 1){ this.selected = _.head(_.values(this.menus)); }
     if(this.type === 'Sale'){ let id = this.$store.getters['menus/sale']; if(id) this.selected = { id } }
   },
