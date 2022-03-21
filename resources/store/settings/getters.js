@@ -19,9 +19,11 @@ export function items_search_fields(state,{ settings }){
 
 export function price_list(state,{ settings },rState){
   return function(name){
-    let pl_name = _.snakeCase((name || '') + 'Price List');
-    if(_.has(settings,pl_name) && _.find(rState.prices.list,{ status:'Active',name:_.get(settings,pl_name) })) return _.find(rState.prices.list,{ status:'Active',name:_.get(settings,pl_name) })
-    return _.find(rState.prices.list,{ status:'Active',name })
+    let list = rState.prices.list, pl_name = _.snakeCase((name || '') + 'Price List');
+    if(_.has(settings,pl_name) && _.find(list,{ status:'Active',name:_.get(settings,pl_name) })) return _.find(list,{ status:'Active',name:_.get(settings,pl_name) })
+    let name_pl = _.find(list,{ status:'Active',name }); if(name_pl) return name_pl;
+    let count = _.size(_.filter(list,['status','Active'])); if(count === 1) return _.head(_.filter(list,['status','Active']));
+    return null;
   }
 }
 

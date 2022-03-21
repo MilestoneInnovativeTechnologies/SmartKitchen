@@ -43,12 +43,12 @@ export default {
       if(type !== 'Dining') this.setPriceList(type);
     },
     setPriceList(type){
-      let type_name = _.snakeCase(type), state_name = type_name + '_price_list';
+      let state_name = _.snakeCase(type + ' Price List');
       if(!_.has(this.$store.state.public,state_name)){
         let price_list_id = _.get(settings('price_list',type),'id',null)
         if(price_list_id) this.$store.commit('public',{ [state_name]:price_list_id })
       }
-      this.params.price_list = this.$store.state.public[state_name];
+      this.params.price_list = _.get(this.$store.state.public,state_name,undefined);
     },
     proceed(){
       this.validate = true; if(this.seat_error) return; this.validate = false;
@@ -59,7 +59,9 @@ export default {
     seat({ id,price_list }){ this.params.seating = id; this.params.price_list = price_list },
     'params.type': { immediate:true,handler:'typeChange' },
     'params.price_list': function(id){ let s_name = _.snakeCase(this.params.type+' Price List'); if(this.$store.state.public[s_name] !== parseInt(id)) this.$store.commit('public',{ [s_name]:parseInt(id) }) },
-    attrs: { immediate:true, deep:true, handler:'init' },
+  },
+  created() {
+    this.init(this.$attrs)
   }
 }
 </script>

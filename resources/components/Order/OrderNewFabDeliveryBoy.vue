@@ -22,12 +22,8 @@ export default {
   computed: {
     price_list(){
       if(!_.has(this.$store.state.public,'home_delivery_price_list')){
-        let home_delivery_price_list = _.get(this.$store.getters['settings/settings'],'home_delivery_price_list')
+        let home_delivery_price_list = _.get(settings('price_list','Home Delivery'),'id',null)
         if(home_delivery_price_list) this.$store.commit('public',{ home_delivery_price_list })
-        else {
-          home_delivery_price_list = _.get(this.$store.getters[('prices/home_delivery')],'id',null)
-          if(home_delivery_price_list) this.$store.commit('public',{ home_delivery_price_list })
-        }
       }
       return _.get(this.$store.state.public,'home_delivery_price_list',undefined)
     }
