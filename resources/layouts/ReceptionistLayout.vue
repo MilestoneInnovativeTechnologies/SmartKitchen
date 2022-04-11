@@ -29,6 +29,7 @@
         <q-route-tab :to="{ name:'archives' }" label="Archive" icon="archive" class="gt-sm" />
         <q-route-tab :to="{ name:'bills' }" label="Bills" icon="receipt_long" class="gt-xs"  :alert="alert || completed.length>0" alert-icon="new_releases" />
         <q-route-tab :to="{ name:'sale' }" label="Sale" icon="shopping_cart" v-if="sale_enabled" />
+        <q-route-tab :to="{ name:'take_away' }" label="Take Away" icon="emoji_people" v-if="take_away_manage" />
         <q-route-tab :to="{ name:'orders' }" label="Orders" icon="add_task" />
         <q-route-tab :to="{ name:'orders_remote' }" label="Remote" icon="online_prediction" v-if="remote_manage" />
         <q-route-tab :to="{ name:'orders_online' }" label="Online" icon="settings_input_antenna" v-if="online" />
@@ -44,7 +45,7 @@ import {mapState} from "vuex";
 import {attention, settings_boolean} from "assets/helpers";
 import Logout from "components/Logout";
 import QuickToggle from "components/QuickToggle";
-const { GH75F,GH56E,CC71V,DP71V,KK99V,CZ03Y,RS44Z } = require('boot/subscription').FEATURES
+const { GH75F,GH56E,CC71V,DP71V,KK99V,CZ03Y,RS44Z,NA57A } = require('boot/subscription').FEATURES
 export default {
   name: 'ReceptionistLayout',
   components: {QuickToggle, Logout, ManualSync},
@@ -52,6 +53,7 @@ export default {
     online_enabled: (GH75F === 'Yes' && GH56E === 'Yes'),
     remote_enabled: (CC71V === 'Yes' && _.trim(DP71V) !== '' ),
     sale_enabled: (CZ03Y === 'Yes'),
+    take_away_enabled: (NA57A === 'Yes'),
   } },
   computed: {
     ...mapState('tokens',{ completed({ data }){ return _.filter(data,({ progress }) => ['Completed'].includes(progress)) } }),
@@ -59,6 +61,7 @@ export default {
     customer_manage(){ return settings('manage_customer',_USER.role) },
     remote_manage(){ return this.remote_enabled && KK99V === 'Yes' && settings_boolean(settings('receptionist_remote_orders')) !== false },
     quick_enabled(){ return RS44Z === 'Yes' && ['order_new','sale'].includes(this.$route.name) },
+    take_away_manage(){ return this.take_away_enabled && settings_boolean(settings('take_away_receptionist_handle')) !== false },
   },
   watch: {
     completed(Nw,Ol){ if(!Ol || Nw.length > Ol.length) {

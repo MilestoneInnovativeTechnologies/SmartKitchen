@@ -9,7 +9,7 @@
 
 <script>
 import { scroll } from 'quasar'
-const { getScrollHeight } = scroll
+const { getScrollHeight,getScrollWidth } = scroll
 import {h_key} from "assets/helpers";
 
 export default {
@@ -20,7 +20,7 @@ export default {
   } },
   computed: {
     cols(){ return this.columns ? _.toInteger(this.columns) : this.masonry_cols(this.width) },
-    cell_width(){ return _.floor(100/this.cols) + '%' },
+    cell_width(){ return _.floor(99/this.cols) + '%' },
     items_size(){ return _.size(this.items) },
   },
   methods: {
@@ -34,7 +34,7 @@ export default {
         vm.containerHeight = (itemHeight * itemsPerCol) + itemHeight + 'px'
       })
     },
-    set_height_after(){ setTimeout(this.set_height,((this.items_size/50)+1)*175) }
+    set_height_after(){ setTimeout(this.set_height,((this.items_size/50)+1)*350) }
   },
   created(){ this.arg = _.isArray(this.items) ? 0 : 1 },
   watch: {

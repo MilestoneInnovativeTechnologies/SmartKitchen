@@ -21,7 +21,7 @@
       <GroupStickyButton v-model="active_group" :style="{ visibility:(seat && (!tab || tab === 'seating')) ? 'hidden' : 'visible' }" :type="params.type" />
     </template>
     <q-dialog persistent :value="tab === 'proceed'" @before-hide="tab = 'items'">
-      <OrderNewSummary :style="popup_width()" v-bind="params" @process="process" :loading="loading" />
+      <OrderNewSummary :style="popup_width()" v-bind="params" @process="process" :loading="loading" :payment="payment" />
     </q-dialog>
   </q-card>
 </template>
@@ -48,7 +48,7 @@ export default {
     },
     loading: false,
   } },
-  props: ['seat','after'],
+  props: ['seat','after','payment'],
   computed: {
     attrs(){ return _.pick(this.$attrs,_.keys(this.params)) },
   },
@@ -70,9 +70,10 @@ export default {
     quantity(idx,quantity) { this.params.items[idx]['quantity'] = quantity },
     remove(idx) { this.params.items.splice(idx,1) },
     customer(id) { this.params.customer = id },
-    submit() {
+    submit(payments) {
       if(_.isEmpty(this.params.items)) return; this.loading = true;
-      post('token','create',this.params).then(() => {
+      let params = this.payment ? Object.assign({},this.params,payments) : this.params;
+      post('token','create',params).then(() => {
         this.params.items.splice(0,this.params.items.length);
         this.item_filter = ""; this.active_group = 0; this.init(this.attrs);
         this.loading = false; this.tab = "items"
@@ -83,6 +84,8 @@ export default {
   },
   watch: {
     'attrs': { immediate:true, deep:true, handler:'init' },
+  },
+  created() {
   }
 }
 </script>

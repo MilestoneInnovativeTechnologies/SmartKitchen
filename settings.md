@@ -76,6 +76,12 @@ While setting this menu name to either of these
 1,true,True,yes,Yes then the corresponding users can confirm the online orders
 
 
+take_away_waiter_handle, take_away_receptionist_handle
+When the feature Take Away is enabled, then a menu named Take Away will be available where all Take Away orders can manage. By default, receptionist can handle but waiter can't. This can disable/enable by having these setting.
+0,false,False,no,No then the corresponding users won't have take away menu
+1,true,True,yes,Yes then the corresponding users will have take away menu
+
+
 items_search_fields
 Default is id,name,detail
 These are the fields of an item, where the search/filter string  to be compared with. When any matches found, that items are only get displayed

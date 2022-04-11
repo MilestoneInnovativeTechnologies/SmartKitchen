@@ -16,7 +16,7 @@ const layout_child = {
     'orders_online','customers'
   ],
   Chef: ['chef_index','chef_kitchens','kitchen_items','kitchen_stocks','tokens'],
-  Receptionist: ['receptionist_index','seat_status','receptionist_bills','seat_status_order','receptionist_orders','order_new','orders_remote','orders_remote_new','sale',
+  Receptionist: ['receptionist_index','seat_status','receptionist_bills','seat_status_order','receptionist_orders','order_new','orders_remote','orders_remote_new','sale','take_away',
     'archives','archive_payments','archive_bills','archive_remote','archive_orders','archive_sales','archive_tokens',
     'orders_online','customers'
   ],
@@ -98,6 +98,7 @@ const route_master = {
   orders_remote: { name:'orders_remote', path:'/orders/remote', component: () => import('pages/Order/RemoteOrders'), meta:{ title:'Remote Orders' } },
   orders_remote_new: { name:'orders_remote_new', path:'/orders/remote/new', component: () => import('pages/Order/RemoteOrdersNew'), meta:{ title:'New Remote Orders',back:true } },
   sale: { name:'sale', path:'sale', component: () => import('pages/Order/Sale'), meta:{ title:'New Sale',footer:false,back:true } },
+  take_away: { name:'take_away', path:'take_away', component: () => import('pages/Order/TakeAway'), meta:{ title:'Take Away' } },
   archives: { name:'archives', path:'archives', component: () => import('pages/Archive/Index'), meta:{ title:'Archives' } },
   archive_payments: { name:'archive_payments', path:'archive/payments', component: () => import('pages/Archive/Payments'), meta:{ title:'Recent Payments',back:true,footer:false } },
   archive_bills: { name:'archive_bills', path:'archive/bills', component: () => import('pages/Archive/Bills'), meta:{ title:'Bills',back:true,footer:false } },

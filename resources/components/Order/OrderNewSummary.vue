@@ -31,24 +31,37 @@
         </q-item>
       </q-list>
     </q-card-section>
-    <q-card-section>
+    <q-card-section class="row q-col-gutter-xs" v-if="payment">
+      <div class="col-7"><OrderCustomer get="id" v-model="v_customer" outlined dense /></div>
+      <div class="col-5"><TaxNatureSelectDropDown label="Tax Nature" v-model="payments.nature" outlined dense /></div>
+      <div class="col-3"><PaymentTypeSelectDropDown v-model="payments.advance_type" outlined dense /></div>
+      <div class="col-4"><q-input type="number" outlined dense v-model.number="payments.discount" label="Discount" @keyup="discount_percent" /></div>
+      <div class="col-5"><q-input type="number" outlined dense v-model.number="payments.advance_amount" label="Amount" /></div>
+    </q-card-section>
+    <q-card-section v-else>
       <OrderCustomer get="id" v-model="v_customer" outlined dense />
     </q-card-section>
     <q-card-actions align="right" class="bg-grey-2">
-      <q-btn label="Submit" :color="clr" padding="xs md" :loading="loading" @click="$emit('process',['submit'])" />
+      <q-btn label="Submit" :color="clr" padding="xs md" :loading="loading" @click="submit" />
     </q-card-actions>
   </q-card>
 </template>
 
 <script>
-import {h_key} from "assets/helpers";
+import {h_key, is_period} from "assets/helpers";
 import {mapState} from "vuex";
 import OrderCustomer from "components/Order/OrderCustomer";
+import TaxNatureSelectDropDown from "components/Tax/TaxNatureSelectDropDown";
+import PaymentTypeSelectDropDown from "components/Payment/PaymentTypeSelectDropDown";
+import {PaymentsTypes} from "assets/assets";
 
 export default {
   name: "OrderNewSummary",
-  components: {OrderCustomer},
-  props: ['items','price_list','customer','color','loading'],
+  components: {PaymentTypeSelectDropDown, TaxNatureSelectDropDown, OrderCustomer},
+  props: ['items','price_list','customer','color','loading','payment'],
+  data(){ return {
+    payments: { nature: null, advance_type:PaymentsTypes[0], advance_amount:0, discount: 0 }
+  } },
   computed: {
     ...mapState('items',{ item_master:'data' }), clr(){ return this.color || 'accent' },
     price(){ return _.get(this.$store.getters['prices/items'],_.toInteger(this.price_list)) },
@@ -60,7 +73,26 @@ export default {
   },
   methods: {
     h_key,
-    iData({ item },key){ return _.get(this.item_master,[_.toInteger(item),key]) }
+    iData({ item },key){ return _.get(this.item_master,[_.toInteger(item),key]) },
+    discount_percent(e){
+      if(is_period(e.keyCode) && (this.prv_per || _.includes(_.toString(this.payments.discount),"."))) {
+        setTimeout(() => {
+          this.$nextTick(() => {
+            this.payments.discount = this.payments.discount * this.total * 0.01
+            e.target.blur(); e.target.focus();
+          })
+        },250)
+      }
+      this.prv_per = is_period(e.keyCode);
+    },
+    submit(){
+      if(this.payment && !this.v_customer) return alert('Select Customer')
+      this.$emit('process',['submit',this.payments])
+    }
+  },
+  watch: {
+    'payments.discount': { immediate:true,handler(discount){ this.payments.advance_amount = _.toNumber(this.total - _.toNumber(discount)) } },
+    total(amount){ this.payments.advance_amount = _.toNumber(_.toNumber(amount) - _.toNumber(this.payments.discount)) }
   }
 }
 </script>
