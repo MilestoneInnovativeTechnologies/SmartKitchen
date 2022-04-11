@@ -49,7 +49,8 @@ export default {
     if(sState.menus.s_items.length && this.type === 'Dining' && !_.size(_.get(sState.public,'dining_menu',[])))
       this.$store.commit('public',{ dining_menu:sState.menus.s_items })
     if(!this.selected.length && this.menus_count === 1){ this.selected = _.head(_.values(this.menus)); }
-    if(this.type === 'Sale'){ let id = this.$store.getters['menus/sale']; if(id) this.selected = { id } }
+    let menu_key = 'menus/' + _.snakeCase(this.type), id = this.$store.getters[menu_key];
+    if(id) this.selected = { id }
   },
   watch: {
     selected(s_menus){ if(s_menus && !_.isEmpty(s_menus)) return this.$emit('selected') }
