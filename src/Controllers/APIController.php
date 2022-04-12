@@ -2,6 +2,7 @@
 
 namespace Milestone\SmartKitchen\Controllers;
 
+use Illuminate\Support\Arr;
 use Milestone\SmartKitchen\Models\Bill;
 use Milestone\SmartKitchen\Models\Customer;
 use Milestone\SmartKitchen\Models\Item;
@@ -82,6 +83,30 @@ class APIController extends Controller
         }
         cache()->put(ck(),$before);
         return $data;//response($data,200,$cache_headers);
+    }
+
+    public function out_ping(){
+        $after = request()->header('OP-After'); $asset = ($after === '2000-01-01 00:00:01') ? 'NO' : 'YES';
+        $data = [];
+        $max = ini_get('max_execution_time') + time();
+        do{
+            $before = now()->toDateTimeString(); $headers = ['OP-Before' => $before];
+            foreach (self::$Models as $model){
+                if(in_array($model,self::$Assets) && $asset === 'NO') continue;
+                $modelObj = new $model;
+                $table = self::getTableName($modelObj); $lid_key = 'OP-Lid-' . $table;
+                $lid = Arr::get($headers,$lid_key,request()->header($lid_key,0));
+                if(self::recordsExists($modelObj,$after,$before,$lid)){
+                    $records = self::getRecords($modelObj,$after,$before,$lid);
+                    $data[$table] = $records;
+                    $headers[$lid_key] = clid($table,$records,true);
+                }
+            }
+            if(!empty($data)) break;
+            sleep(1);
+            $after = $before; $asset = 'NO';
+        } while($max - time() > 3);
+        return response($data,200,$headers);
     }
 
     public static function recordsExists($modelObj,$after,$before,$lid){

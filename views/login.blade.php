@@ -20,7 +20,7 @@
     <script src="{!! \Milestone\SmartKitchen\Controllers\AssetController::AssetRoute('User') !!}"></script>
 
     <script type="text/javascript">
-        const DATA = [], BASE_URL = '{{ route('base_url') }}', MEDIA_ROOT = '{{ route('media_root') }}', _ROLE = 'Login', LOGOUT = '{!! route('logout') !!}', LOGIN = '{!! route('login') !!}';
+        const DATA = [], BASE_URL = '{{ route('base_url') }}', MEDIA_ROOT = '{{ route('media_root') }}', _ROLE = 'Login', LOGOUT = '{!! route('logout') !!}', LOGIN = '{!! route('login') !!}', OUT_PING = '{!! route('out_ping') !!}';
         const LoginSelect = @json(config('sk.login_log_section_role_key')), _TIME = {{ time() }};
         const _KEY = '{{ sk('client_key') }}', _CODE = '{!! \Milestone\SmartKitchen\Controllers\SubscriptionController::code() !!}';
         window.onload = function(){ localStorage.removeItem('jwt_TOKEN'); localStorage.removeItem('jwt_SECRET'); }

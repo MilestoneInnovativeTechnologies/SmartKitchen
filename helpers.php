@@ -16,9 +16,11 @@ function tc($table,$id = null){
     if($id > $lid) cache()->put($ck,$id,now()->addDays(7));
     return tc($table);
 }
-function clid($table,$col){
+function clid($table,$col,$return = null){
     $lid = ($col instanceof \Illuminate\Support\Collection) ? $col->max('id') : 0;
+    if($return) return $lid;
     if($lid) tc($table,intval($lid));
+    return null;
 }
 function human_date($datetime){ return Carbon::parse($datetime)->format("d/M/Y"); }
 function human_date2($datetime){ return Carbon::parse($datetime)->format("d/m/y"); }

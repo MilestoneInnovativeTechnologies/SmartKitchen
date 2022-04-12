@@ -66,7 +66,7 @@ class Token extends Model
 
     public static function fetch($after,$before,$lid){
 //        return self::recent()->active()->sync($after,$before,$lid)->get();
-        return (auth()->user()->role === 'Waiter')
+        return (auth()->user() && auth()->user()->role === 'Waiter')
             ? self::own()->active()->sync($after,$before,$lid)->get()
             : self::active()->sync($after,$before,$lid)->get();
     }

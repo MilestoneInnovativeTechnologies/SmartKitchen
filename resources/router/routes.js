@@ -11,8 +11,11 @@ const layout_master = {
 }
 
 const layout_child = {
-  Login: ['login_index'],
-  Waiter: ['waiter_index','waiter_menu','orders','order_new','waiter_bills',
+  Login: [
+    'login_index',
+    'display_kitchen','display_active_tokens'
+  ],
+  Waiter: ['waiter_index','waiter_menu','orders','order_new','take_away','waiter_bills',
     'orders_online','customers'
   ],
   Chef: ['chef_index','chef_kitchens','kitchen_items','kitchen_stocks','tokens'],
@@ -129,6 +132,8 @@ const route_master = {
   bills_unpaid_customer: { name:'bills_unpaid_customer', path:'/report/bill/unpaid/customer', component: () => import('pages/Report/Reports/ReportBillUnpaidCustomer'), meta:{ title:'Unpaid Bills by Customer',controls:['range','customer'] } },
   bills_unpaid_type: { name:'bills_unpaid_type', path:'/report/bill/unpaid/type', component: () => import('pages/Report/Reports/ReportBillUnpaidType'), meta:{ title:'Unpaid Bills by Type',controls:['range','sale_type'] } },
   bills_unpaid_user: { name:'bills_unpaid_user', path:'/report/bill/unpaid/user', component: () => import('pages/Report/Reports/ReportBillUnpaidUser'), meta:{ title:'Unpaid Bills by User',controls:['range','user'] } },
+  display_kitchen: { name:'display_kitchen', path:'/kitchen', component: () => import('pages/Display/Kitchen'), meta:{ out_ping:true,color:'teal-14' } },
+  display_active_tokens: { name:'display_active_tokens', path:'/tokens/active', component: () => import('pages/Display/ActiveTokens'), meta:{ out_ping:true,color:'purple-14' } },
 }
 
 const feature_routes = {

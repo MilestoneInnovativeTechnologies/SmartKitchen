@@ -28,17 +28,25 @@ export function init ({ commit,dispatch }){
   commit('sync',setTimeout(dispatch,1000,'ping'))
 }
 
-export function process({ state:{ map },commit,dispatch },data){
+export function process({ dispatch },data){
   if(!data || _.isEmpty(data)) return;
+  dispatch('distribute',data).then(resp => dispatch('check_n_verify',resp))
+}
+
+export function distribute({ state,commit },data){
   _.forEach(data, (records,table) => {
-    if(!_.has(map,table) || _.isEmpty(_.get(map,table))) return true;
-    let mutation = _.get(map,table), action = null;
+    if(!_.has(state.map,table) || _.isEmpty(_.get(state.map,table))) return true;
+    let mutation = _.get(state.map,table), action = null;
     if(_.isString(mutation)) { action = 'add'; }
     else { action = mutation[1]; mutation = mutation[0] }
     let $commit = `${mutation}/${action}`;
     commit($commit,records,{ root:true })
   })
-  if(_.intersection(_.keys(data),['tokens','token_items','bills','payments']).length) dispatch('verify')
+  return data;
+}
+
+export function check_n_verify({ dispatch },data){
+  if(_.intersection(_.keys(data),['tokens','token_items','bills','payments']).length) dispatch('verify').then(gettable => dispatch('fetch_gettable',gettable))
 }
 
 export function verify({ rootState }){
@@ -82,10 +90,51 @@ export function verify({ rootState }){
     })
   }
 
+  return gettable;
+}
+
+export function fetch_gettable({},gettable){
   if(gettable.tokens.length) fetch_records('tokens',gettable.tokens);
   else if(gettable.token_items_of_token.length) fetch_records('token_items',gettable.token_items_of_token,'token');
   else if(gettable.bills_of_token.length) fetch_records('bills',gettable.bills_of_token,'token');
   else if(gettable.bills.length) fetch_records('bills',gettable.bills);
   else if(gettable.payments_of_bill.length) fetch_records('payments',gettable.payments_of_bill,'bill');
   else if(gettable.payments.length) fetch_records('payments',gettable.payments);
+}
+
+const out_ping_options = {
+  method: 'post', headers: { 'OP-After':'' }
+}
+const pinging = { status:false,timeout:0,header:null };
+export function out_ping({ dispatch }){
+  if(pinging.status) return;
+  pinging.status = true; setTimeout(() => pinging.status = false,125000);
+  fetch(OUT_PING,out_ping_options)
+    .then(r => {
+      pinging.header = r.headers; out_ping_options['headers']['OP-After'] = pinging.header.get('op-before');
+      pinging.status = false; clearTimeout(pinging.timeout); pinging.timeout = setTimeout(dispatch,1500,'out_ping');
+      return r.json();
+    })
+    .then(data => {
+      if(!data || _.isEmpty(data)) return [];
+      _.forEach(data,function(records,table){
+        let c_key = `op-lid-${table}`; out_ping_options.headers[c_key] = pinging.header.get(c_key);
+      });
+      return data;
+    })
+    .then(data => dispatch('distribute',data))
+    .then(() => dispatch('verify'))
+    .then(gettable => {
+      if(gettable.tokens.length) dispatch('out_records',{ table:'tokens',ids:gettable.tokens,key:'id' });
+      else if(gettable.token_items_of_token.length) dispatch('out_records',{ table:'token_items',ids:gettable.token_items_of_token,key:'token' });
+      else if(gettable.bills_of_token.length) dispatch('out_records',{ table:'bills',ids:gettable.bills_of_token,key:'token' });
+      else if(gettable.bills.length) dispatch('out_records',{ table:'bills',ids:gettable.bills,key:'id' });
+      else if(gettable.payments_of_bill.length) dispatch('out_records',{ table:'payments',ids:gettable.payments_of_bill,key:'bill' });
+      else if(gettable.payments.length) dispatch('out_records',{ table:'payments',ids:gettable.payments,key:'id' });
+    })
+}
+
+export function out_records({ dispatch }, { table, ids, key }){
+  fetch(OUT_PING.replace('ping',table),{ method:'post',body:JSON.stringify({ ids:_.uniq(ids),key:key || 'id' }),headers:{ 'Content-Type':'application/json' } })
+    .then(r => r.json()).then(data => dispatch('distribute',data))
 }

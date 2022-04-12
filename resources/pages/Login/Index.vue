@@ -32,10 +32,10 @@ export default {
   } },
   computed: {
     login(){ return this.$store.state.public.login || 'pin' },
-    errorMsg(){ return (location.search && location.search.substr(0,5) === '?msg=') ? decodeURI(location.search.substr(5)) : '' }
+    errorMsg(){ return (location.search && location.search.substr(0,5) === '?msg=') ? decodeURI(location.search.substr(5)) : '' },
   },
   created() {
     if(this.errorMsg) setTimeout(vm => vm.errorShow = false,7000,this)
-  }
+  },
 }
 </script>

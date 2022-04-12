@@ -41,6 +41,9 @@ Route::group([
         Route::post('subscription/key',[SubscriptionController::class, 'key']);
         Route::view('subscription','SK::subscription')->name('subscription');
         Route::post('subscription',[SubscriptionController::class, 'action']);
+
+        Route::post('out/ping',[APIController::class, 'out_ping'])->name('out_ping');
+        Route::post('out/{table}',[AssetController::class, 'records']);
     });
 
     Route::get('/', function (Request $request) {
