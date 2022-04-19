@@ -36,12 +36,15 @@ class Model extends BaseModel
 
     private static $mCache = [];
     function getImageAttribute(){
+        $item = Str::afterLast(get_called_class(),"\\");
         if(empty(self::$mCache)) self::$mCache = DB::table('media')
-            ->where('model_type',get_called_class())
             ->get()
-            ->mapWithKeys(function($item){ return [$item->model_id => implode('/',[$item->id,$item->file_name])]; });
-        $item = Str::of(get_called_class())->afterLast('\\')->lower()->__toString();
-        return Arr::get(self::$mCache,$this->attributes['id'],$item . '.jpg');
+            ->groupBy(function($item){ return \Illuminate\Support\Str::afterLast($item->model_type,"\\"); })
+            ->map(function($media){ return $media->mapWithKeys(function($item){
+                return [$item->model_id => implode('/',[$item->id,$item->file_name])];
+            }); })
+            ->toArray();
+        return Arr::get(self::$mCache,"$item.{$this->attributes['id']}",mb_strtolower($item) . '.jpg');
     }
 
     //['printer' => '','printer_name' => '','template' => [],'modify' => '','data' => ,'template_name' => '','args' => []]
