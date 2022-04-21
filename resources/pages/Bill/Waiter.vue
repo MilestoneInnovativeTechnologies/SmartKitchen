@@ -26,8 +26,9 @@ export default {
     Tokens: null
   } },
   computed: {
+    me(){ return _.get(this.$route,['meta','me','id']) },
     filter_progress(){ return _.concat(((settings_boolean(settings('waiter_generate_bills')) !== false) ? ['Completed'] : []),((settings_boolean(settings('waiter_make_payments')) !== false) ? ['Pending','Partial'] : [])) },
-    FTokens(){ return _.filter(this.tokens,({ progress,type }) => type === 'Dining' && this.filter_progress.includes(progress) ) },
+    FTokens(){ return _.filter(this.tokens,({ progress,type,user,waiter }) => type === 'Dining' && this.filter_progress.includes(progress) && _.includes([user,_.get(waiter,'id')],this.me)) },
     token_ids(){ return _.map(this.Tokens,'id') },
     Bills(){ return _(this.bills).filter(({ token }) => token && this.token_ids.includes(token.id) && token.progress !== 'Completed').keyBy(({ token }) => token.id).value() }
   }
