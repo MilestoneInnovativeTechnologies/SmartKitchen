@@ -116,7 +116,7 @@ export default {
     },
     loadServer(){
       this.loading = true;
-      asset_url(JI36A).then(url => this.loadFromUrl(url,'server').then(() => this.loading = false))
+      asset_url(JI36A).then(url => this.loadFromUrl(url,'server').then(() => this.loading = false)).catch(err => alert((this.loading = false) || 'No server data found!!'))
     },
     loadFromUrl(url,loc){
       const vm = this; return new Promise(function(resolve){
@@ -148,7 +148,7 @@ export default {
         })
       })
     },
-    getNoImage(){ this.no_img_upload = true; image_url(JI36A,0).then(url => (this.no_image_url = url) && (this.no_img_upload = false)) },
+    getNoImage(){ this.no_img_upload = true; image_url(JI36A,0).then(url => this.no_image_url = url).catch(() => alert('No image uploaded!!')).finally(() => this.no_img_upload = false) },
     loadAllServerImages(){
       this.loading_all_images = true;
       all_images(JI36A).then(obj => {

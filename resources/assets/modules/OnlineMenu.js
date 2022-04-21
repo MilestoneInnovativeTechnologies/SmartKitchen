@@ -23,7 +23,7 @@ function asset_ref(reference){ return ref(storage,full_path(reference)) }
 function image_ref(reference,img_id){ return ref(storage,image_path(reference,img_id)) }
 
 
-function asset_url(reference){ return new Promise(function (resolve){ getDownloadURL(asset_ref(reference)).then(resolve) }) }
+function asset_url(reference){ return new Promise(function (resolve,reject){ getDownloadURL(asset_ref(reference)).then(resolve).catch(err => reject(false)) }) }
 function image_url(reference,img_id){
   if(_.has(image_cache,_.toInteger(img_id))) return Promise.resolve(_.get(image_cache,_.toInteger(img_id)));
   return new Promise(function (resolve,reject){
