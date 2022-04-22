@@ -84,7 +84,7 @@
 </template>
 
 <script>
-import {h_key, is_period, popup_width, time} from "assets/helpers";
+import {h_key, is_period, popup_width, settings_boolean, time} from "assets/helpers";
 import PriceListSelectDropDown from "components/Price/PriceListSelectDropDown";
 import Masonry from "components/Masonry";
 import Bills from "assets/mixins/Bills";
@@ -111,12 +111,19 @@ export default {
     loading: false,
   } },
   computed: {
-    Tokens(){ let tokens = _(this.tokens).filter(token => token.type === 'Take Away' && !_.includes(['Cancelled','Paid'],token.progress))
+    waiter_filter(){
+      let user = _.get(this.$route,['meta','me']), setting = settings_boolean(settings('take_away_waiter_own_order'));
+      return (setting === true && user.role === 'Waiter') ? user.id : false;
+    },
+    Tokens(){ let tokens = _(this.tokens)
+      .filter(token => token.type === 'Take Away' && !_.includes(['Cancelled','Paid'],token.progress))
+      .filter(token => this.waiter_filter ? (token.user === this.waiter_filter) : true)
       .map(token => Object.assign({},token,
         { bill:_.find(this.bills,(bill) => bill.token && bill.token.id === token.id) },
         { payable:this.payable(token),balance:this.balance(token) },
         { slug:tokenSlug(token) })
-      ).filter(({ slug }) => this.filter ? _.includes(slug,_.toLower(this.filter)) : true)
+      )
+      .filter(({ slug }) => this.filter ? _.includes(slug,_.toLower(this.filter)) : true)
       .value(), size = _.size(tokens); return _.chunk(tokens,_.ceil(size/(_.floor(this.$q.screen.width/this.min_width) || 1))) },
     Token(){ return this.active.length ? _.get(this.Tokens,[this.active[0],this.active[1]]) : null },
   },

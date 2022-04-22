@@ -81,6 +81,8 @@ When the feature Take Away is enabled, then a menu named Take Away will be avail
 0,false,False,no,No then the corresponding users won't have take away menu
 1,true,True,yes,Yes then the corresponding users will have take away menu
 
+take_away_waiter_own_order
+If these setting have any value from 1,true,True,yes,Yes then the takeaway orders will be filtered to current waiter's order only 
 
 items_search_fields
 Default is id,name,detail
@@ -126,3 +128,5 @@ Normally the quick mode work like, at first item code to be entered, then tap EN
 If this settings have added with any of these values 1,true,True,yes,Yes,YES,ON,on,On, then quantity will be locked at 1.
 Each time item code entered and on tapping ENTER key, quantity will be taken as 1, and it gets added. On tapping ENTER key multiple times, quantity will also add consequently
 
+currency_symbol
+The symbol given will prepend to the price displayed on item selection. It can be any symbol or character. If a space required between symbol and price, it should give so.. Ex: `₹ `, `₨`, `AED `
