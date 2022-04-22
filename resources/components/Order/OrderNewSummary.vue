@@ -48,7 +48,7 @@
 </template>
 
 <script>
-import {h_key, is_period} from "assets/helpers";
+import {h_key, is_period, settings_boolean} from "assets/helpers";
 import {mapState} from "vuex";
 import OrderCustomer from "components/Order/OrderCustomer";
 import TaxNatureSelectDropDown from "components/Tax/TaxNatureSelectDropDown";
@@ -58,7 +58,7 @@ import {PaymentsTypes} from "assets/assets";
 export default {
   name: "OrderNewSummary",
   components: {PaymentTypeSelectDropDown, TaxNatureSelectDropDown, OrderCustomer},
-  props: ['items','price_list','customer','color','loading','payment'],
+  props: ['items','price_list','customer','color','loading','payment','type'],
   data(){ return {
     payments: { nature: null, advance_type:PaymentsTypes[0], advance_amount:0, discount: 0 }
   } },
@@ -91,7 +91,16 @@ export default {
     }
   },
   watch: {
-    'payments.discount': { immediate:true,handler(discount){ this.payments.advance_amount = _.toNumber(this.total - _.toNumber(discount)) } },
+    'payments.discount': {
+      immediate:true,
+      handler(discount){
+        let role = _.toLower(_.get(this.$route,['meta','me','role'])), key = 'take_away_instant_payment', key1 = `take_away_${role}_instant_payment`;
+        let setting = settings_boolean(settings(key1)) === undefined ? settings_boolean(settings(key)) : settings_boolean(settings(key1));
+        discount = _.toNumber(discount);
+        if(setting === false && discount <= 0) this.payments.advance_amount = 0
+        else this.payments.advance_amount = _.toNumber(this.total - discount)
+      }
+    },
     total(amount){ this.payments.advance_amount = _.toNumber(_.toNumber(amount) - _.toNumber(this.payments.discount)) }
   }
 }

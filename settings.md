@@ -82,7 +82,14 @@ When the feature Take Away is enabled, then a menu named Take Away will be avail
 1,true,True,yes,Yes then the corresponding users will have take away menu
 
 take_away_waiter_own_order
-If these setting have any value from 1,true,True,yes,Yes then the takeaway orders will be filtered to current waiter's order only 
+If these setting have any value from 1,true,True,yes,Yes then the takeaway orders will be filtered to current waiter's order only
+By default, filtering is not applying. Making this value to any of 0,false,False,no,No will disable filtering for waiter
+
+take_away_instant_payment, take_away_waiter_instant_payment, take_away_receptionist_instant_payment
+By default, while taking Take Away order from its own screen, it mentions the order as fully paid.
+If these settings have any value that of false (0,false,False,no,No), then the bill get generated without adding any payment.
+Making value to any of 1,true,True,yes,Yes will make the order instantly paid.
+Priority: If settings have take_away_waiter_instant_payment or take_away_receptionist_instant_payment then it will be considered else take_away_instant_payment will be considered
 
 items_search_fields
 Default is id,name,detail
