@@ -5,7 +5,7 @@
     </template>
     <template v-else>
       <FilterInputText @text="item_filter = $event" class="q-mb-xs" />
-      <GroupItemsSelect :selected="group" :filter="item_filter" :price_list="params.price_list" @item="addItem" type="Sale" />
+      <GroupItemsSelect :selected="group" :filter="item_filter" :price_list="params.price_list" @item="addItem" type="Sale" :item_quantities="item_quantities" @quantity="setQuantity" />
       <GroupStickyButton v-model="group" :type="params.type" />
       <q-page-sticky position="bottom-right" :offset="offset">
         <transition appear enter-active-class="animated zoomIn" leave-active-class="animated zoomOut">
@@ -117,6 +117,7 @@ export default {
       set(sale_price_list){ this.$store.commit('public',{ sale_price_list }) },
     },
     price(){ return _.get(this.prices,_.toInteger(this.params.price_list)) },
+    item_quantities(){ return _(this.params.items).mapKeys('item').mapValues(item => _.toNumber(item.quantity)).value() },
     total(){ return _(this.params.items).map(({ item,quantity }) => quantity * this.price[item]).sum() },
   },
   methods: {
@@ -128,6 +129,13 @@ export default {
       if (itemIndex === -1) itemIndex = this.params.items.push({item: id, quantity: 0}) - 1;
       this.params.items[itemIndex].quantity++;
       if(!this.quick) this.$q.notify(`${this.params.items.length} x Items <br>${_.sumBy(this.params.items,'quantity')} x Quantities`)
+    },
+    setQuantity({ item,quantity }){
+      item = _.toSafeInteger(item); quantity = _.toNumber(quantity);
+      let itemIndex = _.findIndex(this.params.items,['item',item]);
+      if(itemIndex < 0) return this.addItem({ id:item })
+      else this.params.items[itemIndex].quantity = quantity;
+      if(quantity < 1) setTimeout((vm,idx) => vm.removeItem(idx),2000,this,itemIndex)
     },
     calculateTotal(){ this.params.advance_amount = this.total - this.params.discount; if(!this.params.items.length) this.params.discount = 0 },
     removeItem(idx){ this.params.items.splice(idx,1) },

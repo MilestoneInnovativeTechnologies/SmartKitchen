@@ -2,7 +2,7 @@
   <div>
     <Masonry :items="page_items" width="180">
       <template #item="item">
-        <ItemSelectCard @selected="$emit('item',$event)" :id="item.id" :price_list="price_list" />
+        <ItemSelectCard @selected="$emit('item',$event)" :id="item.id" :price_list="price_list" :quantity="(item_quantities && item_quantities[item.id]) ? item_quantities[item.id] : 0" @quantity="$emit('quantity',$event)" />
       </template>
     </Masonry>
     <q-page-sticky position="bottom-right" :offset="offset" v-if="pages > 1">
@@ -22,7 +22,7 @@ import {mapGetters, mapState} from "vuex";
 export default {
   name: "GroupItemsSelect",
   components: {Masonry, ItemSelectCard},
-  props: ['selected','filter','price_list','type'],
+  props: ['selected','filter','price_list','type','item_quantities'],
   data(){ return {
     offset: [0,80], pages_show: true, page: 1
   } },

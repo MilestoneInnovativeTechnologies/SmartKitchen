@@ -9,7 +9,7 @@
       </template>
       <template v-else>
         <FilterInputText @text="item_filter = $event" class="q-mb-xs" />
-        <GroupItemsSelect :selected="active_group" :filter="item_filter" :price_list="params.price_list" @item="item" :type="params.type" />
+        <GroupItemsSelect :selected="active_group" :filter="item_filter" :price_list="params.price_list" :type="params.type" :item_quantities="item_quantities" @item="item" @quantity="setQuantity" />
       </template>
     </q-card-section>
     <template v-if="!quick">
@@ -51,14 +51,22 @@ export default {
   props: ['seat','after','payment'],
   computed: {
     attrs(){ return _.pick(this.$attrs,_.keys(this.params)) },
+    item_quantities(){ return _(this.params.items).mapKeys('item').mapValues(item => _.toNumber(item.quantity)).value() },
   },
   methods: {
     popup_width,
     item({ id }){
-      let items_item = _.find(this.params.items,['item',id]);
-      if(!items_item) this.params.items.push({ item:id,quantity:1,delay:0,narration:null })
-      else items_item.quantity++
+      let items_item_index = _.findIndex(this.params.items,['item',id]);
+      if(items_item_index < 0) this.params.items.push({ item:id,quantity:1,delay:0,narration:null })
+      else this.params.items[items_item_index].quantity++
       if(!this.quick) this.$q.notify({ type:'positive',message:`Item Updated`,caption:`Total ${this.params.items.length} Items`,group:'items',position:"top-right" })
+    },
+    setQuantity({ item,quantity }){
+      item = _.toSafeInteger(item); quantity = _.toNumber(quantity);
+      let idx = _.findIndex(this.params.items,['item',item]);
+      if(idx < 0) return this.item({ id:item })
+      else this.quantity(idx,quantity);
+      if(quantity < 1) setTimeout((vm,idx) => vm.remove(idx),2000,this,idx)
     },
     seating({ id,price_list }) {
       this.params.seating = id;
@@ -67,7 +75,7 @@ export default {
     },
     init(attrs){ let vm = this; _.forEach(attrs,function(val,key){ vm.params[key] = val }) },
     process(ary){ this[_.head(ary)]['apply'](this,_.tail(ary)) },
-    quantity(idx,quantity) { this.params.items[idx]['quantity'] = quantity },
+    quantity(idx,quantity) { this.params.items[idx]['quantity'] = _.toNumber(quantity) },
     remove(idx) { this.params.items.splice(idx,1) },
     customer(id) { this.params.customer = id },
     submit(payments) {

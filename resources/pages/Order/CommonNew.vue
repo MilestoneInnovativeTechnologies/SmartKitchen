@@ -4,7 +4,7 @@
     <FilterInputText @text="filter = $event" />
     <Masonry :items="filterKeys" >
       <template #item="item">
-        <ItemSelectCard @selected="addItem" :id="item.item" :price_list="params.price_list" />
+        <ItemSelectCard @selected="addItem" :id="item.item" :price_list="params.price_list" :quantity="i_qty(item)" @quantity="quantity" />
       </template>
     </Masonry>
     <div :class="horizontal ? 'fixed-bottom' : 'fixed-right'" class="bg-white q-py-sm shadow-2 q-gutter-y-sm q-px-md" style="overflow: scroll" :style="horizontal ? { 'max-height':'60vh' } : { 'width':'400px',top:'2.5rem' }" v-if="!hide">
@@ -51,16 +51,17 @@ export default {
   },
   methods: {
     addItem({id}) {
-      let items_item = _.find(this.params.items, ['item', id]);
-      if (!items_item) this.params.items.push({item: id, quantity: 1, delay: 0, narration: null})
-      else items_item.quantity++
+      let items_item_index = _.findIndex(this.params.items, ['item', id]);
+      if (items_item_index < 0) this.params.items.push({item: id, quantity: 1, delay: 0, narration: null})
+      else this.params.items[items_item_index].quantity++
       this.$q.notify(`${this.params.items.length} x Items <br>${_.sumBy(this.params.items,'quantity')} x Quantities`)
     },
     quantity({ item,quantity }){
       item = _.toSafeInteger(item); quantity = _.toNumber(quantity);
-      let items_item = _.find(this.params.items,['item',item]);
-      if(!items_item) this.params.items.push({ item,quantity })
-      else items_item.quantity = quantity;
+      let items_item_index = _.findIndex(this.params.items,['item',item]);
+      if(items_item_index < 0) this.params.items.push({ item, quantity, delay: 0, narration: null })
+      else this.params.items[items_item_index].quantity = quantity;
+      if(quantity < 1) setTimeout((vm,item) => vm.remove(item),2000,this,{ item })
     },
     remove({ item }){
       let idx = _.findIndex(this.params.items,['item',_.toSafeInteger(item)]);
