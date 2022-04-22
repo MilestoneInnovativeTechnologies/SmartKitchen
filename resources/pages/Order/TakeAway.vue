@@ -1,5 +1,6 @@
 <template>
-  <q-page padding>
+  <q-page>
+    <div class="q-pa-md"><FilterInputText @text="filter = $event" label="Filter Orders" /></div>
     <Masonry :items="Tokens" :width="min_width">
       <template #item="tokens">
         <q-list>
@@ -91,14 +92,18 @@ import {PaymentsTypes} from "assets/assets";
 import TaxNatureSelectDropDown from "components/Tax/TaxNatureSelectDropDown";
 import PaymentTypeSelectDropDown from "components/Payment/PaymentTypeSelectDropDown";
 import OrderCustomer from "components/Order/OrderCustomer";
+import FilterInputText from "components/FilterInputText";
 
 export default {
   name: 'PageTakeAway',
-  components: {OrderCustomer, PaymentTypeSelectDropDown, TaxNatureSelectDropDown, Masonry, PriceListSelectDropDown},
+  components: {
+    FilterInputText,
+    OrderCustomer, PaymentTypeSelectDropDown, TaxNatureSelectDropDown, Masonry, PriceListSelectDropDown},
   mixins: [Bills],
   data(){ return {
     pl_mode: false, min_width: 390,
     fab: true, offset: [12,12],
+    filter: '',
     params: { type: 'Take Away', price_list: null, seat: false, user:null, after:'take_away', payment:true },
     progress_rating: { New:0,Processing:1,Completed:2,Served:3,Paid:4 },
     active: [], selected: {},
@@ -109,10 +114,11 @@ export default {
     Tokens(){ let tokens = _(this.tokens).filter(token => token.type === 'Take Away' && !_.includes(['Cancelled','Paid'],token.progress))
       .map(token => Object.assign({},token,
         { bill:_.find(this.bills,(bill) => bill.token && bill.token.id === token.id) },
-        { payable:this.payable(token),balance:this.balance(token) })
-      )
+        { payable:this.payable(token),balance:this.balance(token) },
+        { slug:tokenSlug(token) })
+      ).filter(({ slug }) => this.filter ? _.includes(slug,_.toLower(this.filter)) : true)
       .value(), size = _.size(tokens); return _.chunk(tokens,_.ceil(size/(_.floor(this.$q.screen.width/this.min_width) || 1))) },
-    Token(){ return this.active.length ? _.get(this.Tokens,[this.active[0],this.active[1]]) : null }
+    Token(){ return this.active.length ? _.get(this.Tokens,[this.active[0],this.active[1]]) : null },
   },
   methods: {
     popup_width, lget:_.get, time, hKey({ item }){ return h_key(item) },
@@ -196,6 +202,10 @@ export default {
 
 function allCompleted(items){
   return _.every(items,({ progress }) => ['Completed','Served','Cancelled'].includes(progress))
+}
+function tokenSlug(token){
+  let customer = _.pick(_.get(token,'customer'),['name','phone']), items = _.map(_.get(token,'items'),'item.name'), waiter = _.get(token,['waiter','name'])
+  return _.toLower(_.join(_.concat(items,_.values(customer),waiter)," "))
 }
 </script>
 
