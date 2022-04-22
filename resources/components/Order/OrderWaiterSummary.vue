@@ -16,7 +16,8 @@ export default {
     prop:[['cyan','note_add'],['orange','published_with_changes'],['green','done'],['blue','done_outline']]
   } },
   computed: {
-    orders(){ return this.$store.getters['tokens/today'] },
+    myID(){ return _.get(this.$route,['meta','me','id']) },
+    orders(){ return _.filter(this.$store.getters['tokens/today'],['user',this.myID]) },
     total(){ return _.size(this.orders) }
   },
   methods: {
