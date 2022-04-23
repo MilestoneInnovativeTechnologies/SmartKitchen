@@ -81,15 +81,23 @@ When the feature Take Away is enabled, then a menu named Take Away will be avail
 0,false,False,no,No then the corresponding users won't have take away menu
 1,true,True,yes,Yes then the corresponding users will have take away menu
 
+
 take_away_waiter_own_order
 If these setting have any value from 1,true,True,yes,Yes then the takeaway orders will be filtered to current waiter's order only
 By default, filtering is not applying. Making this value to any of 0,false,False,no,No will disable filtering for waiter
+
 
 take_away_instant_payment, take_away_waiter_instant_payment, take_away_receptionist_instant_payment
 By default, while taking Take Away order from its own screen, it mentions the order as fully paid.
 If these settings have any value that of false (0,false,False,no,No), then the bill get generated without adding any payment.
 Making value to any of 1,true,True,yes,Yes will make the order instantly paid.
 Priority: If settings have take_away_waiter_instant_payment or take_away_receptionist_instant_payment then it will be considered else take_away_instant_payment will be considered
+
+
+delivery_boy_hide_others_billed
+These settings decide whether the orders that are billed by other delivery boy need to be shown or not.
+When the value of this setting is any of 1,true,True,yes,Yes then it will hide other waiters billed orders.
+By default, it will show every orders that are billed by anyone.
 
 items_search_fields
 Default is id,name,detail
@@ -122,18 +130,22 @@ By default making payments from bills are can be done by receptionist and waiter
 0,false,False,no,No
 If no settings in this name or the value is not any of above, then the waiter is able to add payments from bills
 
+
 quick_mode
 If the feature Quick Mode is enabled, then toggle switch will be displayed on header bar on create order windows. The Quick mode can be made ON/OFF from there itself.
 And if there have a settings in the name quick_mode with value any of 1,true,True,yes,Yes,YES,ON,on,On the by default, quick mode will be enabled. This can be turned off using header bar toggle switch
+
 
 quick_mode_item_prop
 This settings decides which property if an item to be used as code in quick mode. The item can have upto 5 properties that can be enabled by admin in settings > item props
 The settings value could exactly match with item prop name (case-sensitive)
 
+
 quick_mode_quantity_fix
 Normally the quick mode work like, at first item code to be entered, then tap ENTER key, then enter quantity, then tap ENTER key again next item code then its quantity and so on...
 If this settings have added with any of these values 1,true,True,yes,Yes,YES,ON,on,On, then quantity will be locked at 1.
 Each time item code entered and on tapping ENTER key, quantity will be taken as 1, and it gets added. On tapping ENTER key multiple times, quantity will also add consequently
+
 
 currency_symbol
 The symbol given will prepend to the price displayed on item selection. It can be any symbol or character. If a space required between symbol and price, it should give so.. Ex: `₹ `, `₨`, `AED `

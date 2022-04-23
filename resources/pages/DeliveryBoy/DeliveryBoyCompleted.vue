@@ -18,25 +18,34 @@
 </template>
 
 <script>
-import Tokens from "assets/mixins/Tokens";
 import TokenDetailDeliveryBoyExpansion from "components/Tokens/TokenDetailDeliveryBoyExpansion";
-import {time,popup_width} from "assets/helpers";
+import {time, popup_width, settings_boolean} from "assets/helpers";
 import BillGenerateCard from "components/Bill/BillGenerateCard";
 import DeliveryBoyPaymentCard from "components/Payment/DeliveryBoyPaymentCard";
 import {NoCustomer} from "assets/assets";
 import OrderNewFabDeliveryBoy from "components/Order/OrderNewFabDeliveryBoy";
+import Bills from "assets/mixins/Bills";
 
 export default {
   name: "DeliveryBoyCompleted",
   components: {OrderNewFabDeliveryBoy, DeliveryBoyPaymentCard, BillGenerateCard, TokenDetailDeliveryBoyExpansion},
-  mixins: [Tokens],
+  mixins: [Bills],
   data(){ return {
     me: parseInt(this.$route.meta.me.id),
     bill_mode: false, deliver_mode: false,
     selected: null,
   } },
   computed: {
-    Tokens(){ return _(this.tokens).filter(['type','Home Delivery']).filter(is_all_completed).map(token => token.customer ? token : Object.assign({},token,{ customer:NoCustomer })).value() },
+    hide_others(){ return settings_boolean(settings('delivery_boy_hide_others_billed')) === true },
+    hide_tokens(){ return this.hide_others ? _(this.bills).filter(bill => ['Pending','Partial'].includes(bill.progress)).filter(bill => do_hide(bill,this.me)).map(bill => _.toInteger(bill.token.id)).value() : [] },
+    Tokens(){
+      return _(this.tokens)
+        .filter(['type','Home Delivery'])
+        .filter(is_all_completed)
+        .map(token => token.customer ? token : Object.assign({},token,{ customer:NoCustomer }))
+        .filter(token => this.hide_others ? !_.includes(this.hide_tokens,token.id) : true)
+        .value()
+    },
     own(){ return _.filter(this.Tokens,['user',this.me]) },
     orphan(){ return _.filter(this.Tokens,({ user }) => _.isNull(user)) },
     other(){ return _.filter(this.Tokens,({ user }) => !_.isNull(user) && user !== this.me) },
@@ -53,5 +62,8 @@ export default {
 
 function is_all_completed({ items }){
   return items.length && _.every(items,({ progress }) => _.includes(['Cancelled','Completed'],progress))
+}
+function do_hide({ user },id){
+  return user && user.role === 'Delivery Boy' && user.id !== id
 }
 </script>

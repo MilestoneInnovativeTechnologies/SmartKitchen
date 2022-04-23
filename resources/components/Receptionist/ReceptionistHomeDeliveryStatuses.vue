@@ -1,6 +1,7 @@
 <template>
-  <q-card v-if="Tokens.length">
-    <q-card-section class="bg-deep-purple text-white row justify-between text-bold"><div>Home Delivery Statuses</div><div>{{ Tokens.length }}</div></q-card-section>
+  <q-card v-if="Tokens.length || filter">
+    <q-card-section class="bg-deep-purple text-white row justify-between text-bold items-center"><div>Home Delivery Statuses</div><FilterInputText bg-color="white" class="gt-xs" style="width: 50vw" label="Search" @text="filter = $event" /><div>{{ Tokens.length }}</div></q-card-section>
+    <q-card-section class="lt-sm"><FilterInputText label="Search" @text="filter = $event" /></q-card-section>
     <OrderSummaryDeliveryBoy :tokens="Tokens" kitchen user @generate="generating = $event.id" @deliver="delivering = $event.id" />
     <q-dialog persistent :value="generating !== null" @hide="generating = null"><BillGenerateCard :style="popup_width()" v-if="generating" :token="generating" @generated="generating = null" /></q-dialog>
     <q-dialog persistent :value="delivering !== null" @hide="delivering = null"><DeliveryBoyPaymentCard :style="popup_width()" v-if="delivering" :token="delivering" @paid="delivering = null" /></q-dialog>
@@ -14,21 +15,35 @@ import {image, popup_width} from "assets/helpers";
 import {NoCustomer} from "assets/assets";
 import BillGenerateCard from "components/Bill/BillGenerateCard";
 import DeliveryBoyPaymentCard from "components/Payment/DeliveryBoyPaymentCard";
+import FilterInputText from "components/FilterInputText";
+import {HomeDeliveryFilterMinimumTokens} from "assets/constants";
 
 export default {
   name: "ReceptionistHomeDeliveryStatuses",
   mixins: [Bills],
-  components: {DeliveryBoyPaymentCard, BillGenerateCard, OrderSummaryDeliveryBoy },
+  components: {FilterInputText, DeliveryBoyPaymentCard, BillGenerateCard, OrderSummaryDeliveryBoy },
   data(){ return {
     generating: null, delivering: null,
+    filter: ''
   } },
   computed: {
-    Tokens(){ return _(this.tokens).filter(['type','Home Delivery']).filter(({ progress }) => !['Paid','Cancelled'].includes(progress)).map(token => token.customer ? token : Object.assign({},token,{ customer:NoCustomer })).value() },
+    Tokens(){ return _(this.tokens)
+      .filter(['type','Home Delivery'])
+      .filter(({ progress }) => !['Paid','Cancelled'].includes(progress))
+      .map(token => token.customer ? token : Object.assign({},token,{ customer:NoCustomer }))
+      .map(token => Object.assign({},token,{ slug:tokenSlug(token) }))
+      .filter(token => this.filter ? _.includes(token.slug,_.toLower(this.filter)) : true)
+      .value()
+    },
     token_ids(){ return _.map(this.Tokens,'id') },
     Bills(){ return _(this.bills).filter(bill => _.includes(this.token_ids,bill.token.id)).keyBy('token.id').value() }
   },
   methods: {
     image, popup_width
   }
+}
+function tokenSlug(token){
+  let customer = _.pick(_.get(token,'customer'),['name','phone']), items = _.map(_.get(token,'items'),'item.name'), waiter = _.get(token,['waiter','name'])
+  return _.toLower(_.join(_.concat(items,_.values(customer),waiter)," "))
 }
 </script>
