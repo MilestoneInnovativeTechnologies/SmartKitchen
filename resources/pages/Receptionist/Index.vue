@@ -4,7 +4,7 @@
     <ReceptionistServableItems />
     <ReceptionistHomeDeliveryStatuses />
     <OnlineOrdersPendingList color="purple" title="Pending Online Orders" />
-    <ReceptionistNonDiningTokens />
+    <ReceptionistNonDiningTokens color="teal" />
     <ReceptionistRemoteTokens />
   </q-page>
 </template>
