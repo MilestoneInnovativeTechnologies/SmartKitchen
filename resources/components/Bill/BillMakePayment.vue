@@ -43,9 +43,23 @@
       </q-item>
     </q-list>
     <q-card-actions align="right" class="q-px-lg">
+      <q-btn color="red" icon="delete" @click="cancel" />
+      <q-space />
       <q-btn label="Add Payment" color="positive" class="q-px-md" @click="pay" :disabled="amount === 0" />
     </q-card-actions>
     <q-inner-loading :showing="loading"><q-spinner-facebook color="positive" size="2em" /></q-inner-loading>
+    <q-dialog v-model="cancel_confirm" persistent>
+      <q-card>
+        <q-card-section class="row items-center bg-red text-white">
+          <q-icon name="dangerous" color="white" size="md" />
+          <span class="q-ml-sm text-weight-bold">You are about to cancel a Bill, Are you sure??</span>
+        </q-card-section>
+        <q-card-actions align="right" class="q-py-lg">
+          <q-btn flat label="Close" color="primary" v-close-popup /><q-space />
+          <q-btn label="Confirm, Do Cancel!!" color="red" v-close-popup @click="cancel(true)" />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
   </q-card>
 </template>
 
@@ -65,7 +79,8 @@ export default {
   data(){ return {
     loading: false, discount: 0, tax: null,
     options: PaymentsTypes, type: PaymentsTypes[0],
-    v_amount: 0
+    v_amount: 0,
+    cancel_confirm: false,
   } },
   computed: {
     token(){ return _.get(this.bill,'token') },
@@ -99,6 +114,11 @@ export default {
       this.loading = true; if(this.amount === 0) return alert('Enter paying amount..' + ((this.loading = false) || ''));
       let params = { bill:this.bill.id, amount:this.amount, type:this.type }
       post('payment','create',params).then(() => this.v_amount = 0).catch().then(() => this.loading = false)
+    },
+    cancel(status){
+      if(status !== true) return this.cancel_confirm = true;
+      this.loading = true; let params = { bill:this.bill.id }
+      post('bill','cancel',params).then().catch().finally(() => this.loading = this.cancel_confirm = false)
     },
   },
 }
