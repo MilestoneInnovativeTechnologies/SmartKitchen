@@ -1,6 +1,7 @@
 <template>
   <q-page padding v-scroll="scrolled">
-    <Masonry width="280" :items="tokens">
+    <BillFilter :tokens="active_tokens" v-model="Tokens" class="q-mb-sm" />
+    <Masonry width="280" :items="Tokens">
       <template #item="token">
         <OrderSummaryReceptionistOrder :id="token.id" />
       </template>
@@ -16,22 +17,25 @@
 
 <script>
 import {h_key, popup_width} from "assets/helpers";
-import {mapState} from "vuex";
 import OrderSummaryReceptionistOrder from "components/Order/OrderSummaryReceptionistOrder";
 import Masonry from "components/Masonry";
 import OrderNewBasic from "components/Order/OrderNewBasic";
+import BillFilter from "components/Bill/BillFilter";
+import Tokens from "assets/mixins/Tokens";
 
 export default {
   name: 'PageReceptionistOrders',
-  components: {OrderNewBasic, Masonry, OrderSummaryReceptionistOrder},
+  components: {BillFilter, OrderNewBasic, Masonry, OrderSummaryReceptionistOrder},
+  mixins: [Tokens],
   data(){ return {
     fab: true, timeout: 0, offset: [24,24],
     progresses: ['New','Processing'],
     order: false,
+    Tokens: null
   } },
-  computed: mapState('tokens',{
-    tokens({ data }){ return _(data).filter(({ progress,type }) => type !== 'Remote' && this.progresses.includes(progress)).value() }
-  }),
+  computed: {
+    active_tokens(){ return _.filter(this.tokens,token => token.type !== 'Remote' && this.progresses.includes(token.progress)) }
+  },
   methods: {
     popup_width,
     hKey({ id }){ h_key('order','summary','order',id) },
