@@ -34,7 +34,7 @@ export default {
         vm.containerHeight = (itemHeight * itemsPerCol) + itemHeight + 'px'
       })
     },
-    set_height_after(){ setTimeout(this.set_height,((this.items_size/50)+1)*350) }
+    set_height_after(){ setTimeout(this.set_height,((this.items_size/50)+1)*750) }
   },
   created(){ this.arg = _.isArray(this.items) ? 0 : 1 },
   watch: {
