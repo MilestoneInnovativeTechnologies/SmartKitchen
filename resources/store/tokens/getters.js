@@ -26,3 +26,5 @@ export function item(state,getters){
   let ti_map = getters['map'];
   return (ti) => _.get(state.items,ti_map[parseInt(ti)])
 }
+
+export function billed(state,getters,rootState){ return _(_.get(rootState,['bills','data'])).filter(bill => bill.progress !== 'Cancelled').map(bill => _.toSafeInteger(bill.token)).value() }
