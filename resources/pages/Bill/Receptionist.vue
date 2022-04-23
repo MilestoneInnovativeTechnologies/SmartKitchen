@@ -26,7 +26,7 @@ export default {
     Tokens: null,
   } },
   computed: {
-    Bills(){ return _(this.bills).filter(({ token,progress }) => token && (progress !== 'Paid')).keyBy(({ token }) => token.id).value() },
+    Bills(){ return _(this.bills).filter(({ token,progress }) => token && this.filter_progress.includes(progress)).keyBy(({ token }) => token.id).value() },
     FTokens(){ return _.filter(this.tokens,({ id,progress }) => this.filter_progress.includes(progress) || _.has(this.Bills,id)) },
   }
 }
