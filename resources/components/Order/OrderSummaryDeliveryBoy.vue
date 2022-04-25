@@ -2,7 +2,7 @@
   <q-list v-bind="$attrs">
     <div v-if="payment !== undefined" class="text-h4 text-center text-bold text-primary q-mb-md"><span class="text-caption" style="line-height: 0.55rem">Total Payments</span><br />{{ precision(total) }}</div>
     <q-item v-for="(token,idx) in tokens" :key="'osdb-tk-'+token.id+'-idx-'+idx">
-      <q-item-section avatar><q-avatar rounded><q-img :src="image(token.customer.image)" /></q-avatar></q-item-section>
+      <q-item-section avatar top><q-avatar rounded><q-img :src="image(token.customer.image)" /></q-avatar></q-item-section>
       <q-item-section>
         <q-item-label>{{ token.customer.name }}</q-item-label>
         <q-item-label caption lines="2" v-if="kitchen === undefined">{{ token.items.map(item => item.item.name).join(', ') }}</q-item-label>
