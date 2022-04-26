@@ -25,17 +25,18 @@ export default {
       Token: [0,14,19,20,15],
       Sales: [1,2,3,4,5],
       Bill: [7,8,9,10,21,22,23,24,33,31,34,35,36,37],
-      Payments: [31,32,34,35,36,37],
+      Payments: [31,32,40,41,42,34,35,36,37],
       Remote: [25,26,27,28,29,30],
       Tax: [8,9,10,13],
       Kitchen: [6,16],
       Stock: [6],
-      Item: [4,5,17],
+      Item: [4,5,17,39],
+      'Item Group': [38,39],
       Waiter: [14,15],
       Chef: [18],
       Receptionist: [19],
       'Delivery Boy': [20,24],
-      Customer: [21,25,26,33],
+      Customer: [21,33,41,42,25,26],
       Performance: [14,15,16,17,18]
     },
     masters: [
@@ -77,6 +78,11 @@ export default {
       ['Unpaid Bills by Customer', 'bills_unpaid_customer'],//35
       ['Unpaid Bills by Type', 'bills_unpaid_type'],//36
       ['Unpaid User Bills', 'bills_unpaid_user'],//37
+      ['Group Wise Order Summary', 'group_wise_order_summary'],//38
+      ['Group Items Order Summary', 'group_items_order_summary'],//39
+      ['Payment Type Summary', 'payment_type_summary'],//40
+      ['Customer Payments', 'customer_payments'],//41
+      ['Customer Payments by Mode', 'customer_payment_type'],//42
     ]
   } },
   methods: {

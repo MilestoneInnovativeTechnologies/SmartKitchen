@@ -16,7 +16,7 @@ export default {
   mixins: [Bills],
   computed: {
     range(){ return range(this.$store.state.public.range) }, type(){ return this.$store.state.public.payment_type },
-    head(){ return _.zipObject(['Report','Payment Type','Date From','Date To'],['Payments',this.type,to_format('ddd - Do MMM hh:ii A',this.range.from),to_format('ddd - Do MMM hh:ii A',this.range.to)]) },
+    head(){ return _.zipObject(['Report','Payment Type','Date From','Date To'],['Payments',this.type,to_format('ddd - Do MMM hh:mm A',this.range.from),to_format('ddd - Do MMM hh:mm A',this.range.to)]) },
     date_bills(){ return _(this.bills).filter(({ progress,payments }) => progress !== 'Cancelled' && payments.length && is_any_between(payments,this.range.from,this.range.to)).value() },
     payments(){ return _(this.date_bills).flatMap(bill => _.map(bill.payments,payment => Object.assign({},payment, { bill }))).filter(({ date,type,status }) => status === 'Active' && type === this.type && is_between(date,this.range.from,this.range.to)).sortBy(({ date }) => extract_date(date).getTime()).value() },
     table(){ return _(this.payments).map(({ id,date,bill,amount }) => _.zipObject(['ID','Time','Token/Bill','Customer','Bill Amount','Paid Amount','Balance'],[

@@ -30,7 +30,8 @@ const layout_child = {
     'orders_by_waiter','orders_by_receptionist','orders_by_delivery_boy','user_orders', 'kitchen_processing','item_processing','chef_performance',
     'data_import','menu_qr_codes','menu_sync_data','remote_kitchen_manage',
     'remote_orders_by_customer','remote_order_summary_by_customer','day_wise_remote_order_summary','day_wise_remote_order_delivery','remote_order_by_item','remote_order_summary_by_item',
-    'bill_by_customer','bill_payments','bill_payments_by_type','bills_unpaid','bills_unpaid_customer','bills_unpaid_type','bills_unpaid_user'
+    'bill_by_customer','bill_payments','bill_payments_by_type','bills_unpaid','bills_unpaid_customer','bills_unpaid_type','bills_unpaid_user',
+    'group_wise_order_summary','group_items_order_summary','payment_type_summary','customer_payments','customer_payment_type'
   ],
   'Delivery Boy': ['delivery_boy_index','delivery_boy_orders','order_new','customers','delivery_boy_completed','delivery_boy_payments'],
   Menu: ['menu_index'],
@@ -134,6 +135,11 @@ const route_master = {
   bills_unpaid_user: { name:'bills_unpaid_user', path:'/report/bill/unpaid/user', component: () => import('pages/Report/Reports/ReportBillUnpaidUser'), meta:{ title:'Unpaid Bills by User',controls:['range','user'] } },
   display_kitchen: { name:'display_kitchen', path:'/kitchen', component: () => import('pages/Display/Kitchen'), meta:{ out_ping:true,color:'teal-14' } },
   display_active_tokens: { name:'display_active_tokens', path:'/tokens/active', component: () => import('pages/Display/ActiveTokens'), meta:{ out_ping:true,color:'purple-14' } },
+  group_wise_order_summary: { name:'group_wise_order_summary', path:'/report/group/summary', component: () => import('pages/Report/Reports/ReportGroupWiseOrderSummary'), meta:{ title:'Group Wise Order Summary',controls:['range'] } },
+  group_items_order_summary: { name:'group_items_order_summary', path:'/report/group/items/summary', component: () => import('pages/Report/Reports/ReportGroupItemsOrderSummary'), meta:{ title:'Group Items Order Summary',controls:['range','group'] } },
+  payment_type_summary: { name:'payment_type_summary', path:'/report/payment/type/summary', component: () => import('pages/Report/Reports/ReportPaymentTypeSummary'), meta:{ title:'Payment Type Summary',controls:['range'] } },
+  customer_payments: { name:'customer_payments', path:'/report/customer/payments', component: () => import('pages/Report/Reports/ReportCustomerPayments'), meta:{ title:'Customer Payments',controls:['range','customer'] } },
+  customer_payment_type: { name:'customer_payment_type', path:'/report/customer/payment/type', component: () => import('pages/Report/Reports/ReportCustomerByPaymentType'), meta:{ title:'Customer Payment Type',controls:['range','customer','payment_type'] } },
 }
 
 const feature_routes = {
