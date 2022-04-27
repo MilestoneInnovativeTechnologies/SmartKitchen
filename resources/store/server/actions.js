@@ -1,9 +1,11 @@
 const verified = { tokens:[],bills:[],payments:[] }
+let hidden_retry = 0;
 
 export function post ({ dispatch },{ item,action,data }) {
   let url = `${item}/${action}`;
   return new Promise(resolve => {
     api(url,data).then(({ headers,data }) => {
+      hidden_retry = 0
       if(_.has(headers,'sk-action-result')){
         try {
           resolve(JSON.parse(_.get(headers,'sk-action-result')))
@@ -12,6 +14,8 @@ export function post ({ dispatch },{ item,action,data }) {
         }
       }
       dispatch('process',data)
+    }).catch(function (error) {
+      dispatch('api_error',{ item,action,data,error }).then(resolve)
     })
   })
 }
@@ -19,12 +23,13 @@ export function post ({ dispatch },{ item,action,data }) {
 export function ping ({ state:{ interval },commit,dispatch }) {
   api('ping')
     .then(({ data }) => dispatch('process',data))
-    .catch(() => null)
+    .catch(error => (!error.response && !error.request) ? alert('You have been logged out.. Please login again!!') : null)
     .then(() => commit('sync',setTimeout(dispatch,interval,'ping')))
+    .then(() => hidden_retry = 0)
 }
 
 export function init ({ commit,dispatch }){
-  if(!localStorage.getItem('jwt_TOKEN')) return ;
+  if(!localStorage.getItem('jwt_TOKEN') || _ROLE === 'Login') return ;
   commit('sync',setTimeout(dispatch,1000,'ping'))
 }
 
@@ -137,4 +142,36 @@ export function out_ping({ dispatch }){
 export function out_records({ dispatch }, { table, ids, key }){
   fetch(OUT_PING.replace('ping',table),{ method:'post',body:JSON.stringify({ ids:_.uniq(ids),key:key || 'id' }),headers:{ 'Content-Type':'application/json' } })
     .then(r => r.json()).then(data => dispatch('distribute',data))
+}
+
+export function api_error({ dispatch },{ item,action,data,error }){
+  return new Promise(function(resolve){
+    if (error.response) {
+      let status = parseInt(error.response.status);
+      if([400,401,405,406,500,503].includes(status)) {
+        if(hidden_retry > 1){
+          alert('Unexpected error.. Please logout and login then try again!!')
+          resolve([])
+        } else {
+          setTimeout(() => dispatch('post',{ item,action,data }).then(resolve),1000);
+          hidden_retry++;
+        }
+      } else {
+        if(status === 429) alert('Server too busy, Please try again after a minute... Aborting current action!!');
+        else alert('Trying to access content which is not available on server. Aborting current action!!')
+        resolve([])
+      }
+    } else if (error.request) {
+      console.error('Post Error!! Request Made but no response.. Probably Network Error!!');
+      console.log(`item: ${item}, action: ${action}, data: `,data);
+      console.warn(error.request);
+      if(confirm('Network seems to be unavailable! Please RETRY by pressing OK (Check for network before pressing OK), or Cancel the action!!')){
+        dispatch('post',{ item,action,data }).then(resolve)
+      } else resolve([])
+    } else {
+      alert('Error in preparing Data OR You have been logged out.. Please logout and login again!!');
+      resolve([])
+      window.location = (typeof LOGOUT === 'undefined') ? (location.origin + '/logout') : LOGOUT;
+    }
+  })
 }
