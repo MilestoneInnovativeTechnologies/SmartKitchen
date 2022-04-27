@@ -24,7 +24,7 @@ export function ping ({ state:{ interval },commit,dispatch }) {
   api('ping')
     .then(({ data }) => dispatch('process',data))
     .catch(error => (!error.response && !error.request) ? alert('You have been logged out.. Please login again!!') : null)
-    .then(() => commit('sync',setTimeout(dispatch,interval,'ping')))
+    .then(() => commit('sync',setTimeout(dispatch,(60000/_.toInteger(settings('ping_frequency') || 4)),'ping')))
     .then(() => hidden_retry = 0)
 }
 

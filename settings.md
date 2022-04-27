@@ -30,6 +30,9 @@ token_<item>
 
 This is the priority order while selecting a printer or print_template
 
+ping_frequency
+Normally by default, ping action (updating data from server) occurs on each 15 seconds, that is 4 pings per minute.
+This means ping_frequency is 4. This can be changed as per requirement. Ex: if made 10, then 10 pings per minute, ie on each 6 seconds it updates data from server 
 
 items_per_page or max_items_per_page
 This is the setting who controls the maximum amount of items that should be displayed in a page (while ordering)
