@@ -28,7 +28,16 @@ here the <user_name> is the name of logged in user. Everything will be snake cas
 token_<item>
 <item>
 
+Ex: administrator_sale_printer, delivery_boy_bill_print_template, kot_cancelled_print_template, firose_hussain_printer
+
+
 This is the priority order while selecting a printer or print_template
+
+kot_print_separate
+By default the full kot will be printed even for an update in the token. This can be restricted, to print kot on separate actions
+Make the value to any of 1,true,True,yes,Yes to make the selection of template according to Modified, Added or Cancelled.
+If it doesn't have this setting and have any template in the name kot_add_print_template, kot_modify_print_template, kot_cancel_print_template, then specified template will be used.
+The data available for template will have the token item detail under the attribute name item and have additional attribute named item_state which have value Added, Modified, Cancelled
 
 ping_frequency
 Normally by default, ping action (updating data from server) occurs on each 15 seconds, that is 4 pings per minute.
