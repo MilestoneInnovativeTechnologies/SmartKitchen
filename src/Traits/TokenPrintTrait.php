@@ -6,6 +6,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Milestone\SmartKitchen\Models\Price;
 use Milestone\SmartKitchen\Models\Settings;
+use Milestone\SmartKitchen\Models\TokenItem;
 
 trait TokenPrintTrait
 {
@@ -26,6 +27,10 @@ trait TokenPrintTrait
         $data->setAttribute('date_human2',human_date2($data->date));
         $data->setAttribute('time_human',human_time($data->date));
         $prices = Price::where('price_list',$data->price_list)->get()->keyBy->item->map->price->toArray();
+        if(is_array($extra) && array_key_exists('token_item_id',$extra) && $extra['token_item_id']){
+            $token_item = TokenItem::withoutGlobalScopes()->with(['Item','User','Kitchen'])->find(intval($extra['token_item_id']));
+            $data->setAttribute('item',self::setItemAttrs($prices,$token_item));
+        }
         $data->setAttribute('items',$data->Items->map(function($Item)use($prices){ return self::setItemAttrs($prices,$Item); }));
         $data->setAttribute('items_amount',$data->Items->sum->amount);
         $data->setAttribute('items_amount_precise',precise($data->items_amount));
@@ -115,16 +120,22 @@ trait TokenPrintTrait
 
     public function print_template_name($props = []){
         if(Arr::hasAny($props,['template','template_name'])) return $props;
-        $role = auth()->user() ? auth()->user()->role : ''; $type = $this->type; $token = $this->Bill ? 'Bill' : 'Token'; $user = auth()->user() ? auth()->user()->name : '';
-        $template_name = $this->print_name_item('Print Template',$role,$type,$token,$user);
+        $role = Arr::get($props,'role',(auth()->user() ? auth()->user()->role : ''));
+        $type = Arr::get($props,'type',$this->type);
+        $item = Arr::get($props,'item',$this->Bill ? 'Bill' : 'Token');
+        $user = Arr::get($props,'user',(auth()->user() ? auth()->user()->name : ''));
+        $template_name = $this->print_name_item('Print Template',$role,$type,$item,$user);
         $props['template_name'] = $template_name ?: $this->print_template;
         return $props;
     }
 
     public function print_printer_name($props = []){
         if(Arr::hasAny($props,['printer','printer_name'])) return $props;
-        $role = auth()->user() ? auth()->user()->role : ''; $type = $this->type; $token = $this->Bill ? 'Bill' : 'Token'; $user = auth()->user() ? auth()->user()->name : '';
-        $printer_name = $this->print_name_item('Printer',$role,$type,$token,$user);
+        $role = Arr::get($props,'role',(auth()->user() ? auth()->user()->role : ''));
+        $type = Arr::get($props,'type',$this->type);
+        $item = Arr::get($props,'item',$this->Bill ? 'Bill' : 'Token');
+        $user = Arr::get($props,'user',(auth()->user() ? auth()->user()->name : ''));
+        $printer_name = $this->print_name_item('Printer',$role,$type,$item,$user);
         $props['printer_name'] = $printer_name ?: $this->printer_name;
         return $props;
 
