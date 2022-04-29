@@ -121,8 +121,8 @@ class TokenController extends Controller
             $token_item->token = $token_id;
             TokenItemAdding::dispatch($token_id,$ti_data['item'],$ti_data['quantity'],$request->input('user'),$ti_data);
             $token_item->save();
-            TokenItemsSaved::dispatch(Token::find($token_id)->Items,$request->input('user'),$token_id);
             TokenItemAdded::dispatch($token_item->fresh(),$request->input('user'),$ti_data);
+//            TokenItemsSaved::dispatch(Token::find($token_id)->Items,$request->input('user'),$token_id);
             return $token_item->fresh();
         }
         elseif($request->has('id')){

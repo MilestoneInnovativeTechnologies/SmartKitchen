@@ -14,15 +14,16 @@ class TokenItemUpdated
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $id, $kitchen, $item, $old, $new;
+    public $token, $tokenItemID, $kitchen, $item, $old, $new, $mode = 'Modify';
 
     public function __construct($id,$newData,$oldData)
     {
-        $this->id = $id;
+        $this->tokenItemID = $id;
         $this->kitchen = $oldData['kitchen'] ?? null;
         $this->item = $oldData['item'] ?? null;
         $this->old = $oldData;
         $this->new = $newData;
+        $this->token = $oldData['token'] ?? null;
     }
 
 }

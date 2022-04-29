@@ -15,13 +15,14 @@ class TokenItemAdded
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $token, $user, $tokenItem;
+    public $token, $user, $tokenItem, $tokenItemID, $mode = 'Add';
 
     public function __construct($tokenItem, $user)
     {
-        $this->token = Token::find($tokenItem->token);
+        $this->token = $tokenItem->token;
         $this->user = $user;
         $this->tokenItem = $tokenItem;
+        $this->tokenItemID = $tokenItem->id;
     }
 
 }

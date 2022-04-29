@@ -21,7 +21,7 @@ class BillProgressMadeAsCancelled
     {
         $bill->load(['Token']);
         $this->bill = $bill;
-        $this->token = $bill->Token;
+        $this->token = $bill->Token->id;
     }
 
 }

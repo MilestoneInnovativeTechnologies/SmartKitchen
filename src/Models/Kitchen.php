@@ -25,18 +25,43 @@ class Kitchen extends Model implements HasMedia
     public function Items(){ return $this->hasMany(KitchenItem::class,'kitchen','id'); }
     public function Active(){ return $this->hasOne(KitchenStatus::class,'kitchen','id')->where('status','Active'); }
 
-    public function kot_print_template_data($kitchen,$token_id = null){
-        if(!$token_id) return null;
-        $Token = Token::find($token_id);
-        $data = $Token->print_data($Token,['kitchen' => Arr::get($kitchen,'id')]);
+    public function print($props = []) {
+        $TokenModel = new Token; $props['type'] = 'Kot';
+        $printer = Arr::get(KitchenStatus::where('kitchen',$this->id)->first(),'printer');
+        if($printer) $props['printer'] = $printer;
+        else $props = $TokenModel->print_printer_name($props);
+        $props = $TokenModel->print_template_name($props);
+        return parent::print($props);
+    }
+
+    private static function get_kot_token_print_data($Token,$kitchen,$ti_id){
+        $data = $Token->print_data($Token,['kitchen' => Arr::get($kitchen,'id'),'token_item_id' => $ti_id]);
         $data->setAttribute('kitchen',is_array($kitchen) ? $kitchen : $kitchen->toArray());
+        return $data;
+
+    }
+
+    public function kot_print_template_data($kitchen,$token_id = null,$tokenItem_id = null){
+        if(!$token_id) return null; $Token = Token::find($token_id);
+        return self::get_kot_token_print_data($Token,$kitchen,$tokenItem_id);
+    }
+
+    public function kot_add_print_template_data($kitchen,$token_id = null,$tokenItem_id = null){
+        $data = $this->kot_print_template_data($kitchen,$token_id,$tokenItem_id);
+        $data->setAttribute('item_state','Added');
         return $data;
     }
 
-    public function print($props = []) {
-        $printer = Arr::get(KitchenStatus::where('kitchen',$this->id)->first(),'printer',Arr::get(Settings::where('name',$this->printer_name)->first(),'value'));
-        $props['printer'] = $printer;
-        return parent::print($props);
+    public function kot_modify_print_template_data($kitchen,$token_id = null,$tokenItem_id = null){
+        $data = $this->kot_print_template_data($kitchen,$token_id,$tokenItem_id);
+        $data->setAttribute('item_state','Modified');
+        return $data;
+    }
+
+    public function kot_cancel_print_template_data($kitchen,$token_id = null,$tokenItem_id = null){
+        $data = $this->kot_print_template_data($kitchen,$token_id,$tokenItem_id);
+        $data->setAttribute('item_state','Cancelled');
+        return $data;
     }
 
 }

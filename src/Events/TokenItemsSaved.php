@@ -14,7 +14,7 @@ class TokenItemsSaved
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $tokenItems, $user, $token;
+    public $tokenItems, $user, $token, $mode = '', $tokenItem, $tokenItemID;
 
     public function __construct($tokenItems, $user, $token)
     {
