@@ -29,8 +29,8 @@ class SettingsController extends Controller
 
     public function delete(){
         if(!request()->has('id') || !request()->filled('id')) return [];
-        Settings::destroy(request()->input('id'));
-        Settings::orderBy('id','desc')->first()->touch();
+        Settings::where('name','_deleted_')->delete();
+        Settings::find(request()->input('id'))->update(['name' => '_deleted_']);
         return request()->input('id');
     }
 

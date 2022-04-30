@@ -18,7 +18,7 @@ export default {
   } },
   computed: {
     ...mapState('settings',{
-      settings:state => _.filter(state.data,({ name }) => name.indexOf('_file_') !== 0),
+      settings:state => _.filter(state.data,({ name }) => name.indexOf('_') !== 0),
       files:state => _.filter(state.data,({ name }) => name.indexOf('_file_') === 0),
     })
   },
