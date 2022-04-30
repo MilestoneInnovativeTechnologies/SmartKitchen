@@ -22,11 +22,13 @@
 import { mapState } from 'vuex'
 import {attention, h_key} from "assets/helpers";
 import OrderSummaryItemUpdate from "components/Order/OrderSummaryItemUpdate";
+import OrderItemEditable from "assets/mixins/OrderItemEditable";
 
 export default {
   name: "OrderSummaryWaiterOrderItemsList",
   components: {OrderSummaryItemUpdate},
   props: ['order','noserve'],
+  mixins: [OrderItemEditable],
   data(){ return {
     edit_mode: false,
     edit_obj: null,
@@ -42,7 +44,7 @@ export default {
     itemName({ item }){ return _.get(this.items,[_.toSafeInteger(item),'name']) },
     delay({ delay }){ return (delay > 0 && (delay*1000) > new Date().getTime()) ? (delay - _.toInteger(new Date().getTime()/1000)) : 0 },
     kitchen({ kitchen }){ return _.get(this.kitchens,[_.toSafeInteger(kitchen),'name'],null) },
-    editable({ progress }){ return ['New','Accepted'].includes(progress) },
+    editable({ progress }){ return ['New','Accepted'].includes(progress) || this.oie_is(progress) },
     edit(row){
       this.edit_obj = row;
       this.edit_mode = true;

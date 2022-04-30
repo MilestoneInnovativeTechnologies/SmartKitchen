@@ -112,7 +112,7 @@ class TokenController extends Controller
     public function item(Request $request){
         if(!$request->has('user')) $request->merge(['user' => auth()->id()]);
         $ti_data = $request->only(['item','quantity','delay','narration','user','deliver','photo']);
-        if(array_key_exists('delay',$ti_data)){ $delay = intval($ti_data['delay']) * 60; $delay += time(); $ti_data['delay'] = $delay; }
+        if(array_key_exists('delay',$ti_data)){ $delay_int = intval($ti_data['delay']); $ti_data['delay'] = ($delay_int && $delay_int > 0) ? (($delay_int * 60) + time()) : 0; }
         if($request->has('token')){
             $token_id = $request->input('token');
             TokenItemPrepared::dispatch($ti_data);
