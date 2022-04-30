@@ -12,7 +12,7 @@
       </q-list>
     </q-bar>
     <q-list separator style="font-size: 0.75rem" bordered>
-      <q-item v-for="(item,idx) in token.items" :key="'tgb-t-'+token.id+'-ti-'+item.id+'-idx-'+idx">
+      <q-item v-for="(item,idx) in items" :key="'tgb-t-'+token.id+'-ti-'+item.id+'-idx-'+idx">
         <q-item-section>
           <q-item-label caption>{{ item.quantity }}x {{ precision(item.price) }}</q-item-label>
           <q-item-label>{{ item.item.name }}</q-item-label>
@@ -22,7 +22,7 @@
     </q-list>
     <q-card-section horizontal class="text-caption">
       <q-card-section class="col">
-        <div class="flex justify-between"><span>Items </span><span>{{ token.items? token.items.length : 0 }}</span></div>
+        <div class="flex justify-between"><span>Items </span><span>{{ items ? items.length : 0 }}</span></div>
         <div class="flex justify-between"><span>Quantities </span><span>{{ quantities }}</span></div>
         <div class="flex justify-between"><span>Tax Type </span><span>{{ bill.nature || '-' }}</span></div>
       </q-card-section>
@@ -84,8 +84,9 @@ export default {
   } },
   computed: {
     token(){ return _.get(this.bill,'token') },
-    total(){ return _.sumBy(this.token.items,({ price,quantity }) => price*quantity) },
-    quantities(){ return _.sumBy(this.token.items,({ quantity }) => quantity) },
+    items(){ return _.filter(_.get(this.token,'items'),item => item.progress !== 'Cancelled') },
+    total(){ return _.sumBy(this.items,({ price,quantity }) => price*quantity) },
+    quantities(){ return _.sumBy(this.items,({ quantity }) => quantity) },
     to_pay(){ return _.subtract(this.bill.payable,this.bill.paid) },
     customer: {
       get(){ return _.get(this.token,['customer','id']) },

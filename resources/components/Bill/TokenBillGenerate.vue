@@ -12,7 +12,7 @@
       </q-list>
     </q-bar>
     <q-list separator style="font-size: 0.75rem">
-      <q-item v-for="(item,idx) in token.items" :key="'tgb-t-'+token.id+'-ti-'+item.id+'-idx-'+idx">
+      <q-item v-for="(item,idx) in items" :key="'tgb-t-'+token.id+'-ti-'+item.id+'-idx-'+idx">
         <q-item-section>
           <q-item-label caption>{{ item.quantity }}x {{ precision(item.price) }}</q-item-label>
           <q-item-label>{{ item.item.name }}</q-item-label>
@@ -21,7 +21,7 @@
       </q-item>
       <q-item>
         <q-item-section>
-          <q-item-label caption>{{ token.items.length }}x Items, {{ quantities }}x Quantities</q-item-label>
+          <q-item-label caption>{{ items.length }}x Items, {{ quantities }}x Quantities</q-item-label>
           <q-item-label>Total</q-item-label>
         </q-item-section>
         <q-item-section side class="text-bold" style="font-size: 1rem">{{ precision(total) }}</q-item-section>
@@ -38,7 +38,7 @@
         <q-item-label caption class="text-capitalize">Payable</q-item-label>
       </div>
       <div class="text-center col">
-        <q-btn label="Generate Bill" color="secondary" class="q-px-md" @click="generate" :disabled="!customer || token.items.length === 0" />
+        <q-btn label="Generate Bill" color="secondary" class="q-px-md" @click="generate" :disabled="!customer || items.length === 0" />
       </div>
     </q-card-section>
     <q-inner-loading :showing="loading"><q-spinner-facebook color="secondary" size="2em" /></q-inner-loading>
@@ -61,8 +61,9 @@ export default {
     create_customer: null
   } },
   computed: {
-    total(){ return _.sumBy(this.token.items,({ price,quantity }) => price*quantity) },
-    quantities(){ return _.sumBy(this.token.items,({ quantity }) => quantity) },
+    items(){ return _.filter(this.token.items,item => item.progress !== 'Cancelled') },
+    total(){ return _.sumBy(this.items,({ price,quantity }) => price*quantity) },
+    quantities(){ return _.sumBy(this.items,({ quantity }) => quantity) },
     customer: {
       get(){ return this.create_customer !== null ? this.create_customer : _.get(this.token,['customer','id']) },
       set(customer){
@@ -87,7 +88,7 @@ export default {
       this.prv_per = is_period(e.keyCode);
     },
     generate(){
-      this.loading = true; if(!this.customer || !this.token.items || _.size(this.token.items) === 0) return alert('Select a customer' + ((this.loading = false) || ''));
+      this.loading = true; if(!this.customer || !this.items || _.size(this.items) === 0) return alert('Select a customer' + ((this.loading = false) || ''));
       let params = { token:this.token.id, customer:this.customer, discount:this.discount,nature:this.tax }
       post('bill','create',params).then(() => this.$store.dispatch('server/ping',null,{ root:true })).catch().finally(() => this.loading = false)
     },
