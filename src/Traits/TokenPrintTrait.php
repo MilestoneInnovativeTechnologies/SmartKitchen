@@ -66,6 +66,7 @@ trait TokenPrintTrait
     }
 
     private static function setItemAttrs($prices,$Item){
+        $Item->setAttribute('name',$Item->Item->name);
         $Item->setAttribute('price',$prices[$Item->Item->id]);
         $Item->setAttribute('amount',$prices[$Item->Item->id]*$Item->quantity);
         $Item->setAttribute('price_precise',precise($Item->price));
