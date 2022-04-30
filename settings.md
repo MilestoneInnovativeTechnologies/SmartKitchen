@@ -29,9 +29,8 @@ token_<item>
 <item>
 
 Ex: administrator_sale_printer, delivery_boy_bill_print_template, kot_cancelled_print_template, firose_hussain_printer
+This above is the priority order while selecting a printer or print_template
 
-
-This is the priority order while selecting a printer or print_template
 
 kot_print_separate
 By default the full kot will be printed even for an update in the token. This can be restricted, to print kot on separate actions
@@ -39,9 +38,11 @@ Make the value to any of 1,true,True,yes,Yes to make the selection of template a
 If it doesn't have this setting and have any template in the name kot_add_print_template, kot_modify_print_template, kot_cancel_print_template, then specified template will be used.
 The data available for template will have the token item detail under the attribute name item and have additional attribute named item_state which have value Added, Modified, Cancelled
 
+
 ping_frequency
 Normally by default, ping action (updating data from server) occurs on each 15 seconds, that is 4 pings per minute.
 This means ping_frequency is 4. This can be changed as per requirement. Ex: if made 10, then 10 pings per minute, ie on each 6 seconds it updates data from server 
+
 
 items_per_page or max_items_per_page
 This is the setting who controls the maximum amount of items that should be displayed in a page (while ordering)
@@ -116,6 +117,12 @@ Default is id,name,detail
 These are the fields of an item, where the search/filter string  to be compared with. When any matches found, that items are only get displayed
 Item props can also be given, Be sure the case of props are exactly same.
 sale_items_search_fields, dining_items_search_fields, take_away_items_search_fields etc have higher priority, if them present as settings.
+
+
+enable_processing_token_item_update, enable_completed_token_item_update, enable_served_token_item_update
+Normally an ordered item can be edited only when its status is New or Processing. This can be extended to Processing and Completed progresses too.
+These setting with any value from 1,true,True,yes,Yes will enable editing that progress item.
+enable_processing_token_item_update will enable editing Processing items && enable_completed_token_item_update will enable editing Completed items and so on.
 
 
 waiter_manage_customer, receptionist_manage_customer, delivery_boy_manage_customer
