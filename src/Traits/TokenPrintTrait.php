@@ -18,8 +18,8 @@ trait TokenPrintTrait
 
     public function print_data($data,$extra = []){
         $data->load(['Items' => function($Q)use($extra){
-            if(is_array($extra) && array_key_exists('kitchen',$extra)) $Q->withoutGlobalScopes()->where('kitchen',intval($extra['kitchen']))->with(['Item','User','Kitchen']);
-            else $Q->withoutGlobalScopes()->with(['Item','User','Kitchen']);
+            if(is_array($extra) && array_key_exists('kitchen',$extra)) $Q->withoutGlobalScopes()->where('progress','<>','Cancelled')->where('kitchen',intval($extra['kitchen']))->with(['Item','User','Kitchen']);
+            else $Q->withoutGlobalScopes()->where('progress','<>','Cancelled')->with(['Item','User','Kitchen']);
         },'User','Seating','Customer','Bill.Payments']);
         $data->setAttribute('total_items',$data->Items->count());
         $data->setAttribute('total_quantities',$data->Items->sum->quantity);
