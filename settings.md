@@ -168,3 +168,15 @@ Each time item code entered and on tapping ENTER key, quantity will be taken as 
 
 currency_symbol
 The symbol given will prepend to the price displayed on item selection. It can be any symbol or character. If a space required between symbol and price, it should give so.. Ex: `₹ `, `₨`, `AED `
+
+
+report_image, report_text
+Report page header customization is possible by adding image and text in print. report_image, it should be an uploaded image and report_text, address or whatever text or paragraph.
+If both settings provided, image should be aligned towards left and text towards right. If only one of above is given, then that will be aligned at center.
+These are visible only in printing.
+
+
+report_image_<report_title>, report_text_<report_title>
+If for any particular report a custom image or text is required, this can be accomplished using this above settings. Title should be snake cased.
+These have higher priority than that of report_image, report_text.
+Ex: report_image_day_token_summary, report_text_sales_by_type
