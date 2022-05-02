@@ -29,7 +29,7 @@ trait TokenPrintTrait
         $prices = Price::where('price_list',$data->price_list)->get()->keyBy->item->map->price->toArray();
         if(is_array($extra) && array_key_exists('token_item_id',$extra) && $extra['token_item_id']){
             $token_item = TokenItem::withoutGlobalScopes()->with(['Item','User','Kitchen'])->find(intval($extra['token_item_id']));
-            $data->setAttribute('item',self::setItemAttrs($prices,$token_item));
+            $data->setAttribute('item',self::setItemAttrs($prices,$token_item)->toArray());
         }
         $data->setAttribute('items',$data->Items->map(function($Item)use($prices){ return self::setItemAttrs($prices,$Item); }));
         $data->setAttribute('items_amount',$data->Items->sum->amount);
