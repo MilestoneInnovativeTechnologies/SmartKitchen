@@ -11,6 +11,8 @@ use Milestone\SmartKitchen\Models\Settings;
 class SettingsController extends Controller
 {
 
+    public static $UploadPath = 'uploads';
+
     public static function data(){
         return request(['name','value']);
     }

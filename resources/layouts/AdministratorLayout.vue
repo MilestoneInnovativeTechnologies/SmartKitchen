@@ -10,7 +10,7 @@
           <ReportControlElement :name="control" v-for="control in $route.meta.controls" :key="hKey(control)" v-if="control !== 'noprint'" class="q-mr-xs" />
           <q-btn v-if="!$route.meta.controls.includes('noprint')" label="Print" color="teal" @click="print_page" />
         </div>
-        <q-btn flat round dense :icon="$store.state.public.mode === 'report' ? 'admin_panel_settings' : 'analytics'" :to="{ name:ops[$store.state.public.mode] }" />
+        <q-btn flat round dense :icon="$store.state.public.mode === 'report' ? 'admin_panel_settings' : 'analytics'" :to="{ name:ops[$store.state.public.mode] }" v-show="$store.state.public.mode !== 'report' || $route.path === '/'" />
         <Logout />
       </q-toolbar>
     </q-header>

@@ -21,6 +21,7 @@ Route::group([
 ], function () {
     Route::get('assets/online/menu.js', [AssetController::class, 'OnlineMenuAssets']);
     Route::get('assets/{time}/{model}.js', [AssetController::class, 'JSAsset'])->name('asset');
+    Route::get('uploads/{file}', [AssetController::class, 'UploadedFile']);
 });
 
 Route::group([

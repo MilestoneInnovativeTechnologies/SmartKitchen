@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Milestone\SmartKitchen\Models\Item;
 use Milestone\SmartKitchen\Models\ItemGroup;
@@ -16,6 +17,8 @@ use Milestone\SmartKitchen\Models\Seating;
 
 class AssetController extends Controller
 {
+
+    public static $imageContentTypes = ['jpe' => 'jpeg', 'jpg' => 'jpeg', 'tif' => 'tiff', 'ico' => 'x-icon'];
 
     public static function AssetRoute($model){
         $class = self::ClassName($model);
@@ -40,6 +43,11 @@ class AssetController extends Controller
         })->filter()->values()->toArray();
         $Items = Item::where(['status' => "Active"])->get()->map(function($item)use($item_groups){ return Arr::has($item_groups,$item->id) ? array_merge($item->only(['id','name','detail','image']),['groups' => $item_groups[$item->id]]) : null; })->filter()->values()->toArray();
         return compact('Groups','Items','Seats','Prices');
+    }
+
+    public static function UploadedFile($file){
+        $seps = explode(".",$file); $ext = end($seps); $mime = 'image/' . Arr::get(self::$imageContentTypes,$ext,$ext);
+        return response(Storage::get(SettingsController::$UploadPath. '/' . $file),200,['Content-Type' => $mime]);
     }
 
     private static function ClassName($item){
