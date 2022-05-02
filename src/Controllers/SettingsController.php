@@ -29,29 +29,33 @@ class SettingsController extends Controller
 
     public function delete(){
         if(!request()->has('id') || !request()->filled('id')) return [];
-        Settings::where('name','_deleted_')->delete();
         Settings::find(request()->input('id'))->update(['name' => '_deleted_']);
         return request()->input('id');
     }
 
     public function file_upload(Request $request){
         if(request()->filled('name') && request()->hasFile('file')) {
-            $value = request()->file('file')->store('uploads');
+            $value = request()->file('file')->store(self::$UploadPath);
             $name = '_file_' . request('name');
             $settings = new Settings(compact('name','value')); $settings->save();
             return $settings;
         }
         return null;
     }
+
     public function file_remove(){
         if(!\request()->filled('id')) return null;
         $setting = Settings::find(\request('id'));
         if($setting){
             Storage::delete($setting->value);
-            $setting->delete();
-            Settings::orderBy('id','desc')->first()->touch();
+            return $this->delete();
         }
         return $setting;
     }
 
+    public function remove(){
+        if(!request()->has('id') || !request()->filled('id')) return [];
+        Settings::destroy(\request()->get('id'));
+        return \request()->get('id');
+    }
 }
