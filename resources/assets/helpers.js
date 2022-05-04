@@ -6,7 +6,7 @@ const TapAudio = new Audio(MEDIA_PATH + '/tap.mp3')
 export function attention(){ AttentionAudio.play() }
 export function tap(){ TapAudio.play() }
 
-export function h_key(){ return Array.from(arguments).join('-') }
+export function h_key(){ return _.kebabCase(Array.from(arguments).join(' ')) }
 
 export function o_customer(customer){ return _.assign({},customer,{ label:[customer.name,customer.phone].join(', ') }) }
 export function o_customers(customers){ let o_customers = _(customers).map(o_customer).value(); o_customers.unshift(o_customer({ id:0,name:'New Customer',phone:'000' })); return o_customers; }
