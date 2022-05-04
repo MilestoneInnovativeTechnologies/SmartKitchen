@@ -31,7 +31,7 @@
       <q-tabs align="center">
         <q-tab label="PIN" icon="money" @click="$store.commit('public',{ login:'pin' })" />
         <q-tab label="Password" icon="vpn_key" @click="$store.commit('public',{ login:'password' })" />
-        <q-tab label="Display" icon="tv" @click="$store.commit('public',{ login:'display' })" v-if="$q.screen.gt.sm" />
+        <q-tab label="Display" icon="tv" @click="$store.commit('public',{ login:'display' })" v-if="$q.screen.gt.sm && display_screens" />
       </q-tabs>
     </q-footer>
 
@@ -43,7 +43,7 @@ import {
   CLIENT, BRANCH, EDITION, VALID_UPTO, KEY_VALID, CODE_VALID,
   CODE_INVALID_ERROR_CODE, CODE_INVALID_REASON, KEY_MOVE, KEY_CHANGE_REQUIRED
 } from "boot/subscription";
-import {debounce} from "quasar";
+const { ZN30I } = require('boot/subscription').FEATURES
 let timeout = 0;
 
 export default {
@@ -54,6 +54,7 @@ export default {
     MSG: [`${CLIENT}`,`${BRANCH}`,`${EDITION} Edition`,`Valid Upto: ` + VALID_UPTO.split(' ')[0]],
     KEY_MOVE, KEY_CHANGE_REQUIRED,
     fab: true,  offset: [24,24],
+    display_screens: ZN30I === 'Yes'
   } },
   created() {
     setInterval(vm => vm.count++,10000,this)
