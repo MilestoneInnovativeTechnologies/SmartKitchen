@@ -16,7 +16,6 @@ import {NoCustomer} from "assets/assets";
 import BillGenerateCard from "components/Bill/BillGenerateCard";
 import DeliveryBoyPaymentCard from "components/Payment/DeliveryBoyPaymentCard";
 import FilterInputText from "components/FilterInputText";
-import {HomeDeliveryFilterMinimumTokens} from "assets/constants";
 
 export default {
   name: "ReceptionistHomeDeliveryStatuses",
