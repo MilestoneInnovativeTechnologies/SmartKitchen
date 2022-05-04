@@ -53,6 +53,7 @@ export default {
   } },
   computed: {
     Token(){ return _.find(this.tokens,['id',parseInt(this.token)]) },
+    Items(){ return _.filter(this.Token.items,tk_itm => tk_itm.progress !== 'Cancelled') },
     Bill(){ return _.find(this.bills,bill => parseInt(_.get(bill,['token','id'])) === parseInt(this.token)) },
     total(){ return _.sumBy(this.Items,({ price,quantity }) => _.toNumber(price) * _.toNumber(quantity)) },
     token_item_ids(){ return _.map(this.Items,'id') },

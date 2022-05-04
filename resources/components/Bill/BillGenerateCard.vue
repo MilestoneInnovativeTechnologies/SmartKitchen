@@ -30,29 +30,31 @@
         <q-item-label style="font-size: 1.5rem; line-height: 1rem !important;" class="text-weight-bolder">{{ precision(total - discount) }}</q-item-label>
         <q-item-label caption class="text-capitalize">Payable</q-item-label>
       </div>
-      <div class="text-center col-6">
+      <div class="text-center col-6" v-if="d_boy_enabled">
         <UserSelectDropDown v-if="$route.meta.me.role !== 'Delivery Boy'" outlined dense get="id" role="Delivery Boy" clearable v-model="user" label="Delivery Boy" class="q-mb-xs" />
-        <q-btn label="Generate Bill" color="accent" padding="xs md" dense :loading="loading" @click="generate" />
       </div>
     </q-card-section>
+    <q-card-actions align="right" class="bg-grey-2">
+      <q-btn label="Generate Bill" color="accent" padding="xs md" dense :loading="loading" @click="generate" />
+    </q-card-actions>
   </q-card>
 </template>
 
 <script>
-import Tokens from "assets/mixins/Tokens";
 import {image,precision} from "assets/helpers";
 import Bills from "assets/mixins/Bills";
 import OrderCustomer from "components/Order/OrderCustomer";
 import UserSelectDropDown from "components/Users/UserSelectDropDown";
+const { KJ30I } = require('boot/subscription').FEATURES
 
 export default {
   name: "BillGenerateCard",
   components: {UserSelectDropDown, OrderCustomer},
   props: ['token'],
-  mixins: [Tokens,Bills],
+  mixins: [Bills],
   data(){ return {
     tax: null, discount: 0, customer: null,
-    loading: false, user: null,
+    loading: false, user: null, d_boy_enabled: KJ30I === 'Yes',
   } },
   computed: {
     Token(){ return _.find(this.tokens,['id',parseInt(this.token)]) },

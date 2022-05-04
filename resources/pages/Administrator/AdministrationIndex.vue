@@ -29,7 +29,7 @@
       <AdministratorMenuItem :color="color[2]" :route="{ name:'master_user',params:{ role:'Receptionist' } }" icon="support_agent" text="Receptionist" />
       <AdministratorMenuItem :color="color[2]" :route="{ name:'master_user',params:{ role:'Waiter' } }" icon="supervised_user_circle" text="Waiters" />
       <AdministratorMenuItem :color="color[2]" :route="{ name:'master_user',params:{ role:'Chef' } }" icon="engineering" text="Chefs" />
-      <AdministratorMenuItem :color="color[2]" :route="{ name:'master_user',params:{ role:'Delivery Boy' } }" icon="delivery_dining" text="Delivery Boy" />
+      <AdministratorMenuItem :color="color[2]" :route="{ name:'master_user',params:{ role:'Delivery Boy' } }" icon="delivery_dining" text="Delivery Boy" v-if="KJ30I === 'Yes'" />
     </div>
     <div class="col-12 text-bold q-mt-md">Data</div>
     <div class="row q-col-gutter-xs q-mt-xs">
@@ -55,13 +55,13 @@
 import AdministratorDashboardMetricsMain from "components/Administrator/AdministratorDashboardMetricsMain";
 import Jumbotron from "components/Jumbotron";
 import AdministratorMenuItem from "components/Administrator/AdministratorMenuItem";
-const { GH56E,JI36A,CC71V,DP71V } = require('boot/subscription').FEATURES
+const { GH56E,JI36A,CC71V,DP71V,KJ30I } = require('boot/subscription').FEATURES
 export default {
   name: 'PageAdministratorIndex',
   components: {AdministratorMenuItem, Jumbotron, AdministratorDashboardMetricsMain},
   data(){ return {
     color: ['accent','info','secondary','brown','deep-orange','teal-14'],
-    GH56E,JI36A,CC71V,DP71V
+    GH56E,JI36A,CC71V,DP71V,KJ30I
   } },
   created(){ this.$store.commit('public',{ mode:'administration' }) }
 }
