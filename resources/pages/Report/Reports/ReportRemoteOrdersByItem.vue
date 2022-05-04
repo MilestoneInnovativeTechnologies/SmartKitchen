@@ -16,7 +16,7 @@ export default {
   computed: {
     range(){ return range(this.$store.state.public.range) },
     head(){ return _.zipObject(['Date From','Date To'],[to_format('DD/MMM hh:mm A',this.range.from),to_format('DD/MMM hh:mm A',this.range.to)]) },
-    remote_order_items(){ return _(this.bills).filter(({ progress,date }) => progress !== 'Cancelled' && is_between(date,this.range.from,this.range.to)).flatMap('token.items').groupBy('item.name').value() },
+    remote_order_items(){ return _(this.bills).filter(({ progress,date,token }) => token.type === 'Remote' && progress !== 'Cancelled' && is_between(date,this.range.from,this.range.to)).flatMap('token.items').groupBy('item.name').value() },
     table(){ return _(this.remote_order_items).map((ary,item) => _.zipObject(['Item','Orders','Quantities','New','Processing','Completed','Served'],[
       item,_.size(ary),sumOf(ary,'quantity'),countIfProg(ary,'New')+countIfProg(ary,'Accepted'),countIfProg(ary,'Processing'),countIfProg(ary,'Completed'),countIfProg(ary,'Served')
     ])).value() },
