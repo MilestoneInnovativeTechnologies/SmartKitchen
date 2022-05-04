@@ -6,7 +6,7 @@
       <q-input readonly outlined dense class="col-8" :value="Token.date_human" label="Date" />
     </q-card-section>
     <q-list dense separator>
-      <q-item v-for="item in Token.items" :key="'db-gk-t-'+token+'-ti-'+item.id+'-i-'+item.id">
+      <q-item v-for="item in Items" :key="'db-gk-t-'+token+'-ti-'+item.id+'-i-'+item.id">
         <q-item-section avatar><q-avatar rounded><q-img :src="image(item.item.image)" /></q-avatar></q-item-section>
         <q-item-section>
           <q-item-label>{{ item.quantity }}x {{ item.item.name }}</q-item-label>
@@ -56,8 +56,9 @@ export default {
   } },
   computed: {
     Token(){ return _.find(this.tokens,['id',parseInt(this.token)]) },
+    Items(){ return _.filter(this.Token.items,tk_itm => tk_itm.progress !== 'Cancelled') },
     Bill(){ return _.find(this.bills,bill => parseInt(_.get(bill,['token','id'])) === parseInt(this.token)) },
-    total(){ return _.sumBy(this.Token.items,({ price,quantity }) => _.toNumber(price) * _.toNumber(quantity)) },
+    total(){ return _.sumBy(this.Items,({ price,quantity }) => _.toNumber(price) * _.toNumber(quantity)) },
     tax_natures(){ return this.$store.getters["tax/natures"] },
   },
   methods: {

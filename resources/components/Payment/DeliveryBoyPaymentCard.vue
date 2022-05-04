@@ -8,7 +8,7 @@
       <q-input readonly outlined dense class="col-8" :value="human_date2(Bill.date)+' '+time(Bill.date)" label="Bill Date" />
     </q-card-section>
     <q-list dense separator>
-      <q-item v-for="item in Token.items" :key="'db-gk-t-'+token+'-ti-'+item.id+'-i-'+item.id">
+      <q-item v-for="item in Items" :key="'db-gk-t-'+token+'-ti-'+item.id+'-i-'+item.id">
         <q-item-section avatar><q-avatar rounded><q-img :src="image(item.item.image)" /></q-avatar></q-item-section>
         <q-item-section>
           <q-item-label>{{ item.quantity }}x {{ item.item.name }}</q-item-label>
@@ -39,7 +39,6 @@
 </template>
 
 <script>
-import Tokens from "assets/mixins/Tokens";
 import Bills from "assets/mixins/Bills";
 import {image,precision,human_date2,time} from "assets/helpers";
 import {PaymentsTypes} from "assets/assets";
@@ -47,7 +46,7 @@ import {PaymentsTypes} from "assets/assets";
 export default {
   name: "DeliveryBoyPaymentCard",
   props: ['token'],
-  mixins: [Tokens,Bills],
+  mixins: [Bills],
   data(){ return {
     loading: false, amount: 0, type: 'Cash',
     PaymentsTypes
@@ -55,8 +54,8 @@ export default {
   computed: {
     Token(){ return _.find(this.tokens,['id',parseInt(this.token)]) },
     Bill(){ return _.find(this.bills,bill => parseInt(_.get(bill,['token','id'])) === parseInt(this.token)) },
-    total(){ return _.sumBy(this.Token.items,({ price,quantity }) => _.toNumber(price) * _.toNumber(quantity)) },
-    token_item_ids(){ return _.map(this.Token.items,'id') },
+    total(){ return _.sumBy(this.Items,({ price,quantity }) => _.toNumber(price) * _.toNumber(quantity)) },
+    token_item_ids(){ return _.map(this.Items,'id') },
   },
   methods: {
     human_date2, time, image, precision,
