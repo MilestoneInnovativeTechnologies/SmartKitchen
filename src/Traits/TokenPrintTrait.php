@@ -43,7 +43,7 @@ trait TokenPrintTrait
             $data->Bill->setAttribute('discount_precise',precise($data->Bill->discount));
             $data->Bill->setAttribute('sub_total',precise($data->Bill->amount));
             $data->Bill->setAttribute('discount',precise($data->Bill->discount));
-            $data->Bill->setAttribute('payable',$data->Bill->amount - $data->Bill->discount);
+            $data->Bill->setAttribute('payable',floatval($data->Bill->amount) - floatval($data->Bill->discount));
             $data->Bill->setAttribute('payable_precise',precise($data->Bill->payable));
 
             $tax_amounts = self::taxAmounts(Arr::get($data,'Bill.contents'));
@@ -55,7 +55,7 @@ trait TokenPrintTrait
 
             $data->Bill->setAttribute('paid',$data->Bill->Payments->sum->amount);
             $data->Bill->setAttribute('paid_precise',precise($data->Bill->paid));
-            $data->Bill->setAttribute('balance',$data->Bill->payable - $data->Bill->paid);
+            $data->Bill->setAttribute('balance',floatval($data->Bill->payable) - floatval($data->Bill->paid));
             $data->Bill->setAttribute('balance_precise',precise($data->Bill->balance));
 
             if($data->Bill->Payments && $data->Bill->Payments->isNotEmpty()){
@@ -68,7 +68,7 @@ trait TokenPrintTrait
     private static function setItemAttrs($prices,$Item){
         $Item->setAttribute('name',$Item->Item->name);
         $Item->setAttribute('price',$prices[$Item->Item->id]);
-        $Item->setAttribute('amount',$prices[$Item->Item->id]*$Item->quantity);
+        $Item->setAttribute('amount',floatval($prices[$Item->Item->id]) * floatval($Item->quantity));
         $Item->setAttribute('price_precise',precise($Item->price));
         $Item->setAttribute('amount_precise',precise($Item->amount));
         return $Item;
@@ -77,7 +77,7 @@ trait TokenPrintTrait
     private static function setBillContents($contents){
         return collect($contents)->map(function($content){
             $content['price_precise'] = precise($content['price']);
-            $content['amount'] = $content['price'] * $content['quantity'];
+            $content['amount'] = floatval($content['price']) * floatval($content['quantity']);
             $content['amount_precise'] = precise($content['amount']);
             return $content;
         })->toArray();
@@ -94,16 +94,16 @@ trait TokenPrintTrait
 
     private static function taxAmounts($contents){
         return collect($contents)->groupBy(function($content){
-            if(Arr::has($content,'tax') && $content['tax']['amount'] > 0) return $content['tax']['name'];
+            if(Arr::has($content,'tax') && floatval($content['tax']['amount']) > 0) return $content['tax']['name'];
             return null;
         })->mapWithKeys(function($contents,$name){
             if($name){
                 $contents = collect($contents); $percent = Arr::get($contents,'0.tax.percent'); $percent_precise = precise($percent);
-                $taxable = $contents->sum(function($content){ return Arr::get($content,'tax.price') * Arr::get($content,'tax.quantity'); });
+                $taxable = $contents->sum(function($content){ return floatval(Arr::get($content,'tax.price')) * floatval(Arr::get($content,'tax.quantity')); });
                 $amount = $contents->sum(function($content){ return Arr::get($content,'tax.amount'); });
                 $taxable_precise = precise($taxable);
                 $amount_precise = precise($amount);
-                $total = $taxable + $amount; $total_precise = precise($total);
+                $total = floatval($taxable) + floatval($amount); $total_precise = precise($total);
                 $detail = self::subTaxAmounts($contents);
                 return [$name => compact('name','percent','percent_precise','taxable','amount','taxable_precise','amount_precise','total','total_precise','detail')];
             } return [];
