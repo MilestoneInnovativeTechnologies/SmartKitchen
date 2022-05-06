@@ -20,7 +20,7 @@ export function post ({ dispatch },{ item,action,data }) {
   })
 }
 
-export function ping ({ state:{ interval },commit,dispatch }) {
+export function ping ({ commit,dispatch }) {
   api('ping')
     .then(({ data }) => dispatch('process',data))
     .catch(error => (!error.response && !error.request) ? alert('You have been logged out.. Please login again!!') : null)
