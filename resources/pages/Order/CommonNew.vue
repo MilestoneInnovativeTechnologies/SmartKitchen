@@ -47,6 +47,13 @@ export default {
     horizontal() {
       let {height, width} = this.$q.screen;
       return (width < 819 && height >= width)
+    },
+    i_qty(){
+      let items = this.params.items; if(_.isEmpty(items)) return () => 0
+      return function({ item }){
+        let items_item_index = _.findIndex(items, ['item', item]);
+        return (items_item_index < 0) ? 0 : items[items_item_index].quantity;
+      }
     }
   },
   methods: {
