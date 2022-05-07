@@ -20,18 +20,11 @@ export default {
     ...mapState('settings',{
       settings:state => _.filter(state.data,({ name }) => name.indexOf('_') !== 0),
       files:state => _.filter(state.data,({ name }) => name.indexOf('_file_') === 0),
-      deletable:state => _.filter(state.data,({ name }) => name.indexOf('_deleted_') === 0)
     })
   },
   methods: {
     destroyed(id){ this.$store.commit('settings/remove',id,{ root:true }) },
     delete({ id }){ post('settings','remove',{ id }).then(this.destroyed) }
-  },
-  watch: {
-    deletable: {
-      immediate: true,
-      handler(settings){ if(settings && _.size(settings) > 0) return this.delete(settings[0]); }
-    }
   }
 }
 </script>

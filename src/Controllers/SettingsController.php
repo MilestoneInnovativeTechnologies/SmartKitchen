@@ -18,20 +18,24 @@ class SettingsController extends Controller
     }
 
     public static function create(){
+        self::removeDeleted();
         $item = new Settings(self::data()); $item->save();
         return $item;
     }
 
     public function manage(){
         if(!request()->has('id') || !request()->filled('id')) return self::create();
+        self::removeDeleted();
         $item = Settings::find(request()->input('id'));
         $item->update(self::data());
         return $item->fresh();
     }
 
     public function delete(){
+        self::removeDeleted();
         if(!request()->has('id') || !request()->filled('id')) return [];
-        Settings::find(request()->input('id'))->update(['name' => '_deleted_']);
+        $settings = Settings::find(request()->input('id'));
+        if($settings) $settings->update(['name' => '_deleted_']);
         return request()->input('id');
     }
 
@@ -55,9 +59,14 @@ class SettingsController extends Controller
         return $setting;
     }
 
+    // Unused function..
     public function remove(){
         if(!request()->has('id') || !request()->filled('id')) return [];
         Settings::destroy(\request()->get('id'));
         return \request()->get('id');
+    }
+
+    public static function removeDeleted(){
+        Settings::where('name','_deleted_')->delete();
     }
 }
