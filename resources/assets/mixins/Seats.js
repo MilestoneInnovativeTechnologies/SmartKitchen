@@ -1,17 +1,36 @@
 import {mapState} from "vuex";
 import {TokenProgressSeatStatus} from "assets/assets";
+import Tokens from "assets/mixins/Tokens";
+import {now} from "assets/helpers";
 
 export default {
-  computed: mapState({
-    seats({ seating: { data },tokens,prices: { list },users,customers }){ let seatTokens = _.keyBy(tokens.data,'seating'); return _.map(data,seat => {
-      let sid = _.toInteger(seat.id), token = _.get(seatTokens,sid); if(!token) return Object.assign({},seat,{ status:'Vacant' });
-      return this.seatToken(seat,token,list[token.price_list],_.get(users,['data',token.user]),_.get(customers,['data',token.customer]))
-    }) },
+  mixins: [Tokens],
+  computed: mapState('seating',{
+    seats(state){
+      let seatTokens = _.groupBy(this.tokens,'seating.id')
+      return _(state.data).filter(['status','Active']).map(seat => Object.assign({},seat,{ tokens:this.activeTokens(_.get(seatTokens,seat.id,[])) },{ status:this.seatStatus(_.get(seatTokens,seat.id,[])) })).map(seat => Object.assign({},seat,{ slug:this.slug(seat) })).value()
+    },
   }),
   methods: {
-    seatToken(seat, { id,date,progress },price,waiter,customer){
-      progress = (progress === 'Billed' && _.get(this.bills,id) === 'Paid') ? 'Paid' : progress
-      return Object.assign({},seat,_.zipObject(['token','price','user','waiter','customer_id','customer','phone','progress','date','status'],[id,price.name,_.get(waiter,'id'),_.get(waiter,'name'),_.get(customer,'id'),_.get(customer,'name'),_.get(customer,'phone'),progress,date,TokenProgressSeatStatus[progress]]));
+    activeTokens(tokens){
+      return _.filter(tokens,({ progress,progress_timing }) => progress !== 'Paid' || _.toInteger(_.get(_.last(progress_timing),'time')) > (now() - 180))
+    },
+    seatStatus(tokens){
+      if(_.isEmpty(tokens)) return 'Vacant';
+      return TokenProgressSeatStatus[this.leastStatus(tokens)]
+    },
+    leastStatus(tokens){
+      let statuses = ['Cancelled','Paid','Billed','Completed','Processing','New']
+      return statuses[_.reduce(tokens,function (a,{ progress }){ let sIdx = statuses.indexOf(progress); return (sIdx > a) ? sIdx : a },0)]
+    },
+    slug(seat){
+      let slug = []; slug.push(seat.name,seat.status);
+      _.forEach(seat.tokens,token => {
+        slug.push(token.progress,token.id);
+        if(token.customer) slug.push(token.customer.name,token.customer.phone)
+        if(token.waiter) slug.push(token.waiter.name)
+      })
+      return slug.join(' ').toLowerCase();
     }
   }
 }

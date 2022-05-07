@@ -53,17 +53,20 @@ export default {
   } },
   computed: {
     fProgress(){ return _.keys(this.cColor) },
+    me(){ return _.get(this.$route,['meta','me','id']) },
+    receptionists(){ return _(this.$store.state.users.data).filter(['role','Receptionist']).map(user => _.toSafeInteger(user.id)).value() },
+    allowable_users(){ return _.concat(null,this.me,this.receptionists) },
     ...mapState({
       items({ items:{ data } }){ return _(data).mapValues('name').value() },
       kitchens({ kitchens:{ data } }){ return _(data).mapValues('name').value() },
       tokens({ tokens:{ data,items },seating,customers }){
-        return _(data).filter(({ progress,type }) => this.fProgress.includes(progress) && type === 'Dining').map(token => Object.assign({},token,
+        return _(data).filter(({ progress,type,user }) => this.fProgress.includes(progress) && type === 'Dining' && _.includes(this.allowable_users,user)).map(token => Object.assign({},token,
           { items: this.iNameAttach(items[token.id]) },
           { seating: _.get(seating,['data',token.seating],{}) },
           { customer: _.get(customers,['data',token.customer]) },
         )).value()
       }
-    })
+    }),
   },
   methods: {
     iNameAttach(items){ return _(items).map(item => Object.assign({},item,{ name: _.get(this.items,[item.item]),kitchen: _.get(this.kitchens,[item.kitchen],null) })).value() },

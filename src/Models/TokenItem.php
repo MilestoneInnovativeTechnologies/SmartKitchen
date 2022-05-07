@@ -21,6 +21,7 @@ class TokenItem extends Model
                 $data = ['status' => $Item->progress, 'time' => time(), 'auth' => Auth::id()];
                 foreach (self::$timingRequests as $input) if(request()->input($input)) $data[$input] = request()->input($input);
                 array_push($timings,$data);
+                if(!$Item->user && Auth::id() && Auth::user()->role !== 'Chef') $Item->user = Auth::id();
                 $Item->progress_timing = $timings;
             }
         });
@@ -31,6 +32,7 @@ class TokenItem extends Model
     ];
 
     protected $hidden = ['created_at','updated_at'];
+    protected $touches = ['Token'];
 
     public function Item(){ return $this->belongsTo(Item::class,'item','id'); }
     public function User(){ return $this->belongsTo(User::class,'user','id'); }

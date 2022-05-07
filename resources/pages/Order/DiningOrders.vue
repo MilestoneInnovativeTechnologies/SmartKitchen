@@ -28,8 +28,11 @@ export default {
   } },
   computed: {
     ...mapState('tokens',{
-      tokens({ data }){ return _(data).filter(({ progress,type }) => this.progresses.includes(progress) && type === 'Dining').value() },
-    })
+      tokens({ data }){ return _(data).filter(({ progress,type,user }) => this.progresses.includes(progress) && type === 'Dining' && _.includes(this.allowable_users,user)).value() },
+    }),
+    me(){ return _.get(this.$route,['meta','me','id']) },
+    receptionists(){ return _(this.$store.state.users.data).filter(['role','Receptionist']).map(user => _.toSafeInteger(user.id)).value() },
+    allowable_users(){ return _.concat(null,this.me,this.receptionists) }
   },
   methods: {
     hKey({ id }){ h_key('order','summary','order',id) },

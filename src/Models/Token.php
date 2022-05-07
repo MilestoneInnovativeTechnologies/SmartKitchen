@@ -26,6 +26,7 @@ class Token extends Model
             $Token->progress_timing = [['progress' => 'New', 'time' => time(),'user' => $Token->user, 'auth' => Auth::id()]];
         });
         static::updating(function ($Token){
+            if(!$Token->user && Auth::id() && Auth::user()->role !== 'Chef') $Token->user = Auth::id();
             if($Token->isDirty('progress')){
                 $timings = $Token->progress_timing ?: [];
                 $data = ['progress' => $Token->progress, 'time' => time(), 'auth' => Auth::id()];
@@ -42,7 +43,7 @@ class Token extends Model
     protected $hidden = ['created_at','updated_at'];
 
     public function scopeOwn($Q){
-        return $Q->where('user',auth()->id());
+        return $Q->where('user',auth()->id())->orWhere(function($Q){ $Q->whereNull('user')->where('type','Dining'); });
     }
     public function scopeToday($Q){
         return $Q->where('created_at','>=',now()->startOfDay()->toDateTimeString());
