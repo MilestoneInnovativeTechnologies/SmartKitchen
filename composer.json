@@ -15,7 +15,8 @@
         "doctrine/dbal": "^2.12",
         "tymon/jwt-auth": "^1.0",
         "guzzlehttp/guzzle": "^7.0.1",
-        "mike42/escpos-php": "^3.0"
+        "mike42/escpos-php": "^3.0",
+        "hisorange/browser-detect": "^4.5"
     },
     "extra": {
         "laravel": {
