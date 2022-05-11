@@ -16,10 +16,13 @@
         <q-item v-for="(item,idx) in items" :key="h_key('ons-oi',idx,'i',item.item)">
           <q-item-section avatar>{{ idx+1 }}</q-item-section>
           <q-item-section>
-            <q-item-label>{{ iData(item,'name') }}</q-item-label>
+            <q-item-label>{{ iData(item,'name') }}<span v-if="item.narration" class="text-red text-italic text-caption q-ml-sm" style="font-size: 0.65rem">({{ item.narration }})</span></q-item-label>
             <q-item-label caption style="font-size: 0.65rem">{{ item.quantity }} x {{ parseFloat(price[item.item]).toFixed(2) }}</q-item-label>
           </q-item-section>
-          <q-popup-edit :value="items.quantity" @input="$emit('process',['quantity',idx,$event])" :title="iData(item,'name')" auto-save><q-input type="number" :value="item.quantity" @input="$emit('process',['quantity',idx,$event])" dense outlined autofocus label="Quantity" /></q-popup-edit>
+          <q-popup-edit :value="item.quantity" @input="$emit('process',['quantity',idx,$event])" :title="iData(item,'name')" auto-save>
+            <q-input type="number" :value="item.quantity" @input="$emit('process',['quantity',idx,$event])" dense outlined autofocus label="Quantity" />
+            <q-input v-if="item_narration_enabled" type="textarea" :value="item.narration" @input="$emit('process',['item_narration',idx,$event])" dense outlined label="Narration" class="q-mt-xs" style="height: 2.8rem" />
+          </q-popup-edit>
           <q-item-section side>{{ parseFloat(price[item.item] * item.quantity).toFixed(2) }}</q-item-section>
           <q-item-section side><q-icon name="clear" color="negative" size="xs" @click="$emit('process',['remove',idx])" /></q-item-section>
         </q-item>
@@ -32,6 +35,7 @@
       </q-list>
     </q-card-section>
     <q-card-section class="row q-col-gutter-xs" v-if="payment">
+      <div class="col-12" v-if="order_narration_enabled"><q-input type="textarea" style="height: 2.8rem" :value="narration" @input="$emit('process',['narration',$event])" dense outlined label="Narration" /></div>
       <div class="col-7"><OrderCustomer get="id" v-model="v_customer" outlined dense /></div>
       <div class="col-5"><TaxNatureSelectDropDown label="Tax Nature" v-model="payments.nature" outlined dense /></div>
       <div class="col-3"><PaymentTypeSelectDropDown v-model="payments.advance_type" outlined dense /></div>
@@ -40,6 +44,7 @@
     </q-card-section>
     <q-card-section v-else>
       <OrderCustomer get="id" v-model="v_customer" outlined dense />
+      <q-input v-if="order_narration_enabled" type="textarea" style="height: 2.8rem" :value="narration" @input="$emit('process',['narration',$event])" dense outlined label="Narration" class="q-mt-xs" />
     </q-card-section>
     <q-card-actions align="right" class="bg-grey-2">
       <q-btn label="Submit" :color="clr" padding="xs md" :loading="loading" @click="submit" />
@@ -60,7 +65,9 @@ export default {
   components: {PaymentTypeSelectDropDown, TaxNatureSelectDropDown, OrderCustomer},
   props: ['items','price_list','customer','color','loading','payment','type'],
   data(){ return {
-    payments: { nature: null, advance_type:PaymentsTypes[0], advance_amount:0, discount: 0 }
+    payments: { nature: null, advance_type:PaymentsTypes[0], advance_amount:0, discount: 0 },
+    order_narration_enabled: settings_boolean(settings('enable_order_narration')) === true,
+    item_narration_enabled: settings_boolean(settings('enable_item_narration')) === true,
   } },
   computed: {
     ...mapState('items',{ item_master:'data' }), clr(){ return this.color || 'accent' },
@@ -69,6 +76,10 @@ export default {
     v_customer: {
       get(){ return this.customer },
       set(customer){ this.$emit('process',['customer',customer]) }
+    },
+    narration: {
+      get(){ return _.get(this.$attrs,'narration','') },
+      set(narration){ this.$emit('process',['narration',narration]) }
     }
   },
   methods: {

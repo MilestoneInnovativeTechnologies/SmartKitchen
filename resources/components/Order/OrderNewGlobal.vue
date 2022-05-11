@@ -56,7 +56,7 @@ export default {
   methods: {
     popup_width,
     item({ id }){
-      let items_item_index = _.findIndex(this.params.items,['item',id]);
+      let items_item_index = _.findIndex(this.params.items,{ item:id,narration:null });
       if(items_item_index < 0) this.params.items.push({ item:id,quantity:1,delay:0,narration:null })
       else this.params.items[items_item_index].quantity++
       if(!this.quick) this.$q.notify({ type:'positive',message:`Item Updated`,caption:`Total ${this.params.items.length} Items`,group:'items',position:"top-right" })
@@ -78,6 +78,8 @@ export default {
     quantity(idx,quantity) { this.params.items[idx]['quantity'] = _.toNumber(quantity) },
     remove(idx) { this.params.items.splice(idx,1) },
     customer(id) { this.params.customer = id },
+    narration(text) { this.params.narration = text },
+    item_narration(idx,text) { this.params.items[idx]['narration'] = text },
     submit(payments) {
       if(_.isEmpty(this.params.items)) return; this.loading = true;
       let params = this.payment ? Object.assign({},this.params,payments) : this.params;

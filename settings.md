@@ -119,6 +119,11 @@ Item props can also be given, Be sure the case of props are exactly same.
 sale_items_search_fields, dining_items_search_fields, take_away_items_search_fields etc have higher priority, if them present as settings.
 
 
+enable_order_narration, enable_item_narration
+When values of these have any from 1,true,True,yes,Yes then narration field will be displayed on order summary popup as well as item edit popup.
+By default, this remains as disabled
+
+
 enable_processing_token_item_update, enable_completed_token_item_update, enable_served_token_item_update
 Normally an ordered item can be edited only when its status is New or Processing. This can be extended to Processing and Completed progresses too.
 These setting with any value from 1,true,True,yes,Yes will enable editing that progress item.
