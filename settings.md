@@ -189,3 +189,10 @@ report_image_<report_title>, report_text_<report_title>
 If for any particular report a custom image or text is required, this can be accomplished using this above settings. Title should be snake cased.
 These have higher priority than that of report_image, report_text.
 Ex: report_image_day_token_summary, report_text_sales_by_type
+
+
+retries_on_server_error
+Sometimes server respond with any error, in such cases, an alert popup with an error message will be displayed.
+Smart Kitchen can make retry the request after a minute, before pop up error message.
+The number of retries could be made is defined by here. The value should be any number. ex: 1,3 etc.
+By default, the value should be 0, means no retry is made.

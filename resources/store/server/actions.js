@@ -149,12 +149,12 @@ export function api_error({ dispatch },{ item,action,data,error }){
     if (error.response) {
       let status = parseInt(error.response.status);
       if([400,401,405,406,500,503].includes(status)) {
-        if(hidden_retry > 1){
-          alert('Unexpected error.. Please logout and login then try again!!')
-          resolve([])
-        } else {
+        if(hidden_retry < _.toSafeInteger(settings('retries_on_server_error'))){
           setTimeout(() => dispatch('post',{ item,action,data }).then(resolve),1000);
           hidden_retry++;
+        } else {
+          alert('Server error.. Please re-login, then try again!!')
+          resolve([])
         }
       } else {
         if(status === 429) alert('Server too busy, Please try again after a minute... Aborting current action!!');
