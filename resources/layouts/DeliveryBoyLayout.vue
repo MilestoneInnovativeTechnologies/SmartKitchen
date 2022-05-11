@@ -21,7 +21,7 @@
     <q-footer elevated class="bg-primary text-white" v-show="$store.state.footer">
       <q-tabs align="left">
         <q-route-tab :to="{ name:'delivery_boy_index' }" label="Home" icon="home"  />
-        <q-route-tab :to="{ name:'orders' }" label="Orders" icon="add_task" />
+        <q-route-tab :to="{ name:'orders' }" label="Orders" icon="add_task" v-if="ordering" />
         <q-route-tab :to="{ name:'delivery_boy_completed' }" label="Billable" icon="receipt" :alert="billable.length > 0 ? 'red' : false" alert-icon="new_releases" />
         <q-route-tab :to="{ name:'delivery_boy_payments' }" label="Payments" icon="account_balance" />
       </q-tabs>
@@ -33,7 +33,7 @@
 <script>
 import ManualSync from "components/ManualSync";
 import Logout from "components/Logout";
-import {attention} from "assets/helpers";
+import {attention, settings_boolean} from "assets/helpers";
 import {mapState} from "vuex";
 import QuickToggle from "components/QuickToggle";
 const { RS44Z } = require('boot/subscription').FEATURES
@@ -46,6 +46,7 @@ export default {
     billable(){ return _(this.tokens).filter({ type:'Home Delivery',progress:'Processing' }).filter(({ id }) => _.has(this.items,parseInt(id)) && is_all_completed(this.items[parseInt(id)])).filter(({ id }) => !_.find(this.bills,['token',parseInt(id)])).value() },
     customer_manage(){ return settings('manage_customer',_USER.role) },
     quick_enabled(){ return RS44Z === 'Yes' && ['order_new'].includes(this.$route.name) },
+    ordering() { return settings_boolean(settings('delivery_boy_take_orders')) !== false }
   },
   watch: {
     billable(Nw,Ol){ if(!Ol || Nw.length > Ol.length) { attention(); } },

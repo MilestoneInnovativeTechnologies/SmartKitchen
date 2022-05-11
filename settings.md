@@ -107,6 +107,10 @@ Making value to any of 1,true,True,yes,Yes will make the order instantly paid.
 Priority: If settings have take_away_waiter_instant_payment or take_away_receptionist_instant_payment then it will be considered else take_away_instant_payment will be considered
 
 
+delivery_boy_take_orders
+By default delivery boy can take home delivery order. This can be disabled by setting this value to any of 0,false,False,no,No
+
+
 delivery_boy_hide_others_billed
 These settings decide whether the orders that are billed by other delivery boy need to be shown or not.
 When the value of this setting is any of 1,true,True,yes,Yes then it will hide other waiters billed orders.
