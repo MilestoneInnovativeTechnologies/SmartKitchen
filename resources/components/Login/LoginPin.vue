@@ -37,15 +37,28 @@ export default {
   computed: {
     digs:{
       get(){ return _.padEnd(this.pin,4,"_").split("") },
-      set(a){ this.pin = (this.pin + a).substr(-4); }
+      set(a){ tap(); this.pin = (this.pin + a).slice(-4); }
     }
   },
   methods: {
-    backspace(){ this.pin = this.pin.substr(0,_.size(this.pin)-1) },
-    login(){ this.loading = true; this.$refs['login_form'].submit() }
+    backspace(){ tap(); this.pin = this.pin.slice(0,_.size(this.pin)-1); },
+    login(){ tap(); this.loading = true; this.$refs['login_form'].submit() },
+
+    eventManage(eFn){
+      if(!this.$q.platform.is.desktop) return;
+      eFn('keypress',this.docListen); eFn('keyup',this.docListenKeyup)
+    },
+    docListenKeyup(e){ if(['Backspace','Delete','Escape','Tab'].includes(e.key)) this.docListen(e) },
+    docListen(e){
+      if([0,1,2,3,4,5,6,7,8,9,'0','1','2','3','4','5','6','7','8','9'].includes(e.key)) return this.digs = e.key
+      if(['Enter','+','=','Tab'].includes(e.key) && !e.ctrlKey) return this.login();
+      if(['Enter','\n'].includes(e.key) && e.ctrlKey) return this.login();
+      if(['b','B','Backspace'].includes(e.key)) return this.backspace();
+      if(['c','C','Delete','Escape'].includes(e.key)) return tap() || (this.pin = '');
+    },
+
   },
-  watch: {
-    pin(){ tap() }
-  }
+  created() { this.eventManage(document.addEventListener) },
+  beforeDestroy() { this.eventManage(document.removeEventListener) },
 }
 </script>
