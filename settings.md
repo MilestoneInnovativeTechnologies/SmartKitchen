@@ -164,6 +164,11 @@ If the feature Quick Mode is enabled, then toggle switch will be displayed on he
 And if there have a settings in the name quick_mode with value any of 1,true,True,yes,Yes,YES,ON,on,On the by default, quick mode will be enabled. This can be turned off using header bar toggle switch
 
 
+quick_mode_tap_sound
+Tap sound can be enabled on key press on quick mode numeric keypad. Make this value to any of 1,true,True,yes,Yes,YES,ON,on,On.
+By default, no tap sound will be fired.
+
+
 quick_mode_item_prop
 This settings decides which property if an item to be used as code in quick mode. The item can have upto 5 properties that can be enabled by admin in settings > item props
 The settings value could exactly match with item prop name (case-sensitive)

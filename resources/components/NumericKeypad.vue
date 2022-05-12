@@ -27,12 +27,14 @@
 
 <script>
 import NumericKey from "components/NumericKey";
+import {settings_boolean, tap} from "assets/helpers";
 export default {
   name: "NumericKeypad",
   components: {NumericKey},
   props: ['value','disabled'],
   data(){ return {
-    keys: ['C','backspace','forward','subdirectory_arrow_left']
+    keys: ['C','backspace','forward','subdirectory_arrow_left'],
+    silent: (settings_boolean(settings('quick_mode_tap_sound')) !== true)
   } },
   computed: {
     number: {
@@ -42,8 +44,9 @@ export default {
   },
   methods: {
     keypress(n){
+      if(!this.silent) tap();
       if(n === this.keys[0]) return this.clear();
-      if(n === this.keys[1]) return this.number = _.toString(this.number).substr(0,_.size(_.toString(this.number))-1)
+      if(n === this.keys[1]) return this.number = _.toString(this.number).slice(0,_.size(_.toString(this.number))-1)
       if(n === this.keys[2]) return this.$emit('done',this.number)
       if(n === this.keys[3]) return this.$emit('enter',this.number)
       this.number = _.toString(this.number) + _.toString(n)
