@@ -29,7 +29,7 @@ class Printer
     public $done = false;
 
     private static $Specials = ['line','title','around','stack','table','image','upi'];
-    private static $upi_addr = 'upi://pay?pa=[address]&pn=[name]&tn=[id]&am=[amount]';
+    private static $upi_addr = 'upi://pay?pa=[address]&pn=[name]&tr=[id]&am=[amount]&tn=Smart Kitchen Payment';
 
     public function __construct($printer,$template = null,$data = null)
     {

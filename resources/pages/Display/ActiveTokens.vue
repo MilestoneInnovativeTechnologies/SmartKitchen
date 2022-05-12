@@ -47,7 +47,7 @@ import Tokens from "assets/mixins/Tokens";
 import Masonry from "components/Masonry";
 
 export default {
-  name: 'ActiveTokens',
+  name: 'DisplayActiveTokens',
   components: {Masonry},
   mixins: [Tokens],
   props: ['color'],

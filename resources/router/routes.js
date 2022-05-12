@@ -13,7 +13,7 @@ const layout_master = {
 const layout_child = {
   Login: [
     'login_index',
-    'display_kitchen','display_active_tokens'
+    'display_kitchen','display_active_tokens','display_pay_bill_qr_code'
   ],
   Waiter: ['waiter_index','waiter_menu','orders','order_new','take_away','waiter_bills',
     'orders_online','customers'
@@ -140,6 +140,7 @@ const route_master = {
   payment_type_summary: { name:'payment_type_summary', path:'/report/payment/type/summary', component: () => import('pages/Report/Reports/ReportPaymentTypeSummary'), meta:{ title:'Payment Type Summary',controls:['range'] } },
   customer_payments: { name:'customer_payments', path:'/report/customer/payments', component: () => import('pages/Report/Reports/ReportCustomerPayments'), meta:{ title:'Customer Payments',controls:['range','customer'] } },
   customer_payment_type: { name:'customer_payment_type', path:'/report/customer/payment/type', component: () => import('pages/Report/Reports/ReportCustomerByPaymentType'), meta:{ title:'Customer Payment Type',controls:['range','customer','payment_type'] } },
+  display_pay_bill_qr_code: { name:'display_pay_bill_qr_code', path:'/bill/pay', component: () => import('pages/Display/BillPayQRCode'), meta:{ out_ping:true,color:'positive' } },
 }
 
 const feature_routes = {

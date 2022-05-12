@@ -5,4 +5,5 @@ export default [
   { name:'Home Delivery',caption:'Delivery orders tracking',icon:'logout' },
   { name:'Table Status',caption:'Realtime view each tables order status and progress',icon:'logout' },
   { name:'Delivery Boy',caption:'View the activities of active delivery boys handling orders',icon:'logout' },
+  { name:'Bill Payments',caption:'Displays list of Pending Bills, and on selecting any bill Payment UPI QR Code will be displayed for making easy payment..',icon:'attach_money',to:{ name:'display_pay_bill_qr_code' } },
 ]
