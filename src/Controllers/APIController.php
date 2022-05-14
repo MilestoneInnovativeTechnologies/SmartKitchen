@@ -110,6 +110,7 @@ class APIController extends Controller
     }
 
     public static function recordsExists($modelObj,$after,$before,$lid){
+        if(!$lid && !$after) return false;
         return $modelObj->sync($after,$before,$lid)->exists();
     }
 
