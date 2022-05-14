@@ -41,6 +41,7 @@ export default {
     typeChange(type){
       this.params.seating = _.get(this.attrs,'seating',null); this.params.user = _.get(this.attrs,'user',null)
       if(type !== 'Dining') this.setPriceList(type);
+      if(!this.params.customer) this.params.customer = _.get(settings('default_customer',type),'id',null)
     },
     setPriceList(type){
       let state_name = _.snakeCase(type + ' Price List');

@@ -94,8 +94,7 @@ export default {
   },
   watch: {
     'attrs': { immediate:true, deep:true, handler:'init' },
-  },
-  created() {
+    'params.type': { immediate:true,handler(type){ if(type && !this.params.customer) this.params.customer = _.get(settings('default_customer',type),'id') } }
   }
 }
 </script>

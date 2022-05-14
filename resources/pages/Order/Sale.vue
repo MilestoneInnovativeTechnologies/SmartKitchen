@@ -97,7 +97,9 @@ export default {
   components: { MenuSelect, QuickOrder, GroupItemsSelect, GroupStickyButton, PaymentTypeSelectDropDown, TaxNatureSelectDropDown, OrderCustomer, PriceListSelectDropDown, FilterInputText },
   mixins: [QuickMode],
   data(){ return {
-    group: 0, item_filter: '', fab: true, offset: [12,12], payment_mode: false, processing: false,
+    group: 0, item_filter: '', fab: true, offset: [12,12],
+    payment_mode: false, processing: false,
+    default_customer: null,
     params: {
       type: 'Sale', price_list: null, items: [],
       customer: null, nature: null, discount: 0, advance_type:PaymentsTypes[0], advance_amount: 0
@@ -145,7 +147,7 @@ export default {
       if(ids.length) post('token','served',{ id:ids }).then(vm.completed)
       else vm.completed();
     },750,this) },
-    completed(){ this.payment_mode = false; this.params.items.splice(0,this.params.items.length); this.processing = false; if(_.has(this,['$refs','quick_order','$data','code'])) this.$refs['quick_order'].$data.code = 0 },
+    completed(){ this.payment_mode = false; this.params.items.splice(0,this.params.items.length); this.processing = false; this.params.customer = this.default_customer; if(_.has(this,['$refs','quick_order','$data','code'])) this.$refs['quick_order'].$data.code = 0 },
     moveFab (ev) {
       this.draggingFab = ev.isFirst !== true && ev.isFinal !== true
       this.fabPos = [
@@ -172,6 +174,7 @@ export default {
   },
   created(){
     this.$q.notify.setDefaults({ position: 'top-right', timeout: 2000, color: 'positive', group:'items', html: true, caption: 'Items Updated !!' });
+    this.default_customer = this.params.customer = _.get(settings('default_customer',this.params.type),'id')
   }
 }
 </script>

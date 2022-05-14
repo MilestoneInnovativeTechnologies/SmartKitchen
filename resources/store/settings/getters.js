@@ -50,3 +50,12 @@ export function quick(state,{ settings }){
     return _.includes(true_values,_.get(settings,s_name))
   }
 }
+
+export function default_customer(state,{ settings },rState){
+  let customers = _(rState.customers.data).filter(['status','Active']).keyBy('name').value();
+  return function (type){
+    let name = _.snakeCase((type || '') + ' Default Customer'),
+      s_name = _.get(settings,name,_.get(settings,'default_customer',null))
+    return _.get(customers,s_name,null)
+  }
+}

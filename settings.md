@@ -63,6 +63,13 @@ The price list name should be exactly same as what in Price lists
 If there is a price list of name exactly same of any type or order, then this price list will be taken for that type of order. This have lesser priority than that of having in settings
 
 
+default_customer, <type>_default_customer
+This should be the name of a Customer. Case Sensitive.
+The purpose of these settings is, In any type of Order, what should be the default customer is decided by this setting.
+The setting name should be line take_away_default_customer, sale_default_customer etc.
+Type specified setting have more priority than that of default_customer. The setting default_customer is used all over other than type specified.
+
+
 remote_<branch_code>_price_list, remote_<branch_code>, <branch_code>_price_list, <branch_code>
 This should be the name of a price list.
 If remote kitchen function is enabled and have a kitchen as cloud, the orders will be received & creates corresponding token and token items locally.
