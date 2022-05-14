@@ -17,7 +17,7 @@
           <q-card class="q-mt-xs">
             <q-card-section :class="'bg-' + color" class="text-white q-py-xs text-center text-caption text-bold">{{ time_now }}</q-card-section>
             <q-list dense separator>
-              <q-item v-for="(ary,idx) in data" :key="'kts-' + idx">
+              <q-item v-for="(ary,idx) in [...data,...data2]" :key="'kts-' + idx">
                 <q-item-section><q-item-label caption class="text-bold">{{ ary[0] }}</q-item-label></q-item-section>
                 <q-item-section side class="text-right text-bold">{{ ary[1] }}</q-item-section>
               </q-item>
@@ -91,6 +91,10 @@ export default {
       Tokens:'Total Tokens',tokens_new:'New Tokens',
       tokens_processing:'Processing Tokens',token_items:'Total Items',items_accepted:'Process Pending Items',items_processing:'Processing Items',
       tokens_today:'Tokens Today', token_items_processed_today:'Items Processed Today'
+    },
+    summary2_take: 5,
+    summary2: {
+      items_processed:'Most processed items today', least_stock_items: 'Least stock items'
     }
   } },
   computed: {
@@ -109,8 +113,9 @@ export default {
     tokens_today(){ return _(this.tokens).filter(token => is_today(token.date)).filter(token => any_item_in_kitchen(token.items,this.selected_kitchen)).value() },
     token_items_today(){ return _(this.tokens_today).flatMap('items').filter(item => _.get(item,['kitchen','id']) === this.selected_kitchen).value() },
     token_items_processed_today(){ return _.filter(this.token_items_today,item => ['Completed','Served'].includes(item.progress)) },
-    item_processed(){ return _(this.token_items_today).countBy(item => _.get(item,['item','name'])).map((count,item) => [item,count]).sortBy(ary => ary[1]).reverse().value() },
-    least_stock_items(){ return _(_.get(this.$store.state.kitchens,['items',this.selected_kitchen])).sortBy('stock').map(ki => [_.get(this.$store.state.items.data,[ki.item,'name']),ki.stock]).value() }
+    items_processed(){ return _(this.token_items_processed_today).groupBy(item => _.get(item,['item','name'])).mapValues(kis => _.sumBy(kis,ki => _.toNumber(ki.quantity))).map((count,item) => [item,count]).sortBy(ary => ary[1]).reverse().value() },
+    least_stock_items(){ return _(this.$store.getters['kitchens/stock']).map((kStock,item_id) => [_.get(this.$store.state.items.data,[item_id,'name']),kStock[this.selected_kitchen]]).value() },
+    data2(){ return _(this.summary2).map((title,fn) => _.concat([[title,'']],_.take(this[fn],this.summary2_take))).flatMap().value() },
   },
   methods: {
     user_names(users){ return _.map(users,user => _.truncate(_.get(this.users,[user,'name']),{ length:5,omission:'..' })) },
