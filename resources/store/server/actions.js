@@ -170,8 +170,7 @@ export function api_error({ dispatch },{ item,action,data,error }){
       } else resolve([])
     } else {
       alert('Error in preparing Data OR You have been logged out.. Please logout and login again!!');
-      resolve([])
-      window.location = (typeof LOGOUT === 'undefined') ? (location.origin + '/logout') : LOGOUT;
+      setTimeout(url => window.location = url,1500,(typeof LOGOUT === 'undefined') ? (location.origin + '/logout') : LOGOUT)
     }
   })
 }
