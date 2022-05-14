@@ -108,7 +108,7 @@ export function fetch_gettable({},gettable){
 }
 
 const out_ping_options = {
-  method: 'post', headers: { 'OP-After':'' }
+  method: 'post', headers: { 'OP-After':'2001-01-01 00:00:01' }
 }
 const pinging = { status:false,timeout:0,header:null };
 export function out_ping({ dispatch }){
