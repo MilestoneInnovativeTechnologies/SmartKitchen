@@ -1,5 +1,5 @@
 export default [
-  { name:'Kitchen',caption:'Displays kitchen items',icon:'person',to:{ name:'display_kitchen'} },
+  { name:'Kitchen Item Processing',caption:'Displays tokens which are currently processing in a kitchen.',icon:'person',to:{ name:'display_kitchen_processing_tokens' } },
   { name:'Active Tokens',caption:'Active tokens details',icon:'receipt',to:{ name:'display_active_tokens' } },
   { name:'Daily Order',caption:'Today\'s full orders',icon:'receipt' },
   { name:'Home Delivery',caption:'Delivery orders tracking',icon:'logout' },
