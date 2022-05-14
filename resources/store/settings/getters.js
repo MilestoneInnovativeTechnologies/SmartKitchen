@@ -18,19 +18,18 @@ export function items_search_fields(state,{ settings }){
 }
 
 export function price_list(state,{ settings },rState){
-  return function(name){
-    let list = rState.prices.list, pl_name = _.snakeCase((name || '') + 'Price List');
-    if(_.has(settings,pl_name) && _.find(list,{ status:'Active',name:_.get(settings,pl_name) }))
-      return _.find(list,{ status:'Active',name:_.get(settings,pl_name) })
-    return null;
+  let price_lists = _(rState.prices.list).filter(['status','Active']).keyBy('name').value()
+  return function(type){
+    let name = _.snakeCase((type || '') + ' Price List'), s_name = _.get(settings,name,null)
+    return _.get(price_lists,s_name,null)
   }
 }
 
 export function menu(state,{ settings },rState){
-  return function(name){
-    let menu_name = _.snakeCase((name || '') + 'Menu');
-    if(_.has(settings,menu_name) && _.find(rState.menus.data,{ status:'Active',name:_.get(settings,menu_name) })) return _.find(rState.menus.data,{ status:'Active',name:_.get(settings,menu_name) })
-    return _.find(rState.menus.data,{ status:'Active',name })
+  let menus = _(rState.menus.data).filter(['status','Active']).keyBy('name').value()
+  return function(type){
+    let name = _.snakeCase((type || '') + ' Menu'), s_name = _.get(settings,name,null);
+    return _.get(menus,s_name,null)
   }
 }
 
