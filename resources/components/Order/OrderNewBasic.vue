@@ -45,7 +45,7 @@ export default {
     setPriceList(type){
       let state_name = _.snakeCase(type + ' Price List');
       if(!_.has(this.$store.state.public,state_name)){
-        let price_list_id = _.get(settings('price_list',type),'id',null)
+        let price_list_id = _.get(this.$store.getters['prices/prices_of_type'](type),'id',null)
         if(price_list_id) this.$store.commit('public',{ [state_name]:price_list_id })
       }
       this.params.price_list = _.get(this.$store.state.public,state_name,undefined);
