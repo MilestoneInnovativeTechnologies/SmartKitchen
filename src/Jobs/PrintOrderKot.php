@@ -41,7 +41,7 @@ class PrintOrderKot
         }])->find($token);
         $kitchens = $Token->Items->map->kitchen->filter()->unique()->toArray();
         if(empty($kitchens)) return;
-        Kitchen::whereIn('id',$kitchens)->where('auto_accept','Yes')->get()->each(function($kitchen) use($token){ $kitchen->print(['args' => $token]); });
+        Kitchen::whereIn('id',$kitchens)->where('auto_accept','Yes')->get()->each(function($kitchen) use($token){ $kitchen->print(['args' => [$token]]); });
     }
 
     private static function ItemPrint($tokenItemID,$mode){

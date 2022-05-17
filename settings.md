@@ -66,7 +66,7 @@ If there is a price list of name exactly same of any type or order, then this pr
 default_customer, <type>_default_customer
 This should be the name of a Customer. Case Sensitive.
 The purpose of these settings is, In any type of Order, what should be the default customer is decided by this setting.
-The setting name should be line take_away_default_customer, sale_default_customer etc.
+The setting name should be like take_away_default_customer, sale_default_customer etc.
 Type specified setting have more priority than that of default_customer. The setting default_customer is used all over other than type specified.
 
 
