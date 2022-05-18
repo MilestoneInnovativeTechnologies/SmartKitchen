@@ -48,6 +48,6 @@ class PrintOrderKot
         $tokenItem = TokenItem::find($tokenItemID);
         if($tokenItem->progress === 'New' || !$tokenItem->kitchen) return;
         $Kitchen = Kitchen::find($tokenItem->kitchen);
-        if($Kitchen->auto_accept === 'Yes') $Kitchen->print(['args' => [$tokenItem->token,$tokenItemID],'item' => $mode]);
+        if($Kitchen->auto_accept === 'Yes') $Kitchen->print(['args' => [$tokenItem->token,$tokenItemID],'sub' => $mode]);
     }
 }

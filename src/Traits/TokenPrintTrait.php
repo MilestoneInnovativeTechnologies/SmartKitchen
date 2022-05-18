@@ -124,8 +124,9 @@ trait TokenPrintTrait
         $role = Arr::get($props,'role',(auth()->user() ? auth()->user()->role : ''));
         $type = Arr::get($props,'type',$this->type);
         $item = Arr::get($props,'item',$this->Bill ? 'Bill' : 'Token');
+        $sub = Arr::get($props,'sub','');
         $user = Arr::get($props,'user',(auth()->user() ? auth()->user()->name : ''));
-        $template_name = $this->print_name_item('Print Template',$role,$type,$item,$user);
+        $template_name = $this->print_name_item('Print Template',$role,$type,$item,$user,$sub);
         $props['template_name'] = $template_name ?: $this->print_template;
         return $props;
     }
@@ -135,19 +136,22 @@ trait TokenPrintTrait
         $role = Arr::get($props,'role',(auth()->user() ? auth()->user()->role : ''));
         $type = Arr::get($props,'type',$this->type);
         $item = Arr::get($props,'item',$this->Bill ? 'Bill' : 'Token');
+        $sub = Arr::get($props,'sub','');
         $user = Arr::get($props,'user',(auth()->user() ? auth()->user()->name : ''));
-        $printer_name = $this->print_name_item('Printer',$role,$type,$item,$user);
+        $printer_name = $this->print_name_item('Printer',$role,$type,$item,$user,$sub);
         $props['printer_name'] = $printer_name ?: $this->printer_name;
         return $props;
 
     }
 
-    public function print_name_item($thing, $role, $type, $item, $user){
+    public function print_name_item($thing, $role, $type, $item, $user, $sub){
         $parts = [
-            ($role.$user.$type.$item),($role.$user.$type),($role.$user.$item),($role.$user),
-            ($user.$type.$item),($user.$type),($user.$item),($user),
-            ($role.$type.$item),($role.$type),($role.$item),($role),
-            ($type.$item),($type),($item),('')
+            ($role.$user.$type.$item.$sub),($role.$user.$type.$item),
+            ($role.$user.$item.$sub),($role.$user.$item),
+            ($role.$user.$type),($role.$user),
+            ($user.$type.$item.$sub),($user.$type.$item),($user.$item.$sub),($user.$item),($user.$type),($user),
+            ($role.$type.$item.$sub),($role.$type.$item),($role.$item.$sub),($role.$item),($role.$type),($role),
+            ($type.$item.$sub),($type.$item),($item.$sub),($item),($type),('')
         ];
         foreach ($parts as $part){
             $name = self::settings(Str::snake($part . $thing));
