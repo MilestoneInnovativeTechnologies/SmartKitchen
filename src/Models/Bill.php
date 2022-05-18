@@ -46,7 +46,7 @@ class Bill extends Model
         return self::recent()->sync($after,$before,$lid)->get();
     }
 
-    public function print($props = []){ Token::find($this->token)->print($props); }
+    public function print($props = []){ Token::find($this->token)->print(array_merge($props,['item' => 'Bill'])); }
     public function print_data($data){ $Token = Token::find($data->token); return $Token->print_data($Token); }
 
 }

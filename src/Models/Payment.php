@@ -31,10 +31,9 @@ class Payment extends Model
     }
 
     public function print($props = []){
-        $role = $name = ''; $Token = new Token();
-        if(auth()->user()){ $user = auth()->user(); $role = $user->role; $name = $user->name; }
-        if(!Arr::hasAny($props,['printer','printer_name'])) $props['printer_name'] = $Token->print_name_item('Printer',$role,'','Payment',$name);
-        if(!Arr::hasAny($props,['template','template_name'])) $props['template_name'] = $Token->print_name_item('Print Template',$role,'','Payment',$name);
+        $Token = Token::find($this->Bill->token); $props['item'] = 'Payment';
+        $props = $Token->print_printer_name($props);
+        $props = $Token->print_template_name($props);
         return parent::print($props);
     }
 

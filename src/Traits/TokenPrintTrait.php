@@ -135,7 +135,7 @@ trait TokenPrintTrait
         if(Arr::hasAny($props,['printer','printer_name'])) return $props;
         $role = Arr::get($props,'role',(auth()->user() ? auth()->user()->role : ''));
         $type = Arr::get($props,'type',$this->type);
-        $item = Arr::get($props,'item',$this->Bill ? 'Bill' : 'Token');
+        $item = Arr::get($props,'item','');
         $sub = Arr::get($props,'sub','');
         $user = Arr::get($props,'user',(auth()->user() ? auth()->user()->name : ''));
         $printer_name = $this->print_name_item('Printer',$role,$type,$item,$user,$sub);
