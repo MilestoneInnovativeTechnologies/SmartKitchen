@@ -24,12 +24,12 @@ import BillGenerateCard from "components/Bill/BillGenerateCard";
 import DeliveryBoyPaymentCard from "components/Payment/DeliveryBoyPaymentCard";
 import {NoCustomer} from "assets/assets";
 import OrderNewFabDeliveryBoy from "components/Order/OrderNewFabDeliveryBoy";
-import Bills from "assets/mixins/Bills";
+import Tokens from "assets/mixins/Tokens";
 
 export default {
   name: "DeliveryBoyCompleted",
   components: {OrderNewFabDeliveryBoy, DeliveryBoyPaymentCard, BillGenerateCard, TokenDetailDeliveryBoyExpansion},
-  mixins: [Bills],
+  mixins: [Tokens],
   data(){ return {
     me: parseInt(this.$route.meta.me.id),
     bill_mode: false, deliver_mode: false,

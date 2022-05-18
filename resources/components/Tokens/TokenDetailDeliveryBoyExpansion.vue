@@ -44,18 +44,16 @@
 
 <script>
 import {image, precision} from "assets/helpers";
-import Bills from "assets/mixins/Bills";
 
 export default {
   name: "TokenDetailDeliveryBoyExpansion",
   props: ['label','caption','token','color'],
-  mixins: [Bills],
   computed: {
     clr(){ return this.color || 'primary' },
     items(){ return _.get(this.token,'items') },
     quantities(){ return _.sumBy(this.items,({ quantity }) => _.toNumber(quantity)) },
     total(){ return _.sumBy(this.items,({ quantity,price }) => _.toNumber(quantity) * _.toNumber(price)) },
-    Bill(){ return _.find(this.bills,bill => parseInt(_.get(bill,['token','id'])) === parseInt(this.token.id)) },
+    Bill(){ return _.get(this.token,['bill']) },
   },
   methods: {
     precision, image

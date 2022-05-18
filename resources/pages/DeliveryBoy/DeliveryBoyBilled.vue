@@ -40,7 +40,7 @@ export default {
       return _(this.bills)
         .filter(bill => ['Pending','Partial'].includes(bill.progress) && bill.token.type === 'Home Delivery')
         .filter(bill => this.hide_others ? can_view(bill,this.$route.meta.me.id) : true)
-        .map('token')
+        .map(bill => Object.assign({},bill.token,{ bill }))
         .value()
     },
     hide_others(){ return settings_boolean(settings('delivery_boy_hide_others_billed')) === true },
