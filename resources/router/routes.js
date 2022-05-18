@@ -33,7 +33,7 @@ const layout_child = {
     'bill_by_customer','bill_payments','bill_payments_by_type','bills_unpaid','bills_unpaid_customer','bills_unpaid_type','bills_unpaid_user',
     'group_wise_order_summary','group_items_order_summary','payment_type_summary','customer_payments','customer_payment_type'
   ],
-  'Delivery Boy': ['delivery_boy_index','delivery_boy_orders','order_new','customers','delivery_boy_completed','delivery_boy_payments'],
+  'Delivery Boy': ['delivery_boy_index','delivery_boy_orders','order_new','customers','delivery_boy_completed','delivery_boy_billed','delivery_boy_payments'],
   Menu: ['menu_index'],
 }
 
@@ -114,6 +114,7 @@ const route_master = {
   delivery_boy_orders: { name:'orders', path:'/orders', component: () => import('pages/DeliveryBoy/DeliveryBoyOrders'), meta:{ title:'Orders' } },
   customers: { name:'customers', path:'/customers', component: () => import('pages/Customer/CustomerIndex'), meta:{ title:'Customers' } },
   delivery_boy_completed: { name:'delivery_boy_completed', path:'/completed', component: () => import('pages/DeliveryBoy/DeliveryBoyCompleted'), meta:{ title:'Completed Tokens' } },
+  delivery_boy_billed: { name:'delivery_boy_billed', path:'/billed', component: () => import('pages/DeliveryBoy/DeliveryBoyBilled'), meta:{ title:'Billed Tokens' } },
   delivery_boy_payments: { name:'delivery_boy_payments', path:'/payments', component: () => import('pages/DeliveryBoy/DeliveryBoyPayments'), meta:{ title:'Payments' } },
   menu_index: { name:'menu_index', path:'/', component: () => import('pages/OnlineMenu/OnlineMenuIndex'), meta: { title:'Online Menu' } },
   menu_qr_codes: { name:'menu_qr_codes', path:'menu/qr_codes', component: () => import('pages/OnlineMenu/OnlineMenuQRCodes'), meta:{ title:'Online Menu QR Code Generator' } },

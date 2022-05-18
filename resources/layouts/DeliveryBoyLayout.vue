@@ -23,6 +23,7 @@
         <q-route-tab :to="{ name:'delivery_boy_index' }" label="Home" icon="home"  />
         <q-route-tab :to="{ name:'orders' }" label="Orders" icon="add_task" v-if="ordering" />
         <q-route-tab :to="{ name:'delivery_boy_completed' }" label="Billable" icon="receipt" :alert="billable.length > 0 ? 'red' : false" alert-icon="new_releases" />
+        <q-route-tab :to="{ name:'delivery_boy_billed' }" label="Deliverable" icon="local_shipping" :alert="deliverable.length > 0 ? 'red' : false" alert-icon="new_releases" />
         <q-route-tab :to="{ name:'delivery_boy_payments' }" label="Payments" icon="account_balance" />
       </q-tabs>
     </q-footer>
@@ -34,16 +35,28 @@
 import ManualSync from "components/ManualSync";
 import Logout from "components/Logout";
 import {attention, settings_boolean} from "assets/helpers";
-import {mapState} from "vuex";
 import QuickToggle from "components/QuickToggle";
+import Bills from "assets/mixins/Bills";
 const { RS44Z } = require('boot/subscription').FEATURES
 export default {
   name: 'DeliveryBoyLayout',
   components: {QuickToggle, Logout, ManualSync},
+  mixins: [Bills],
   data () { return { name:_USER.name, logout: LOGOUT } },
   computed: {
-    ...mapState('tokens',{ tokens:'data',items:'items' }), ...mapState({ bills:state => state.bills.data }),
-    billable(){ return _(this.tokens).filter({ type:'Home Delivery',progress:'Processing' }).filter(({ id }) => _.has(this.items,parseInt(id)) && is_all_completed(this.items[parseInt(id)])).filter(({ id }) => !_.find(this.bills,['token',parseInt(id)])).value() },
+    hide_others(){ return settings_boolean(settings('delivery_boy_hide_others_billed')) === true },
+    billable(){
+      return _(this.tokens)
+        .filter(token => token.type === 'Home Delivery' && is_all_completed(token.items))
+        .filter(token => !_.includes(this.$store.getters['tokens/billed'],token.id))
+        .value()
+    },
+    deliverable(){
+      return _(this.bills)
+        .filter(bill => ['Pending','Partial'].includes(bill.progress) && bill.token.type === 'Home Delivery')
+        .filter(bill => this.hide_others ? is_mine(bill,this.$route.meta.me.id) : true)
+        .value()
+    },
     customer_manage(){ return settings('manage_customer',_USER.role) },
     quick_enabled(){ return RS44Z === 'Yes' && ['order_new'].includes(this.$route.name) },
     ordering() { return settings_boolean(settings('delivery_boy_take_orders')) !== false }
@@ -52,7 +65,7 @@ export default {
     billable(Nw,Ol){ if(!Ol || Nw.length > Ol.length) { attention(); } },
   }
 }
-function is_all_completed(items){
-  return items.length && _.every(items,({ progress }) => _.includes(['Cancelled','Completed','Served'],progress))
-}
+function is_all_completed(items){ return items.length && _.every(items,({ progress }) => _.includes(['Cancelled','Completed','Served'],progress)) }
+function is_mine({ user },id){ return user && user.id === id }
+
 </script>
