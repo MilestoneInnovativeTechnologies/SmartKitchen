@@ -120,7 +120,7 @@ class APIController extends Controller
 
     public static function getRecords($model,$after,$before,$lid){
         if(method_exists($model,'fetch')) return $model::fetch($after,$before,$lid);
-        if(method_exists($model,'scopeOwn')) return $model->own()->sync($after,$before,$lid)->get();
-        return $model->sync($after,$before,$lid)->get();
+        if(method_exists($model,'scopeOwn')) return $model->own()->sync($after,$before,$lid)->latest()->take(data_limit())->get();
+        return $model->sync($after,$before,$lid)->latest()->take(data_limit())->get();
     }
 }

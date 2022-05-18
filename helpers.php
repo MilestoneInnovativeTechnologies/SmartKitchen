@@ -37,3 +37,5 @@ function settings($name,$bool = false){
     if(in_array($value,explode(",","0,false,False,no,No"))) return false;
     return null;
 }
+
+function data_limit(){ return settings('data_limit') ?: 1500; }

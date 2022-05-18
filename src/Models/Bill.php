@@ -43,7 +43,7 @@ class Bill extends Model
     public function User(){ return $this->belongsTo(User::class,'user','id'); }
 
     public static function fetch($after,$before,$lid){
-        return self::recent()->sync($after,$before,$lid)->get();
+        return self::recent()->sync($after,$before,$lid)->latest()->take(data_limit())->get();
     }
 
     public function print($props = []){ Token::find($this->token)->print(array_merge($props,['item' => 'Bill'])); }

@@ -18,7 +18,7 @@ class Payment extends Model
         return $Q->where('created_at','>=',now()->subRealDays(sk('recent_days_length'))->startOfDay()->toDateTimeString());
     }
     public static function fetch($after,$before,$lid){
-        return self::recent()->sync($after,$before,$lid)->get();
+        return self::recent()->sync($after,$before,$lid)->latest()->take(data_limit())->get();
     }
 
     public function print_data($data){

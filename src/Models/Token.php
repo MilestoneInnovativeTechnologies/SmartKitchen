@@ -66,10 +66,9 @@ class Token extends Model
     public function Bill(){ return $this->hasOne(Bill::class,'token','id')->where('progress','!=','Cancelled'); }
 
     public static function fetch($after,$before,$lid){
-//        return self::recent()->active()->sync($after,$before,$lid)->get();
         return (auth()->user() && auth()->user()->role === 'Waiter')
             ? self::own()->active()->sync($after,$before,$lid)->get()
-            : self::active()->sync($after,$before,$lid)->get();
+            : self::active()->sync($after,$before,$lid)->latest()->take(data_limit())->get();
     }
 
     public function print($props = []) {
