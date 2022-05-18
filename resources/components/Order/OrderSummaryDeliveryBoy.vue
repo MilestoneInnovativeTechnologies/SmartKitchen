@@ -4,7 +4,7 @@
     <q-item v-for="(token,idx) in tokens" :key="'osdb-tk-'+token.id+'-idx-'+idx">
       <q-item-section avatar top><q-avatar rounded><q-img :src="image(token.customer.image)" /></q-avatar></q-item-section>
       <q-item-section>
-        <q-item-label>{{ token.customer.name }}</q-item-label>
+        <q-item-label>{{ token.id }}, {{ token.customer.name }}</q-item-label>
         <q-item-label caption lines="2" v-if="kitchen === undefined">{{ token.items.map(item => item.item.name).join(', ') }}</q-item-label>
         <q-item-label caption lines="1" v-else v-for="(item,idx2) in token.items" :key="'osdb-tk-'+token.id+'-idx-'+idx+'ims-'+item.id+'-'+idx2" v-html="kitchen_view(item)" />
         <template v-if="address !== undefined && token.customer">
