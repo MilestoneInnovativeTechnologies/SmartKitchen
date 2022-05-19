@@ -145,7 +145,7 @@ class TokenController extends Controller
         if(!$request->input('id')) return []; $token_id = $request->input('id');
         $Token = Token::with('Items')->find($token_id);
         $kitchens = $Token->Items->map->kitchen->filter()->unique()->values()->toArray();
-        if($kitchens) Kitchen::whereIn('id',$kitchens)->get()->each(function($kitchen)use($token_id){ $kitchen->print(['args' => $token_id]); });
+        if($kitchens) Kitchen::whereIn('id',$kitchens)->get()->each(function($kitchen)use($token_id){ $kitchen->print(['args' => [$token_id]]); });
         return [];
     }
 
