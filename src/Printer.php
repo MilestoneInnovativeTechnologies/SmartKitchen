@@ -203,7 +203,7 @@ class Printer
     private static function row_segregate($info,$data,$index = false){
         list($key,$columns) = explode('#',$info);
         $columns = collect(explode("|",$columns))->mapWithKeys(function($item){ $parts = explode(":",$item); return [$parts[0] => $parts[1]]; })->toArray();
-        $items = Arr::get($data,$key);
+        $items = (array) (Arr::get($data,$key) ?: []);
         return count($items) ? array_map(function($item,$idx)use($columns,$data,$index){
             $columns = $index ? array_merge(['#' => $idx],$columns) : $columns;
             return collect($columns)->mapWithKeys(function($value,$key)use($data,$item){
