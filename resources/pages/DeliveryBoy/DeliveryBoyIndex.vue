@@ -11,12 +11,14 @@
       <div class="col-xs-6"><DigitMetric :value="Tokens.length" bg="deep-purple" text="white" title="Total Orders" icon="format_list_numbered" /></div>
     </div>
     <q-list>
-      <q-item-label header v-if="processing.length">Processing Orders</q-item-label>
-      <OrderSummaryDeliveryBoy :tokens="processing" kitchen separator />
-      <q-item-label header v-if="Billable.length">Billable Orders</q-item-label>
-      <OrderSummaryDeliveryBoy :tokens="Billable" separator />
-      <q-item-label header v-if="deliverable.length">Deliverable Orders</q-item-label>
-      <OrderSummaryDeliveryBoy :tokens="deliverable" address separator />
+      <q-item-label header v-if="processing.length">Processing Orders <span v-show="processing.length > 4">(+ {{ processing.length-4 }} More)</span></q-item-label>
+      <OrderSummaryDeliveryBoy :tokens="take_only(processing,4)" kitchen separator />
+
+      <q-item-label header v-if="Billable.length">Billable Orders <span v-show="Billable.length > 4">(+ {{ Billable.length-4 }} More)</span></q-item-label>
+      <OrderSummaryDeliveryBoy :tokens="take_only(Billable,4)" separator />
+
+      <q-item-label header v-if="deliverable.length">Deliverable Orders <span v-show="deliverable.length > 4">(+ {{ deliverable.length-4 }} More)</span></q-item-label>
+      <OrderSummaryDeliveryBoy :tokens="take_only(deliverable,4)" address separator />
     </q-list>
     <OrderNewFabDeliveryBoy />
   </q-page>
@@ -38,7 +40,7 @@ export default {
     me: parseInt(this.$route.meta.me.id)
   } },
   computed: {
-    Tokens(){ return _(this.tokens).filter(['type','Home Delivery']).map(token => token.customer ? token : Object.assign({},token,{ customer:NoCustomer }))./*filter(({ date }) => is_today(date)).*/value() },
+    Tokens(){ return _(this.tokens).filter(token => token.progress !== 'Cancelled' && token.type === 'Home Delivery').sortBy('id').reverse().map(token => token.customer ? token : Object.assign({},token,{ customer:NoCustomer }))./*filter(({ date }) => is_today(date)).*/value() },
     bills_today(){ return _(this.bills).filter(({ date }) => is_today(date)).value() },
     bills_own(){ return _.filter(this.bills_today,['user.id',this.me]) },
     token_bill(){ return _(this.Tokens).mapKeys(({ id }) => parseInt(id)).mapValues((token,token_id) => _.get(_.find(this.bills,['token.id',parseInt(token_id)]),'id',null) ).value() },
@@ -48,10 +50,10 @@ export default {
     deliverable(){ return _(this.tokens_own).filter(({ id }) => _.get(this.token_bill,parseInt(id)) && _.get(_.find(this.bills,['id',_.get(this.token_bill,parseInt(id))]),'progress') === 'Pending').value() },
     processing(){ return _.filter(this.tokens_own,({ items }) => !is_all_completed(items)) },
     delivered(){ return _(this.tokens_own).filter(({ id }) => _.get(this.token_bill,parseInt(id))).filter(({ id }) => _.get(_.find(this.bills,['id',_.get(this.token_bill,id)]),'progress') !== 'Pending').value() },
+  },
+  methods: {
+    take_only(array,amount){ return _.take(array,amount || 5) },
   }
 }
-
-function is_all_completed(items){
-  return items.length && _.every(items,({ progress }) => _.includes(['Cancelled','Completed','Served'],progress))
-}
+function is_all_completed(items){ return items.length && _.every(items,({ progress }) => _.includes(['Cancelled','Completed','Served'],progress)) }
 </script>

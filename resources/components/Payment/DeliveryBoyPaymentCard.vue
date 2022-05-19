@@ -2,8 +2,8 @@
   <q-card>
     <q-bar class="bg-accent text-white"><q-icon name="receipt_long" class="q-mr-md" />Delivery Payment<q-space /><q-btn icon="close" rounded flat dense v-close-popup /></q-bar>
     <q-card-section class="row q-col-gutter-sm">
-      <q-input readonly outlined dense class="col-4" :value="Token.id" label="Token ID" />
-      <q-input readonly outlined dense class="col-8" :value="Token.date_human" label="Token Date" />
+      <q-input readonly outlined dense class="col-4" :value="token.id" label="Token ID" />
+      <q-input readonly outlined dense class="col-8" :value="token.date_human" label="Token Date" />
       <q-input readonly outlined dense class="col-4" :value="Bill.id" label="Bill ID" />
       <q-input readonly outlined dense class="col-8" :value="human_date2(Bill.date)+' '+time(Bill.date)" label="Bill Date" />
     </q-card-section>
@@ -22,12 +22,19 @@
         <div class="col-2">&nbsp;</div>
         <div class="col-6 text-bold text-subtitle2">Sub Total</div>
         <div class="col-4 text-bold text-subtitle2 text-right">{{ precision(Bill.amount) }}</div>
-        <div class="col-2">&nbsp;</div>
-        <div class="col-6 text-bold text-subtitle2">Discount</div>
-        <div class="col-4 text-bold text-subtitle2 text-right">{{ precision(Bill.discount) }}</div>
+        <template v-if="Bill.discount">
+          <div class="col-2">&nbsp;</div>
+          <div class="col-6 text-bold text-subtitle2">Discount</div>
+          <div class="col-4 text-bold text-subtitle2 text-right">{{ precision(Bill.discount) }}</div>
+        </template>
+        <template v-if="Bill.paid">
+          <div class="col-2">&nbsp;</div>
+          <div class="col-6 text-bold text-subtitle2">Paid</div>
+          <div class="col-4 text-bold text-subtitle2 text-right">{{ precision(Bill.paid) }}</div>
+        </template>
         <div class="col-2">&nbsp;</div>
         <div class="col-6 text-bold text-subtitle1">Payable</div>
-        <div class="col-4 text-bold text-subtitle1 text-right">{{ precision(Bill.payable) }}</div>
+        <div class="col-4 text-bold text-subtitle1 text-right">{{ precision(Bill.payable - Bill.paid) }}</div>
       </q-card-section>
     </q-card-section>
     <q-card-actions class="row items-center q-col-gutter-x-sm">
@@ -39,22 +46,19 @@
 </template>
 
 <script>
-import Bills from "assets/mixins/Bills";
 import {image,precision,human_date2,time} from "assets/helpers";
 import {PaymentsTypes} from "assets/assets";
 
 export default {
   name: "DeliveryBoyPaymentCard",
   props: ['token'],
-  mixins: [Bills],
   data(){ return {
     loading: false, amount: 0, type: 'Cash',
-    PaymentsTypes
+    PaymentsTypes, paying: 0, balance: 0,
   } },
   computed: {
-    Token(){ return _.find(this.tokens,['id',parseInt(this.token)]) },
-    Items(){ return _.filter(this.Token.items,tk_itm => tk_itm.progress !== 'Cancelled') },
-    Bill(){ return _.find(this.bills,bill => parseInt(_.get(bill,['token','id'])) === parseInt(this.token)) },
+    Items(){ return _.filter(this.token.items,tk_itm => tk_itm.progress !== 'Cancelled') },
+    Bill(){ return _.get(this.token,'bill') },
     total(){ return _.sumBy(this.Items,({ price,quantity }) => _.toNumber(price) * _.toNumber(quantity)) },
     token_item_ids(){ return _.map(this.Items,'id') },
   },
@@ -62,16 +66,17 @@ export default {
     human_date2, time, image, precision,
     deliver(){
       this.loading = true; if(!this.token || !this.amount || _.isEmpty(this.token_item_ids)) return this.loading = false;
+      this.paying = this.amount; this.balance = (this.Bill.payable - this.Bill.paid) - this.paying;
       post('token','served',{ id:this.token_item_ids }).then().catch().then(this.pay)
     },
     pay(){
-      let params = { bill:_.get(this.Bill,'id'), amount:this.amount, type:this.type }
+      let params = { bill:_.get(this.Bill,'id'), amount:this.paying, type:this.type }
       post('payment','create',params).then().catch().then(this.paid)
     },
     paid(){ this.loading = false; this.$emit('paid') }
   },
   watch: {
-    Bill:{ immediate:true, deep:true, handler({ payable }){ this.amount = payable } }
+    Bill:{ immediate:true, deep:true, handler({ payable,paid }){ this.amount = (payable - paid) } }
   }
 }
 </script>

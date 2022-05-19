@@ -1,63 +1,61 @@
 <template>
   <q-page padding>
+    <div class="q-px-md q-mb-sm"><FilterInputText label="Filter" @text="filter = $event" lazy="true" /></div>
     <q-list>
-<!--      <q-item-label header class="text-h6">Own</q-item-label>-->
-<!--      <q-item-label caption v-if="!own.length" class="q-pl-lg">No Own Tokens</q-item-label>-->
-      <TokenDetailDeliveryBoyExpansion v-for="token in Tokens" :key="'dbc-own-' + token.id" :token="token" @deliver="deliver(token)" @bill="bill(token)" group="own" color="positive" popup :label="token.customer.name" :caption="time(token.date)" />
-<!--      <q-item-label header class="text-h6">Orphan</q-item-label>-->
-<!--      <q-item-label caption v-if="!orphan.length" class="q-pl-lg">No Orphan Tokens</q-item-label>-->
-<!--      <TokenDetailDeliveryBoyExpansion v-for="token in orphan" :key="'dbc-own-' + token.id" :token="token" @deliver="deliver(token)" @bill="bill(token)" group="orphan" color="accent" popup :label="token.customer.name" :caption="pa(token)" />-->
-<!--      <q-item-label header class="text-h6">Other</q-item-label>-->
-<!--      <q-item-label caption v-if="!other.length" class="q-pl-lg">No Others Tokens</q-item-label>-->
-<!--      <TokenDetailDeliveryBoyExpansion v-for="token in other" :key="'dbc-own-' + token.id" :token="token" @deliver="deliver(token)" @bill="bill(token)" group="other" color="secondary" popup :label="np(token)" :caption="wa(token)" />-->
+      <TokenDetailDeliveryBoyExpansion v-for="token in FilteredTokens" :key="'dbc-cm-tk-' + token.id" :token="token" @bill="bill(token)" group="own" color="purple" popup :label="label(token)" :caption="caption(token)" />
     </q-list>
-    <q-dialog persistent v-model="bill_mode" @before-hide="bill_mode = false"><BillGenerateCard :token="selected" :style="popup_width()" v-if="selected" @generated="bill_mode = false" /></q-dialog>
-    <q-dialog persistent v-model="deliver_mode" @before-hide="deliver_mode = false"><DeliveryBoyPaymentCard :token="selected" :style="popup_width()" v-if="selected" @paid="deliver_mode = false" /></q-dialog>
+    <q-btn class="full-width q-mt-md" label="Show more" flat dense color="amber" @click="page++" v-show="!filter && AllTokens.length > show" />
+    <q-dialog persistent v-model="bill_mode" @before-hide="bill_mode = false"><BillGenerateCard :token="selected" :style="popup_width()" v-if="bill_mode" @generated="generated" /></q-dialog>
     <OrderNewFabDeliveryBoy />
   </q-page>
 </template>
 
 <script>
 import TokenDetailDeliveryBoyExpansion from "components/Tokens/TokenDetailDeliveryBoyExpansion";
-import {time, popup_width, settings_boolean} from "assets/helpers";
+import {popup_width} from "assets/helpers";
 import BillGenerateCard from "components/Bill/BillGenerateCard";
 import DeliveryBoyPaymentCard from "components/Payment/DeliveryBoyPaymentCard";
 import {NoCustomer} from "assets/assets";
 import OrderNewFabDeliveryBoy from "components/Order/OrderNewFabDeliveryBoy";
 import Tokens from "assets/mixins/Tokens";
+import FilterInputText from "components/FilterInputText";
+import {ItemsPerPageDefault} from "assets/constants";
 
 export default {
   name: "DeliveryBoyCompleted",
-  components: {OrderNewFabDeliveryBoy, DeliveryBoyPaymentCard, BillGenerateCard, TokenDetailDeliveryBoyExpansion},
+  components: {
+    FilterInputText,
+    OrderNewFabDeliveryBoy, DeliveryBoyPaymentCard, BillGenerateCard, TokenDetailDeliveryBoyExpansion},
   mixins: [Tokens],
   data(){ return {
     me: parseInt(this.$route.meta.me.id),
     bill_mode: false, deliver_mode: false,
-    selected: null,
+    selected: null, filter: '', page: 1
   } },
   computed: {
     billed_tokens(){ return this.$store.getters['tokens/billed'] },
-    Tokens(){
+    show(){ return this.page * _.ceil((settings('items_per_page') || ItemsPerPageDefault)/3) },
+    AllTokens(){
       return _(this.tokens)
-        .filter(token => token.type === 'Home Delivery' && token.progress !== 'Cancelled')
-        .filter(is_all_completed)
-        .filter(token => !_.includes(this.billed_tokens,token.id))
+        .filter(token => token.type === 'Home Delivery' && token.progress !== 'Cancelled' && is_all_completed(token) && !_.includes(this.billed_tokens,token.id))
         .map(token => token.customer ? token : Object.assign({},token,{ customer:NoCustomer }))
+        .map(token => Object.assign({},token,{ slug:token_slug(token) }))
+        .sortBy('id').reverse()
         .value()
     },
-    // own(){ return _.filter(this.Tokens,['user',this.me]) },
-    // orphan(){ return _.filter(this.Tokens,({ user }) => _.isNull(user)) },
-    // other(){ return _.filter(this.Tokens,({ user }) => !_.isNull(user) && user !== this.me) },
+    FilteredTokens(){
+      return this.filter ? _.filter(this.AllTokens,token => _.includes(token.slug,_.toLower(this.filter))) : _.take(this.AllTokens,this.show)
+    }
   },
   methods: {
-    time, popup_width,
-    np({ customer }){ return [customer.name,customer.phone].join(', ') },
-    pa({ customer }){ return [customer.phone,customer.address].join('<br />') },
-    wa({ waiter,customer }){ return [customer.address,'(User: '+waiter.name+')'].join('<br />') },
-    bill({ id }){ this.selected = id; this.bill_mode = true },
-    deliver({ id }){ this.selected = id; this.deliver_mode = true },
+    popup_width,
+    label(token){ return `${token.id}, ${token.customer.name}` },
+    caption(token){ return plain(_.get(token,['customer','address'],"")) },
+    bill(token){ this.selected = token; this.bill_mode = true },
+    generated(){ this.bill_mode = false; this.selected = null },
   }
 }
-
+function plain(txt){ return (txt || "").replaceAll(/\n/g,", ") }
 function is_all_completed({ items }){ return items.length && _.every(items,({ progress }) => _.includes(['Cancelled','Completed','Served'],progress)) }
+function token_slug({ id,customer }){ return _.toLower([id,customer.name,customer.phone,plain(customer.address)].join(" ")) }
 </script>

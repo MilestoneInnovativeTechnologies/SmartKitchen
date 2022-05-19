@@ -2,26 +2,24 @@
   <q-expansion-item v-bind="$attrs">
     <template v-slot:header>
       <q-item-section avatar top><q-avatar rounded><q-img :src="image(token.customer.image)" /></q-avatar></q-item-section>
-      <q-item-section><q-item-label :class="'text-' + clr">{{ token.id }}, {{ label }}</q-item-label><q-item-label caption v-html="caption" /><q-item-label caption v-if="Bill" class="text-red"><q-icon name="done_all" size="sm" /> Billed</q-item-label></q-item-section>
-      <q-item-section side><q-badge outline :color="clr" class="q-py-xs q-px-sm" :label="precision(total)" /></q-item-section>
+      <q-item-section>
+        <q-item-label :class="'text-' + clr">{{ label }}</q-item-label>
+        <q-item-label caption v-if="caption" lines="1">{{ caption }}</q-item-label>
+        <q-item-label caption lines="1">{{ item_short }}</q-item-label>
+        <q-item-label caption v-if="user" class="text-red"><q-icon name="done_all" size="xs" /> Billed By: {{ user }}</q-item-label>
+      </q-item-section>
+      <q-item-section side><q-badge outline :color="clr" class="q-py-xs q-px-sm text-bold" :label="precision(total)" /></q-item-section>
     </template>
     <q-card>
-      <q-card-section>
-        <q-card-section class="q-pa-none row items-center justify-between q-col-gutter-xs">
-          <q-badge :label="token.date_human" outline :text-color="clr" class="q-pa-sm" />
-          <q-badge :label="items.length + ' Items'" outline :text-color="clr" class="q-pa-sm" />
-          <q-badge :label="quantities + ' Quantities'" outline :text-color="clr" class="q-pa-sm" />
-        </q-card-section>
-        <div v-if="token.narration" v-text="token.narration" :class="'text-' + clr" class="q-py-sm" />
-      </q-card-section>
-      <q-list bordered separator>
+      <q-card-section v-if="token.narration" :class="'text-' + clr" class="q-py-xs text-italic" style="font-size: 0.75rem">Narration: {{ token.narration }}</q-card-section>
+      <q-list separator>
         <q-item v-for="item in items" :key="'dbe-t'+token.id+'-ti-'+item.id+'-i-'+item.item.id">
           <q-item-section avatar><q-avatar rounded><q-img :src="image(item.item.image)" /></q-avatar></q-item-section>
           <q-item-section>
+            <q-item-label caption style="font-size: 0.65rem">Rate: {{ precision(item.price) }}</q-item-label>
             <q-item-label :class="'text-' + clr" class="text-bold">{{ item.quantity }}x {{ item.item.name }}</q-item-label>
             <q-item-label caption v-if="item.narration" class="text-red">{{ item.narration }}</q-item-label>
-            <q-item-label caption>Rate: {{ precision(item.price) }}</q-item-label>
-            <q-item-label caption v-if="item.kitchen">Kitchen: {{ item.kitchen.name }}</q-item-label>
+            <q-item-label caption v-if="item.kitchen" style="font-size: 0.65rem">Kitchen: {{ item.kitchen.name }}</q-item-label>
           </q-item-section>
           <q-item-section side :class="'text-' + clr" class="text-bold">{{ precision(item.price * item.quantity) }}</q-item-section>
         </q-item>
@@ -30,13 +28,9 @@
         <q-input label="Customer Phone" :value="token.customer.phone" outlined dense :color="clr" />
         <q-input label="Customer Address" type="textarea" :value="token.customer.address" readonly outlined dense autogrow />
       </q-card-section>
-      <q-card-actions class="row items-center justify-between q-px-md">
+      <q-card-actions align="center">
         <q-btn v-if="!Bill" label="Generate Bill" color="red" padding="xs md" @click="$emit('bill')" />
-        <div v-else>
-          <q-btn flat padding="none" color="positive" icon="done_all" :label="'Billed: ' + Bill.payable" />
-          <div style="line-height: 0.75rem" class="q-pl-sm q-ml-lg">{{ Bill.user.name }}</div>
-        </div>
-        <q-btn v-if="Bill" label="Delivered" color="positive" padding="xs md" @click="$emit('deliver')" />
+        <q-btn v-else label="Delivered" color="positive" padding="xs md" @click="$emit('deliver')" />
       </q-card-actions>
     </q-card>
   </q-expansion-item>
@@ -50,13 +44,17 @@ export default {
   props: ['label','caption','token','color'],
   computed: {
     clr(){ return this.color || 'primary' },
-    items(){ return _.get(this.token,'items') },
+    me(){ return _.get(this.$route.meta,['me','id']) },
+    items(){ return _.filter(_.get(this.token,'items'),item => item.progress !== 'Cancelled') },
+    item_short(){ return _(this.items).map(item => _.get(item,['item','name'])).join(", ") },
     quantities(){ return _.sumBy(this.items,({ quantity }) => _.toNumber(quantity)) },
-    total(){ return _.sumBy(this.items,({ quantity,price }) => _.toNumber(quantity) * _.toNumber(price)) },
+    total(){ return this.Bill ? (this.Bill.payable - this.Bill.paid) : _.sumBy(this.items,({ quantity,price }) => _.toNumber(quantity) * _.toNumber(price)) },
     Bill(){ return _.get(this.token,['bill']) },
+    user(){ let user = _.get(this.Bill,['user']); return (user && user.id !== this.me) ? user.name : false },
   },
   methods: {
-    precision, image
+    precision, image,
+    truncate(text,length){ return _.truncate(text,{ length,separator:'..' }) },
   }
 }
 </script>
