@@ -66,9 +66,10 @@ trait TokenPrintTrait
     }
 
     private static function setItemAttrs($prices,$Item){
+        $price = Arr::get($prices,$Item->Item->id,0);
         $Item->setAttribute('name',$Item->Item->name);
-        $Item->setAttribute('price',$prices[$Item->Item->id]);
-        $Item->setAttribute('amount',floatval($prices[$Item->Item->id]) * floatval($Item->quantity));
+        $Item->setAttribute('price',$price);
+        $Item->setAttribute('amount',floatval($price) * floatval($Item->quantity));
         $Item->setAttribute('price_precise',precise($Item->price));
         $Item->setAttribute('amount_precise',precise($Item->amount));
         return $Item;
