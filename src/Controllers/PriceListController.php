@@ -3,6 +3,8 @@
 namespace Milestone\SmartKitchen\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\DB;
 use Milestone\SmartKitchen\Models\Price;
 use Milestone\SmartKitchen\Models\PriceList;
 
@@ -36,9 +38,10 @@ class PriceListController extends Controller
     }
 
     public static function items($pl,$items){
-        if(empty($items)) return;
+        DB::delete('DELETE p1 FROM prices p1 INNER JOIN prices p2 WHERE p2.id > p1.id AND p1.item = p2.item AND p1.price_list = p2.price_list');
+        if(empty($items)) return; $price_list = Arr::get($pl,'id');
         foreach ($items as $item => $price)
-            $pl->Items()->where('item',$item)->update(['price' => $price]);
+            Price::updateOrCreate(compact('price_list','item'),compact('price'));
     }
 
 }
