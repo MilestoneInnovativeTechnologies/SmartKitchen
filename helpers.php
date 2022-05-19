@@ -39,3 +39,13 @@ function settings($name,$bool = false){
 }
 
 function data_limit(){ return settings('data_limit') ?: 1500; }
+function fetch_from_date(){
+    $day_start = settings('day_start');
+    if($day_start){
+        return now()->setTimeFromTimeString($day_start)->isFuture()
+            ? now()->setTimeFromTimeString($day_start)->subDay()->toDateTimeString()
+            : now()->setTimeFromTimeString($day_start)->toDateTimeString();
+    }
+    $recent_days_length = settings('recent_days_length') ?: sk('recent_days_length') ?: 7;
+    return now()->subRealDays($recent_days_length)->startOfDay()->toDateTimeString();
+}

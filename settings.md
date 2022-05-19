@@ -208,3 +208,10 @@ Sometimes server respond with any error, in such cases, an alert popup with an e
 Smart Kitchen can make retry the request after a minute, before pop up error message.
 The number of retries could be made is defined by here. The value should be any number. ex: 1,3 etc.
 By default, the value should be 0, means no retry is made.
+
+day_start, recent_days_length, data_limit
+These are the settings decide the amount of data to be fetched from server. Although this setting is available, dependent data will always fetch subsequently.
+day_start have higher priority than recent_days_length.
+day_start should be a time in 24-hour format mentioning the start time of business. The data will be fetched from that time onwards only.
+If day_start is not available then checked for recent_days_length, which is by default 7. The fetching data will be from the mentioned days onwards.
+data_limit, by default is 1500, means, maximum data fetched will be caped to this number.

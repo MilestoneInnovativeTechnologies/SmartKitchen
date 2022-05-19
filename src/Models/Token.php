@@ -49,12 +49,12 @@ class Token extends Model
         return $Q->where('created_at','>=',now()->startOfDay()->toDateTimeString());
     }
     public function scopeRecent($Q){
-        return $Q->where('created_at','>=',now()->subRealDays(sk('recent_days_length'))->startOfDay()->toDateTimeString());
+        return $Q->where('updated_at','>=',fetch_from_date());
     }
     public function scopeActive($Q){
         return $Q
             ->where('progress','!=','Billed')
-            ->orWhere(function($q1){ $q1->where('progress','Billed')->where('updated_at','>',now()->subRealDays(sk('recent_days_length'))->toDateTimeString()); })
+            ->orWhere(function($q1){ $q1->where('progress','Billed')->where('updated_at','>',fetch_from_date()); })
             ->orWhere(function($q1){ $q1->where('type','Remote')->whereNotIn('progress',['Billed','Cancelled'])->whereHas('Items',function($q2){ $q2->withoutGlobalScope('token')->where('deliver','>=',now()->toDateTimeString()); }); });
     }
 
@@ -68,7 +68,7 @@ class Token extends Model
     public static function fetch($after,$before,$lid){
         return (auth()->user() && auth()->user()->role === 'Waiter')
             ? self::own()->active()->sync($after,$before,$lid)->get()
-            : self::active()->sync($after,$before,$lid)->latest()->take(data_limit())->get();
+            : self::active()->sync($after,$before,$lid)->take(data_limit())->get();
     }
 
     public function print($props = []) {

@@ -29,7 +29,7 @@ class Bill extends Model
     }
 
     public function scopeRecent($Q){
-        return $Q->where('created_at','>=',now()->subRealDays(sk('recent_days_length'))->startOfDay()->toDateTimeString());
+        return $Q->where('updated_at','>=',fetch_from_date());
     }
 
     protected $casts = [
@@ -43,7 +43,7 @@ class Bill extends Model
     public function User(){ return $this->belongsTo(User::class,'user','id'); }
 
     public static function fetch($after,$before,$lid){
-        return self::recent()->sync($after,$before,$lid)->latest()->take(data_limit())->get();
+        return self::recent()->sync($after,$before,$lid)->take(data_limit())->get();
     }
 
     public function print($props = []){ Token::find($this->token)->print(array_merge($props,['item' => 'Bill'])); }
