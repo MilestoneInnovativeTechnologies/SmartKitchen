@@ -26,7 +26,7 @@ class Kitchen extends Model implements HasMedia
     public function Active(){ return $this->hasOne(KitchenStatus::class,'kitchen','id')->where('status','Active'); }
 
     public function print($props = []) {
-        $TokenModel = Token::find($props['args'][0]); $props['item'] = 'Kot';
+        $TokenModel = Token::find(is_array($props['args']) ? $props['args'][0] : $props['args']); $props['item'] = 'Kot';
         $printer = Arr::get(KitchenStatus::where('kitchen',$this->id)->first(),'printer');
         if($printer) $props['printer'] = $printer;
         else $props = $TokenModel->print_printer_name($props);
