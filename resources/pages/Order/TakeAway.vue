@@ -119,11 +119,12 @@ export default {
     AllTokens(){ return _(this.tokens)
       .filter(token => token.type === 'Take Away' && !_.includes(['Cancelled','Paid'],token.progress))
       .filter(token => this.waiter_filter ? (token.user === this.waiter_filter) : true)
-      .map(token => Object.assign({},token,
-        { bill:_.find(this.bills,(bill) => bill.token && bill.token.id === token.id) },
-        { payable:this.payable(token),balance:this.balance(token) },
-        { slug:tokenSlug(token) })
-      )
+      .map(token => Object.assign({},token, {
+        bill: _.get(this.token_bill,token.id),
+        payable: this.payable(token),
+        balance: this.balance(token),
+        slug: tokenSlug(token)
+      }))
       .sortBy('id')
       .value();
     },
