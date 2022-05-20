@@ -101,7 +101,7 @@ export default {
     payment_mode: false, processing: false,
     default_customer: null,
     params: {
-      type: 'Sale', price_list: null, items: [],
+      type: 'Sale', price_list: null, items: [], serve:1,
       customer: null, nature: null, discount: 0, advance_type:PaymentsTypes[0], advance_amount: 0
     }
   } },
@@ -141,13 +141,15 @@ export default {
     },
     calculateTotal(){ this.params.advance_amount = this.total - this.params.discount; if(!this.params.items.length) this.params.discount = 0 },
     removeItem(idx){ this.params.items.splice(idx,1) },
-    complete(){ if(!this.params.customer) return alert('Choose Customer'); this.processing = true; post('token','create',this.params).then(this.serve) },
-    serve({ id }){ setTimeout(function(vm){
-      let ids = _.map(vm.$store.state.tokens.items[parseInt(id)],'id');
-      if(ids.length) post('token','served',{ id:ids }).then(vm.completed)
-      else vm.completed();
-    },750,this) },
-    completed(){ this.payment_mode = false; this.params.items.splice(0,this.params.items.length); this.processing = false; this.params.customer = this.default_customer; if(_.has(this,['$refs','quick_order','$data','code'])) this.$refs['quick_order'].$data.code = 0 },
+    complete(){ if(!this.params.customer) return alert('Choose Customer'); this.processing = true; post('token','create',this.params).then(this.completed) },
+    completed(){
+      this.payment_mode = false;
+      this.params.items.splice(0,this.params.items.length);
+      this.params.customer = this.default_customer;
+      if(_.has(this,['$refs','quick_order','$data','code'])) this.$refs['quick_order'].$data.code = 0
+      this.params.advance_type = PaymentsTypes[0];
+      this.processing = false;
+    },
     moveFab (ev) {
       this.draggingFab = ev.isFirst !== true && ev.isFinal !== true
       this.fabPos = [

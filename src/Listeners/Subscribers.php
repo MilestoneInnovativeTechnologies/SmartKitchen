@@ -29,6 +29,7 @@ class Subscribers
                 PrintAcceptedItemsToken::class,
                 CheckAndDoFurtherIfRemoteOrder::class,
                 CheckAndDoFurtherIfHavePayment::class,
+                ServeIfRequested::class,
             ],
             \Milestone\SmartKitchen\Events\TokenItemAccepting::class =>  [],
             \Milestone\SmartKitchen\Events\TokenItemAccepted::class =>  [
@@ -62,7 +63,8 @@ class Subscribers
                 TryDistributingAddedTokenItem::class,
                 TryRefreshingTokenProgress::class,
                 PrintAcceptedItemsToken::class,
-                CheckAndProceedTokenBillCancellation::class
+                CheckAndProceedTokenBillCancellation::class,
+                ServeIfRequested::class,
             ],
             \Milestone\SmartKitchen\Events\TokenItemUpdating::class =>  [],
             \Milestone\SmartKitchen\Events\TokenItemUpdated::class =>  [
