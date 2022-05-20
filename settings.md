@@ -188,6 +188,11 @@ If this settings have added with any of these values 1,true,True,yes,Yes,YES,ON,
 Each time item code entered and on tapping ENTER key, quantity will be taken as 1, and it gets added. On tapping ENTER key multiple times, quantity will also add consequently
 
 
+auto_serve_take_away_token_item_on_complete, auto_serve_dining_token_item_on_complete, auto_serve_home_delivery_token_item_on_complete 
+Each token item on said type of token will be marked as served on getting its status as completed.
+To achieve this option, make the value of these settings to any of true
+
+
 currency_symbol
 The symbol given will prepend to the price displayed on item selection. It can be any symbol or character. If a space required between symbol and price, it should give so.. Ex: `₹ `, `₨`, `AED `
 

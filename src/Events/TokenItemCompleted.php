@@ -15,11 +15,12 @@ class TokenItemCompleted
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $tokenItem, $user;
+    public $tokenItemID, $token, $user;
 
-    public function __construct(TokenItem $tokenItem, $user)
+    public function __construct($tokenItem, $user)
     {
-        $this->tokenItem = $tokenItem;
+        $this->tokenItemID = $tokenItem->id;
+        $this->token = $tokenItem->token;
         $this->user = $user;
     }
 
