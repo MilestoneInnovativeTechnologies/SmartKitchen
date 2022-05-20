@@ -7,6 +7,10 @@ export function prices_of_type(state,getters,rootState,rootGetters){
     let status = 'Active', pl = rootGetters['settings/price_list'](name);
     if(!pl) pl = _.find(state.list,{ name,status })
     if(!pl && _.size(_.filter(state.list,{ status })) === 1) pl = _.find(state.list,{ status })
+    if(!pl){
+      let pl_name = _.get(rootGetters['settings/settings'],'price_list'), pl2 = _.find(state.list,{ name:pl_name,status });
+      if(pl_name && pl2) pl = pl2;
+    }
     return pl ? Object.assign({},pl,{ items: _.get(getters.items,_.toInteger(pl.id)) }) : null
   }
 }

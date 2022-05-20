@@ -56,11 +56,12 @@ That menu name is given here. The name should be exactly same as what in Menus.
 If there is a menu of name exactly same of any type or order, then this menu will be taken for that type of order. This have lesser priority than that of having in settings 
 
 
-sale_price_list, home_delivery_price_list, take_away_price_list
+sale_price_list, home_delivery_price_list, take_away_price_list, price_list
 This should be the name of a price list.
 The purpose of these settings is, In any type of Order which price list should be taken is decided by this setting.
 The price list name should be exactly same as what in Price lists
 If there is a price list of name exactly same of any type or order, then this price list will be taken for that type of order. This have lesser priority than that of having in settings
+If none of above satisfied, and is there a setting with name price_list with value, then that price list will be used for all.
 
 
 default_customer, <type>_default_customer
