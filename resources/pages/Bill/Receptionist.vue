@@ -7,7 +7,7 @@
         <BillMakePayment v-else :bill="token_bill[Token.id]" />
       </template>
     </Masonry>
-    <div class="q-pa-lg flex flex-center" v-show="more"><q-pagination v-model="page" color="primary" :min="1" :max="max" :max-pages="7" :ellipses="true" :boundary-numbers="true" /></div>
+    <Pagination :records="Tokens" v-model="showing" />
   </q-page>
 </template>
 
@@ -17,21 +17,18 @@ import TokenBillGenerate from "components/Bill/TokenBillGenerate";
 import BillMakePayment from "components/Bill/BillMakePayment";
 import Masonry from "components/Masonry";
 import BillFilter from "components/Bill/BillFilter";
+import Pagination from "components/Pagination";
 
 export default {
   name: "PageBillReceptionist",
-  components: {BillFilter, Masonry, BillMakePayment, TokenBillGenerate},
+  components: {Pagination, BillFilter, Masonry, BillMakePayment, TokenBillGenerate},
   mixins: [Bills],
   data(){ return {
     filter_progress: ['Completed','Pending','Partial'],
-    Tokens: null, page: 1,
+    Tokens: null, showing: null,
   } },
   computed: {
-    ipp(){ return this.$store.getters['settings/items_per_page'] },
-    max(){ return this.Tokens ? _.ceil(this.Tokens.length/this.ipp) : 1 },
-    FTokens(){ return _.filter(this.tokens,({ id,progress }) => this.filter_progress.includes(progress) || _.has(this.Bills,id)) },
-    showing(){ return _.slice(this.Tokens,(this.page-1) * this.ipp,this.page * this.ipp) },
-    more(){ return this.Tokens && (this.Tokens.length > this.showing.length) }
+    FTokens(){ return _.filter(this.tokens,({ id,progress }) => this.filter_progress.includes(progress) || this.filter_progress.includes(_.get(this.token_bill,[id,'progress']))) },
   }
 }
 </script>
