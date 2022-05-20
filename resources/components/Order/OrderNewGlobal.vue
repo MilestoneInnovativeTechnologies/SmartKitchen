@@ -57,9 +57,10 @@ export default {
     popup_width,
     item({ id }){
       let items_item_index = _.findIndex(this.params.items,{ item:id,narration:null });
-      if(items_item_index < 0) this.params.items.push({ item:id,quantity:1,delay:0,narration:null })
+      if(items_item_index < 0) items_item_index = this.params.items.push({ item:id,quantity:1,delay:0,narration:null }) - 1
       else this.params.items[items_item_index].quantity++
-      if(!this.quick) this.$q.notify({ type:'positive',message:`Item Updated`,caption:`Total ${this.params.items.length} Items`,group:'items',position:"top-right" })
+      let token_item = this.params.items[items_item_index]
+      if(!this.quick) this.$q.notify({ type:'positive',message:`Item Updated`,html:true, caption:`${this.params.items.length} x Items <br />${_.sumBy(this.params.items,'quantity')} x Quantities <br />${token_item.quantity}x ${this.itemName(token_item.item)}`,group:'items',position:"top-right" })
     },
     setQuantity({ item,quantity }){
       item = _.toSafeInteger(item); quantity = _.toNumber(quantity);
@@ -91,6 +92,7 @@ export default {
         if(this.seat) setTimeout(vm => vm.tab = 'seating',600,this)
       })
     },
+    itemName(i_id){ return _.get(this.$store.state.items.data,[i_id,'name']) },
   },
   watch: {
     'attrs': { immediate:true, deep:true, handler:'init' },

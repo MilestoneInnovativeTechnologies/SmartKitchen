@@ -126,11 +126,12 @@ export default {
     popup_width, hKey({ item }){ return h_key(item) },
     CFL(){ if(!this.price_list) this.$router.push('/'); else this.params.price_list = this.price_list },
     move(ev){ this.offset = [this.offset[0] - ev.delta.x, this.offset[1] - ev.delta.y] },
+    itemName(i_id){ return _.get(this.items_data,[i_id,'name']) },
     addItem({ id }){
       let itemIndex = _.findIndex(this.params.items, ['item', parseInt(id)]);
       if (itemIndex === -1) itemIndex = this.params.items.push({item: id, quantity: 0}) - 1;
       this.params.items[itemIndex].quantity++;
-      if(!this.quick) this.$q.notify(`${this.params.items.length} x Items <br>${_.sumBy(this.params.items,'quantity')} x Quantities`)
+      if(!this.quick) this.$q.notify(`${this.params.items.length} x Items <br>${_.sumBy(this.params.items,'quantity')} x Quantities <br>${this.params.items[itemIndex].quantity}x ${this.itemName(this.params.items[itemIndex].item)}`)
     },
     setQuantity({ item,quantity }){
       item = _.toSafeInteger(item); quantity = _.toNumber(quantity);
