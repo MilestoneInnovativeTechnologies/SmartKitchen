@@ -1,16 +1,16 @@
 <template>
   <q-page>
-    <div class="q-pa-md"><FilterInputText @text="filter = $event" label="Filter Orders" /></div>
+    <div class="q-pa-md"><FilterInputText @text="filter = $event" label="Filter Orders" lazy /></div>
     <Masonry :items="Tokens" :width="min_width">
       <template #item="tokens">
         <q-list>
           <q-expansion-item v-for="(token,col) in tokens.item" :key="'token-' + token.id" group="token" popup @show="show(tokens.identity,col)" :header-class="header_class(token)">
             <template #header>
-              <q-item-section avatar><q-avatar size="md" font-size="0.85rem" :color="token.balance ? 'primary' : 'positive'" text-color="white" rounded>{{ token.id }}</q-avatar></q-item-section>
+              <q-item-section side avatar><q-avatar size="xl" font-size="0.85rem" :color="token.balance ? 'primary' : 'positive'" text-color="white" rounded>{{ token.id }}</q-avatar></q-item-section>
               <q-item-section>
                 <q-item-label style="font-size: 0.75rem">{{ lget(token,['customer','name'],'No Customer') }}</q-item-label>
                 <q-item-label v-if="token.bill" caption style="font-size: 0.70rem" class="text-primary text-weight-bold">Items: {{ token.items.length }}, Total: {{ token.bill.payable }}</q-item-label>
-                <q-item-label caption style="font-size: 0.70rem">{{ items_name(token) }}</q-item-label>
+                <q-item-label caption style="font-size: 0.70rem" lines="1">{{ items_name(token) }}</q-item-label>
                 <q-item-label v-if="token.narration" caption style="font-size: 0.70rem" class="text-red">{{ token.narration }}</q-item-label>
               </q-item-section>
               <q-item-section side class="text-center">
@@ -66,7 +66,8 @@
         </q-list>
       </template>
     </Masonry>
-    <div class="q-my-xl"> &nbsp; </div>
+    <div class="q-pa-lg flex flex-center absolute-bottom" v-show="more"><q-pagination v-model="page" color="primary" :min="1" :max="Math.ceil(AllTokens.length/ipp)" :max-pages="7" :ellipses="true" :boundary-numbers="true" /></div>
+    <div class="q-mb-xl">&nbsp;</div>
     <q-page-sticky position="bottom-right" :offset="offset">
       <transition appear enter-active-class="animated zoomIn" leave-active-class="animated zoomOut">
         <q-fab icon="add" active-icon="add" v-if="!pl_mode" color="primary" glossy @click="add_order" />
@@ -96,9 +97,7 @@ import FilterInputText from "components/FilterInputText";
 
 export default {
   name: 'PageTakeAway',
-  components: {
-    FilterInputText,
-    OrderCustomer, PaymentTypeSelectDropDown, TaxNatureSelectDropDown, Masonry, PriceListSelectDropDown},
+  components: {FilterInputText, OrderCustomer, PaymentTypeSelectDropDown, TaxNatureSelectDropDown, Masonry, PriceListSelectDropDown},
   mixins: [Bills],
   data(){ return {
     pl_mode: false, min_width: 390,
@@ -109,13 +108,15 @@ export default {
     active: [], selected: {},
     customer: null, tax: null, options: PaymentsTypes, type: PaymentsTypes[0], discount:0, amount: 0,
     loading: false,
+    page: 1,
   } },
   computed: {
+    ipp(){ return this.$store.getters['settings/items_per_page'] },
     waiter_filter(){
       let user = _.get(this.$route,['meta','me']), setting = settings_boolean(settings('take_away_waiter_own_order'));
       return (setting === true && user.role === 'Waiter') ? user.id : false;
     },
-    Tokens(){ let tokens = _(this.tokens)
+    AllTokens(){ return _(this.tokens)
       .filter(token => token.type === 'Take Away' && !_.includes(['Cancelled','Paid'],token.progress))
       .filter(token => this.waiter_filter ? (token.user === this.waiter_filter) : true)
       .map(token => Object.assign({},token,
@@ -123,13 +124,17 @@ export default {
         { payable:this.payable(token),balance:this.balance(token) },
         { slug:tokenSlug(token) })
       )
-      .filter(({ slug }) => this.filter ? _.includes(slug,_.toLower(this.filter)) : true)
-      .value(), size = _.size(tokens); return _.chunk(tokens,_.ceil(size/(_.floor(this.$q.screen.width/this.min_width) || 1))) },
+      .sortBy('id')
+      .value();
+    },
+    FilteredTokens(){ return this.filter ? _.filter(this.AllTokens,token => _.includes(token.slug,_.toLower(this.filter))) : _.slice(this.AllTokens,(this.page-1) * this.ipp,this.page * this.ipp) },
+    Tokens(){ return _.chunk(this.FilteredTokens,_.ceil(_.size(this.FilteredTokens)/(_.floor(this.$q.screen.width/this.min_width) || 1))) },
     Token(){ return this.active.length ? _.get(this.Tokens,[this.active[0],this.active[1]]) : null },
+    more(){ return !this.filter && _.size(this.AllTokens) && (_.size(this.AllTokens) > _.size(this.FilteredTokens)) },
   },
   methods: {
     popup_width, lget:_.get, time, hKey({ item }){ return h_key(item) },
-    header_class(token){ return this.token_progress(token) === 'Completed' ? 'animate' : (_.get(this.Token,'id') === token.id ? 'bg-grey-4' : '') },
+    header_class(token){ return _.get(this.Token,'id') === token.id ? 'bg-grey-4' : '' },
     getPriceList(){
       if(!_.has(this.$store.state.public,'take_away_price_list')){
         let take_away_price_list = _.get(this.$store.getters['prices/take_away'],'id')
@@ -211,25 +216,7 @@ function allCompleted(items){
   return _.every(items,({ progress }) => ['Completed','Served','Cancelled'].includes(progress))
 }
 function tokenSlug(token){
-  let customer = _.pick(_.get(token,'customer'),['name','phone']), items = _.map(_.get(token,'items'),'item.name'), waiter = _.get(token,['waiter','name'])
-  return _.toLower(_.join(_.concat(items,_.values(customer),waiter)," "))
+  let token_id = token.id, customer = _.pick(_.get(token,'customer'),['name','phone']), items = _.map(_.get(token,'items'),'item.name'), waiter = _.get(token,['waiter','name'])
+  return _.toLower(_.join(_.concat(token_id,items,_.values(customer),waiter)," "))
 }
 </script>
-
-<style>
-.animate {
-  animation: pulse 2s infinite;
-}
-@keyframes pulse {
-  0%,100% {
-    transform: scale(1);
-    background-color: rgba(227, 227, 227, 0.3);
-  }
-
-  75% {
-    transform: scale(0.98);
-    background-color: rgb(252, 252, 252, 0);
-  }
-}
-</style>
-
