@@ -28,3 +28,17 @@ export function item(state,getters){
 }
 
 export function billed(state,getters,rootState){ return _(_.get(rootState,['bills','data'])).filter(bill => bill.progress !== 'Cancelled').map(bill => _.toSafeInteger(bill.token)).value() }
+export function tokens(state,getters,rootState,rootGetters){
+  let sItems = rootState.items.data, sUsers = rootState.users.data, sKitchens = rootState.kitchens.data,
+    sPItems = rootGetters['prices/items'], sSeating = rootState.seating.data, sPList = rootState.prices.list, sCustomers = rootState.customers.data,
+    sBills = _(rootState.bills.data).filter(bill => bill.progress !== 'Cancelled').keyBy(bill => _.toInteger(bill.token)).value();
+  return _(state.data).map(token => Object.assign({},token,{
+    items: _.map(_.get(state.items,token.id),item => Object.assign({},item,{ item: _.get(sItems,item.item), user: _.get(sUsers,item.user), kitchen: _.get(sKitchens,item.kitchen), price: _.get(sPItems,[token.price_list,parseInt(item.item)]) })),
+    seating: _.get(sSeating,token.seating),
+    price_list: _.get(sPList,token.price_list),
+    waiter: _.get(sUsers,token.user),
+    customer: _.get(sCustomers,token.customer),
+    progress: token.progress !== 'Billed' ? token.progress : _.get(sBills,[token.id,'progress'],token.progress)
+  })).value()
+}
+
