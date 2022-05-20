@@ -210,6 +210,14 @@ Smart Kitchen can make retry the request after a minute, before pop up error mes
 The number of retries could be made is defined by here. The value should be any number. ex: 1,3 etc.
 By default, the value should be 0, means no retry is made.
 
+
+avoid_cancelling_bill_on_token_update, restrict_payment_cancel_while_bill_cancel_on_token_update
+Normally orders can be edited by adding, editing or cancelling any items. While doing this, if there is any bill existing, it will get cancelled.
+If having this settings value as any of true, then bill won't get cancelled.
+If the bill is cancellable on token update, even if payment exists, payments will be cancelled and the bill will ge cancelled.
+Cancelling payments can be restricted by having restrict_payment_cancel_while_bill_cancel_on_token_update to any of true
+
+
 day_start, recent_days_length, data_limit
 These are the settings decide the amount of data to be fetched from server. Although this setting is available, dependent data will always fetch subsequently.
 day_start have higher priority than recent_days_length.

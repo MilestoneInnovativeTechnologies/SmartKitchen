@@ -25,12 +25,9 @@ class BillController extends Controller
 
     public function do_cancel(Request $request){
         $bill_id = $request->id;
-        $bill = Bill::with('Payments')->find($bill_id);
-        if($bill->Payments->isNotEmpty()){
-            $bill->Payments->each(function($payment){ $payment->status = 'Inactive'; $payment->save(); });
-        }
+        self::CancelPayments($bill_id);
         TryMakingBillAsCancelled::dispatch($bill_id);
-        return $bill;
+        return $bill_id;
     }
 
     public static function Contents($token, $nature = null, $discount = 0){
@@ -58,6 +55,15 @@ class BillController extends Controller
         $t_price = doubleval(((100 * $net_total)/(100 + $percent))); $amount = $t_price * $percent / 100; $price = $t_price/$quantity;
         $contents = Tax::Contents($contents,$price,$quantity);
         return compact('price','quantity','percent','amount','contents');
+    }
+
+    public static function CancelPayments($bill_id){
+        return Bill::with('Payments')->find($bill_id)
+            ->Payments
+            ->each(function ($payment){
+                $payment->status = 'Inactive';
+                $payment->save();
+            });
     }
 
     public function print(Request $request){

@@ -54,18 +54,21 @@ class Subscribers
             \Milestone\SmartKitchen\Events\TokenItemCancelling::class =>  [],
             \Milestone\SmartKitchen\Events\TokenItemCancelled::class =>  [
                 TryResettingTokenProgress::class,
-                PrintAcceptedItemsToken::class
+                PrintAcceptedItemsToken::class,
+                CheckAndProceedTokenBillCancellation::class,
             ],
             \Milestone\SmartKitchen\Events\TokenItemAdding::class =>  [],
             \Milestone\SmartKitchen\Events\TokenItemAdded::class =>  [
                 TryDistributingAddedTokenItem::class,
                 TryRefreshingTokenProgress::class,
                 PrintAcceptedItemsToken::class,
+                CheckAndProceedTokenBillCancellation::class
             ],
             \Milestone\SmartKitchen\Events\TokenItemUpdating::class =>  [],
             \Milestone\SmartKitchen\Events\TokenItemUpdated::class =>  [
                 AcceptedTokenItemStockAdjust::class,
-                PrintAcceptedItemsToken::class
+                PrintAcceptedItemsToken::class,
+                CheckAndProceedTokenBillCancellation::class,
             ],
 
 

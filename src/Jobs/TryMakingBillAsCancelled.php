@@ -30,7 +30,7 @@ class TryMakingBillAsCancelled
         if($this->bill->Payments->isEmpty()) return $this->run();
         Log::warning('The bill: ' . $this->bill->id . ' have payments in active state..');
         Log::info('Checking for token existence!!');
-        if(Token::where('id',$this->bill->token)->exists()) return Log::info('Token exists and Payments made.. Bill cannot cancel.. Terminating!!');
+        if(Token::where('id',$this->bill->token)->where('progress','!=','Cancelled')->exists()) return Log::info('Token exists and Payments made.. Bill cannot cancel.. Terminating!!');
         Log::warning('Token not exists. Cancelling all payments..');
         Payment::where('bill',$this->bill->id)->update(['status' => 'Inactive']);
         $this->run();
