@@ -1,10 +1,11 @@
 <template>
   <q-page padding v-scroll="scrolled">
-    <Masonry width="280" :items="tokens">
+    <Masonry width="280" :items="showing">
       <template #item="token">
         <OrderSummaryWaiterItem :id="token.id" />
       </template>
     </Masonry>
+    <Pagination :records="tokens" v-model="showing" />
     <transition appear enter-active-class="animated fadeIn" leave-active-class="animated fadeOut">
       <q-page-sticky v-show="fab || !tokens.length" position="bottom-right" :offset="offset">
         <q-fab icon="add" color="primary" glossy :to="{ name: 'order_new',params:{ seat:true,user:$route.meta.me.id,type:'Dining' } }" v-touch-pan.prevent.mouse="move" />
@@ -19,12 +20,14 @@ import {h_key} from "assets/helpers";
 import {mapState} from "vuex";
 import { debounce } from 'quasar'
 import Masonry from "components/Masonry";
+import Pagination from "components/Pagination";
 export default {
   name: 'PageDiningOrders',
-  components: {Masonry, OrderSummaryWaiterItem},
+  components: {Pagination, Masonry, OrderSummaryWaiterItem},
   data(){ return {
     fab: true, timeout: 0, offset: [24,24],
     progresses: ['New','Processing','Completed'],
+    showing: null,
   } },
   computed: {
     ...mapState('tokens',{

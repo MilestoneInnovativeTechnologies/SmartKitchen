@@ -1,11 +1,12 @@
 <template>
   <q-page padding v-scroll="scrolled">
     <BillFilter :tokens="active_tokens" v-model="Tokens" class="q-mb-sm" />
-    <Masonry width="280" :items="Tokens">
+    <Masonry width="280" :items="showing">
       <template #item="token">
         <OrderSummaryReceptionistOrder :id="token.id" />
       </template>
     </Masonry>
+    <Pagination :records="Tokens" v-model="showing" />
     <transition appear enter-active-class="animated fadeIn" leave-active-class="animated fadeOut">
       <q-page-sticky v-show="!order && (fab || tokens.length < 6)" position="bottom-right" :offset="offset">
         <q-fab icon="add" active-icon="add" color="primary" glossy @click="order = true" v-touch-pan.prevent.mouse="move" />
@@ -22,16 +23,17 @@ import Masonry from "components/Masonry";
 import OrderNewBasic from "components/Order/OrderNewBasic";
 import BillFilter from "components/Bill/BillFilter";
 import Tokens from "assets/mixins/Tokens";
+import Pagination from "components/Pagination";
 
 export default {
   name: 'PageReceptionistOrders',
-  components: {BillFilter, OrderNewBasic, Masonry, OrderSummaryReceptionistOrder},
+  components: {Pagination, BillFilter, OrderNewBasic, Masonry, OrderSummaryReceptionistOrder},
   mixins: [Tokens],
   data(){ return {
     fab: true, timeout: 0, offset: [24,24],
     progresses: ['New','Processing'],
     order: false,
-    Tokens: null
+    Tokens: null, showing: [],
   } },
   computed: {
     active_tokens(){ return _.filter(this.tokens,token => token.type !== 'Remote' && this.progresses.includes(token.progress)) }

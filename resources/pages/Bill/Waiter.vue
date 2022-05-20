@@ -1,7 +1,7 @@
 <template>
   <q-page padding>
     <BillFilter class="q-mb-sm" :tokens="FTokens" v-model="Tokens" />
-    <Masonry :width="300" :items="Tokens">
+    <Masonry :width="300" :items="showing">
       <template #item="Token">
         <TokenBillGenerate v-if="Token.progress === 'Completed'" :token="Token" />
         <BillMakePayment v-else :bill="token_bill[Token.id]" />
