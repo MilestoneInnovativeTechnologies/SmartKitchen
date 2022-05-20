@@ -78,6 +78,10 @@ class TokenController extends Controller
         $tokenItems = is_array($tokenItems) ? $tokenItems : [$tokenItems];
         $user = $request->input('user',Auth::id());
         foreach ($tokenItems as $tokenItem) TokenItemController::Serve($tokenItem,$user);
+        if($request->filled(['bill','amount','type']) && (float) $request->amount > 0){
+            $class = PaymentController::class; $action = 'create';
+            app()->call("$class@$action");
+        }
     }
 
     public function cancel(Request $request){

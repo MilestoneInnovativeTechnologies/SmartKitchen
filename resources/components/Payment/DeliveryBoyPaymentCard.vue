@@ -54,7 +54,7 @@ export default {
   props: ['token'],
   data(){ return {
     loading: false, amount: 0, type: 'Cash',
-    PaymentsTypes, paying: 0, balance: 0,
+    PaymentsTypes, paying: 0,
   } },
   computed: {
     Items(){ return _.filter(this.token.items,tk_itm => tk_itm.progress !== 'Cancelled') },
@@ -66,12 +66,8 @@ export default {
     human_date2, time, image, precision,
     deliver(){
       this.loading = true; if(!this.token || !this.amount || _.isEmpty(this.token_item_ids)) return this.loading = false;
-      this.paying = this.amount; this.balance = (this.Bill.payable - this.Bill.paid) - this.paying;
-      post('token','served',{ id:this.token_item_ids }).then().catch().then(this.pay)
-    },
-    pay(){
-      let params = { bill:_.get(this.Bill,'id'), amount:this.paying, type:this.type }
-      post('payment','create',params).then().catch().then(this.paid)
+      let params = { id:this.token_item_ids,bill:_.get(this.Bill,'id'),amount:this.amount,type:this.type }
+      post('token','served',params).then().catch().then(this.paid)
     },
     paid(){ this.loading = false; this.$emit('paid') }
   },
