@@ -33,7 +33,7 @@ export default {
   data(){ return {
     add_mode: false, bill_generate_mode: false, info: false,
   } },
-  props: ['id','noserve'],
+  props: ['token','noserve'],
   name: "OrderSummaryReceptionistOrder",
   computed: {
     ...mapState({ token:function({ tokens:{ data },seating,users,customers }){

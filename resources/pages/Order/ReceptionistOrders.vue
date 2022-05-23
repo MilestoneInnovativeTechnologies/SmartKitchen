@@ -3,7 +3,7 @@
     <BillFilter :tokens="active_tokens" v-model="Tokens" class="q-mb-sm" />
     <Masonry width="280" :items="showing">
       <template #item="token">
-        <OrderSummaryReceptionistOrder :id="token.id" />
+        <OrderSummaryReceptionistOrder :token="token" />
       </template>
     </Masonry>
     <Pagination :records="Tokens" v-model="showing" />
@@ -22,21 +22,23 @@ import OrderSummaryReceptionistOrder from "components/Order/OrderSummaryReceptio
 import Masonry from "components/Masonry";
 import OrderNewBasic from "components/Order/OrderNewBasic";
 import BillFilter from "components/Bill/BillFilter";
-import Tokens from "assets/mixins/Tokens";
 import Pagination from "components/Pagination";
+import Bills from "assets/mixins/Bills";
 
 export default {
   name: 'PageReceptionistOrders',
   components: {Pagination, BillFilter, OrderNewBasic, Masonry, OrderSummaryReceptionistOrder},
-  mixins: [Tokens],
+  mixins: [Bills],
   data(){ return {
     fab: true, timeout: 0, offset: [24,24],
-    progresses: ['New','Processing'],
+    progress_includes: { Completed:[],Billed:['Completed'],Paid:['Completed','Pending','Partial'] },
     order: false,
     Tokens: null, showing: [],
   } },
   computed: {
-    active_tokens(){ return _.filter(this.tokens,token => token.type !== 'Remote' && this.progresses.includes(token.progress)) }
+    settings_progress(){ return settings('keep_tokens_in_orders_until') || 'Completed' },
+    progresses(){ return _.concat(['New','Processing'],this.progress_includes[this.settings_progress]) },
+    active_tokens(){ return _(this.tokens).filter(token => token.type !== 'Remote' && this.progresses.includes(token.progress)).map(token => Object.assign({},token,{ bill:this.token_bill[token.id] })).value() }
   },
   methods: {
     popup_width,

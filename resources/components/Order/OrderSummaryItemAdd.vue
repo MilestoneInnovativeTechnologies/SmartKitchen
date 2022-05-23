@@ -1,8 +1,8 @@
 <template>
   <q-card>
-    <q-card-section class="row items-center q-pb-none">
-      <div class="text-h6">Add Item</div><q-space />
-      <q-btn icon="close" flat round dense @click="$emit('close',null)" />
+    <q-card-section class="row items-center justify-between bg-primary text-white q-py-xs">
+      <div class="text-bold">Add Item</div>
+      <q-btn icon="close" size="md" flat round dense @click="$emit('close',null)" />
     </q-card-section>
     <q-card-section class="q-gutter-xs q-pb-none">
       <q-select

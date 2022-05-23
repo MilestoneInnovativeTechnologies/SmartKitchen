@@ -4,7 +4,7 @@
     <q-card-section class="q-pa-xs">
       <Masonry :items="oTokens" width="260">
         <template #item="token">
-          <OrderSummaryReceptionistOrder :id="token.id" />
+          <OrderSummaryReceptionistOrder :token="token" />
         </template>
       </Masonry>
     </q-card-section>
@@ -12,22 +12,22 @@
 </template>
 
 <script>
-import Tokens from "assets/mixins/Tokens";
 import {h_key} from "assets/helpers";
 import OrderSummaryReceptionistOrder from "components/Order/OrderSummaryReceptionistOrder";
 import Masonry from "components/Masonry";
+import Bills from "assets/mixins/Bills";
 
 export default {
   name: "ReceptionistNonDiningTokens",
   components: {Masonry, OrderSummaryReceptionistOrder},
-  mixins: [Tokens],
+  mixins: [Bills],
   props: ['color'],
   data(){ return {
     activeProgress: ['New','Processing','Completed','Billed','Pending'],
     displayTypes: ['Take Away','Sale','Other'],
   } },
   computed: {
-    oTokens(){ return _(this.tokens).filter(({ type,progress }) => this.displayTypes.includes(type) && this.activeProgress.includes(progress)).value() },
+    oTokens(){ return _(this.tokens).filter(({ type,progress }) => this.displayTypes.includes(type) && this.activeProgress.includes(progress)).map(token => Object.assign({},token,{ bill:this.token_bill[token.id] })).value() },
     clr(){ return this.color || 'teal' }
   },
   methods: {

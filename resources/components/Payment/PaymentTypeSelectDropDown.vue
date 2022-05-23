@@ -1,5 +1,5 @@
 <template>
-  <q-select :options="options" v-bind="$attrs" :value="optValue" @input="doEmit" label="Payment Type" />
+  <q-select :options="options" v-bind="$attrs" :value="optValue" @input="doEmit" :label="label || 'Payment Type'" />
 </template>
 
 <script>
@@ -8,6 +8,7 @@ import {PaymentsTypes} from "assets/assets";
 
 export default {
   name: "PaymentTypeSelectDropDown",
+  props: ['label'],
   mixins: [SelectDropDown],
   computed: {
     options(){ return PaymentsTypes }
