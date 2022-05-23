@@ -13,7 +13,7 @@
         <q-btn icon="add_box" color="primary" flat @click="add_mode = true" padding="0" />
       </div>
     </q-card-actions>
-    <OrderSummaryWaiterOrderItemsList :order="token.id" :noserve="noserve" />
+    <OrderSummaryWaiterOrderItemsList :token="token" :noserve="noserve" />
     <q-dialog v-model="add_mode" persistent v-if="token.progress !== 'Billed'">
       <OrderSummaryItemAdd :token="token.id" :style="popup_width()" @close="add_mode = false" />
     </q-dialog>

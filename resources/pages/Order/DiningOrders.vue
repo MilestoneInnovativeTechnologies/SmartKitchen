@@ -2,12 +2,12 @@
   <q-page padding v-scroll="scrolled">
     <Masonry width="280" :items="showing">
       <template #item="token">
-        <OrderSummaryWaiterItem :id="token.id" />
+        <OrderSummaryWaiterOrder :token="token" />
       </template>
     </Masonry>
-    <Pagination :records="tokens" v-model="showing" />
+    <Pagination :records="Tokens" v-model="showing" />
     <transition appear enter-active-class="animated fadeIn" leave-active-class="animated fadeOut">
-      <q-page-sticky v-show="fab || !tokens.length" position="bottom-right" :offset="offset">
+      <q-page-sticky v-show="fab || !Tokens.length" position="bottom-right" :offset="offset">
         <q-fab icon="add" color="primary" glossy :to="{ name: 'order_new',params:{ seat:true,user:$route.meta.me.id,type:'Dining' } }" v-touch-pan.prevent.mouse="move" />
       </q-page-sticky>
     </transition>
@@ -15,29 +15,29 @@
 </template>
 
 <script>
-import OrderSummaryWaiterItem from "components/Order/OrderSummaryWaiterOrder";
 import {h_key} from "assets/helpers";
-import {mapState} from "vuex";
 import { debounce } from 'quasar'
 import Masonry from "components/Masonry";
 import Pagination from "components/Pagination";
+import bills from "assets/mixins/Bills";
+import OrderSummaryWaiterOrder from "components/Order/OrderSummaryWaiterOrder";
 export default {
   name: 'PageDiningOrders',
-  components: {Pagination, Masonry, OrderSummaryWaiterItem},
+  components: {OrderSummaryWaiterOrder, Pagination, Masonry},
+  mixins: [bills],
   data(){ return {
     fab: true, timeout: 0, offset: [24,24],
     progresses: ['New','Processing','Completed'],
     showing: null,
   } },
   computed: {
-    ...mapState('tokens',{
-      tokens({ data }){ return _(data).filter(({ progress,type,user }) => this.progresses.includes(progress) && type === 'Dining' && _.includes(this.allowable_users,user)).value() },
-    }),
+    Tokens(){ return _.filter(this.tokens,this.mine) },
     me(){ return _.get(this.$route,['meta','me','id']) },
     receptionists(){ return _(this.$store.state.users.data).filter(['role','Receptionist']).map(user => _.toSafeInteger(user.id)).value() },
     allowable_users(){ return _.concat(null,this.me,this.receptionists) }
   },
   methods: {
+    mine({ progress,type,user }){ return type === 'Dining' && this.progresses.includes(progress) && _.includes(this.allowable_users,user) },
     hKey({ id }){ h_key('order','summary','order',id) },
     scrolled: debounce(function(){this.fab = false},500,true),
     move(ev){ this.offset = [this.offset[0] - ev.delta.x, this.offset[1] - ev.delta.y] }

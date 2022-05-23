@@ -46,7 +46,8 @@ export default {
     }
   },
   created(){
-    _.forEach(['item','quantity','narration','id'],key => this.params[key] = _.get(this.$attrs,key))
+    _.forEach(['quantity','narration','id'],key => this.params[key] = _.get(this.$attrs,key))
+    this.params.item = _.get(this.$attrs,['item','id'])
     if(this.$attrs.delay && this.$attrs.delay > 0 && this.$attrs.delay * 1000 > new Date().getTime()){
       this.params.delay = _.ceil((this.$attrs.delay - _.toInteger(new Date().getTime()/1000))/60)
     } else this.params.delay = 0;
