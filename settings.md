@@ -193,6 +193,13 @@ Each token item on said type of token will be marked as served on getting its st
 To achieve this option, make the value of these settings to any of true
 
 
+keep_tokens_in_orders_until
+By default, its value is Completed, which means for receptionist, in Orders tab, all the orders will be displayed until the token status is Completed. Whenever the token status comes to Completed (All items served), It will be hided from Orders.
+This can be changed to until Billed or Paid. If this made as Billed and the token status reached to Billed, it will be hided. That means until we generate bill it remains there ,and once bill generated, it goes from there.
+Supported values are Completed, Billed, Paid.
+Please note, this is for receptionist only.
+
+
 currency_symbol
 The symbol given will prepend to the price displayed on item selection. It can be any symbol or character. If a space required between symbol and price, it should give so.. Ex: `₹ `, `₨`, `AED `
 
