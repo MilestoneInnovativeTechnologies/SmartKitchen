@@ -196,6 +196,12 @@ If auto bill is enabled, the completed token will be billed. For billing, it req
 If this setting is added and have the value as same as any of tax nature (Already added in taxes), then bill get generated in that tax nature. No, any value given, bill get generated without tax. 
 
 
+auto_pay_bill_payment_type, auto_pay_take_away_bill_payment_type, auto_pay_dining_bill_payment_type, auto_pay_home_delivery_bill_payment_type
+The value can be any of Payment type from Cash, Card, Credit, Wallet.
+Having this setting means, it will make the Bill as Paid by automatically adding same bill amount as payment.
+The value given here will be used as payment type
+
+
 keep_tokens_in_orders_until, keep_tokens_in_waiter_orders_until
 By default, its value is Completed for Receptionist and Billed for Waiter., which means for receptionist, in Orders tab, all the orders will be displayed until the token status is Completed. And for waiters it is Billed.
 Whenever the token status comes to Completed (All items served) or Billed respectively for Receptionist & Waiter, It will be hided from Orders.

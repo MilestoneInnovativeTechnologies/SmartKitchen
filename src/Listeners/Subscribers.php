@@ -99,6 +99,7 @@ class Subscribers
             \Milestone\SmartKitchen\Events\BillCreated::class =>  [
                 TryMakingTokenProgressAsBilled::class,
                 CheckForAdvancePayments::class,
+                CheckAndProceedForAutoPayment::class,
             ],
             \Milestone\SmartKitchen\Events\BillProgressMakingAsCancelled::class => [],
             \Milestone\SmartKitchen\Events\BillProgressMadeAsCancelled::class => [
