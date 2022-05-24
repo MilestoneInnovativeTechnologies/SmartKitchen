@@ -10,7 +10,7 @@
       <div>
         <q-btn v-if="!bill" icon="receipt_long" color="secondary" flat @click="bill_generate_mode = true" padding="0" />
         <q-btn v-if="can_pay" icon="payments" color="green-10" flat @click="collect_payment_mode = true" padding="0" />
-        <q-btn icon="add_box" color="primary" flat @click="add_mode = true" padding="0" />
+        <q-btn v-if="can_add" icon="add_box" color="primary" flat @click="add_mode = true" padding="0" />
       </div>
     </q-card-actions>
     <OrderSummaryWaiterOrderItemsList :token="token" :noserve="noserve" />
