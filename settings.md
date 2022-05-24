@@ -155,16 +155,8 @@ When this settings value made either of these
 1,true,True,yes,Yes then the corresponding users can have options of remote orders
 
 
-waiter_generate_bills
-By default generating bills from completed tokens are can be done by receptionist and waiter. If the branch doesn't want the waiter to generate bills, then add a setting in this name having value either of these
-0,false,False,no,No
-If no settings in this name or the value is not any of above, then the waiter is able to generate bills from completed tokens
-
-
-waiter_make_payments
-By default making payments from bills are can be done by receptionist and waiter. If the branch doesn't want the waiter to be able to add payments, then add a setting in this name having value either of these
-0,false,False,no,No
-If no settings in this name or the value is not any of above, then the waiter is able to add payments from bills
+waiter_generate_bills, waiter_make_payments
+By default generating bills and making payments are to be done by receptionist and waiter. If it is not required, add this setting and make its value to no
 
 
 quick_mode
@@ -193,11 +185,23 @@ Each token item on said type of token will be marked as served on getting its st
 To achieve this option, make the value of these settings to any of true
 
 
-keep_tokens_in_orders_until
-By default, its value is Completed, which means for receptionist, in Orders tab, all the orders will be displayed until the token status is Completed. Whenever the token status comes to Completed (All items served), It will be hided from Orders.
-This can be changed to until Billed or Paid. If this made as Billed and the token status reached to Billed, it will be hided. That means until we generate bill it remains there ,and once bill generated, it goes from there.
+auto_bill_token_on_complete, auto_bill_take_away_token_on_complete, auto_bill_dining_token_on_complete, auto_bill_home_delivery_token_on_complete 
+Having this setting value as Yes means, it will generate Bill automatically for the specified type or for all.
+A customer is required to create a Bill, which should be there while ordering, or else in settings.
+Refer default_customer setting section for setting customer. If no customer is found, no bill will be generated.
+
+
+auto_bill_default_tax_nature, auto_bill_take_away_default_tax_nature, auto_bill_dining_default_tax_nature, auto_bill_home_delivery_default_tax_nature
+If auto bill is enabled, the completed token will be billed. For billing, it requires customer as mandatory, tax nature as optional.
+If this setting is added and have the value as same as any of tax nature (Already added in taxes), then bill get generated in that tax nature. No, any value given, bill get generated without tax. 
+
+
+keep_tokens_in_orders_until, keep_tokens_in_waiter_orders_until
+By default, its value is Completed for Receptionist and Billed for Waiter., which means for receptionist, in Orders tab, all the orders will be displayed until the token status is Completed. And for waiters it is Billed.
+Whenever the token status comes to Completed (All items served) or Billed respectively for Receptionist & Waiter, It will be hided from Orders.
+This can be changed to anu from Completed, Billed or Paid. If this made as Billed and the token status reached to Billed, it will be hided. That means until we generate bill it remains there ,and once bill generated, it goes from there.
 Supported values are Completed, Billed, Paid.
-Please note, this is for receptionist only.
+For waiter keep_tokens_in_waiter_orders_until is prior than keep_tokens_in_orders_until
 
 
 currency_symbol
@@ -228,6 +232,12 @@ Normally orders can be edited by adding, editing or cancelling any items. While 
 If having this settings value as any of true, then bill won't get cancelled.
 If the bill is cancellable on token update, even if payment exists, payments will be cancelled and the bill will ge cancelled.
 Cancelling payments can be restricted by having restrict_payment_cancel_while_bill_cancel_on_token_update to any of true
+
+
+enable_billed_token_update, enable_billed_take_away_token_update, enable_billed_home_delivery_token_update, enable_billed_dining_token_update
+Normally when a token is billed, it won't be edited further. That means no adding of further items are allowed. This can be altered and can make editable until it Paid.
+So, when the value of this setting is yes, then even billed token is also become editable. Type specified setting is available, it has more priority than enable_unpaid_token_update.
+When updating token, the generated bill will get cancelled, which depends on settings avoid_cancelling_bill_on_token_update
 
 
 day_start, recent_days_length, data_limit

@@ -18,7 +18,7 @@ class CheckForBillExistenceAndUpdate
 
     public function handle(TokenProgressMadeAsCompleted $event)
     {
-        $token_id = $event->token->id;
+        $token_id = $event->token_id;
         if(Bill::where('progress','!=','Cancelled')->where('token',$token_id)->exists())
             MakeTokenProgressAsBilled::dispatch($token_id);
     }
