@@ -54,6 +54,12 @@ export default {
     cColor(){ return 'bg-' + DiningTypeColor[this.token.type] },
     bill(){ return _.get(this.token,'bill') },
     can_pay(){ return this.bill && _.get(this.bill,'progress') !== 'Paid' },
+    can_add(){
+      if(!this.bill) return true; let setting_key = _.snakeCase(`Enable Billed ${this.token.type} Token Update`);
+      if(settings_boolean(settings(setting_key)) === true) return true;
+      if(settings_boolean(settings(setting_key)) === false) return false;
+      return settings_boolean(settings('enable_billed_token_update')) === true
+    },
   },
   methods: {
     popup_width
