@@ -36,7 +36,7 @@ import CardImageTitle from "components/CardImageTitle";
 import { mapState } from 'vuex'
 import {images} from "assets/default_images";
 import {DiningTypeColor} from "assets/assets";
-import {image, popup_width} from "assets/helpers";
+import {image, popup_width, settings_boolean} from "assets/helpers";
 import CustomerDetailCard from "components/Customer/CustomerDetailCard";
 import TokenBillGenerate from "components/Bill/TokenBillGenerate";
 import PaymentCollectCard from "components/Payment/PaymentCollectCard";
