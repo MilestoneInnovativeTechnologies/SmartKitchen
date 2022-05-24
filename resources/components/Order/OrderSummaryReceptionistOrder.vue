@@ -33,7 +33,6 @@
 import OrderSummaryWaiterOrderItemsList from "components/Order/OrderSummaryWaiterOrderItemsList";
 import OrderSummaryItemAdd from "components/Order/OrderSummaryItemAdd";
 import CardImageTitle from "components/CardImageTitle";
-import { mapState } from 'vuex'
 import {images} from "assets/default_images";
 import {DiningTypeColor} from "assets/assets";
 import {image, popup_width, settings_boolean} from "assets/helpers";
