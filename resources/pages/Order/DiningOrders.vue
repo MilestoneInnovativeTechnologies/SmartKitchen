@@ -27,11 +27,16 @@ export default {
   mixins: [bills],
   data(){ return {
     fab: true, timeout: 0, offset: [24,24],
-    progresses: ['New','Processing','Completed'],
     showing: null,
+    progress_includes: { Paid:['Pending','Partial'] },
   } },
   computed: {
-    Tokens(){ return _.filter(this.tokens,this.mine) },
+    settings_progress(){
+      let wps = settings('keep_tokens_in_waiter_orders_until'); if(wps !== undefined) return wps;
+      return settings('keep_tokens_in_waiter_orders_until') || 'Billed';
+    },
+    progresses(){ return _.concat(['New','Processing','Completed'],this.progress_includes[this.settings_progress]) },
+    Tokens(){ return _(this.tokens).filter(this.mine).map(token => Object.assign({},token,{ bill:this.token_bill[token.id] })).value() },
     me(){ return _.get(this.$route,['meta','me','id']) },
     receptionists(){ return _(this.$store.state.users.data).filter(['role','Receptionist']).map(user => _.toSafeInteger(user.id)).value() },
     allowable_users(){ return _.concat(null,this.me,this.receptionists) }
