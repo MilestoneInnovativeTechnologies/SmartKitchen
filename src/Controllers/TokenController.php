@@ -84,6 +84,13 @@ class TokenController extends Controller
         }
     }
 
+    public function do_cancel(Request $request){
+        $user = $request->input('user',Auth::id());
+        Token::with(['Items'])->find($request->input('id'))->Items->each(function($tokenItem)use($user){
+            TokenItemController::Cancel($tokenItem->id,$user);
+        });
+    }
+
     public function cancel(Request $request){
         $tokenItem = $request->input('id');
         $user = $request->input('user',Auth::id());
@@ -146,7 +153,7 @@ class TokenController extends Controller
 
     public function kot_print(Request $request){
         if(!$request->input('id')) return []; $token_id = $request->input('id');
-        $Token = Token::with('Items')->find($token_id);
+        $Token = Token::with(['Items' => function($Q){ return $Q->where('progress','!=',"Cancelled"); }])->find($token_id);
         $kitchens = $Token->Items->map->kitchen->filter()->unique()->values()->toArray();
         if($kitchens) Kitchen::whereIn('id',$kitchens)->get()->each(function($kitchen)use($token_id){ $kitchen->print(['args' => [$token_id]]); });
         return [];
