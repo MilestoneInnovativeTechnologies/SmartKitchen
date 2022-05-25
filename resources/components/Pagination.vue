@@ -1,11 +1,11 @@
 <template>
-  <div class="q-pa-lg flex flex-center" v-show="more"><q-pagination v-model="page" color="primary" :min="1" :max="max" :max-pages="pages || 7" :ellipses="true" :boundary-numbers="true" /></div>
+  <div class="q-pa-lg flex flex-center" v-show="more"><q-pagination v-model="page" :color="color || 'primary'" :min="1" :max="max" :max-pages="pages || 7" :ellipses="true" :boundary-numbers="true" /></div>
 </template>
 
 <script>
 export default {
   name: "Pagination",
-  props: ['value','records','pages'],
+  props: ['value','records','pages','color'],
   data(){ return {
     page: 1,
   } },
