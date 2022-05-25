@@ -1,13 +1,11 @@
 <template>
   <q-page>
     <q-list separator>
-      <q-item v-for="payment in payments" :key="'archive-payments-' + payment.id" clickable @click="detail(payment)">
-        <q-item-section avatar>
-          <q-avatar size="md" rounded color="info" class="text-white text-bold">{{ payment.id }}</q-avatar>
-        </q-item-section>
+      <q-item v-for="payment in showing" :key="'archive-payments-' + payment.id" clickable @click="detail(payment)">
+        <q-item-section avatar><q-badge color="info" class="q-pa-sm" style="font-size: 0.65rem" :label="payment.bill" /></q-item-section>
         <q-item-section>
           <q-item-label class="text-bold text-cyan">{{ parseFloat(payment.amount).toFixed(2) }}</q-item-label>
-          <q-item-label caption>Bill ID: {{ payment.bill }}</q-item-label>
+          <q-item-label caption>Payment ID: {{ payment.id }}</q-item-label>
         </q-item-section>
         <q-item-section>
           <q-item-label class="text-cyan">{{ payment.type }}</q-item-label>
@@ -67,6 +65,7 @@
         </q-card-actions>
       </q-card>
     </q-dialog>
+    <Pagination :records="payments" v-model="showing" />
   </q-page>
 </template>
 
@@ -74,10 +73,11 @@
 import {mapState} from "vuex";
 import {extract_date,human_date,human_date2,time} from "assets/helpers";
 import ItemDetailWide from "components/ItemDetailWide";
+import Pagination from "components/Pagination";
 
 export default {
   name: 'PageArchivePayments',
-  components: {ItemDetailWide},
+  components: {Pagination, ItemDetailWide},
   computed: {
     ...mapState('payments',{ payments:state => _(state.data).sortBy(({ date }) => extract_date(date).getTime()).reverse().value() }),
     bill(){ return this.payment ? _.get(this.$store.state.bills.data,_.toInteger(this.payment.bill)) : null },
@@ -86,6 +86,7 @@ export default {
   },
   data(){ return {
     details:false, payment:null, loading:false,
+    showing: null,
   } },
   methods: {
     human_date,human_date2, time,

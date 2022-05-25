@@ -1,8 +1,9 @@
 <template>
   <q-page padding>
+    <FilterInputText @text="filter = $event" />
     <q-list separator>
-      <q-item v-for="(token,idx) in Tokens" :key="h_key('ao-o-',token.id)" clickable @click="show = !!((selected = idx) || true)">
-        <q-item-section avatar><q-avatar rounded size="md" text-color="white" :color="color">{{ token.id }}</q-avatar></q-item-section>
+      <q-item v-for="(token,idx) in showing" :key="h_key('ao-o-',token.id)" clickable @click="show = !!((selected = idx) || true)">
+        <q-item-section avatar><q-badge :color="color" class="q-pa-sm" style="font-size: 0.65rem" :label="token.id" /></q-item-section>
         <ItemDetailStackLeft class="col-grow q-mt-sm" :color="color" :label="token.date_human">{{ token.customer ? token.customer.name : '' }}</ItemDetailStackLeft>
         <q-item-section><q-item-label lines="2" class="text-grey" style="font-size: 0.70rem">{{ items(token) }}</q-item-label></q-item-section>
         <q-item-section side :class="'text-' + color" class="text-bold">{{ amount(token).toFixed(2) }}</q-item-section>
@@ -11,6 +12,7 @@
     <q-dialog persistent v-model="show">
       <ArchiveTokenDetail v-if="Token" :token="Token" style="min-width: 80vw" :color="color" @print="print(Token)" />
     </q-dialog>
+    <Pagination :records="Tokens" v-model="showing" />
   </q-page>
 </template>
 
@@ -19,18 +21,22 @@ import ItemDetailStackLeft from "components/ItemDetailStackLeft";
 import ArchiveTokenDetail from "components/Archive/Token/ArchiveTokenDetail";
 import Tokens from "assets/mixins/Tokens";
 import {extract_date, h_key} from "assets/helpers";
+import FilterInputText from "components/FilterInputText";
+import Pagination from "components/Pagination";
 
 export default {
   name: 'PageArchiveSales',
-  components: {ItemDetailStackLeft, ArchiveTokenDetail},
+  components: {Pagination, FilterInputText, ItemDetailStackLeft, ArchiveTokenDetail},
   mixins: [Tokens],
   data(){ return {
     color: 'purple',
     selected: null, show: false,
+    filter: '', showing: null,
   } },
   computed: {
-    Tokens(){ return _(this.tokens_own).filter(({ type }) => type === 'Sale').sortBy(({ date }) => extract_date(date).getTime()).reverse().value() },
-    Token(){ return this.selected === null ? null : this.Tokens[this.selected] },
+    AllTokens(){ return _(this.tokens_own).filter(({ type }) => type === 'Sale').map(token => Object.assign({},token,{ slug:slug(token) })).sortBy(({ date }) => extract_date(date).getTime()).reverse().value() },
+    Tokens(){ return this.filter ? _.filter(this.AllTokens,({ slug }) => _.includes(slug,this.filter.toLowerCase())) : this.AllTokens },
+    Token(){ return this.selected === null ? null : this.showing[this.selected] },
   },
   methods: {
     h_key,
@@ -39,4 +45,5 @@ export default {
     print({ id }){ post('token','sales_print',{ id }) },
   }
 }
+function slug({ id,customer,type }){ return [id,_.get(customer,'name'),type].join(" ").toLowerCase() }
 </script>

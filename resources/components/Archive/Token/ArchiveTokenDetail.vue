@@ -25,13 +25,15 @@
       <ArchiveTokenListItem v-for="(item,idx) in items" :key="'atd-t-' + token.id +'-i-i-' + item.id" :color="color" :item="item" :class="{ 'bg-grey-3':idx%2 }" />
     </q-list>
     <q-card-actions>
+      <q-btn type="a" size="sm" dense flat text-color="red" label="Cancel Token" @click="token_cancel" />
       <q-space />
       <q-btn dense :color="color" size="sm" label="Progress Timings" @click="token_timings = true" />
-      <q-btn dense :color="color" size="sm" label="Print" @click="$emit('print')" />
+      <q-btn dense :color="color" size="sm" label="Print KOT" @click="$emit('print')" />
     </q-card-actions>
     <q-dialog persistent v-model="token_timings">
       <TokenTimingCard :timing="timing" :color="color" bordered separator style="min-width: 65vw" />
     </q-dialog>
+    <q-inner-loading :showing="loading"><q-spinner-facebook size="xl" color="primary" /></q-inner-loading>
   </q-card>
 </template>
 
@@ -45,12 +47,16 @@ export default {
   props: ['token','color'],
   data(){ return {
     token_timings: false,
+    loading: false,
   } },
   computed: {
     progress(){ let progress = this.token.progress; return ['Pending','Partial'].includes(progress) ? ({ Pending:'Payment Pending',Partial:'Paid Partially' })[progress]: progress },
     customer(){ return this.token.customer },
     items(){ return this.token.items || [] },
     timing(){ return this.token.progress_timing || [] }
+  },
+  methods: {
+    token_cancel(){ this.loading = true; post('token','do_cancel',{ id:this.token.id }).then().catch().finally(() => (this.loading = false)) }
   }
 }
 </script>
