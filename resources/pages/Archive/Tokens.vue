@@ -11,8 +11,8 @@
 <!--        <q-item-section side><q-badge :label="token.progress" class="q-py-xs q-px-sm" :color="color" outline /></q-item-section>-->
       </q-item>
     </q-list>
-    <q-dialog persistent v-model="show"><ArchiveTokenDetail v-if="Token" :token="Token" style="min-width: 80vw" :color="color" @print="print(Token)" /></q-dialog>
-    <Pagination :records="Tokens" v-model="showing" />
+    <q-dialog persistent v-model="show"><ArchiveTokenDetail v-if="Token" :token="Token" style="min-width: 80vw" :color="color" print_label="Print KOT" @print="print(Token)" /></q-dialog>
+    <Pagination :records="Tokens" v-model="showing" :color="color" />
   </q-page>
 </template>
 

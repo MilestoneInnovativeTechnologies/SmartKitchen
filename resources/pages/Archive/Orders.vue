@@ -12,6 +12,7 @@
     <q-dialog persistent v-model="show">
       <ArchiveTokenDetail v-if="Token" :token="Token" style="min-width: 80vw" :color="color" @print="print(Token)" />
     </q-dialog>
+    <Pagination :records="Tokens" v-model="showing" :color="color" />
   </q-page>
 </template>
 
@@ -21,10 +22,11 @@ import {extract_date, h_key} from "assets/helpers";
 import ArchiveTokenDetail from "components/Archive/Token/ArchiveTokenDetail";
 import ItemDetailStackLeft from "components/ItemDetailStackLeft";
 import FilterInputText from "components/FilterInputText";
+import Pagination from "components/Pagination";
 
 export default {
   name: 'PageArchiveOrders',
-  components: {FilterInputText, ItemDetailStackLeft, ArchiveTokenDetail},
+  components: {Pagination, FilterInputText, ItemDetailStackLeft, ArchiveTokenDetail},
   mixins: [Tokens],
   data(){ return {
     color: 'green',

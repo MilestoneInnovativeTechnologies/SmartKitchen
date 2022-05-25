@@ -1,6 +1,5 @@
 <template>
   <q-item v-bind="$attrs">
-<!--    <q-item-section avatar><q-avatar rounded color="teal" size="md" text-color="white">{{ bill.id }}</q-avatar></q-item-section>-->
     <q-item-section avatar><q-badge color="teal" class="q-pa-sm" style="font-size: 0.65rem" :label="bill.id" /></q-item-section>
     <q-item-section class="col-grow">
       <q-item-label class="text-teal">{{ bill.customer ? bill.customer.name : '' }}</q-item-label>

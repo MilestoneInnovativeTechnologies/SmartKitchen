@@ -65,7 +65,7 @@
         </q-card-actions>
       </q-card>
     </q-dialog>
-    <Pagination :records="payments" v-model="showing" />
+    <Pagination :records="payments" v-model="showing" color="info" />
   </q-page>
 </template>
 

@@ -164,10 +164,4 @@ class TokenController extends Controller
         Token::find($token_id)->print();
         return [];
     }
-
-    public function sales_print(Request $request){
-        if(!$request->input('id')) return []; $token_id = $request->input('id');
-        Token::find($token_id)->print();
-        return [];
-    }
 }

@@ -12,7 +12,7 @@
     <q-dialog persistent v-model="show">
       <ArchiveTokenDetail v-if="Token" :token="Token" style="min-width: 80vw" :color="color" @print="print(Token)" />
     </q-dialog>
-    <Pagination :records="Tokens" v-model="showing" />
+    <Pagination :records="Tokens" v-model="showing" :color="color" />
   </q-page>
 </template>
 
@@ -42,7 +42,7 @@ export default {
     h_key,
     items({ items }){ return _.truncate(_.map(items,({ item: { name } }) => _.truncate(name,{ length:13,omission:'..' })).join(', '),{ length:64,omission:' etc' }) },
     amount({ items }){ return _.round(_(items).map(({ price,quantity }) => price * quantity).sum(),2) },
-    print({ id }){ post('token','sales_print',{ id }) },
+    print({ id }){ post('token','print',{ id }) },
   }
 }
 function slug({ id,customer,type }){ return [id,_.get(customer,'name'),type].join(" ").toLowerCase() }

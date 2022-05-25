@@ -28,7 +28,7 @@
       <q-btn type="a" size="sm" dense flat text-color="red" label="Cancel Token" @click="token_cancel" />
       <q-space />
       <q-btn dense :color="color" size="sm" label="Progress Timings" @click="token_timings = true" />
-      <q-btn dense :color="color" size="sm" label="Print KOT" @click="$emit('print')" />
+      <q-btn dense :color="color" size="sm" :label="print_label || 'Print'" @click="$emit('print')" />
     </q-card-actions>
     <q-dialog persistent v-model="token_timings">
       <TokenTimingCard :timing="timing" :color="color" bordered separator style="min-width: 65vw" />
@@ -44,7 +44,7 @@ import ItemDetailStack from "components/ItemDetailStack";
 export default {
   name: "ArchiveTokenDetail",
   components: {ItemDetailStack, ArchiveTokenListItem, TokenTimingCard},
-  props: ['token','color'],
+  props: ['token','color','print_label'],
   data(){ return {
     token_timings: false,
     loading: false,
