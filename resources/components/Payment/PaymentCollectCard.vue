@@ -1,5 +1,5 @@
 <template>
-  <q-card>
+  <q-card v-if="bill">
     <q-bar class="bg-positive text-white"><q-icon name="payments" class="q-mr-md" /><span style="font-size: 0.75rem" class="text-bold">Add Payment</span><q-space /><q-btn icon="close" rounded flat dense v-close-popup /></q-bar>
     <q-card-section class="bg-grey-1">
       <q-list dense>

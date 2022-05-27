@@ -15,24 +15,37 @@ class PrintOrderKot
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    private $token, $mode, $tokenItemID;
+    private $token, $mode, $added, $modified, $cancelled;
+    private static $MODES = ['Add' => 'added','Modify' => 'modified','Cancel' => 'cancelled'];
 
-    public function __construct($token, $mode, $tokenItemID){
-        $this->token = $token;
-        $this->mode = $mode;
-        $this->tokenItemID = $tokenItemID;
+    public function __construct($token, $mode, $added, $modified, $cancelled){
+        $this->token = $token; $this->mode = $mode;
+        $this->added = $added; $this->modified = $modified; $this->cancelled = $cancelled;
     }
 
     public function handle(){
         if(!$this->mode) return self::FullPrint($this->token);
-        if(!$this->tokenItemID) return Log::critical('KOT print job called without TokenItemID but having Mode: ' . $this->mode);
+        if(!$this->added && !$this->modified && !$this->cancelled) return Log::critical('KOT print job called without added,modified,cancelled but having Mode: ' . $this->mode);
         if(settings('kot_print_separate',true) === null){
-            if(settings('kot_' . strtolower($this->mode) . '_print_template')) self::ItemPrint($this->tokenItemID,$this->mode);
-            else self::FullPrint($this->token);
+            foreach (self::$MODES as $mode => $data){
+                if(empty($this->{$data})) continue;
+                if(settings('kot_' . strtolower($mode) . '_print_template')) self::ItemPrint($this->{$data},$mode,$this->token);
+                else self::FullPrint($this->{$data});
+            }
             return null;
         }
-        if(settings('kot_print_separate',true) === true) return self::ItemPrint($this->tokenItemID,$this->mode);
-        return self::FullPrint($this->token);
+        if(settings('kot_print_separate',true) === true){
+            foreach (self::$MODES as $mode => $data){
+                if(empty($this->{$data})) continue;
+                self::ItemPrint($this->{$data},$mode,$this->token);
+            }
+            return null;
+        }
+        foreach (self::$MODES as $data){
+            if(empty($this->{$data})) continue;
+            self::FullPrint($this->{$data});
+        }
+        return null;
     }
 
     private static function FullPrint($token){
@@ -44,10 +57,22 @@ class PrintOrderKot
         Kitchen::whereIn('id',$kitchens)->where('auto_accept','Yes')->get()->each(function($kitchen) use($token){ $kitchen->print(['args' => [$token]]); });
     }
 
-    private static function ItemPrint($tokenItemID,$mode){
-        $tokenItem = TokenItem::find($tokenItemID);
-        if($tokenItem->progress === 'New' || !$tokenItem->kitchen) return;
-        $Kitchen = Kitchen::find($tokenItem->kitchen);
-        if($Kitchen->auto_accept === 'Yes') $Kitchen->print(['args' => [$tokenItem->token,$tokenItemID],'sub' => $mode]);
+    private static function ItemPrint($tokenItems,$mode,$token){
+        $kitchens = [];
+        collect((array) $tokenItems)->each(function($tokenItem)use(&$kitchens){
+            if($tokenItem->progress !== 'New' && $tokenItem->kitchen){
+                $kitchen = $tokenItem->kitchen;
+                if(!array_key_exists($kitchen,$kitchens)) $kitchens[$kitchen] = [];
+                $kitchens[$kitchen][] = $tokenItem->id;
+            }
+        });
+        if(!empty($kitchens)){
+            Kitchen::find(array_keys($kitchens))->each(function($Kitchen)use($kitchens,$mode,$token){
+                $kitchen_id = $Kitchen->id; $items = $kitchens[$kitchen_id] ?? [];
+                if(!empty($items) && $Kitchen->auto_accept === 'Yes'){
+                    $Kitchen->print(['args' => [$token,$items,$mode], 'sub' => $mode]);
+                }
+            });
+        }
     }
 }

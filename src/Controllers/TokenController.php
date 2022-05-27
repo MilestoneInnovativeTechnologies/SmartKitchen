@@ -9,8 +9,11 @@ use Illuminate\Support\Facades\Auth;
 use Milestone\SmartKitchen\Events\TokenItemAdded;
 use Milestone\SmartKitchen\Events\TokenItemAdding;
 use Milestone\SmartKitchen\Events\TokenItemPrepared;
+use Milestone\SmartKitchen\Events\TokenItemsAdded;
+use Milestone\SmartKitchen\Events\TokenItemsCancelled;
 use Milestone\SmartKitchen\Events\TokenItemsSaved;
 use Milestone\SmartKitchen\Events\TokenItemsSaving;
+use Milestone\SmartKitchen\Events\TokenItemsUpdated;
 use Milestone\SmartKitchen\Events\TokenItemUpdated;
 use Milestone\SmartKitchen\Events\TokenItemUpdating;
 use Milestone\SmartKitchen\Models\Kitchen;
@@ -85,17 +88,18 @@ class TokenController extends Controller
     }
 
     public function do_cancel(Request $request){
-        $user = $request->input('user',Auth::id());
-        Token::with(['Items'])->find($request->input('id'))->Items->each(function($tokenItem)use($user){
-            TokenItemController::Cancel($tokenItem->id,$user);
+        $user = $request->input('user',Auth::id()); $tokenItems = [];
+        Token::with(['Items'])->find($request->input('id'))->Items->each(function($tokenItem)use($user,&$tokenItems){
+            $tokenItems[] = TokenItemController::Cancel($tokenItem->id,$user);
         });
+        TokenItemsUpdated::dispatch([], [], $tokenItems, $user, $request->input('id'));
     }
 
     public function cancel(Request $request){
         $tokenItem = $request->input('id');
         $user = $request->input('user',Auth::id());
-        TokenItemController::Cancel($tokenItem,$user);
-        return TokenItem::find($tokenItem);
+        $tokenItem = TokenItemController::Cancel($tokenItem,$user);
+        TokenItemsUpdated::dispatch([], [], [$tokenItem], $user, $tokenItem->token);
     }
 
     public static function Items($token, $progress = null){
@@ -128,12 +132,12 @@ class TokenController extends Controller
             $token_id = $request->input('token');
             TokenItemPrepared::dispatch($ti_data);
             $token_item = new TokenItem($ti_data);
-            TokenItemsSaving::dispatch([$token_item]);
             $token_item->token = $token_id;
             TokenItemAdding::dispatch($token_id,$ti_data['item'],$ti_data['quantity'],$request->input('user'),$ti_data);
-            $token_item->save();
-            TokenItemAdded::dispatch($token_item->fresh(),$request->input('user'),$ti_data);
-            return $token_item->fresh();
+            $token_item->save(); $tokenItem = $token_item->fresh();
+            TokenItemAdded::dispatch($tokenItem,$request->input('user'),$ti_data);
+            TokenItemsUpdated::dispatch([$tokenItem->fresh()], [], [], $request->user, $tokenItem->token);
+            return $tokenItem->fresh();
         }
         elseif($request->has('id')){
             $id = $request->input('id');
@@ -143,6 +147,29 @@ class TokenController extends Controller
             TokenItemUpdated::dispatch($id,$ti_data,$old);
             return $token_item->fresh();
         }
+        return [];
+    }
+
+    public function token_items(Request $request){
+        if(!$request->filled('token')) return [];
+        $user = $request->input('user',Auth::id());
+        $token_id = $request->input('token');
+        $cancelled = $request->input('cancelled'); $added = $request->input('added'); $items = $request->input('items');
+        $done_cancelled = empty($cancelled) ? [] : self::BulkUpdateCancel($token_id,$user,$items,$cancelled);
+        $done_added = empty($added) ? [] : self::BulkUpdateAdd($token_id,$user,$items,$added);
+        $done_modified = [];
+        foreach ($request->input('items') as $obj){
+            if(!$obj['item'] || !$obj['id']) continue;
+            $token_item_id = $obj['id'];
+            $token_item = TokenItem::find($token_item_id); $old = $token_item->toArray();
+            $ti_data = Arr::only($obj,['item','quantity','delay','narration']);
+            if(!self::HaveTIUpdate($ti_data,$old)) continue;
+            TokenItemUpdating::dispatch($token_item_id,$ti_data,$old);
+            $token_item->update($ti_data);
+            TokenItemUpdated::dispatch($token_item_id,$ti_data,$old);
+            $done_modified[] = $token_item->fresh();
+        }
+        TokenItemsUpdated::dispatch($done_added, $done_modified, $done_cancelled, $user, $token_id);
         return [];
     }
 
@@ -163,5 +190,47 @@ class TokenController extends Controller
         if(!$request->input('id')) return []; $token_id = $request->input('id');
         Token::find($token_id)->print();
         return [];
+    }
+
+    private static function BulkUpdateCancel($token,$user,$items,$cancelled){
+        $cancellable = [];
+        if(empty($cancelled) || empty($items)) return [];
+        foreach ($cancelled as $cancel){
+            $id = $items[$cancel]['id'];
+            if($id) $cancellable[] = $id;
+        }
+        $tokenItems = TokenItem::find($cancellable)->each(function ($tokenItem){
+            $tokenItem->progress = 'Cancelled';
+            $tokenItem->save();
+        })->all();
+        TokenItemsCancelled::dispatch($tokenItems,$user,$token);
+        return $tokenItems;
+    }
+
+    private static function BulkUpdateAdd($token,$user,$items,$added){
+        $tokenItems = [];
+        if(empty($added) || empty($items)) return $tokenItems;
+        foreach ($added as $idx){
+            $data = $items[$idx];
+            $ti_data = Arr::only($data,['item','quantity','delay','narration']); $ti_data['user'] = $user;
+            $delay_int = intval($ti_data['delay']); $ti_data['delay'] = ($delay_int && $delay_int > 0) ? (($delay_int * 60) + time()) : 0;
+            TokenItemPrepared::dispatch($ti_data);
+            $token_item = new TokenItem($ti_data);
+            $token_item->token = $token;
+            TokenItemAdding::dispatch($token,$ti_data['item'],$ti_data['quantity'],$user,$ti_data);
+            $token_item->save(); $tokenItem = $token_item->fresh();
+            TokenItemAdded::dispatch($tokenItem,$user,$ti_data);
+            $tokenItems[] = $tokenItem->fresh();
+        }
+        TokenItemsAdded::dispatch($tokenItems,$user,$token);
+        return $tokenItems;
+    }
+
+    private static function HaveTIUpdate($NewData,$OldData){
+        foreach ($NewData as $key => $val){
+            if(!array_key_exists($key,$OldData) || $OldData[$key] !== $val)
+                return true;
+        }
+        return false;
     }
 }

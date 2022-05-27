@@ -20,16 +20,16 @@ trait TokenPrintTrait
         $data->load(['Items' => function($Q)use($extra){
             if(is_array($extra) && array_key_exists('kitchen',$extra)) $Q->withoutGlobalScopes()->where('progress','<>','Cancelled')->where('kitchen',intval($extra['kitchen']))->with(['Item','User','Kitchen']);
             else $Q->withoutGlobalScopes()->where('progress','<>','Cancelled')->with(['Item','User','Kitchen']);
-        },'User','Seating','Customer','Bill.Payments']);
+        },'User','Seating','Customer','Bill' => function($Q){ $Q->with(['Payments','User']); }]);
         $data->setAttribute('total_items',$data->Items->count());
         $data->setAttribute('total_quantities',$data->Items->sum->quantity);
         $data->setAttribute('date_human',human_date($data->date));
         $data->setAttribute('date_human2',human_date2($data->date));
         $data->setAttribute('time_human',human_time($data->date));
         $prices = Price::where('price_list',$data->price_list)->get()->keyBy->item->map->price->toArray();
-        if(is_array($extra) && array_key_exists('token_item_id',$extra) && $extra['token_item_id']){
-            $token_item = TokenItem::withoutGlobalScopes()->with(['Item','User','Kitchen'])->find(intval($extra['token_item_id']));
-            $data->setAttribute('item',self::setItemAttrs($prices,$token_item)->toArray());
+        if(is_array($extra) && array_key_exists('token_item_ids',$extra) && $extra['token_item_ids']){
+            $token_items = TokenItem::withoutGlobalScopes()->with(['Item','User','Kitchen'])->find($extra['token_item_ids']);
+            $data->setAttribute('state_items',self::setItemsAttrs($prices,$token_items)->toArray());
         }
         $data->setAttribute('items',$data->Items->map(function($Item)use($prices){ return self::setItemAttrs($prices,$Item); }));
         $data->setAttribute('items_amount',$data->Items->sum->amount);
@@ -73,6 +73,10 @@ trait TokenPrintTrait
         $Item->setAttribute('price_precise',precise($Item->price));
         $Item->setAttribute('amount_precise',precise($Item->amount));
         return $Item;
+    }
+
+    private static function setItemsAttrs($prices,$Items){
+        return collect($Items)->map(function($Item)use($prices){ return self::setItemAttrs($prices,$Item); });
     }
 
     private static function setBillContents($contents){

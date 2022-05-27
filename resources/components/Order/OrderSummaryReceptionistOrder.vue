@@ -7,24 +7,18 @@
       <q-badge :label="token.type" class="q-py-sm q-ml-xs" />
       <q-badge :label="token.progress" class="q-py-sm q-ml-xs" />
       <q-space />
-      <div>
-        <q-btn v-if="!bill" icon="receipt_long" color="secondary" flat @click="bill_generate_mode = true" padding="0" />
-        <q-btn v-if="can_pay" icon="payments" color="green-10" flat @click="collect_payment_mode = true" padding="0" />
-        <q-btn v-if="can_add" icon="add_box" color="primary" flat @click="add_mode = true" padding="0" />
+      <div class="q-gutter-x-xs">
+        <q-btn v-if="!bill" icon="receipt_long" color="secondary" size="sm" @click="bill_generate_mode = true" padding="xs" />
+        <q-btn v-if="can_pay" icon="payments" color="positive" size="sm" @click="collect_payment_mode = true" padding="xs" />
+<!--        <q-btn v-if="can_add" icon="add_box" color="primary" size="sm" @click="add_mode = true" padding="xs" />-->
+        <q-btn v-if="can_add" icon="rule" color="warning" size="sm" @click="manage_mode = true" padding="xs" />
       </div>
     </q-card-actions>
     <OrderSummaryWaiterOrderItemsList :token="token" :noserve="noserve" />
-    <q-dialog v-model="add_mode" persistent v-if="token.progress !== 'Billed'">
-      <OrderSummaryItemAdd :token="token.id" :style="popup_width()" @close="add_mode = false" />
-    </q-dialog>
-    <q-dialog v-model="bill_generate_mode" persistent>
-      <div :style="popup_width()">
-        <TokenBillGenerate :token="token" :close="true" @generated="bill_generate_mode = false" />
-      </div>
-    </q-dialog>
-    <q-dialog v-model="collect_payment_mode" persistent>
-      <PaymentCollectCard :style="popup_width()" :bill="token.bill" @paid="collect_payment_mode = false" />
-    </q-dialog>
+<!--    <q-dialog v-model="add_mode" persistent v-if="token.progress !== 'Billed'"><OrderSummaryItemAdd :token="token.id" :style="popup_width()" @close="add_mode = false" /></q-dialog>-->
+    <q-dialog v-model="manage_mode" persistent><OrderSummaryItemsManage :token="token" :style="popup_width()" @close="manage_mode = false" @done="manage_mode = false" /></q-dialog>
+    <q-dialog v-model="bill_generate_mode" persistent><TokenBillGenerate :token="token" :style="popup_width()" :close="true" @generated="bill_generate_mode = false" /></q-dialog>
+    <q-dialog v-model="collect_payment_mode" persistent><PaymentCollectCard :style="popup_width()" :bill="token.bill" @paid="collect_payment_mode = false" /></q-dialog>
     <q-dialog v-model="info" persistent v-if="token.type === 'Home Delivery' && token.customer"><CustomerDetailCard :id="token.customer.id" style="max-width: 360px; width: 90vw;" color="purple" /></q-dialog>
   </q-card>
 </template>
@@ -39,11 +33,13 @@ import {image, popup_width, settings_boolean} from "assets/helpers";
 import CustomerDetailCard from "components/Customer/CustomerDetailCard";
 import TokenBillGenerate from "components/Bill/TokenBillGenerate";
 import PaymentCollectCard from "components/Payment/PaymentCollectCard";
+import OrderSummaryItemsManage from "components/Order/OrderSummaryItemsManage";
 
 export default {
-  components: {PaymentCollectCard, TokenBillGenerate, CustomerDetailCard, CardImageTitle, OrderSummaryItemAdd, OrderSummaryWaiterOrderItemsList},
+  components: {OrderSummaryItemsManage, PaymentCollectCard, TokenBillGenerate, CustomerDetailCard, CardImageTitle, OrderSummaryItemAdd, OrderSummaryWaiterOrderItemsList},
   data(){ return {
-    add_mode: false, bill_generate_mode: false, info: false, collect_payment_mode: false
+    add_mode: false, bill_generate_mode: false, info: false, collect_payment_mode: false,
+    manage_mode: false,
   } },
   props: ['token','noserve'],
   name: "OrderSummaryReceptionistOrder",

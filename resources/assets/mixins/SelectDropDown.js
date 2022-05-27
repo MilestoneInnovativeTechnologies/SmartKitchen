@@ -1,7 +1,6 @@
 export default {
   props: ['value','get','name'],
   computed: {
-    options(){ return {} },
     optValue(){ return this.get === undefined ? this.value : _.find(this.options,[this.get,this.value]) },
   },
   methods: {

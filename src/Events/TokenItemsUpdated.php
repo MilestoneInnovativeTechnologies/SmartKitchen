@@ -10,17 +10,17 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class TokenItemsSaved
+class TokenItemsUpdated
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $tokenItems, $user, $token, $mode = '', $added, $modified, $cancelled;
+    public $tokenItems, $added, $modified, $cancelled, $user, $token, $mode = 'Updated';
 
-    public function __construct($tokenItems, $user, $token)
+    public function __construct($added, $modified, $cancelled, $user, $token)
     {
-        $this->tokenItems = $tokenItems;
-        $this->user = $user;
-        $this->token = $token;
+        $this->added = $added; $this->modified = $modified; $this->cancelled = $cancelled;
+        $this->tokenItems = $added + $modified + $cancelled;
+        $this->user = $user; $this->token = $token;
     }
 
 }

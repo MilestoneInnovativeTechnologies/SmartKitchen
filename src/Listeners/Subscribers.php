@@ -31,6 +31,14 @@ class Subscribers
                 CheckAndDoFurtherIfHavePayment::class,
                 ServeIfRequested::class,
             ],
+            \Milestone\SmartKitchen\Events\TokenItemsCancelled::class => [],
+            \Milestone\SmartKitchen\Events\TokenItemsAdded::class => [],
+            \Milestone\SmartKitchen\Events\TokenItemsUpdated::class => [
+                PrintAcceptedItemsToken::class,
+                CheckAndProceedTokenBillCancellation::class,
+                TryResettingTokenProgress::class,
+            ],
+
             \Milestone\SmartKitchen\Events\TokenItemAccepting::class =>  [],
             \Milestone\SmartKitchen\Events\TokenItemAccepted::class =>  [
                 KOTAutoProcessAccepted::class,
@@ -56,23 +64,23 @@ class Subscribers
             ],
             \Milestone\SmartKitchen\Events\TokenItemCancelling::class =>  [],
             \Milestone\SmartKitchen\Events\TokenItemCancelled::class =>  [
-                TryResettingTokenProgress::class,
-                PrintAcceptedItemsToken::class,
-                CheckAndProceedTokenBillCancellation::class,
+//                TryResettingTokenProgress::class,
+//                PrintAcceptedItemsToken::class,
+//                CheckAndProceedTokenBillCancellation::class,
             ],
             \Milestone\SmartKitchen\Events\TokenItemAdding::class =>  [],
             \Milestone\SmartKitchen\Events\TokenItemAdded::class =>  [
                 TryDistributingAddedTokenItem::class,
-                TryRefreshingTokenProgress::class,
-                PrintAcceptedItemsToken::class,
-                CheckAndProceedTokenBillCancellation::class,
+//                TryRefreshingTokenProgress::class,
+//                PrintAcceptedItemsToken::class,
+//                CheckAndProceedTokenBillCancellation::class,
                 ServeIfRequested::class,
             ],
             \Milestone\SmartKitchen\Events\TokenItemUpdating::class =>  [],
             \Milestone\SmartKitchen\Events\TokenItemUpdated::class =>  [
                 AcceptedTokenItemStockAdjust::class,
-                PrintAcceptedItemsToken::class,
-                CheckAndProceedTokenBillCancellation::class,
+//                PrintAcceptedItemsToken::class,
+//                CheckAndProceedTokenBillCancellation::class,
             ],
 
 

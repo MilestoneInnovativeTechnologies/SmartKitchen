@@ -10,11 +10,11 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class TokenItemsSaved
+class TokenItemsAdded
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $tokenItems, $user, $token, $mode = '', $added, $modified, $cancelled;
+    public  $tokenItems, $user, $token, $mode = 'Added';
 
     public function __construct($tokenItems, $user, $token)
     {

@@ -14,6 +14,6 @@ class PrintAcceptedItemsToken
     }
     public function handle($event)
     {
-        PrintOrderKot::dispatch($event->token,$event->mode,$event->tokenItemID);
+        PrintOrderKot::dispatch($event->token,$event->mode,$event->added,$event->modified,$event->cancelled);
     }
 }

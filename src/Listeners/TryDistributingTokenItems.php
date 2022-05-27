@@ -4,7 +4,6 @@ namespace Milestone\SmartKitchen\Listeners;
 
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
-use Milestone\SmartKitchen\Events\TokenItemsSaved;
 use Milestone\SmartKitchen\Jobs\AssignTokenItemToKitchen;
 
 class TryDistributingTokenItems
@@ -13,10 +12,10 @@ class TryDistributingTokenItems
     {
         //
     }
-    public function handle(TokenItemsSaved $event)
+    public function handle($event)
     {
         $tokenItems = $event->tokenItems; $user = $event->user;
-        $tokenItems->each(function($tokenItem) use($user){
+        collect($tokenItems)->each(function($tokenItem) use($user){
             if(!$tokenItem->kitchen || $tokenItem->progress === 'New')
                 AssignTokenItemToKitchen::dispatch($tokenItem->id,$user);
         });
