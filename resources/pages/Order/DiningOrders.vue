@@ -28,12 +28,12 @@ export default {
   data(){ return {
     fab: true, timeout: 0, offset: [24,24],
     showing: null,
-    progress_includes: { Paid:['Pending','Partial'] },
+    progress_includes: { Billed:[], Paid:['Pending','Partial'] },
   } },
   computed: {
     settings_progress(){
       let wps = settings('keep_tokens_in_waiter_orders_until'); if(wps !== undefined) return wps;
-      return settings('keep_tokens_in_waiter_orders_until') || 'Billed';
+      return settings('keep_tokens_in_orders_until') || 'Billed';
     },
     progresses(){ return _.concat(['New','Processing','Completed'],this.progress_includes[this.settings_progress]) },
     Tokens(){ return _(this.tokens).filter(this.mine).map(token => Object.assign({},token,{ bill:this.token_bill[token.id] })).value() },

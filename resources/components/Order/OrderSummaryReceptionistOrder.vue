@@ -10,12 +10,10 @@
       <div class="q-gutter-x-xs">
         <q-btn v-if="!bill" icon="receipt_long" color="secondary" size="sm" @click="bill_generate_mode = true" padding="xs" />
         <q-btn v-if="can_pay" icon="payments" color="positive" size="sm" @click="collect_payment_mode = true" padding="xs" />
-<!--        <q-btn v-if="can_add" icon="add_box" color="primary" size="sm" @click="add_mode = true" padding="xs" />-->
-        <q-btn v-if="can_add" icon="rule" color="warning" size="sm" @click="manage_mode = true" padding="xs" />
+        <q-btn v-if="can_update" icon="rule" color="warning" size="sm" @click="manage_mode = true" padding="xs" />
       </div>
     </q-card-actions>
     <OrderSummaryWaiterOrderItemsList :token="token" :noserve="noserve" />
-<!--    <q-dialog v-model="add_mode" persistent v-if="token.progress !== 'Billed'"><OrderSummaryItemAdd :token="token.id" :style="popup_width()" @close="add_mode = false" /></q-dialog>-->
     <q-dialog v-model="manage_mode" persistent><OrderSummaryItemsManage :token="token" :style="popup_width()" @close="manage_mode = false" @done="manage_mode = false" /></q-dialog>
     <q-dialog v-model="bill_generate_mode" persistent><TokenBillGenerate :token="token" :style="popup_width()" :close="true" @generated="bill_generate_mode = false" /></q-dialog>
     <q-dialog v-model="collect_payment_mode" persistent><PaymentCollectCard :style="popup_width()" :bill="token.bill" @paid="collect_payment_mode = false" /></q-dialog>
@@ -25,7 +23,6 @@
 
 <script>
 import OrderSummaryWaiterOrderItemsList from "components/Order/OrderSummaryWaiterOrderItemsList";
-import OrderSummaryItemAdd from "components/Order/OrderSummaryItemAdd";
 import CardImageTitle from "components/CardImageTitle";
 import {images} from "assets/default_images";
 import {DiningTypeColor} from "assets/assets";
@@ -36,10 +33,9 @@ import PaymentCollectCard from "components/Payment/PaymentCollectCard";
 import OrderSummaryItemsManage from "components/Order/OrderSummaryItemsManage";
 
 export default {
-  components: {OrderSummaryItemsManage, PaymentCollectCard, TokenBillGenerate, CustomerDetailCard, CardImageTitle, OrderSummaryItemAdd, OrderSummaryWaiterOrderItemsList},
+  components: {OrderSummaryItemsManage, PaymentCollectCard, TokenBillGenerate, CustomerDetailCard, CardImageTitle, OrderSummaryWaiterOrderItemsList},
   data(){ return {
-    add_mode: false, bill_generate_mode: false, info: false, collect_payment_mode: false,
-    manage_mode: false,
+    manage_mode: false, bill_generate_mode: false, info: false, collect_payment_mode: false,
   } },
   props: ['token','noserve'],
   name: "OrderSummaryReceptionistOrder",
@@ -49,7 +45,7 @@ export default {
     cColor(){ return 'bg-' + DiningTypeColor[this.token.type] },
     bill(){ return _.get(this.token,'bill') },
     can_pay(){ return this.bill && _.get(this.bill,'progress') !== 'Paid' },
-    can_add(){
+    can_update(){
       if(!this.bill) return true; let setting_key = _.snakeCase(`Enable Billed ${this.token.type} Token Update`);
       if(settings_boolean(settings(setting_key)) === true) return true;
       if(settings_boolean(settings(setting_key)) === false) return false;
