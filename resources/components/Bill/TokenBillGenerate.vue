@@ -1,5 +1,5 @@
 <template>
-  <q-card>
+  <q-card v-if="token">
     <q-bar class="bg-secondary text-white q-py-lg">
       <q-list class="q-my-xl full-width">
         <q-item style="font-size: 0.75rem" class="q-px-none items-center">

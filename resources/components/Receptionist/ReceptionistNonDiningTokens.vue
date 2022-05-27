@@ -4,7 +4,7 @@
     <q-card-section class="q-pa-xs">
       <Masonry :items="oTokens" width="260">
         <template #item="token">
-          <OrderSummaryReceptionistOrder :token="token" />
+          <OrderSummaryReceptionistOrder :token="token" v-on="$listeners" />
         </template>
       </Masonry>
     </q-card-section>
@@ -16,11 +16,12 @@ import {h_key} from "assets/helpers";
 import OrderSummaryReceptionistOrder from "components/Order/OrderSummaryReceptionistOrder";
 import Masonry from "components/Masonry";
 import Bills from "assets/mixins/Bills";
+import OrderSummaryActions from "assets/mixins/OrderSummaryActions";
 
 export default {
   name: "ReceptionistNonDiningTokens",
   components: {Masonry, OrderSummaryReceptionistOrder},
-  mixins: [Bills],
+  mixins: [Bills,OrderSummaryActions],
   props: ['color'],
   data(){ return {
     activeProgress: ['New','Processing','Completed','Billed','Pending'],

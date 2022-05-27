@@ -1,7 +1,7 @@
 <template>
   <q-card>
     <q-card-section class="q-py-xs text-center text-white" :class="cColor"><span v-if="token.type === 'Dining' && token.user">{{ token.user.name }}</span></q-card-section>
-    <CardImageTitle :image="src" :title="token.seating ? token.seating.name : (token.customer ? token.customer.name : token.type)" :caption="token.customer ? (token.seating ? (token.customer.name + ', ' + token.customer.phone) : token.customer.phone) : null" :info="token.type === 'Home Delivery'" @info="info = !info" />
+    <CardImageTitle :image="src" :title="token.seating ? token.seating.name : (token.customer ? token.customer.name : token.type)" :caption="token.customer ? (token.seating ? (token.customer.name + ', ' + token.customer.phone) : token.customer.phone) : null" :info="token.type === 'Home Delivery'" @info="$emit('action',['customer',token])" />
     <q-card-actions>
       <q-badge :label="token.id" class="q-pa-sm" />
       <q-badge :label="token.type" class="q-py-sm q-ml-xs" />
@@ -9,16 +9,12 @@
       <q-space />
       <div class="q-gutter-x-xs">
         <q-btn v-show="token_items_selected.length" :loading="TIS_loading" icon="how_to_reg" color="primary" size="sm" padding="xs" @click="serve_selected_token_items" />
-        <q-btn v-if="!bill" icon="receipt_long" color="secondary" size="sm" @click="bill_generate_mode = true" padding="xs" />
-        <q-btn v-if="can_pay" icon="payments" color="positive" size="sm" @click="collect_payment_mode = true" padding="xs" />
-        <q-btn v-if="can_update" icon="rule" color="warning" size="sm" @click="manage_mode = true" padding="xs" />
+        <q-btn v-if="!bill" icon="receipt_long" color="secondary" size="sm" @click="$emit('action',['bill',token])" padding="xs" />
+        <q-btn v-if="can_pay" icon="payments" color="positive" size="sm" @click="$emit('action',['payment',token])" padding="xs" />
+        <q-btn v-if="can_update" icon="rule" color="warning" size="sm" @click="$emit('action',['items',token])" padding="xs" />
       </div>
     </q-card-actions>
     <OrderSummaryWaiterOrderItemsList :token="token" :noserve="noserve" @select="token_item_select" :selected="token_items_selected" />
-    <q-dialog v-model="manage_mode" persistent><OrderSummaryItemsManage :token="token" :style="popup_width()" @close="manage_mode = false" @done="manage_mode = false" /></q-dialog>
-    <q-dialog v-model="bill_generate_mode" persistent><TokenBillGenerate :token="token" :style="popup_width()" :close="true" @generated="bill_generate_mode = false" /></q-dialog>
-    <q-dialog v-model="collect_payment_mode" persistent><PaymentCollectCard :style="popup_width()" :bill="token.bill" @paid="collect_payment_mode = false" /></q-dialog>
-    <q-dialog v-model="info" persistent v-if="token.type === 'Home Delivery' && token.customer"><CustomerDetailCard :id="token.customer.id" style="max-width: 360px; width: 90vw;" color="purple" /></q-dialog>
   </q-card>
 </template>
 

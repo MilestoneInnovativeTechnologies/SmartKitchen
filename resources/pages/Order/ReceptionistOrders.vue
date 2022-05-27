@@ -3,9 +3,10 @@
     <BillFilter :tokens="active_tokens" v-model="Tokens" class="q-mb-sm" />
     <Masonry width="280" :items="showing">
       <template #item="token">
-        <OrderSummaryReceptionistOrder :token="token" />
+        <OrderSummaryReceptionistOrder :token="token" @action="OSA_action" />
       </template>
     </Masonry>
+    <OrderSummaryActionPopups @done="OSA_action_done" v-bind="OSA_CB" />
     <Pagination :records="Tokens" v-model="showing" />
     <transition appear enter-active-class="animated fadeIn" leave-active-class="animated fadeOut">
       <q-page-sticky v-show="!order && (fab || tokens.length < 6)" position="bottom-right" :offset="offset">
@@ -24,11 +25,13 @@ import OrderNewBasic from "components/Order/OrderNewBasic";
 import BillFilter from "components/Bill/BillFilter";
 import Pagination from "components/Pagination";
 import Bills from "assets/mixins/Bills";
+import OrderSummaryActionPopups from "components/Order/OrderSummaryActionPopups";
+import OrderSummaryActions from "assets/mixins/OrderSummaryActions";
 
 export default {
   name: 'PageReceptionistOrders',
-  components: {Pagination, BillFilter, OrderNewBasic, Masonry, OrderSummaryReceptionistOrder},
-  mixins: [Bills],
+  components: {OrderSummaryActionPopups, Pagination, BillFilter, OrderNewBasic, Masonry, OrderSummaryReceptionistOrder},
+  mixins: [Bills,OrderSummaryActions],
   data(){ return {
     fab: true, timeout: 0, offset: [24,24],
     progress_includes: { Completed:[],Billed:['Completed'],Paid:['Completed','Pending','Partial'] },
