@@ -1,6 +1,10 @@
 <template>
   <q-page padding class="flex flex-center">
-    <Masonry width="280" :items="Tokens"><template #item="token"><OrderSummaryReceptionistOrder :token="token" :noserve="true" /></template></Masonry>
+    <Masonry width="280" :items="Tokens">
+      <template #item="token">
+        <OrderSummaryReceptionistOrder :token="token" :noserve="true" />
+      </template>
+    </Masonry>
     <OrderNewFabDeliveryBoy />
   </q-page>
 </template>
