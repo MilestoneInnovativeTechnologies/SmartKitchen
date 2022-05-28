@@ -28,7 +28,7 @@ export default {
     Tokens: null, showing: null,
   } },
   computed: {
-    FTokens(){ return _.filter(this.tokens,({ id,progress }) => this.filter_progress.includes(progress) || this.filter_progress.includes(_.get(this.token_bill,[id,'progress']))) },
+    FTokens(){ return _.filter(this.tokens,({ id,progress }) => this.filter_progress.includes(progress) || this.filter_progress.includes(_.get(this.token_bill,[id,'progress']))).reverse() },
   }
 }
 </script>

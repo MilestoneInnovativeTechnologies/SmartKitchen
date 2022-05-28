@@ -41,7 +41,7 @@ export default {
   computed: {
     settings_progress(){ return settings('keep_tokens_in_orders_until') || 'Completed' },
     progresses(){ return _.concat(['New','Processing'],this.progress_includes[this.settings_progress]) },
-    active_tokens(){ return _(this.tokens).filter(token => token.type !== 'Remote' && this.progresses.includes(token.progress)).map(token => Object.assign({},token,{ bill:this.token_bill[token.id] })).value() }
+    active_tokens(){ return _(this.tokens).filter(token => token.type !== 'Remote' && this.progresses.includes(token.progress)).map(token => Object.assign({},token,{ bill:this.token_bill[token.id] })).reverse().value() }
   },
   methods: {
     popup_width,

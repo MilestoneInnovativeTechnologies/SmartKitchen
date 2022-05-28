@@ -6,7 +6,7 @@
         <q-list>
           <q-expansion-item v-for="(token,col) in tokens.item" :key="'token-' + token.id" group="token" popup @show="show(tokens.identity,col)" :header-class="header_class(token)">
             <template #header>
-              <q-item-section side avatar><q-avatar size="xl" font-size="0.85rem" :color="token.balance ? 'primary' : 'positive'" text-color="white" rounded>{{ token.id }}</q-avatar></q-item-section>
+              <q-item-section side avatar><q-badge style="font-size: 0.70rem" :color="token.balance ? 'primary' : 'positive'" text-color="white" :label="token.id" class="q-px-sm q-py-sm" /></q-item-section>
               <q-item-section>
                 <q-item-label style="font-size: 0.75rem">{{ lget(token,['customer','name'],'No Customer') }}</q-item-label>
                 <q-item-label v-if="token.bill" caption style="font-size: 0.70rem" class="text-primary text-weight-bold">Items: {{ token.items.length }}, Total: {{ token.bill.payable }}</q-item-label>
@@ -125,7 +125,7 @@ export default {
         balance: this.balance(token),
         slug: tokenSlug(token)
       }))
-      .sortBy('id')
+      .sortBy('id').reverse()
       .value();
     },
     FilteredTokens(){ return this.filter ? _.filter(this.AllTokens,token => _.includes(token.slug,_.toLower(this.filter))) : _.slice(this.AllTokens,(this.page-1) * this.ipp,this.page * this.ipp) },

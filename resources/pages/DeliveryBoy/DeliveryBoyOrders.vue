@@ -23,7 +23,7 @@ export default {
   components: {OrderSummaryActionPopups, OrderNewFabDeliveryBoy, OrderSummaryReceptionistOrder, Masonry},
   mixins: [Bills,OrderSummaryActions],
   computed: {
-    Tokens(){ return _(this.tokens).filter(token => !['Cancelled','Paid'].includes(token.progress) && token.type === 'Home Delivery').filter(token => !token.user || token.user === this.$route.meta.me.id).map(token => Object.assign({},token,{ bill: _.get(this.token_bill,token.id) })).value() },
+    Tokens(){ return _(this.tokens).filter(token => !['Cancelled','Paid'].includes(token.progress) && token.type === 'Home Delivery').filter(token => !token.user || token.user === this.$route.meta.me.id).map(token => Object.assign({},token,{ bill: _.get(this.token_bill,token.id) })).reverse().value() },
   },
 }
 </script>
