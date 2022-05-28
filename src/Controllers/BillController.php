@@ -50,7 +50,7 @@ class BillController extends Controller
 
     public static function taxable($contents, $item, $discount_percent){
         $percent = array_sum(array_map(function($p){ return doubleval($p); },array_column($contents,'percent')));
-        $price = doubleval($item['price']); $quantity = doubleval($item['quantity']); $total = $price * $quantity; $discount_amount = $total * doubleval($discount_percent) / 100;
+        $price = doubleval($item['price']); $quantity = doubleval($item['quantity'] ?: 1); $total = $price * $quantity; $discount_amount = $total * doubleval($discount_percent) / 100;
         $net_total = $total - $discount_amount;
         $t_price = doubleval(((100 * $net_total)/(100 + $percent))); $amount = $t_price * $percent / 100; $price = $t_price/$quantity;
         $contents = Tax::Contents($contents,$price,$quantity);

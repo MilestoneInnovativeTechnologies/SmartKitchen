@@ -30,7 +30,7 @@ class TokenController extends Controller
         foreach ($request->input('items') as $obj){
             if(!$obj['item']) continue;
             $item = $obj['item'];
-            $quantity = $obj['quantity'] ?? 0;
+            $quantity = ($obj['quantity'] ?? 0) ?: 1;
             $narration = $obj['narration'] ?? null;
             $delay = $obj['delay'] ?? 0; $delay = intval($delay) * 60;
             if($delay > 0) $delay += time();
