@@ -12,7 +12,6 @@
             <q-item-label v-if="pending(i_kitchen)" class="text-teal" caption style="font-size: 0.6rem">Pending: {{ pending(i_kitchen) }} <q-spinner-dots class="q-ml-xs" /></q-item-label>
           </q-item-section>
           <q-item-section side class="text-bold text-black" style="font-size: 0.9rem">{{ i_kitchen.stock }}</q-item-section>
-<!--          <q-item-section side v-if="i_kitchen.auto_process === 'Yes'"><q-icon name="done_all" color="positive" /></q-item-section>-->
         </q-item>
       </q-list>
       <q-card-section v-else class="text-caption text-center text-warning q-pa-none q-pt-xs" style="font-size: 0.65rem">Not available in any active kitchens!!</q-card-section>
