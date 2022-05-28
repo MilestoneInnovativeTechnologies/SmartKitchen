@@ -4,6 +4,8 @@
     <q-dialog :value="collect_payment" persistent @before-hide="done"><PaymentCollectCard :style="popup_width()" :bill="bill" @paid="done" /></q-dialog>
     <q-dialog :value="customer_detail" persistent @before-hide="done"><CustomerDetailCard v-if="customer_id" :id="customer_id" style="max-width: 360px; width: 90vw;" color="purple" /></q-dialog>
     <q-dialog :value="token_items" persistent @before-hide="done"><OrderSummaryItemsManage :token="item" :style="popup_width()" @close="done" @done="done" /></q-dialog>
+    <q-dialog :value="delivery_bill" persistent @before-hide="done"><BillGenerateCard :token="item" v-if="item" :style="popup_width()" @generated="done" /></q-dialog>
+    <q-dialog :value="delivery_pay" persistent @before-hide="done"><DeliveryBoyPaymentCard :token="item" v-if="item" :style="popup_width()" @paid="done" /></q-dialog>
   </div>
 </template>
 
@@ -13,16 +15,20 @@ import {popup_width} from "assets/helpers";
 import PaymentCollectCard from "components/Payment/PaymentCollectCard";
 import CustomerDetailCard from "components/Customer/CustomerDetailCard";
 import OrderSummaryItemsManage from "components/Order/OrderSummaryItemsManage";
+import BillGenerateCard from "components/Bill/BillGenerateCard";
+import DeliveryBoyPaymentCard from "components/Payment/DeliveryBoyPaymentCard";
 
 export default {
   name: "OrderSummaryActionPopups",
   props: ['item','mode'],
-  components: {OrderSummaryItemsManage, CustomerDetailCard, PaymentCollectCard, TokenBillGenerate},
+  components: {DeliveryBoyPaymentCard, BillGenerateCard, OrderSummaryItemsManage, CustomerDetailCard, PaymentCollectCard, TokenBillGenerate},
   computed: {
     bill_generate(){ return this.mode === 'bill' },
     collect_payment(){ return this.mode === 'payment' },
     customer_detail(){ return this.mode === 'customer' },
     token_items(){ return this.mode === 'items' },
+    delivery_bill(){ return this.mode === 'delivery_bill' },
+    delivery_pay(){ return this.mode === 'delivery_pay' },
 
     bill(){ return _.get(this.item,'bill') },
     customer_id(){ return _.get(this.item,['customer','id']) },

@@ -29,8 +29,8 @@
         <q-input label="Customer Address" type="textarea" :value="token.customer.address" readonly outlined dense autogrow />
       </q-card-section>
       <q-card-actions align="center">
-        <q-btn v-if="!Bill" label="Generate Bill" color="red" padding="xs md" @click="$emit('bill')" />
-        <q-btn v-else label="Delivered" color="positive" padding="xs md" @click="$emit('deliver')" />
+        <q-btn v-if="!Bill" label="Generate Bill" color="red" padding="xs md" @click="$emit('action',['delivery_bill',token])" />
+        <q-btn v-else label="Delivered" color="positive" padding="xs md" @click="$emit('action',['delivery_pay',token])" />
       </q-card-actions>
     </q-card>
   </q-expansion-item>

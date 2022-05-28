@@ -2,10 +2,10 @@
   <q-page padding>
     <div class="q-px-md q-mb-sm"><FilterInputText label="Filter" @text="filter = $event" lazy="true" /></div>
     <q-list>
-      <TokenDetailDeliveryBoyExpansion v-for="token in FilteredTokens" :key="'dbc-bltk-' + token.id" :token="token" @deliver="deliver(token)" group="own" color="positive" popup :label="label(token)" :caption="caption(token)" />
+      <TokenDetailDeliveryBoyExpansion v-for="token in FilteredTokens" :key="'dbc-bltk-' + token.id" :token="token" @action="OSA_action" group="own" color="positive" popup :label="label(token)" :caption="caption(token)" />
     </q-list>
     <q-btn class="full-width q-mt-md" label="Show more" flat dense color="amber" @click="page++" v-show="!filter && AllTokens.length > show" />
-    <q-dialog persistent v-model="deliver_mode" @before-hide="deliver_mode = false"><DeliveryBoyPaymentCard :token="selected" :style="popup_width()" @paid="paid" v-if="deliver_mode" /></q-dialog>
+    <OrderSummaryActionPopups @done="OSA_action_done" v-bind="OSA_CB" />
     <OrderNewFabDeliveryBoy />
   </q-page>
 </template>
@@ -18,14 +18,15 @@ import OrderNewFabDeliveryBoy from "components/Order/OrderNewFabDeliveryBoy";
 import Bills from "assets/mixins/Bills";
 import FilterInputText from "components/FilterInputText";
 import {ItemsPerPageDefault} from "assets/constants";
+import OrderSummaryActionPopups from "components/Order/OrderSummaryActionPopups";
+import OrderSummaryActions from "assets/mixins/OrderSummaryActions";
 
 export default {
   name: "DeliveryBoyBilled",
-  components: {FilterInputText, OrderNewFabDeliveryBoy, DeliveryBoyPaymentCard, TokenDetailDeliveryBoyExpansion},
-  mixins: [Bills],
+  components: {OrderSummaryActionPopups, FilterInputText, OrderNewFabDeliveryBoy, DeliveryBoyPaymentCard, TokenDetailDeliveryBoyExpansion},
+  mixins: [Bills,OrderSummaryActions],
   data(){ return {
     me: parseInt(this.$route.meta.me.id),
-    deliver_mode: false, selected: null,
     filter: '', page: 1
   } },
   computed: {
