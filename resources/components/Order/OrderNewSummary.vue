@@ -71,6 +71,10 @@ export default {
   } },
   computed: {
     ...mapState('items',{ item_master:'data' }), clr(){ return this.color || 'accent' },
+    instant_payment(){
+      let role = _.toLower(_.get(this.$route,['meta','me','role'])), key = 'take_away_instant_payment', key1 = `take_away_${role}_instant_payment`;
+      return ((settings_boolean(settings(key1)) === undefined ? settings_boolean(settings(key)) : settings_boolean(settings(key1))) !== false)
+    },
     price(){ return _.get(this.$store.getters['prices/items'],_.toInteger(this.price_list)) },
     total(){ return _.reduce(this.items,(total,{ item,quantity }) => total + this.price[item] * quantity,0) },
     v_customer: {
@@ -105,14 +109,12 @@ export default {
     'payments.discount': {
       immediate:true,
       handler(discount){
-        let role = _.toLower(_.get(this.$route,['meta','me','role'])), key = 'take_away_instant_payment', key1 = `take_away_${role}_instant_payment`;
-        let setting = settings_boolean(settings(key1)) === undefined ? settings_boolean(settings(key)) : settings_boolean(settings(key1));
         discount = _.toNumber(discount);
-        if(setting === false && discount <= 0) this.payments.advance_amount = 0
+        if(this.instant_payment === false && discount <= 0) this.payments.advance_amount = 0
         else this.payments.advance_amount = _.toNumber(this.total - discount)
       }
     },
-    total(amount){ this.payments.advance_amount = _.toNumber(_.toNumber(amount) - _.toNumber(this.payments.discount)) }
+    total(amount){ if(this.instant_payment || _.toNumber(this.payments.discount)) this.payments.advance_amount = _.toNumber(_.toNumber(amount) - _.toNumber(this.payments.discount)) }
   }
 }
 </script>
