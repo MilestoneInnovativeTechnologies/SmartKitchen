@@ -59,11 +59,13 @@ import OrderCustomer from "components/Order/OrderCustomer";
 import TaxNatureSelectDropDown from "components/Tax/TaxNatureSelectDropDown";
 import PaymentTypeSelectDropDown from "components/Payment/PaymentTypeSelectDropDown";
 import {PaymentsTypes} from "assets/assets";
+import KeyPressCapture from "assets/mixins/KeyPressCapture";
 
 export default {
   name: "OrderNewSummary",
   components: {PaymentTypeSelectDropDown, TaxNatureSelectDropDown, OrderCustomer},
   props: ['items','price_list','customer','color','loading','payment','type'],
+  mixins: [KeyPressCapture],
   data(){ return {
     payments: { nature: null, advance_type:PaymentsTypes[0], advance_amount:0, discount: 0 },
     order_narration_enabled: settings_boolean(settings('enable_order_narration')) === true,
@@ -103,7 +105,8 @@ export default {
     submit(){
       if(this.payment && !this.v_customer) return alert('Select Customer')
       this.$emit('process',['submit',this.payments])
-    }
+    },
+    KPC(e){ if(['Enter','\n'].includes(e.key) && e.ctrlKey) this.submit() }
   },
   watch: {
     'payments.discount': {

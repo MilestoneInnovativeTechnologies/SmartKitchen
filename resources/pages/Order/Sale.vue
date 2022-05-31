@@ -4,8 +4,8 @@
       <QuickOrder @item="addItem" :items="params.items" :price_list="params.price_list" @done="payment_mode = true" ref="quick_order" />
     </template>
     <template v-else>
-      <FilterInputText @text="item_filter = $event" class="q-mb-xs" />
-      <GroupItemsSelect :selected="group" :filter="item_filter" :price_list="params.price_list" @item="addItem" type="Sale" :item_quantities="item_quantities" @quantity="setQuantity" />
+      <FilterInputText @text="item_filter = $event" class="q-mb-xs" autofocus />
+      <GroupItemsSelect :selected="group" :filter="item_filter" :price_list="params.price_list" @item="addItem" type="Sale" :item_quantities="item_quantities" @quantity="setQuantity" @proceed="payment_mode = true" />
       <GroupStickyButton v-model="group" :type="params.type" />
       <q-page-sticky position="bottom-right" :offset="offset">
         <transition appear enter-active-class="animated zoomIn" leave-active-class="animated zoomOut">
@@ -92,10 +92,11 @@ import GroupItemsSelect from "components/Group/GroupItemsSelect";
 import QuickOrder from "components/Order/QuickOrder";
 import QuickMode from "assets/mixins/QuickMode";
 import MenuSelect from "components/Menu/MenuSelect";
+import KeyPressCapture from "assets/mixins/KeyPressCapture";
 export default {
   name: 'PageSale',
   components: { MenuSelect, QuickOrder, GroupItemsSelect, GroupStickyButton, PaymentTypeSelectDropDown, TaxNatureSelectDropDown, OrderCustomer, PriceListSelectDropDown, FilterInputText },
-  mixins: [QuickMode],
+  mixins: [QuickMode,KeyPressCapture],
   data(){ return {
     group: 0, item_filter: '', fab: true, offset: [12,12],
     payment_mode: false, processing: false,
@@ -168,7 +169,8 @@ export default {
         },250)
       }
       this.prv_per = is_period(e.keyCode);
-    }
+    },
+    KPC(e){ if(this.payment_mode && ['Enter','\n'].includes(e.key) && e.ctrlKey) this.complete() }
   },
   watch: {
     'params.items': { deep:true, handler:'calculateTotal' },

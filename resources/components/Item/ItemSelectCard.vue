@@ -19,7 +19,7 @@
         <div class="text-caption" style="font-size: 0.65rem; line-height: 0.8rem"><q-separator class="q-mb-sm" /> {{ item.detail }} <q-separator class="q-mt-sm" /></div>
       </q-card-section>
       <q-card-section class="q-py-none">
-        <q-input type="number" v-model.number="qty" outlined dense />
+        <q-input type="number" v-model.number="qty" outlined dense ref="item_quantity_input" />
         <q-slider :min="0" :max="stock" v-model.number="qty" label color="positive" />
       </q-card-section>
     </q-card-section>
@@ -33,9 +33,9 @@ import {h_key, image} from "assets/helpers";
 export default {
   name: "ItemSelectCard",
   components: {CardImageTitle},
-  props: ['id','price_list','remote','quantity'],
+  props: ['id','price_list','remote','quantity','position'],
   data(){ return {
-    info:false,processing_status: ['Accepted','Processing']
+    info:false, processing_status: ['Accepted','Processing']
   } },
   computed: {
     ...mapState({ items: state => state.items.data, prices: state => state.prices.data,
@@ -52,14 +52,30 @@ export default {
     processing(){ return _(this.t_items).filter(({ item,progress }) => item === this.intID && this.processing_status.includes(progress)).value() },
     qty: {
       get(){ return this.quantity || 0 },
-      set(quantity){ this.$emit('quantity',{ quantity,item:this.id }) },
+      set(quantity){ this.$emit('quantity',{ quantity:_.toNumber(quantity),item:this.id }) },
     },
+    selected_item_position(){ return _.get(this.$store.state.public,'selected_item_position',-1) }
   },
   methods: {
     hKey({ id,kitchen }){ return h_key('isc',this.id,'kitchen',kitchen,'stock',id) },
     matchItemPriceList({ item,price_list }){ return (_.toInteger(item) === this.intID) && (_.toInteger(price_list) === this.intPL) },
     kName({ kitchen }){ return _.truncate(_.get(this.s_kitchens,[_.toInteger(kitchen),'name']),{ length:15, omission: '..' }) },
     pending(i){ return _.sumBy(this.processing,({ quantity,kitchen }) => _.toInteger(kitchen) === i.kitchen ? _.toNumber(quantity) : 0) },
+  },
+  watch: {
+    selected_item_position: {
+      deep: true,
+      handler(position){
+        this.info = (position === this.position)
+        this.$nextTick(function(){
+          setTimeout(() => {
+            let input = this.$refs && this.$refs['item_quantity_input'] ? _.get(this.$refs,['item_quantity_input','$el'],false) : false;
+            if(input) input.focus()
+            // if(quantity > 0)
+          },150)
+        })
+      }
+    }
   }
 }
 </script>

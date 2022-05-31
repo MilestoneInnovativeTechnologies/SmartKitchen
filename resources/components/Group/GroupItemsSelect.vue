@@ -2,7 +2,7 @@
   <div>
     <Masonry :items="page_items" width="180">
       <template #item="item">
-        <ItemSelectCard @selected="$emit('item',$event)" :id="item.id" :price_list="price_list" :quantity="(item_quantities && item_quantities[item.id]) ? item_quantities[item.id] : 0" @quantity="$emit('quantity',$event)" />
+        <ItemSelectCard @selected="$emit('item',$event)" :id="item.id" :price_list="price_list" :quantity="(item_quantities && item_quantities[item.id]) ? item_quantities[item.id] : 0" @quantity="$emit('quantity',$event)" :position="item.identity" />
       </template>
     </Masonry>
     <q-page-sticky position="bottom-right" :offset="offset" v-if="pages > 1">
@@ -18,11 +18,13 @@ import {matches} from "assets/helpers";
 import ItemSelectCard from "components/Item/ItemSelectCard";
 import Masonry from "components/Masonry";
 import {mapGetters, mapState} from "vuex";
+import KeyboardOrder from "assets/mixins/KeyboardOrder";
 
 export default {
   name: "GroupItemsSelect",
   components: {Masonry, ItemSelectCard},
   props: ['selected','filter','price_list','type','item_quantities'],
+  mixins: [KeyboardOrder],
   data(){ return {
     offset: [0,80], pages_show: true, page: 1
   } },

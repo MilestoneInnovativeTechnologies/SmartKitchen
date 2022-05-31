@@ -8,8 +8,8 @@
         <QuickOrder @item="item" :items="params.items" :price_list="params.price_list" @done="tab = 'proceed'" />
       </template>
       <template v-else>
-        <FilterInputText @text="item_filter = $event" class="q-mb-xs" />
-        <GroupItemsSelect :selected="active_group" :filter="item_filter" :price_list="params.price_list" :type="params.type" :item_quantities="item_quantities" @item="item" @quantity="setQuantity" />
+        <FilterInputText @text="item_filter = $event" class="q-mb-xs" autofocus />
+        <GroupItemsSelect :selected="active_group" :filter="item_filter" :price_list="params.price_list" :type="params.type" :item_quantities="item_quantities" @item="item" @quantity="setQuantity" @proceed="tab = 'proceed'" />
       </template>
     </q-card-section>
     <template v-if="!quick">
@@ -55,17 +55,18 @@ export default {
   },
   methods: {
     popup_width,
-    item({ id }){
+    item({ id },quantity){
       let items_item_index = _.findIndex(this.params.items,{ item:id,narration:null });
-      if(items_item_index < 0) items_item_index = this.params.items.push({ item:id,quantity:1,delay:0,narration:null }) - 1
+      if(items_item_index < 0) items_item_index = this.params.items.push({ item:id,quantity:quantity || 1,delay:0,narration:null }) - 1
       else this.params.items[items_item_index].quantity++
       let token_item = this.params.items[items_item_index]
       if(!this.quick) this.$q.notify({ type:'positive',message:`Item Updated`,html:true, caption:`${this.params.items.length} x Items <br />${_.sumBy(this.params.items,'quantity')} x Quantities <br />${token_item.quantity}x ${this.itemName(token_item.item)}`,group:'items',position:"top-right" })
+      return items_item_index;
     },
     setQuantity({ item,quantity }){
       item = _.toSafeInteger(item); quantity = _.toNumber(quantity);
       let idx = _.findIndex(this.params.items,['item',item]);
-      if(idx < 0) return this.item({ id:item })
+      if(idx < 0) this.item({ id:item },quantity)
       else this.quantity(idx,quantity);
       if(quantity < 1) setTimeout((vm,idx) => vm.remove(idx),2000,this,idx)
     },
