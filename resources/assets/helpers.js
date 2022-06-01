@@ -1,5 +1,5 @@
 import { MEDIA_PATH } from './constants'
-const { formatDate,extractDate,isSameDate,startOfDate,subtractFromDate,addToDate,isBetweenDates } = require('quasar').date
+const { formatDate,extractDate,isSameDate,startOfDate,subtractFromDate,addToDate,isBetweenDates,getDateDiff } = require('quasar').date
 const AttentionAudio = new Audio(MEDIA_PATH + '/attention.mp3')
 const TapAudio = new Audio(MEDIA_PATH + '/tap.mp3')
 
@@ -26,23 +26,35 @@ export function extract_date(datetime,format){ format = common_format(format); r
 export function time(datetime,format,sec){ format = common_format(format); return formatDate(extractDate(datetime,format),sec ? 'hh:mm:ss A' : 'hh:mm A') }
 export function human_date(datetime,time){ return formatDate(extractDate(datetime,common_format()),time ? 'ddd, D/MM - hh:mm A' : 'ddd, D/MM') }
 export function human_date2(datetime){ return formatDate(extractDate(datetime,common_format()),'ddd, D/MMM/YYYY') }
-export function is_today(datetime,format){ format = common_format(format); return isSameDate(extractDate(datetime,format),new Date(),'day') }
-export function is_yesterday(datetime,format){ format = common_format(format); return isSameDate(extractDate(datetime,format),subtractFromDate(new Date,{ days:1 }),'day') }
-export function is_tomorrow(datetime,format){ format = common_format(format); return isSameDate(extractDate(datetime,format),addToDate(new Date,{ days:1 }),'day') }
-export function is_past_day(datetime,days){ return isBetweenDates(extract_date(datetime),subtractFromDate(new Date,{ days:days || 8 }),subtractFromDate(new Date,{ days:1 }),{ inclusiveFrom:true,inclusiveTo:true,onlyDate:true }) }
-export function is_future_day(datetime,days){ return isBetweenDates(extract_date(datetime),addToDate(new Date,{ days:1 }),addToDate(new Date,{ days:days || 8 }),{ inclusiveFrom:true,inclusiveTo:true,onlyDate:true }) }
+export function day_start(){
+  if(!settings('day_start')) return startOfDate(new Date(),'day')
+  let dayStart = settings('day_start'), date = extractDate(formatDate(new Date(),'YYYY-MM-DD ') + dayStart,'YYYY-MM-DD HH:mm:ss');
+  return (date > new Date()) ? subtractFromDate(date,{ days:1 }) : date;
+}
+export function day_end(){ return addToDate(day_start(),{ seconds:86399 }) }
+export function is_today(datetime,format){ format = common_format(format); return isBetweenDates(extractDate(datetime,format),day_start(),day_end(),{ inclusiveFrom:true,inclusiveTo:true,onlyDate:false }) }
+export function is_yesterday(datetime,format){ format = common_format(format); return isBetweenDates(extractDate(datetime,format),subtractFromDate(day_start(),{ days:1 }),day_start(),{ inclusiveFrom:true,inclusiveTo:false,onlyDate:false }) }
+export function is_tomorrow(datetime,format){ format = common_format(format); return isBetweenDates(extractDate(datetime,format),day_end(),addToDate(day_end(),{ days:1 }),{ inclusiveFrom:false,inclusiveTo:true,onlyDate:false }) }
+export function is_past_day(datetime,days){ return isBetweenDates(extract_date(datetime),subtractFromDate(day_start(),{ days:days || 8 }),day_start(),{ inclusiveFrom:true,inclusiveTo:false,onlyDate:false }) }
+export function is_future_day(datetime,days){ return isBetweenDates(extract_date(datetime),day_end(),addToDate(day_end(),{ days:days || 8 }),{ inclusiveFrom:false,inclusiveTo:true,onlyDate:false }) }
 export function is_date_same(d1,d2,unit,format){ format = common_format(format); return isSameDate(extractDate(d1,format),extractDate(d2,format),(unit || 'day')) }
 export function to_format(format,date){ format = common_format(format); return formatDate(date || new Date,format) }
 export function range(from,to) {
   if (_.has(from, 'from')) {
-    to = _.get(from, 'to', to_format('YYYY-MM-DD')) + ' 11:59:59';
-    from = _.get(from, 'from', to_format('YYYY-MM-DD')) + ' 11:59:59'
+    to = _.get(from, 'to', formatDate(day_end(),"YYYY-MM-DD HH:mm:ss"))
+    from = _.get(from, 'from',formatDate(day_start(),"YYYY-MM-DD HH:mm:ss"))
   }
-  from = startOfDate(from || to_format(), 'day');
-  to = subtractFromDate(startOfDate(to || addToDate(to_format(), {days: 1}), 'day'), {seconds: 1})
+  let time_start = settings('day_start');
+  if(time_start) {
+    from =  subtractFromDate(day_start(),{ days:getDateDiff(day_start(),extractDate(from,'YYYY-MM-DD'),'days') });
+    to = subtractFromDate(day_end(),{ days:getDateDiff(day_end(),extractDate(to,'YYYY-MM-DD'),'days') });
+  } else {
+    from = startOfDate(from || to_format(), 'day');
+    to = subtractFromDate(startOfDate(to || addToDate(to_format(), {days: 1}), 'day'), {seconds: 1})
+  }
   return { from: to_format('YYYY-MM-DD HH:mm:ss',from),to: to_format('YYYY-MM-DD HH:mm:ss',to) }
 }
-export function is_between(date,from,to){ return isBetweenDates(extract_date(date),extract_date(from),extract_date(to),{ inclusiveFrom:true,inclusiveTo:true,onlyDate:true }) }
+export function is_between(date,from,to){ return isBetweenDates(extract_date(date),extract_date(from),extract_date(to),{ inclusiveFrom:true,inclusiveTo:true,onlyDate:false }) }
 
 export function crypt(str, seed = 0) {
   let h1 = 0xdeadbeef ^ seed, h2 = 0x41c6ce57 ^ seed;
