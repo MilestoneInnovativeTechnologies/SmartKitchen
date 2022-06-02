@@ -16,6 +16,7 @@
         </q-item-section>
       </q-item>
     </q-list>
+    <Pagination color="primary" :records="AllCustomers" v-model="customers" />
     <q-dialog persistent :value="!!view" @before-hide="view = null"><CustomerDetailCard style="max-width: 360px; width: 90vw;" v-if="view" color="primary" :id="view" /></q-dialog>
     <q-dialog persistent v-model="create"><CustomerCreate style="max-width: 360px; width: 90vw;" @close="create = false" /></q-dialog>
   </q-page>
@@ -26,14 +27,16 @@ import FilterInputText from "components/FilterInputText";
 import {image, matches} from "assets/helpers";
 import CustomerDetailCard from "components/Customer/CustomerDetailCard";
 import CustomerCreate from "components/Customer/CustomerCreate";
+import Pagination from "components/Pagination";
 export default {
   name: "PageCustomerIndex",
-  components: {CustomerCreate, CustomerDetailCard, FilterInputText},
+  components: {Pagination, CustomerCreate, CustomerDetailCard, FilterInputText},
   data(){ return {
-    search: null, view: null, create: false
+    search: null, view: null, create: false,
+    customers: null,
   } },
   computed: {
-    customers(){ return this.search ? _.filter(this.$store.state.customers.data,customer => matches(customer,['name','phone','email','address'],this.search)) : _.filter(this.$store.state.customers.data) }
+    AllCustomers(){ return this.search ? _.filter(this.$store.state.customers.data,customer => matches(customer,['name','phone','email','address'],this.search)) : _.filter(this.$store.state.customers.data) }
   },
   methods: {
     image
