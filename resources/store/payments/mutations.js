@@ -1,12 +1,8 @@
-import Vue from "vue";
+import {id_keyed} from "assets/helpers";
 
 export function add (state,records) {
   if(!_.isArray(records)) records = [records];
-  _.forEach(records,data => {
-    if(!data.id) return ; let key = _.toSafeInteger(data.id);
-    if(_.has(state.data,key)) Vue.delete(state.data,key);
-    Vue.set(state.data,key,data)
-  })
+  state.data = Object.assign({},state.data,id_keyed(records))
 }
 
 export function cancel(state, payment){

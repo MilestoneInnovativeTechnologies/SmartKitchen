@@ -2,17 +2,23 @@ import Vue from "vue";
 const { CC71V } = require('boot/subscription').FEATURES
 
 export function add (state,records) {
-  if(CC71V !== 'Yes') return ;
-  if(!_.isArray(records)) records = [records];
+  if(CC71V !== 'Yes') return ; if(!_.isArray(records)) records = [records];
+  const data_records = {}, uploads = [], monitors = [];
   _.forEach(records,data => {
     if(!data || !data.id) return;
     let { item,local_id } = data; local_id = parseInt(local_id);
     let remote = _.find(state.data,(rmt) => rmt.item === item && parseInt(rmt.local_id) === local_id );
     let id = remote ? parseInt(remote.id) : parseInt(data.id);
-    Vue.set(state.data,id,data);
-    if(!state.data[id].reference) state.uploadFn({item,data});
-    else state.monitorFn({ item,reference:state.data[id].reference,id })
+    data_records[id] = data;
+    // Vue.set(state.data,id,data);
+    if(!data.reference) uploads.push({ item,data })
+    else monitors.push({ item,reference:data.reference,id })
+    // if(!state.data[id].reference) state.uploadFn({item,data});
+    // else state.monitorFn({ item,reference:state.data[id].reference,id })
   })
+  state.data = Object.assign({},state.data,data_records);
+  _.forEach(uploads,upload => state.uploadFn(upload))
+  _.forEach(monitors,monitor => state.monitorFn(monitor))
 }
 
 export function uploadFn(state,fn){ state.uploadFn = fn }

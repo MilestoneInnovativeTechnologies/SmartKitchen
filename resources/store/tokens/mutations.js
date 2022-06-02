@@ -3,28 +3,20 @@ import {to_format} from "assets/helpers";
 
 export function add (state,records) {
   if(!_.isArray(records)) records = [records];
-  _.forEach(records,data => {
-    if(!data.id) return ; let key = _.toSafeInteger(data.id);
-    if(_.has(state.data,key)) Vue.delete(state.data,key);
-    Vue.set(state.data,key,data);
-    state.data[key].date_human = to_format('ddd, DD MMM hh:mm A',data.date)
-  })
+  state.data = Object.assign({},state.data,_(records).mapKeys(({ id }) => _.toInteger(id)).mapValues(token => Object.assign({},token,{ date_human:to_format('ddd, DD MMM hh:mm A',token.date) })).value())
 }
 
 export function items (state,records) {
-  if(!records) return;
-  if(!_.isArray(records)) records = [records];
-  let group = _.groupBy(records,'token')
-  _.forEach(group,(items,token) => {
-    token = _.toSafeInteger(token)
-    if(!_.has(state.items,token)) Vue.set(state.items,token,_.map(items,timap))
-    else {
-      _.forEach(items,item => {
-        let idx = _.findIndex(state.items[token],['id',_.toSafeInteger(item.id)]), ti = timap(item);
-        if(idx < 0) state.items[token].push(ti)
-        else _.forEach(ti,(val,key) => state.items[token][idx][key] = val)
+  if(!records) return; if(!_.isArray(records)) records = [records];
+  let item_records = _(records).groupBy(({ token }) => _.toInteger(token)).mapValues(items => _.map(items,timap)).value()
+  _.forEach(item_records,function(items,token){
+    if(_.has(state.items,token)){
+      _.forEach(items,function(item){
+        let ti_id = _.get(item,'id'), sr_ti_idx = _.findIndex(state.items[token],['id',ti_id])
+        if(sr_ti_idx < 0) state.items[token].push(item)
+        else Vue.set(state.items[token],sr_ti_idx,item)
       })
-    }
+    } else state.items = Object.assign({},state.items,{ [token]:items })
   })
 }
 

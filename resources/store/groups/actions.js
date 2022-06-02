@@ -1,3 +1,3 @@
 export function init ({ commit }) {
-  if(typeof _ASSET_ItemGroup !== "undefined") commit('add',_ASSET_ItemGroup)
+  if(typeof _ASSET_ItemGroup !== "undefined") setTimeout(commit,400,'add',_ASSET_ItemGroup)
 }

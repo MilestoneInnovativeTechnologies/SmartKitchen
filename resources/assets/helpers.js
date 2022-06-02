@@ -77,3 +77,4 @@ export function of_ids(records,ids){ return _.filter(records,({ id }) => ids.inc
 
 export function popup_width(width){ return new Object({ width:(width || 360)+'px','max-width':'90vw' }) }
 export function settings_boolean(value){ return _.includes([0,'0','No','no','NO',false,'false','False','FALSE',null,'of','off','Of','Off','OFF','OF'],value) ? false : (_.includes([1,'1','Yes','yes','YES',true,'true','True','TRUE','on','On','ON'],value) ? true : undefined) }
+export function id_keyed(records){ return _(records).mapKeys(record => _.toInteger(record.id)).value() }

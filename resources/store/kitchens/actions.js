@@ -1,6 +1,6 @@
 export function init ({ commit }) {
-  if(typeof _ASSET_Kitchen !== "undefined") commit('add',_ASSET_Kitchen)
-  if(typeof _ASSET_KitchenItem !== "undefined") commit('items',_ASSET_KitchenItem)
+  if(typeof _ASSET_Kitchen !== "undefined") setTimeout(commit,900,'add',_ASSET_Kitchen)
+  if(typeof _ASSET_KitchenItem !== "undefined") setTimeout(commit,1000,'items',_ASSET_KitchenItem)
 }
 
 export function chef(ctx,{ kitchen }){ return new Promise(resolve => post('kitchen','toggle',{ kitchen }).then(resolve)) }

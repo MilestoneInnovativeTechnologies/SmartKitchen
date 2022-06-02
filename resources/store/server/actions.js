@@ -30,7 +30,7 @@ export function ping ({ commit,dispatch }) {
 
 export function init ({ commit,dispatch }){
   if(!localStorage.getItem('jwt_TOKEN') || _ROLE === 'Login') return ;
-  commit('sync',setTimeout(dispatch,1000,'ping'))
+  commit('sync',setTimeout(dispatch,2500,'ping'))
 }
 
 export function process({ dispatch },data){

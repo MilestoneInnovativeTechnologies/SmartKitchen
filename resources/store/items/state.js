@@ -3,5 +3,6 @@ export default function () {
     prop: {},
     data: {},
     rFun: null,
+    propObj: {},
   }
 }

@@ -1,23 +1,17 @@
-import Vue from "vue";
+import {id_keyed} from "assets/helpers";
 
 export function prop (state,records) {
   if(!_.isArray(records)) records = [records];
-  _.forEach(records,data => {
-    if(!data.id) return ; let key = _.toSafeInteger(data.id);
-    if(_.has(state.prop,key)) Vue.delete(state.prop,key);
-    Vue.set(state.prop,key,data)
-  });
+  state.prop = Object.assign({}, state.prop,id_keyed(records));
+  state.propObj = Object.assign({},state.propObj,_(state.prop).mapKeys('name').mapValues(({ id }) => 'prop'+id).value());
   if(state.data && _.size(state.data)) state.rFun(_.values(state.data))
 }
 
 export function add (state,records) {
   if(!_.isArray(records)) records = [records];
-  _.forEach(records,data => {
-    if(!data.id) return ; let key = _.toSafeInteger(data.id);
-    if(_.has(state.data,key)) Vue.delete(state.data,key);
-    _.forEach(state.prop,({ id,name }) => data[name] = _.get(data,'prop'+id,''))
-    Vue.set(state.data,key,data)
-  })
+  state.data = Object.assign({},state.data,_(records).mapKeys(({ id }) => _.toInteger(id)).mapValues(record => Object.assign({},record,pObj(state.propObj,record))).value())
 }
 
 export function rFun(state,rFun){ state.rFun = rFun }
+
+function pObj(obj,record){ return _.mapValues(obj,prop => _.get(record,prop)) }
