@@ -90,8 +90,8 @@ class Subscribers
             \Milestone\SmartKitchen\Events\TokenProgressMadeAsNew::class =>  [],
             \Milestone\SmartKitchen\Events\TokenProgressMakingAsCompleted::class =>  [],
             \Milestone\SmartKitchen\Events\TokenProgressMadeAsCompleted::class =>  [
-                CheckForBillExistenceAndUpdate::class,
                 CheckAndProceedForAutoBill::class,
+                CheckForBillExistenceAndUpdate::class,
             ],
             \Milestone\SmartKitchen\Events\TokenProgressMakingAsBilled::class =>  [],
             \Milestone\SmartKitchen\Events\TokenProgressMadeAsBilled::class =>  [],
