@@ -4,7 +4,7 @@ import { images } from "assets/default_images";
 export const OrderTypes = ['Dining','Home Delivery','Take Away','Sale','Remote','Other']
 export const PaymentsTypes = ['Cash','Card','Wallet','Credit']
 export const PaymentsTypeColors = { Cash:'positive',Card:'purple-6',Wallet:'indigo-7',Credit:'pink-7' }
-export const TokenProgressSeatStatus = { New:'Just Filled',Processing:'Busy/Processing',Completed:'Busy/Served',Billed:'Billed/Vacant',Paid:'Vacant',Cancelled:'Vacant' }
+export const TokenProgressSeatStatus = { New:'Just Filled',Processing:'Busy/Processing',Completed:'Busy/Served',Billed:'Billed/Vacant',Pending:'Billed/Vacant',Partial:'Vacant',Paid:'Vacant',Cancelled:'Vacant' }
 export const SeatStatusCardColor = { Vacant:'positive','Just Filled':'lime','Busy/Processing':'red-6','Busy/Served':'red-6','Billed/Vacant':'green-13' }
 export const OrderTypeRequiredFields = { Dining:['Seating','Waiter','Customer'],'Home Delivery':['Customer','PriceList'],'Take Away':['Customer','PriceList'],Other:[] }
 export const OrderTypeRequiredFieldsDB = { Dining:['type','seating','user','customer','price_list'],'Home Delivery':['type','customer','price_list','user'],'Take Away':['type','customer','price_list'],Other:[] }

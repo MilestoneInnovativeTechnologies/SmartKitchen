@@ -20,7 +20,7 @@ export default {
       return TokenProgressSeatStatus[this.leastStatus(tokens)]
     },
     leastStatus(tokens){
-      let statuses = ['Cancelled','Paid','Billed','Completed','Processing','New']
+      let statuses = ['Cancelled','New','Billed','Pending','Partial','Paid','Completed','Processing']
       return statuses[_.reduce(tokens,function (a,{ progress }){ let sIdx = statuses.indexOf(progress); return (sIdx > a) ? sIdx : a },0)]
     },
     slug(seat){
