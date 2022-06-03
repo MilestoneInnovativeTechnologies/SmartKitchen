@@ -22,7 +22,7 @@ class CheckAndProceedAutoServe
         $Token = Token::find($event->token);
         $type = $Token->type;
         $settings_name = Str::snake("Auto Serve $type token Item On Complete");
-        if(settings($settings_name,true) === true)
+        if(settings($settings_name,true) === true || (settings($settings_name,true) === null && settings(Str::snake("Auto Serve Token Item On Complete"),true) === true))
             TokenItemController::Serve($event->tokenItemID,$event->user);
     }
 }

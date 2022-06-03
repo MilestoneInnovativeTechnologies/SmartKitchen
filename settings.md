@@ -180,9 +180,10 @@ If this settings have added with any of these values 1,true,True,yes,Yes,YES,ON,
 Each time item code entered and on tapping ENTER key, quantity will be taken as 1, and it gets added. On tapping ENTER key multiple times, quantity will also add consequently
 
 
-auto_serve_take_away_token_item_on_complete, auto_serve_dining_token_item_on_complete, auto_serve_home_delivery_token_item_on_complete 
+auto_serve_token_item_on_complete, auto_serve_take_away_token_item_on_complete, auto_serve_dining_token_item_on_complete, auto_serve_home_delivery_token_item_on_complete 
 Each token item on said type of token will be marked as served on getting its status as completed.
-To achieve this option, make the value of these settings to any of true
+To achieve this option, make the value of these settings to any of true.
+auto_serve_token_item_on_complete have lesser priority that type specified, if no type specified exists, then auto_serve_token_item_on_complete will be considered
 
 
 auto_bill_token_on_complete, auto_bill_take_away_token_on_complete, auto_bill_dining_token_on_complete, auto_bill_home_delivery_token_on_complete 
