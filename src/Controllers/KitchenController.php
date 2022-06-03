@@ -84,8 +84,12 @@ class KitchenController extends Controller
             $item = Kitchen::find(request()->input('id'));
             $item->update(self::data());
         }
-        $status_updates = ['full_timer','printer'];
-        if(request()->hasAny($status_updates)){ KitchenStatus::where('kitchen',$item->id)->first()->update(request()->only($status_updates)); }
+        if(request()->hasAny(['full_timer','printer'])){
+            $full_timer = \request()->input('full_timer',null) ?: null;
+            $printer = \request()->input('printer',null) ?: null;
+            $status_updates = compact('full_timer','printer');
+            KitchenStatus::where('kitchen',$item->id)->first()->update($status_updates);
+        }
         return $item->fresh();
     }
 
