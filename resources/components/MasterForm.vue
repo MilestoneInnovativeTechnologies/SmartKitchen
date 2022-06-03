@@ -12,6 +12,9 @@
       <UserLoginPin v-else-if="type === 'login_pin'" v-model="params[field]" :label="title(field)" outlined :update="data ? data[field] : null" />
       <UserLoginUserName v-else-if="type === 'login_user'" v-model="params[field]" :label="title(field)" outlined :update="data ? data[field] : null" />
       <UserSelectDropDown v-else-if="type === 'chef'" v-model="params[field]" :label="title(field)" role="Chef" get="id" clearable outlined :update="data ? data[field] : null" />
+      <ItemGroupsChoose v-else-if="type === 'item_groups_choose'" v-model="params[field]" :label="title(field)" />
+      <ItemPricesSet v-else-if="type === 'item_prices_set'" v-model="params[field]" />
+      <ItemKitchenStocks v-else-if="type === 'item_kitchen_stocks'" v-model="params[field]" />
       <q-input v-else :type="type" v-model="params[field]" :label="title(field)" outlined />
     </template>
     <slot></slot>
@@ -34,12 +37,18 @@ import KitchenSelectDropDown from "components/Kitchen/KitchenSelectDropDown";
 import UserLoginPin from "components/Users/UserLoginPin";
 import UserLoginUserName from "components/Users/UserLoginUserName";
 import UserSelectDropDown from "components/Users/UserSelectDropDown";
+import ItemGroupsChoose from "components/Group/ItemGroupsChoose";
+import ItemPricesSet from "components/Price/ItemPricesSet";
+import ItemKitchenStocks from "components/Item/ItemKitchenStocks";
 const defs = {
   status: 'Active', yesno: 'Yes', noyes: 'No',
 }
 export default {
   name: "MasterForm",
   components: {
+    ItemKitchenStocks,
+    ItemPricesSet,
+    ItemGroupsChoose,
     UserSelectDropDown, UserLoginUserName, UserLoginPin,
     KitchenSelectDropDown, AdministratorMasterPriceListPriceSet,
     ItemsChoose, TaxContentManage, SeatInputSeats, PriceListSelectDropDown},

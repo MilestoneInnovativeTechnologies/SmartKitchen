@@ -5,7 +5,7 @@
       <q-toggle v-model="ims" checked-icon="check" color="red" label="Items with Image" unchecked-icon="clear" />
     </q-card-section>
     <q-card-section>
-      <FilterInputText class="q-mb-sm" @text="fTxt" />
+      <FilterInputText class="q-mb-sm" @text="fTxt = $event" />
       <q-chip color="secondary" :outline="!chosen.includes(item.id)" clickable @click="toggle(item)" v-for="(item,idx) in items" :key="'tic-' + item.id" v-if="idx < init_load || delayed"><q-avatar v-if="ims"><q-img :src="item.image" /></q-avatar>{{ item.name }}</q-chip>
     </q-card-section>
   </q-card>
