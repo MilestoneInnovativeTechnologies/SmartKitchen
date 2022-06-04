@@ -215,6 +215,10 @@ currency_symbol
 The symbol given will prepend to the price displayed on item selection. It can be any symbol or character. If a space required between symbol and price, it should give so.. Ex: `₹ `, `₨`, `AED `
 
 
+instant_item_create
+If this setting made to true, then receptionist will be able to add item instantly. An additional icon will be displayed of top bar, which popups item create card.
+
+
 report_image, report_text
 Report page header customization is possible by adding image and text in print. report_image, it should be an uploaded image and report_text, address or whatever text or paragraph.
 If both settings provided, image should be aligned towards left and text towards right. If only one of above is given, then that will be aligned at center.

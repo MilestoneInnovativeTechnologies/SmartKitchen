@@ -41,14 +41,14 @@ class ItemController extends Controller
                 $items = $group->items; $group_id = $group->id;
                 if(in_array($group_id,$groups)){
                     if(!in_array($item_id,$items)){
-                        $items[] = $item_id;
-                        $group->items = array_unique($items);
+                        $items[] = $item_id; $items = array_values(array_unique($items));
+                        sort($items); $group->items = $items;
                         $group->save();
                     }
                 } else {
                     if(in_array($item_id,$items)){
-                        $group->items = array_unique(array_diff($items,[$item_id]));
-                        $group->save();
+                        $items = array_values(array_unique(array_diff($items,[$item_id])));
+                        sort($items); $group->items = $items; $group->save();
                     }
                 }
             });
@@ -91,6 +91,27 @@ class ItemController extends Controller
             $prop->update(self::data());
             return $prop->fresh();
         }
+    }
+
+    public function instant(Request $request){
+        $name = $request->input('name'); if(!$name) return;
+        $Item = Item::create(compact('name')); $item = $Item->id;
+        $request->whenFilled('group',function ($group)use ($item){
+            $Group = ItemGroup::find($group); $items = $Group->items;
+            $items[] = $item; $items = array_values(array_unique($items));
+            sort($items); $Group->items = $items; $Group->save();
+        });
+        $request->whenFilled('kitchen',function ($kitchen)use ($item){
+            $KIS = KitchenItem::where(['kitchen' => $kitchen])->get(); $AP = $KIS->countBy('auto_process'); $AC = $KIS->countBy('auto_complete');
+            $stock = 100; $duration = 180;
+            $auto_process = (Arr::get($AP,'Yes',0) > Arr::get($AP,'No',0)) ? 'Yes' : 'No';
+            $auto_complete = (Arr::get($AC,'Yes',0) > Arr::get($AC,'No',0)) ? 'Yes' : 'No';
+            KitchenItem::updateOrCreate(compact('kitchen','item'),compact('stock','duration','auto_process','auto_complete'));
+        });
+        $request->whenFilled('prices',function ($prices)use ($item){
+            foreach ($prices as $price_list => $price)
+            Price::updateOrCreate(compact('price_list','item'),compact('price'));
+        });
     }
 
 }
