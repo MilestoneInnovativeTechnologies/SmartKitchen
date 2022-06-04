@@ -1,23 +1,24 @@
 <template>
   <q-card>
-    <q-card-section class="row items-center q-pb-none">
+    <q-card-section class="row items-center q-py-sm bg-grey-2">
       <div class="text-h6">New Customer</div><q-space />
       <q-btn icon="close" flat round dense @click="$emit('close',null)" />
     </q-card-section>
     <q-card-section class="q-gutter-xs">
-      <q-input dense outlined label="Name" v-model="name"/>
-      <q-input dense outlined label="Phone" v-model="phone"/>
-      <q-input dense type="email" outlined label="Email" v-model="email"/>
-      <q-input dense type="textarea" outlined label="Address" v-model="address"/>
+      <q-input dense outlined label="Name" v-model="name" autofocus />
+      <q-input dense outlined label="Phone" v-model="phone" />
+      <q-input dense type="email" outlined label="Email" v-model="email" />
+      <q-input dense type="textarea" outlined label="Address" v-model="address" />
     </q-card-section>
-    <q-card-actions align="right">
-      <q-btn color="primary" label="Reset" type="reset" flat class="text-grey" @click.prevent="reset"/>
+    <q-card-actions align="right" class="q-py-sm bg-grey-2">
+      <q-btn color="primary" label="Reset" type="reset" flat class="text-grey" @click.prevent="reset"/><q-space />
       <q-btn color="primary" label="Submit" type="submit" @click.prevent="submit"/>
     </q-card-actions>
   </q-card>
 </template>
 
 <script>
+
 export default {
   name: "CustomerCreate",
   props: ['param','param_value'],
