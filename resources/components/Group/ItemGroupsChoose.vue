@@ -25,7 +25,7 @@ export default {
     all_item_groups(){ return this.$store.state.groups.data },
     item_groups(){ return this.fTxt ? _.filter(this.all_item_groups,grp => matches(grp,['name'],this.fTxt)) : this.all_item_groups },
     groups: {
-      get(){ return this.value },
+      get(){ return this.value || [] },
       set(groups){ this.$emit('input',groups) },
     }
   },

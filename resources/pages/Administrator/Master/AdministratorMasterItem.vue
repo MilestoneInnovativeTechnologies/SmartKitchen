@@ -22,9 +22,9 @@ export default {
     fields(){ return Object.assign({},{ name:'text',detail:'textarea' },this.prop_fields,{ groups:'item_groups_choose',prices:'item_prices_set',stocks:'item_kitchen_stocks' },{ status:'status' })},
     items(){
       return _.map(this.item_master,item => Object.assign({},item,{
-        groups: this.$store.getters['items/groups'][item.id],
-        prices: this.$store.getters['items/prices'][item.id],
-        stocks: this.$store.getters['items/kitchen_details'][item.id],
+        groups: _.get(this.$store.getters['items/groups'],item.id,[]),
+        prices: _.get(this.$store.getters['items/prices'],item.id,{}),
+        stocks: _.get(this.$store.getters['items/kitchen_details'],item.id,{}),
       }))
     },
   },

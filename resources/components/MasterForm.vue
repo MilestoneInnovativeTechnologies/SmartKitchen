@@ -45,13 +45,8 @@ const defs = {
 }
 export default {
   name: "MasterForm",
-  components: {
-    ItemKitchenStocks,
-    ItemPricesSet,
-    ItemGroupsChoose,
-    UserSelectDropDown, UserLoginUserName, UserLoginPin,
-    KitchenSelectDropDown, AdministratorMasterPriceListPriceSet,
-    ItemsChoose, TaxContentManage, SeatInputSeats, PriceListSelectDropDown},
+  components: { ItemKitchenStocks, ItemPricesSet, ItemGroupsChoose, UserSelectDropDown, UserLoginUserName, UserLoginPin,
+    KitchenSelectDropDown, AdministratorMasterPriceListPriceSet, ItemsChoose, TaxContentManage, SeatInputSeats, PriceListSelectDropDown},
   props: ['fields','data','loading','destroy'],
   data(){ return {
     params: { },
