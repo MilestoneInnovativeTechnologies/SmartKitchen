@@ -2,7 +2,7 @@
   <q-card>
     <q-bar class="text-white q-py-sm" style="font-size: 0.8rem" :class="'bg-' + clr"><q-icon name="account_tree" size="xs" left /><span class="text-bold">New Order Details</span><q-space /><q-btn icon="close" flat round v-close-popup /></q-bar>
     <q-card-section class="q-gutter-y-xs">
-      <q-select v-if="!hide.includes('type')" outlined input-debounce="0" v-model="params.type" :options="types" label="Select Type" />
+      <q-select v-if="!hide.includes('type')" outlined input-debounce="0" v-model="params.type" :options="types" label="Select Type" autofocus />
       <SeatSelectDropDown error-message="For Dining Seat Selection is Mandatory" :error="seat_error" hide-bottom-space v-if="!hide.includes('seating') && required.includes('Seating')" outlined input-debounce="0" v-model="seat" label="Select Seat" />
       <PriceListSelectDropDown v-if="!hide.includes('price_list') && required.includes('PriceList')" outlined input-debounce="0" v-model="params.price_list" label="Select Price List" get="id" />
       <WaiterSelectDropDown v-if="!hide.includes('user') && required.includes('Waiter')" outlined input-debounce="0" v-model="params.user" label="Select Waiter" get="id" />
