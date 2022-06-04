@@ -1,14 +1,16 @@
 <template>
   <q-page>
+    <FilterInputText @text="filter = $event" class="q-ma-md" />
     <q-list separator>
       <q-item v-for="payment in showing" :key="'archive-payments-' + payment.id" clickable @click="detail(payment)">
-        <q-item-section avatar><q-badge color="info" class="q-pa-sm" style="font-size: 0.65rem" :label="payment.bill" /></q-item-section>
+        <q-item-section avatar><q-badge color="info" class="q-pa-sm" style="font-size: 0.65rem" :label="payment.bill.id" /></q-item-section>
         <q-item-section>
           <q-item-label class="text-bold text-cyan">{{ parseFloat(payment.amount).toFixed(2) }}</q-item-label>
-          <q-item-label caption>Payment ID: {{ payment.id }}</q-item-label>
+          <q-item-label caption>Token: {{ payment.bill.token.id }}, Type: {{ payment.bill.token.type }}</q-item-label>
         </q-item-section>
         <q-item-section>
           <q-item-label class="text-cyan">{{ payment.type }}</q-item-label>
+          <q-item-label caption>{{ payment.bill.customer.name }}</q-item-label>
         </q-item-section>
         <q-item-section side>
           <q-item-label caption>{{ time(payment.date) }}</q-item-label>
@@ -71,25 +73,35 @@
 
 <script>
 import {mapState} from "vuex";
-import {extract_date,human_date,human_date2,time} from "assets/helpers";
+import {extract_date, human_date, human_date2, id_keyed, matches, time} from "assets/helpers";
 import ItemDetailWide from "components/ItemDetailWide";
 import Pagination from "components/Pagination";
+import FilterInputText from "components/FilterInputText";
+import Bills from "assets/mixins/Bills";
 
 export default {
   name: 'PageArchivePayments',
-  components: {Pagination, ItemDetailWide},
+  components: {FilterInputText, Pagination, ItemDetailWide},
+  mixins: [Bills],
   computed: {
-    ...mapState('payments',{ payments:state => _(state.data).sortBy(({ date }) => extract_date(date).getTime()).reverse().value() }),
-    bill(){ return this.payment ? _.get(this.$store.state.bills.data,_.toInteger(this.payment.bill)) : null },
-    customer(){ return this.bill ? _.get(this.$store.state.customers.data,_.toInteger(this.bill.customer)) : null },
-    others(){ return this.bill ? _.filter(this.payments,({ bill,id,status }) => _.toInteger(bill) === _.toInteger(this.bill.id) && _.toInteger(id) !== _.toInteger(this.payment.id) && status === 'Active') : [] }
+    keyed_bills(){ return id_keyed(this.bills) },
+    Payments(){ return _(this.$store.state.payments.data).filter(['status','Active']).map(this.payment_data).reverse().value() },
+    bill(){ return _.get(this.payment,'bill') },
+    customer(){ return _.get(this.payment,['bill','customer']) },
+    others(){ return this.bill ? _.filter(this.payments,({ bill,id,status }) => _.toInteger(bill) === _.toInteger(this.bill.id) && _.toInteger(id) !== _.toInteger(this.payment.id) && status === 'Active') : [] },
+    payments(){ return this.filter ? _.filter(this.Payments,payment => _.includes(payment.slug,this.filter.toLowerCase())) : this.Payments },
   },
   data(){ return {
+    filter: '',
     details:false, payment:null, loading:false,
     showing: null,
   } },
   methods: {
     human_date,human_date2, time,
+    payment_data(payment){
+      let bill = _.get(this.keyed_bills,payment.bill), slug = [bill.token.id,bill.id,bill.amount,payment.amount,bill.token.type,bill.customer.name,bill.customer.phone].join(' ').toLowerCase()
+      return Object.assign({},payment,{ bill,slug })
+    },
     detail(payment){
       this.details = true;
       this.payment = payment

@@ -1,6 +1,6 @@
 <template>
-  <q-page padding>
-    <FilterInputText @text="filter = $event" />
+  <q-page>
+    <FilterInputText @text="filter = $event" class="q-ma-md" />
     <q-list separator>
       <BillListItem v-for="(bill,idx) in showing" :key="hKey(bill,idx,'a-b-b')" :bill="bill" clickable :class="{ 'bg-grey-1':idx%2 }" @click.native="show = !!((selected = idx) || true)" />
     </q-list>
@@ -37,5 +37,5 @@ export default {
     print({ id }){ post('bill','print',{ id }) },
   }
 }
-function slug({ id,customer,amount,token }){ return [id,_.get(customer,'name'),_.toNumber(amount),token.type].join(" ").toLowerCase() }
+function slug({ id,customer,amount,token }){ return [_.get(token,'id'),id,_.get(customer,'name'),_.toNumber(amount),token.type].join(" ").toLowerCase() }
 </script>

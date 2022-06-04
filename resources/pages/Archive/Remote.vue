@@ -1,6 +1,6 @@
 <template>
-  <q-page padding>
-    <FilterInputText @text="filter = $event" />
+  <q-page>
+    <FilterInputText @text="filter = $event" class="q-ma-md" />
     <q-list separator>
       <q-item v-for="(token,idx) in showing" :key="h_key('ar-r-',token.id)" clickable @click="show = !!((selected = idx) || true)">
         <q-item-section avatar><q-badge :color="color" class="q-pa-sm" style="font-size: 0.65rem" :label="token.id" /></q-item-section>

@@ -7,6 +7,9 @@
         <div class="text-caption">Bill ID: {{ bill.id }}</div>
         <div class="text-caption" style="line-height: 0.45rem">Token ID: {{ bill.token.id }}</div>
       </q-card-section>
+      <q-card-section>
+        <q-badge color="grey-1" text-color="teal" :label="bill.token.type" class="q-mt-md q-px-lg q-py-sm" />
+      </q-card-section>
       <q-card-section class="col-grow text-right">
         <q-btn icon="close" text-color="teal-1" dense rounded flat class="absolute-top-right q-mr-xs q-mt-xs" v-close-popup />
         <div class="q-mt-xl"></div>
