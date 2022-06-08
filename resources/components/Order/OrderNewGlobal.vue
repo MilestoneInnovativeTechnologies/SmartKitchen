@@ -13,7 +13,7 @@
       </template>
     </q-card-section>
     <template v-if="!quick">
-      <q-tabs v-model="tab" align="justify" dense class="fixed-bottom bg-primary">
+      <q-tabs v-model="tab" align="justify" dense class="fixed-bottom bg-primary" style="z-index: 3001">
         <q-tab v-if="seat" class="text-white" name="seating" icon="event_seat" label="Seat" />
         <q-tab class="text-white" name="items" icon="widgets" label="Items" />
         <q-tab class="text-white" name="proceed" icon="forward" label="Proceed" />
