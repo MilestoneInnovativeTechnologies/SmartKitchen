@@ -171,7 +171,7 @@ export default {
       }
       this.prv_per = is_period(e.keyCode);
     },
-    KPC(e){ if(this.payment_mode && ['Enter','\n'].includes(e.key) && e.ctrlKey) this.complete() }
+    KPC(e){ if(this.payment_mode && ['Enter','\n'].includes(e.key) && e.ctrlKey && !this.processing) this.complete() }
   },
   watch: {
     'params.items': { deep:true, handler:'calculateTotal' },

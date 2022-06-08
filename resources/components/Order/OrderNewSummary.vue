@@ -106,7 +106,7 @@ export default {
       if(this.payment && !this.v_customer) return alert('Select Customer')
       this.$emit('process',['submit',this.payments])
     },
-    KPC(e){ if(['Enter','\n'].includes(e.key) && e.ctrlKey) this.submit() }
+    KPC(e){ if(['Enter','\n'].includes(e.key) && e.ctrlKey && !this.loading) this.submit() }
   },
   watch: {
     'payments.discount': {
