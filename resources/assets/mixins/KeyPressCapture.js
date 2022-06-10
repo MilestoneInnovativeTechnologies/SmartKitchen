@@ -7,7 +7,7 @@ export default {
       if(!this.$q.platform.is.desktop) return;
       eFn('keypress',this.KPC); eFn('keyup',this.KPC_Additional)
     },
-    KPC_Additional(e){ if(['Backspace','Delete','Escape','Tab'].includes(e.key)) this.KPC(e) },
+    KPC_Additional(e){ if(['Backspace','Delete','Escape','Tab','ArrowDown','ArrowUp'].includes(e.key)) this.KPC(e) },
     KPC(e){ console.log(e) },
   },
   created(){ if(this.KPC_isDesktop) this.KPC_EventSubscribe(document.addEventListener); },
