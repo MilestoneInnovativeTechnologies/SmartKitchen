@@ -21,7 +21,7 @@
       <GroupStickyButton v-model="active_group" :style="{ visibility:(seat && (!tab || tab === 'seating')) ? 'hidden' : 'visible' }" :type="params.type" />
     </template>
     <q-dialog persistent :value="tab === 'proceed'" @before-hide="tab = 'items'">
-      <OrderNewSummary :style="popup_width()" v-bind="params" @process="process" :loading="loading" :payment="payment" />
+      <OrderNewSummary :style="popup_width()" v-bind="params" @process="process" :loading="loading" :payment="payment" @close="tab = 'items'" />
     </q-dialog>
   </q-card>
 </template>
