@@ -5,11 +5,11 @@
     </q-card-section>
     <q-card-section class="q-px-none" v-else>
       <template v-if="quick">
-        <QuickOrder @item="item" :items="params.items" :price_list="params.price_list" @done="tab = 'proceed'" />
+        <QuickOrder @item="item" :items="params.items" :price_list="params.price_list" @done="proceed" />
       </template>
       <template v-else>
         <FilterInputText @text="item_filter = $event" class="q-mb-xs" autofocus />
-        <GroupItemsSelect :selected="active_group" :filter="item_filter" :price_list="params.price_list" :type="params.type" :item_quantities="item_quantities" @item="item" @quantity="setQuantity" @proceed="tab = 'proceed'" />
+        <GroupItemsSelect :selected="active_group" :filter="item_filter" :price_list="params.price_list" :type="params.type" :item_quantities="item_quantities" @item="item" @quantity="setQuantity" @proceed="proceed" />
       </template>
     </q-card-section>
     <template v-if="!quick">
@@ -35,7 +35,6 @@ import OrderNewSummary from "components/Order/OrderNewSummary";
 import {popup_width} from "assets/helpers";
 import QuickOrder from "components/Order/QuickOrder";
 import QuickMode from "assets/mixins/QuickMode";
-const rmvTmeOut = {}
 
 export default {
   name: "OrderNewGlobal",
@@ -70,8 +69,6 @@ export default {
       let idx = _.findIndex(this.params.items,['item',item]);
       if(idx < 0) this.item({ id:item },quantity)
       else this.quantity(idx,quantity);
-      if(quantity < 1) rmvTmeOut[idx] = setTimeout((vm,idx) => vm.remove(idx),2000,this,idx)
-      else if(_.has(rmvTmeOut,idx)) clearTimeout(rmvTmeOut[idx])
     },
     seating({ id,price_list }) {
       this.params.seating = id;
@@ -85,6 +82,7 @@ export default {
     customer(id) { this.params.customer = id },
     narration(text) { this.params.narration = text },
     item_narration(idx,text) { this.params.items[idx]['narration'] = text },
+    proceed(){ this.params.items = _.filter(this.params.items,item => item.quantity > 0); this.tab = 'proceed' },
     submit(payments) {
       if(_.isEmpty(this.params.items)) return; this.loading = true;
       let params = this.payment ? Object.assign({},this.params,payments) : this.params;
