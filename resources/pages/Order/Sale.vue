@@ -93,6 +93,8 @@ import QuickOrder from "components/Order/QuickOrder";
 import QuickMode from "assets/mixins/QuickMode";
 import MenuSelect from "components/Menu/MenuSelect";
 import KeyPressCapture from "assets/mixins/KeyPressCapture";
+const rmvTmeOut = {}
+
 export default {
   name: 'PageSale',
   components: { MenuSelect, QuickOrder, GroupItemsSelect, GroupStickyButton, PaymentTypeSelectDropDown, TaxNatureSelectDropDown, OrderCustomer, PriceListSelectDropDown, FilterInputText },
@@ -140,7 +142,8 @@ export default {
       let itemIndex = _.findIndex(this.params.items,['item',item]);
       if(itemIndex < 0) return this.addItem({ id:item },quantity)
       else this.params.items[itemIndex].quantity = quantity;
-      if(quantity < 1) setTimeout((vm,idx) => vm.removeItem(idx),2000,this,itemIndex)
+      if(quantity < 1) rmvTmeOut[itemIndex] = setTimeout((vm,idx) => vm.removeItem(idx),2000,this,itemIndex)
+      else if(_.has(rmvTmeOut,itemIndex)) clearTimeout(rmvTmeOut[itemIndex])
     },
     calculateTotal(){ this.params.advance_amount = this.total - this.params.discount; if(!this.params.items.length) this.params.discount = 0 },
     removeItem(idx){ this.params.items.splice(idx,1) },
@@ -171,7 +174,11 @@ export default {
       }
       this.prv_per = is_period(e.keyCode);
     },
-    KPC(e){ if(this.payment_mode && ['Enter','\n'].includes(e.key) && e.ctrlKey && !this.processing) this.complete() }
+    KPC(e){
+      if(!this.payment_mode) return;
+      if(['Enter','\n'].includes(e.key) && e.ctrlKey && !this.processing) this.complete()
+      if(e.key === 'Escape') this.payment_mode = false;
+    }
   },
   watch: {
     'params.items': { deep:true, handler:'calculateTotal' },
