@@ -7,7 +7,7 @@
     </Masonry>
     <q-page-sticky position="bottom-left" :offset="offset" v-if="pages > 1">
       <q-fab v-model="pages_show" label="Pages" vertical-actions-align="center" color="indigo" hide-icon direction="up" glossy push v-touch-pan.prevent.mouse="move">
-        <q-fab-action v-for="page_num in pages" color="indigo" :label="page_num" square glossy push @click="page = page_num" :key="'gis-p-' + page_num" v-bind="fab_attrs(page_num)" />
+        <q-fab-action v-for="page_num in pages" padding="sm" :label="page_num" square glossy push @click="page = page_num" :key="'gis-p-' + page_num" v-bind="fab_attrs(page_num)" />
       </q-fab>
     </q-page-sticky>
   </div>
@@ -26,7 +26,7 @@ export default {
   props: ['selected','filter','price_list','type','item_quantities'],
   mixins: [KeyboardOrder],
   data(){ return {
-    offset: [0,80], pages_show: false, page: 1
+    offset: [12,65], pages_show: false, page: 1
   } },
   computed: {
     type_name(){ return (this.type && this.type !== 'Dining') ? _.snakeCase([this.type,'Menu'].join(' ')) : null },
