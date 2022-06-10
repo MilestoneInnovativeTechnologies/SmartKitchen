@@ -35,6 +35,8 @@ import OrderNewSummary from "components/Order/OrderNewSummary";
 import {popup_width} from "assets/helpers";
 import QuickOrder from "components/Order/QuickOrder";
 import QuickMode from "assets/mixins/QuickMode";
+const rmvTmeOut = {}
+
 export default {
   name: "OrderNewGlobal",
   components: {QuickOrder, OrderNewSummary, SeatSelect, GroupStickyButton, GroupItemsSelect, FilterInputText},
@@ -68,7 +70,8 @@ export default {
       let idx = _.findIndex(this.params.items,['item',item]);
       if(idx < 0) this.item({ id:item },quantity)
       else this.quantity(idx,quantity);
-      if(quantity < 1) setTimeout((vm,idx) => vm.remove(idx),2000,this,idx)
+      if(quantity < 1) rmvTmeOut[idx] = setTimeout((vm,idx) => vm.remove(idx),2000,this,idx)
+      else if(_.has(rmvTmeOut,idx)) clearTimeout(rmvTmeOut[idx])
     },
     seating({ id,price_list }) {
       this.params.seating = id;
