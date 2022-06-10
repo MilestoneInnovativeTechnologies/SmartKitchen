@@ -5,7 +5,7 @@
       <q-btn icon="close" flat round dense @click="$emit('close',null)" />
     </q-card-section>
     <q-card-section class="q-gutter-xs">
-      <q-input dense outlined label="Name" v-model="name" autofocus />
+      <q-input dense outlined label="Name" v-model="name" />
       <q-input dense outlined label="Phone" v-model="phone" />
       <q-input dense type="email" outlined label="Email" v-model="email" />
       <q-input dense type="textarea" outlined label="Address" v-model="address" />
