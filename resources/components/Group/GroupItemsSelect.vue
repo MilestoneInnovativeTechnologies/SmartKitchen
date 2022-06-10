@@ -52,8 +52,8 @@ export default {
       let items = _.uniq(_.flatMap(groups,group => _.get(this.group_master,[group,'items'])))
       return _(items).map(id => _.get(this.item_master,[id])).filter(['status','Active']).value()
     },
-    fab_attrs(num){ return this.page === num ? { disable:true,padding:'xs',icon:'reply_all' } : { padding:'sm' } },
-    move(ev){ this.offset = [this.offset[0] - ev.delta.x, this.offset[1] - ev.delta.y] },
+    fab_attrs(num){ return this.page === num ? { disable:true,color:'secondary' } : { color:'indigo' } },
+    move(ev){ this.offset = [this.offset[0] + ev.delta.x, this.offset[1] - ev.delta.y] },
   },
   watch:{
     filter(n,o){ if(!o && n) this.page = 1 },

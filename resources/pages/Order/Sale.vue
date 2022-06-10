@@ -98,7 +98,7 @@ export default {
   components: { MenuSelect, QuickOrder, GroupItemsSelect, GroupStickyButton, PaymentTypeSelectDropDown, TaxNatureSelectDropDown, OrderCustomer, PriceListSelectDropDown, FilterInputText },
   mixins: [QuickMode,KeyPressCapture],
   data(){ return {
-    group: 0, item_filter: '', fab: true, offset: [12,12],
+    group: 0, item_filter: '', fab: true, offset: [12,65],
     payment_mode: false, processing: false,
     default_customer: null,
     params: {
