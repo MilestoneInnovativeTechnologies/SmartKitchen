@@ -6,7 +6,7 @@
     </q-card-section>
     <q-card-section>
       <div class="row items-center no-wrap q-col-gutter-x-xs">
-        <ItemSearchDropDown class="col-grow" v-model="adding.item" outlined dense autofocus label="Item" ref="item_ref" />
+        <ItemSearchDropDown class="col-grow" v-model="adding.item" outlined dense label="Item" ref="item_ref" />
         <q-input type="number" v-model.number="adding.quantity" outlined dense label="Quantity" />
         <div><q-btn icon="arrow_downward" color="primary" round dense @click="add" /></div>
       </div>
