@@ -16,6 +16,7 @@ use Milestone\SmartKitchen\Events\TokenItemsSaving;
 use Milestone\SmartKitchen\Events\TokenItemsUpdated;
 use Milestone\SmartKitchen\Events\TokenItemUpdated;
 use Milestone\SmartKitchen\Events\TokenItemUpdating;
+use Milestone\SmartKitchen\Models\Bill;
 use Milestone\SmartKitchen\Models\Kitchen;
 use Milestone\SmartKitchen\Models\Tax;
 use Milestone\SmartKitchen\Models\Token;
@@ -176,6 +177,7 @@ class TokenController extends Controller
     public function customer(Request $request){
         if(!$request->filled(['token'])) return;
         Token::find($request->input('token'))->update($request->only('customer'));
+        Bill::where('token',$request->token)->where('progress','!=','Cancelled')->update($request->only('customer'));
     }
 
     public function kot_print(Request $request){

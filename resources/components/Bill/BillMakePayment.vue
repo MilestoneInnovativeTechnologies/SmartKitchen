@@ -11,7 +11,9 @@
             <q-item-label>{{ token.type }}</q-item-label>
             <q-item-label caption class="text-white text-bold">{{ date(token.date) }}</q-item-label>
           </q-item-section>
-          <q-item-section side class="text-white text-bold">{{ token.customer.name }}</q-item-section>
+          <q-item-section side>
+            <q-btn :label="token.customer.name" text-color="white" no-caps flat padding="0" @click="$emit('action',['bill_customer',token])" />
+          </q-item-section>
 <!--          <q-item-section side><q-btn icon="close" color="white" rounded flat dense v-close-popup class="q-mt-xs" /></q-item-section>-->
         </q-item>
       </q-list>
@@ -72,14 +74,13 @@
 
 import {human_date2, is_period, is_today, precision, time} from "assets/helpers";
 import UserSelectDropDown from "components/Users/UserSelectDropDown";
-import OrderCustomer from "components/Order/OrderCustomer";
 import TaxNatureSelectDropDown from "components/Tax/TaxNatureSelectDropDown";
 import ChefLayout from "layouts/ChefLayout";
 import {PaymentsTypes} from "assets/assets";
 
 export default {
   name: "BillMakePayment",
-  components: {ChefLayout, TaxNatureSelectDropDown, OrderCustomer, UserSelectDropDown},
+  components: {ChefLayout, TaxNatureSelectDropDown, UserSelectDropDown},
   props: ['bill'],
   data(){ return {
     loading: false, discount: 0, tax: null,
@@ -93,10 +94,6 @@ export default {
     total(){ return _.sumBy(this.items,({ price,quantity }) => price*quantity) },
     quantities(){ return _.sumBy(this.items,({ quantity }) => quantity) },
     to_pay(){ return _.subtract(this.bill.payable,this.bill.paid) },
-    customer: {
-      get(){ return _.get(this.token,['customer','id']) },
-      set(customer){ this.loading = true; post('token','customer',{ token:this.token.id,customer }).then(() => this.loading = false) }
-    },
     amount: {
       get(){ return this.v_amount || this.to_pay },
       set(v){ this.v_amount = _.toNumber(v) },
