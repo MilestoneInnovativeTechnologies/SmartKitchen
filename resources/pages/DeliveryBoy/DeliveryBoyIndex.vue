@@ -40,19 +40,20 @@ export default {
     me: parseInt(this.$route.meta.me.id)
   } },
   computed: {
-    Tokens(){ return _(this.tokens).filter(token => token.progress !== 'Cancelled' && token.type === 'Home Delivery').sortBy('id').reverse().map(token => token.customer ? token : Object.assign({},token,{ customer:NoCustomer }))./*filter(({ date }) => is_today(date)).*/value() },
+    Tokens(){ return _(this.tokens).filter(token => token.progress !== 'Cancelled' && token.type === 'Home Delivery').sortBy('id').reverse().map(token => token.customer ? token : Object.assign({},token,{ customer:NoCustomer })).map(token => Object.assign({},token,{ bill:_.get(this.token_bill,token.id) }))./*filter(({ date }) => is_today(date)).*/value() },
     bills_today(){ return _(this.bills).filter(({ date }) => is_today(date)).value() },
     bills_own(){ return _.filter(this.bills_today,['user.id',this.me]) },
-    Billable(){ return _.filter(this.Tokens,({ id,items }) => is_all_completed(items) && !_.get(this.token_bill,parseInt(id))) },
+    Billable(){ return _.filter(this.Tokens,token => !token.bill) },
     Payments(){ return _.sumBy(this.bills_own,({ paid }) => _.toNumber(paid)) },
-    tokens_own(){ return _.filter(this.Tokens,({ user,id }) => _.get(this.token_bill,id,(user === this.me))) },
-    deliverable(){ return _(this.tokens_own).filter(({ id }) => _.get(this.token_bill,parseInt(id)) && _.get(this.token_bill,[parseInt(id),'progress']) === 'Pending').value() },
+    tokens_own(){ return _.filter(this.Tokens,token => token_own_filter(this.me,token)) },
+    deliverable(){ return _.filter(this.tokens_own,({ bill }) => bill && (bill.progress === 'Pending' || bill.progress === 'Partial')) },
     processing(){ return _.filter(this.tokens_own,({ items }) => !is_all_completed(items)) },
-    delivered(){ return _(this.tokens_own).filter(({ id }) => _.has(this.token_bill,parseInt(id))).filter(({ id }) => _.get(_.find(this.bills,['id',_.get(this.token_bill,id)]),'progress') !== 'Pending').value() },
+    delivered(){ return _.filter(this.tokens_own,({ bill }) => bill && bill.progress === 'Paid') },
   },
   methods: {
     take_only(array,amount){ return _.take(array,amount || 5) },
   }
 }
 function is_all_completed(items){ return items.length && _.every(items,({ progress }) => _.includes(['Cancelled','Completed','Served'],progress)) }
+function token_own_filter(user_id,token){ return (token.bill && (_.get(token.bill,['user','id']) === user_id || _.get(token.bill,['user','role']) === 'Receptionist')) || (token.user === user_id) }
 </script>
