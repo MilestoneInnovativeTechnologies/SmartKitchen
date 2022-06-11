@@ -9,7 +9,7 @@
       <q-space />
       <div class="q-gutter-x-xs">
         <q-btn v-show="token_items_selected.length" :loading="TIS_loading" icon="how_to_reg" color="primary" size="sm" padding="xs" @click="serve_selected_token_items" />
-        <q-btn v-if="!bill" icon="receipt_long" color="secondary" size="sm" @click="$emit('action',['bill',token])" padding="xs" />
+        <q-btn v-if="!bill" icon="receipt_long" color="secondary" size="sm" @click="$emit('action',[token.type === 'Home Delivery' ? 'delivery_bill' : 'bill',token])" padding="xs" />
         <q-btn v-if="can_pay" icon="payments" color="positive" size="sm" @click="$emit('action',['payment',token])" padding="xs" />
         <q-btn v-if="can_update" icon="rule" color="warning" size="sm" @click="$emit('action',['items',token])" padding="xs" />
       </div>
