@@ -24,7 +24,7 @@ class RefreshTokenProgress
 
     public function handle()
     {
-        Log::info('Initialized Token Refresh Activity');
+        Log::info('Initialized Token Refresh Activity. Token: ' . $this->token->id);
         $items = $this->token->items; $progresses = $items->map->progress;
         if($items->isEmpty()) { Log::critical('Items are empty'); return $this->makeProgress('New'); }
         if($progresses->contains('Processing')) { Log::info('Have items in Processing'); return $this->makeProgress('Processing'); }

@@ -9,19 +9,17 @@ use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
-use Milestone\SmartKitchen\Models\Bill;
 
 class BillProgressMadeAsCancelled
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $bill,$token;
+    public $bill_id,$token_id;
 
-    public function __construct(Bill $bill)
+    public function __construct($bill)
     {
-        $bill->load(['Token']);
-        $this->bill = $bill;
-        $this->token = $bill->Token->id;
+        $this->bill_id = $bill->id;
+        $this->token_id = $bill->token;
     }
 
 }
