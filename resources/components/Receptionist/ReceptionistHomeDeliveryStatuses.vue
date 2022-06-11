@@ -3,7 +3,7 @@
     <q-card-section class="bg-deep-purple text-white row justify-between text-bold items-center q-py-xs"><div>Home Delivery Statuses</div><FilterInputText bg-color="white" class="gt-xs" style="width: 50vw" label="Filter" @text="filter = $event" lazy /><div>{{ Tokens.length }}</div></q-card-section>
     <q-card-section class="lt-sm"><FilterInputText label="Search" @text="filter = $event" lazy /></q-card-section>
     <OrderSummaryDeliveryBoy :tokens="show" kitchen user @generate="generating = $event" @deliver="deliver" />
-    <q-dialog persistent :value="generating !== null" @hide="generating = null"><BillGenerateCard :style="popup_width()" v-if="generating" :token="generating" @generated="generating = null" /></q-dialog>
+    <q-dialog persistent :value="generating !== null" @hide="generating = null"><BillGenerateCard :style="popup_width()" v-if="generating" :token="generating" @generated="generating = null" :close="true" /></q-dialog>
     <q-dialog persistent :value="delivering !== null" @hide="delivering = null"><DeliveryBoyPaymentCard :style="popup_width()" v-if="delivering" :token="delivering" @paid="delivering = null" /></q-dialog>
   </q-card>
 </template>
@@ -30,18 +30,15 @@ export default {
       .filter(['type','Home Delivery'])
       .filter(({ progress }) => !['Paid','Cancelled'].includes(progress))
       .map(token => token.customer ? token : Object.assign({},token,{ customer:NoCustomer }))
-      .map(token => Object.assign({},token,{ slug:tokenSlug(token) }))
+      .map(token => Object.assign({},token,{ slug:tokenSlug(token),bill:_.get(this.token_bill,token.id) }))
       .sortBy('id').reverse()
-      .filter(token => this.filter ? _.includes(token.slug,_.toLower(this.filter)) : true)
       .value()
     },
-    show(){ return this.filter ? this.Tokens : _.take(this.Tokens,10) },
-    token_ids(){ return _.map(this.Tokens,'id') },
-    Bills(){ return _(this.bills).filter(bill => _.includes(this.token_ids,bill.token.id)).keyBy('token.id').value() }
+    show(){ return this.filter ? _.filter(this.Tokens,token => _.includes(token.slug,_.toLower(this.filter))) : _.take(this.Tokens,10) },
   },
   methods: {
     image, popup_width,
-    deliver(token){ this.delivering = Object.assign({},token,{ bill:_.get(this.Bills,token.id) }) }
+    deliver(token){ this.delivering = Object.assign({},token,{ bill:_.get(this.token_bill,token.id) }) }
   }
 }
 function tokenSlug(token){
