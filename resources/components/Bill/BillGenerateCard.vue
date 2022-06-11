@@ -1,6 +1,6 @@
 <template>
   <q-card>
-    <q-bar class="bg-accent text-white"><q-icon name="receipt_long" class="q-mr-md" />Generate Bill<q-space /><q-btn icon="close" rounded flat dense v-close-popup /></q-bar>
+    <q-bar class="bg-accent text-white"><q-icon name="receipt_long" class="q-mr-md" /><span class="text-caption">Generate Bill</span><q-space /><q-btn v-if="close" icon="close" rounded flat dense v-close-popup /></q-bar>
     <q-card-section class="row q-col-gutter-sm">
       <q-input readonly outlined dense class="col-4" :value="token.id" label="Token ID" />
       <q-input readonly outlined dense class="col-8" :value="token.date_human" label="Date" />
@@ -49,7 +49,7 @@ const { KJ30I } = require('boot/subscription').FEATURES
 export default {
   name: "BillGenerateCard",
   components: {UserSelectDropDown, OrderCustomer},
-  props: ['token'],
+  props: ['token','close'],
   data(){ return {
     tax: null, discount: 0, customer: null,
     loading: false, user: null, d_boy_enabled: KJ30I === 'Yes',
