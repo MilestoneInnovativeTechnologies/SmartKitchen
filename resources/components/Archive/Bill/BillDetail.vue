@@ -92,8 +92,8 @@ export default {
   },
   methods: {
     human_date2,
-    payment_cancel({ id }){ this.$store.dispatch('payments/cancel',id,{ root:true }) },
-    bill_cancel(){ this.$store.dispatch('bills/cancel',this.bill,{ root:true }) }
+    payment_cancel({ id }){ this.$store.dispatch('payments/cancel',id,{ root:true }).then(() => this.$emit('done')) },
+    bill_cancel(){ this.$store.dispatch('bills/cancel',this.bill,{ root:true }).then(() => this.$emit('done')) }
   }
 }
 </script>

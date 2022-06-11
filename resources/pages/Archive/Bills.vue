@@ -5,7 +5,7 @@
       <BillListItem v-for="(bill,idx) in showing" :key="hKey(bill,idx,'a-b-b')" :bill="bill" clickable :class="{ 'bg-grey-1':idx%2 }" @click.native="show = !!((selected = idx) || true)" />
     </q-list>
     <q-dialog persistent v-model="show" transition-show="flip-down" transition-hide="flip-up">
-      <BillDetail v-if="bill" :bill="bill" style="min-width: 80vw" @print="print(bill)" />
+      <BillDetail v-if="bill" :bill="bill" style="min-width: 80vw" @print="print(bill)" @done="show = false" />
     </q-dialog>
     <Pagination :records="Bills" v-model="showing" color="teal" />
   </q-page>
