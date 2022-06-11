@@ -3,33 +3,38 @@
     <q-bar class="bg-positive text-white q-py-lg">
       <q-list class="q-my-xl full-width">
         <q-item style="font-size: 0.75rem" class="q-px-none items-center">
-          <q-item-section side class="text-white">{{ bill.id }} ({{ token.id }})</q-item-section>
-          <q-item-section side class="text-white" style="font-size: 0.70rem">{{ date(token.date) }}</q-item-section>
-          <q-item-section class="text-white">{{ token.type }}</q-item-section>
-          <q-item-section side class="text-white">{{ token.customer.name }}</q-item-section>
+          <q-item-section side class="text-white text-bold">
+            <q-item-label>Bill: {{ bill.id }}</q-item-label>
+            <q-item-label caption class="text-bold text-white">Token: {{ token.id }}</q-item-label>
+          </q-item-section>
+          <q-item-section class="text-white text-bold">
+            <q-item-label>{{ token.type }}</q-item-label>
+            <q-item-label caption class="text-white text-bold">{{ date(token.date) }}</q-item-label>
+          </q-item-section>
+          <q-item-section side class="text-white text-bold">{{ token.customer.name }}</q-item-section>
 <!--          <q-item-section side><q-btn icon="close" color="white" rounded flat dense v-close-popup class="q-mt-xs" /></q-item-section>-->
         </q-item>
       </q-list>
     </q-bar>
-    <q-list separator style="font-size: 0.75rem" bordered>
+    <q-list separator style="font-size: 0.75rem" bordered dense>
       <q-item v-for="(item,idx) in items" :key="'tgb-t-'+token.id+'-ti-'+item.id+'-idx-'+idx">
-        <q-item-section>
-          <q-item-label caption>{{ item.quantity }}x {{ precision(item.price) }}</q-item-label>
-          <q-item-label>{{ item.item.name }}</q-item-label>
+        <q-item-section class="text-bold">
+          <q-item-label><span class="text-positive">{{ item.quantity }}x</span> {{ item.item.name }}</q-item-label>
         </q-item-section>
-        <q-item-section side class="text-bold">{{ precision(item.price * item.quantity) }}</q-item-section>
+        <q-item-section>{{ precision(item.price) }}</q-item-section>
+        <q-item-section side class="text-bold text-positive">{{ precision(item.price * item.quantity) }}</q-item-section>
       </q-item>
     </q-list>
     <q-card-section horizontal class="text-caption">
       <q-card-section class="col">
-        <div class="flex justify-between"><span>Items </span><span>{{ items ? items.length : 0 }}</span></div>
-        <div class="flex justify-between"><span>Quantities </span><span>{{ quantities }}</span></div>
-        <div class="flex justify-between"><span>Tax Type </span><span>{{ bill.nature || '-' }}</span></div>
+        <div class="flex justify-between"><span>Items </span><span class="text-positive text-bold">{{ items ? items.length : 0 }}</span></div>
+        <div class="flex justify-between"><span>Quantities </span><span class="text-positive text-bold">{{ quantities }}</span></div>
+        <div class="flex justify-between"><span>Tax Type </span><span class="text-positive text-bold">{{ bill.nature || '-' }}</span></div>
       </q-card-section>
       <q-card-section class="col">
-        <div class="flex justify-between"><span>Total </span><span>{{ precision(total) }}</span></div>
-        <div class="flex justify-between"><span>Discount </span><span>{{ precision(bill.discount) }}</span></div>
-        <div class="flex justify-between"><span>Paid </span><span>{{ precision(bill.paid) }}</span></div>
+        <div class="flex justify-between"><span>Total </span><span class="text-bold text-positive">{{ precision(total) }}</span></div>
+        <div class="flex justify-between"><span>Discount </span><span class="text-bold text-positive">{{ precision(bill.discount) }}</span></div>
+        <div class="flex justify-between"><span>Paid </span><span class="text-bold text-positive">{{ precision(bill.paid) }}</span></div>
       </q-card-section>
     </q-card-section><q-separator />
     <q-item-section class="text-center q-py-md">
@@ -43,7 +48,7 @@
       </q-item>
     </q-list>
     <q-card-actions align="right" class="q-px-lg">
-      <q-btn color="red" icon="delete" @click="cancel" />
+      <q-btn color="red" dense flat @click="cancel" no-caps label="Cancel Bill" />
       <q-space />
       <q-btn label="Add Payment" color="positive" class="q-px-md" @click="pay" :disabled="amount === 0" />
     </q-card-actions>
