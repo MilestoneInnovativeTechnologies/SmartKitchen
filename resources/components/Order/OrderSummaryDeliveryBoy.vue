@@ -35,9 +35,9 @@ export default {
   name: "OrderSummaryDeliveryBoy",
   props: ['tokens','kitchen','address','payment','user'],
   computed: {
-    Bills(){ return this.payment === undefined ? [] : _(this.$store.state.bills.data).filter(bill => _.includes(_.map(this.tokens,'id'),bill.token)).keyBy('token').value() },
-    Payments(){ return this.payment === undefined ? [] : _(this.$store.state.payments.data).filter(payment => _.includes(_.map(this.Bills,'id'),payment.bill)).groupBy('bill').value() },
-    total(){ return _(this.Bills).map(({ id }) => this.bill_paid(this.Payments[id])).sum() }
+    Bills(){ return this.payment === undefined ? [] : _(this.tokens).filter(token => !!token.bill).keyBy('token').value() },
+    Payments(){ return this.payment === undefined ? [] : _(this.Bills).flatMap('payments').groupBy('bill').value() },
+    total(){ return _(this.Bills).flatten().sumBy(payment => _.toNumber(payment.amount)) }
   },
   methods: {
     image, precision, time,
@@ -45,8 +45,7 @@ export default {
     bill_paid(payments){ return _.sumBy(payments,({ amount }) => _.toNumber(amount)) },
     token_payment({ id }){ return _.get(this.Payments,_.get(this.Bills,[id,'id'])) },
     payment_date(token){ return _.get(_.last(this.token_payment(token)),'date') },
-    token_user({ id,user,waiter }) {
-      let bill = _.find(this.$store.state.bills.data, {token: id});
+    token_user({ user,waiter,bill }) {
       return (bill && bill.user)
         ? _.get(this.$store.state.users.data[parseInt(bill.user)], 'name')
         : (user ? waiter.name : '')
@@ -56,8 +55,7 @@ export default {
         ? token.items.reduce((sum,item) => sum + item.quantity * item.price,0)
         : (this.token_payment(token) ? this.bill_paid(this.Payments[this.Bills[token.id]['id']]) : 0)
     },
-    token_status({ id,progress,items }){
-      let bill = _.find(this.$store.state.bills.data, {token: id});
+    token_status({ progress,items,bill }){
       if(bill) return bill.progress === 'Pending' ? 'Deliverable' : (bill.progress === 'Partial' ? 'Partially Paid' : 'Paid');
       if(['New','Accepted'].includes(progress)) return 'New';
       return is_all_completed(items) ? 'Billable' : 'Processing';
@@ -65,6 +63,6 @@ export default {
   }
 }
 function is_all_completed(items){
-  return items.length && _.every(items,({ progress }) => _.includes(['Cancelled','Completed'],progress))
+  return items.length && _.every(items,({ progress }) => _.includes(['Cancelled','Completed','Served'],progress))
 }
 </script>
