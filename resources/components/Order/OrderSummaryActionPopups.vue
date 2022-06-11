@@ -4,7 +4,7 @@
     <q-dialog :value="collect_payment" persistent @before-hide="done"><PaymentCollectCard :style="popup_width()" :bill="bill" @paid="done" /></q-dialog>
     <q-dialog :value="customer_detail" persistent @before-hide="done"><CustomerDetailCard v-if="customer_id" :id="customer_id" style="max-width: 360px; width: 90vw;" color="purple" /></q-dialog>
     <q-dialog :value="token_items" persistent @before-hide="done"><OrderSummaryItemsManage :token="item" :style="popup_width()" @close="done" @done="done" /></q-dialog>
-    <q-dialog :value="delivery_bill" persistent @before-hide="done"><BillGenerateCard :token="item" v-if="item" :style="popup_width()" @generated="done" /></q-dialog>
+    <q-dialog :value="delivery_bill" persistent @before-hide="done"><BillGenerateCard :token="item" v-if="item" :style="popup_width()" @generated="done" :close="true" /></q-dialog>
     <q-dialog :value="delivery_pay" persistent @before-hide="done"><DeliveryBoyPaymentCard :token="item" v-if="item" :style="popup_width()" @paid="done" /></q-dialog>
   </div>
 </template>
