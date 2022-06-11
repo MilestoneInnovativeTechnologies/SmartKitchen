@@ -4,8 +4,10 @@
       <q-list class="q-my-xl full-width">
         <q-item style="font-size: 0.75rem" class="q-px-none items-center">
           <q-item-section side><q-icon name="receipt_long" size="sm" color="white" /></q-item-section>
-          <q-item-section class="text-white">
-            <q-item-label class="q-ml-sm text-bold">{{ token.id }}, {{ token.type }}, {{ token.seating ? token.seating.name : date(token.date) }}, {{ token.customer ? token.customer.name : '' }}</q-item-label>
+          <q-item-section class="text-white text-bold"><q-item-label>{{ token.id }}</q-item-label></q-item-section>
+          <q-item-section side class="text-white">
+            <q-item-label class="q-ml-sm text-bold">{{ token.seating ? token.seating.name : date(token.date) }}</q-item-label>
+            <q-item-label caption  class="text-white q-ml-sm text-bold">{{ token.type }}</q-item-label>
           </q-item-section>
           <q-item-section side v-if="close"><q-btn icon="close" color="white" rounded flat dense v-close-popup class="q-mt-xs text-bold" /></q-item-section>
         </q-item>
@@ -15,17 +17,17 @@
       <q-item v-for="(item,idx) in items" :key="'tgb-t-'+token.id+'-ti-'+item.id+'-idx-'+idx">
         <q-item-section side class="text-black">{{ idx+1 }}</q-item-section>
         <q-item-section>
-          <q-item-label caption>Price: {{ precision(item.price) }}</q-item-label>
-          <q-item-label><span class="text-bold">{{ item.quantity }}x</span> {{ item.item.name }}</q-item-label>
+          <q-item-label caption style="font-size: 0.65rem">Price: {{ precision(item.price) }}</q-item-label>
+          <q-item-label><span class="text-bold text-secondary">{{ item.quantity }}x</span> {{ item.item.name }}</q-item-label>
         </q-item-section>
-        <q-item-section side class="text-bold">{{ precision(item.price * item.quantity) }}</q-item-section>
+        <q-item-section side class="text-bold text-secondary">{{ precision(item.price * item.quantity) }}</q-item-section>
       </q-item>
       <q-item>
         <q-item-section>
           <q-item-label caption>{{ items.length }}x Items, {{ quantities }}x Quantities</q-item-label>
           <q-item-label class="text-bold">Total</q-item-label>
         </q-item-section>
-        <q-item-section side class="text-bold" style="font-size: 1rem">{{ precision(total) }}</q-item-section>
+        <q-item-section side class="text-bold text-secondary" style="font-size: 1rem">{{ precision(total) }}</q-item-section>
       </q-item>
       <q-item><q-item-section><OrderCustomer v-model="customer" get="id" outlined /></q-item-section></q-item>
       <q-item>
