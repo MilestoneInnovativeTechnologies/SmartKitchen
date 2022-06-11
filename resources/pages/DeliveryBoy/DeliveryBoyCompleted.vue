@@ -13,7 +13,6 @@
 <script>
 import TokenDetailDeliveryBoyExpansion from "components/Tokens/TokenDetailDeliveryBoyExpansion";
 import {popup_width} from "assets/helpers";
-import BillGenerateCard from "components/Bill/BillGenerateCard";
 import DeliveryBoyPaymentCard from "components/Payment/DeliveryBoyPaymentCard";
 import {NoCustomer} from "assets/assets";
 import OrderNewFabDeliveryBoy from "components/Order/OrderNewFabDeliveryBoy";
@@ -25,7 +24,7 @@ import OrderSummaryActions from "assets/mixins/OrderSummaryActions";
 
 export default {
   name: "DeliveryBoyCompleted",
-  components: {OrderSummaryActionPopups, FilterInputText, OrderNewFabDeliveryBoy, DeliveryBoyPaymentCard, BillGenerateCard, TokenDetailDeliveryBoyExpansion},
+  components: {OrderSummaryActionPopups, FilterInputText, OrderNewFabDeliveryBoy, DeliveryBoyPaymentCard, TokenDetailDeliveryBoyExpansion},
   mixins: [Tokens,OrderSummaryActions],
   data(){ return {
     me: parseInt(this.$route.meta.me.id),
