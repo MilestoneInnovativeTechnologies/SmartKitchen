@@ -3,8 +3,9 @@
     <BillFilter class="q-mb-sm" :tokens="FTokens" v-model="Tokens" />
     <Masonry :width="300" :items="showing">
       <template #item="Token">
-        <TokenBillGenerate v-if="Token.progress === 'Completed'" :token="Token" />
-        <BillMakePayment v-else :bill="token_bill[Token.id]" />
+        <BillMakePayment v-if="token_bill[Token.id]" :bill="token_bill[Token.id]" />
+        <BillGenerateCard v-else-if="Token.type === 'Home Delivery'" :token="Token" />
+        <TokenBillGenerate v-else :token="Token" />
       </template>
     </Masonry>
     <Pagination :records="Tokens" v-model="showing" />
@@ -18,10 +19,11 @@ import BillMakePayment from "components/Bill/BillMakePayment";
 import Masonry from "components/Masonry";
 import BillFilter from "components/Bill/BillFilter";
 import Pagination from "components/Pagination";
+import BillGenerateCard from "components/Bill/BillGenerateCard";
 
 export default {
   name: "PageBillReceptionist",
-  components: {Pagination, BillFilter, Masonry, BillMakePayment, TokenBillGenerate},
+  components: {BillGenerateCard, Pagination, BillFilter, Masonry, BillMakePayment, TokenBillGenerate},
   mixins: [Bills],
   data(){ return {
     filter_progress: ['Completed','Pending','Partial'],
