@@ -19,7 +19,7 @@ class RefreshTokenProgress
 
     public function __construct($token)
     {
-        $this->token = Token::with(['Items','Bill'])->find($token);
+        $this->token = Token::with(['Items' => function($Q){ return $Q->withoutGlobalScopes(); },'Bill' => function($Q){ return $Q->withoutGlobalScopes(); }])->find($token);
     }
 
     public function handle()
