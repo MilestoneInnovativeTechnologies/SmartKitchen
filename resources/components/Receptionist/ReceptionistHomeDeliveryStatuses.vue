@@ -2,7 +2,7 @@
   <q-card v-if="Tokens.length || filter">
     <q-card-section class="bg-deep-purple text-white row justify-between text-bold items-center q-py-xs"><div>Home Delivery Statuses</div><FilterInputText bg-color="white" class="gt-xs" style="width: 50vw" label="Filter" @text="filter = $event" lazy /><div>{{ Tokens.length }}</div></q-card-section>
     <q-card-section class="lt-sm"><FilterInputText label="Search" @text="filter = $event" lazy /></q-card-section>
-    <OrderSummaryDeliveryBoy :tokens="show" kitchen user @generate="generating = $event" @deliver="deliver" />
+    <OrderSummaryDeliveryBoy :tokens="show" kitchen user @generate="generating = $event" @deliver="delivering = $event" />
     <q-dialog persistent :value="generating !== null" @hide="generating = null"><BillGenerateCard :style="popup_width()" v-if="generating" :token="generating" @generated="generating = null" :close="true" /></q-dialog>
     <q-dialog persistent :value="delivering !== null" @hide="delivering = null"><DeliveryBoyPaymentCard :style="popup_width()" v-if="delivering" :token="delivering" @paid="delivering = null" /></q-dialog>
   </q-card>
@@ -38,7 +38,6 @@ export default {
   },
   methods: {
     image, popup_width,
-    deliver(token){ this.delivering = Object.assign({},token,{ bill:_.get(this.token_bill,token.id) }) }
   }
 }
 function tokenSlug(token){
