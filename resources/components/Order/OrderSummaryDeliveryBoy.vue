@@ -6,7 +6,9 @@
       <q-item-section>
         <q-item-label>{{ token.id }}, {{ token.customer.name }}</q-item-label>
         <q-item-label caption lines="2" v-if="kitchen === undefined">{{ token.items.map(item => item.item.name).join(', ') }}</q-item-label>
-        <q-item-label caption lines="1" v-else v-for="(item,idx2) in token.items" :key="'osdb-tk-'+token.id+'-idx-'+idx+'ims-'+item.id+'-'+idx2" v-html="kitchen_view(item)" />
+        <template v-else>
+          <q-item-label caption lines="1" v-for="(item,idx2) in token.items" :key="'osdb-tk-'+token.id+'-idx-'+idx+'ims-'+item.id+'-'+idx2" v-html="kitchen_view(item)" />
+        </template>
         <template v-if="address !== undefined && token.customer">
           <q-item-label caption lines="2">{{ token.customer.phone }}</q-item-label>
           <q-item-label caption lines="2">{{ token.customer.address }}</q-item-label>
@@ -16,6 +18,7 @@
           <q-item-label caption v-if="token_user(token)">User: {{ token_user(token) }}</q-item-label>
           <q-item-label caption>Amount: {{ precision(token_total(token)) }}</q-item-label>
         </template>
+        <q-item-label caption v-if="token.bill && token.bill.user">{{ token.bill.user.role }}: {{ token.bill.user.name }}</q-item-label>
       </q-item-section>
       <q-item-section side v-if="user === undefined">{{ precision(token_total(token)) }}</q-item-section>
       <q-item-section side v-else class="text-purple text-caption">
