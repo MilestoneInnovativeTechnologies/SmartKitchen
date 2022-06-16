@@ -25,7 +25,7 @@
       <ArchiveTokenListItem v-for="(item,idx) in items" :key="'atd-t-' + token.id +'-i-i-' + item.id" :color="color" :item="item" :class="{ 'bg-grey-3':idx%2 }" />
     </q-list>
     <q-card-actions>
-      <q-btn type="a" size="sm" dense flat text-color="red" label="Cancel Token" @click="token_cancel" />
+      <q-btn type="a" size="sm" dense flat text-color="red" label="Cancel Token" @click="token_cancel" v-show="token.progress !== 'Cancelled'" />
       <q-space />
       <q-btn dense :color="color" size="sm" label="Progress Timings" @click="token_timings = true" />
       <q-btn dense :color="color" size="sm" :label="print_label || 'Print'" @click="$emit('print')" />
@@ -56,7 +56,7 @@ export default {
     timing(){ return this.token.progress_timing || [] }
   },
   methods: {
-    token_cancel(){ this.loading = true; post('token','do_cancel',{ id:this.token.id }).then().catch().finally(() => (this.loading = false)) }
+    token_cancel(){ this.loading = true; post('token','do_cancel',{ id:this.token.id }).then(() => this.$emit('cancelled')).catch().finally(() => (this.loading = false)) }
   }
 }
 </script>
