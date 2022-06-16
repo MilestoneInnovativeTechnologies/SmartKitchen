@@ -10,7 +10,7 @@
       </q-item>
     </q-list>
     <q-dialog persistent v-model="show">
-      <ArchiveTokenDetail v-if="Token" :token="Token" style="min-width: 80vw" :color="color" @print="print(Token)" />
+      <ArchiveTokenDetail v-if="Token" :token="Token" style="min-width: 80vw" :color="color" @print="print(Token)" @cancelled="show = false" />
     </q-dialog>
     <Pagination :records="Tokens" v-model="showing" :color="color" />
   </q-page>
