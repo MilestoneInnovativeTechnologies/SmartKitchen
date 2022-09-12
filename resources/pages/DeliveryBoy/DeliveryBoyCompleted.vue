@@ -51,7 +51,7 @@ export default {
     caption(token){ return plain(_.get(token,['customer','address'],"")) },
   }
 }
-function plain(txt){ return (txt || "").replaceAll(/\n/g,", ") }
+function plain(txt){ return (txt || "").replace(/\n/g,", ") }
 function is_all_completed({ items }){ return items.length && _.every(items,({ progress }) => _.includes(['Cancelled','Completed','Served'],progress)) }
 function token_slug({ id,customer }){ return _.toLower([id,customer.name,customer.phone,plain(customer.address)].join(" ")) }
 </script>

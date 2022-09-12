@@ -53,6 +53,6 @@ export default {
   }
 }
 function can_view({ user },id){ return !user || (user.id === id || user.role !== 'Delivery Boy') }
-function plain(txt){ return (txt || "").replaceAll(/\n/g,", ") }
+function plain(txt){ return (txt || "").replace(/\n/g,", ") }
 function bill_slug({ id,token,payable }){ return _.toLower([id,payable,token.id,token.customer.name,token.customer.phone,plain(token.customer.address)].join(" ")) }
 </script>

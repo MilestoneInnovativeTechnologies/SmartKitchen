@@ -50,7 +50,7 @@ export default {
     unpaid(){ return _(this.bills).filter(['progress','Pending']).value() },
     bill(){ return _.get(this.unpaid,this.selected,null) },
     upi(){ return new Object({ address:this.upi_address,name:this.upi_name,amount:_.get(this.bill,'payable'),id:_.get(this.bill,'id') }) },
-    url(){ return encodeURI(this.template.replaceAll(/\[\w*\]/g,key => _.get(this.upi,key.slice(1,-1)))) }
+    url(){ return encodeURI(this.template.replace(/\[\w*\]/g,key => _.get(this.upi,key.slice(1,-1)))) }
   },
   methods: {
     popup_width, precision,

@@ -57,7 +57,7 @@ export default {
   methods: {
     encode(data){ return this.url + encodeURI(btoa(JSON.stringify(Object.assign({},data,{ validity:this.validity,branch:BRANCH_CODE })))) },
     generate(){ this.qr_codes.splice(0,this.qr_codes.length)
-      if(!this.enable_order || GH75F === 'No') this.qr_codes.push([_.get(this.menus,[this.menu,'name'],"").replaceAll('menu','') + ' Menu QR Code',this.encode({ menu:this.menu,price_list:this.price_list })])
+      if(!this.enable_order || GH75F === 'No') this.qr_codes.push([_.get(this.menus,[this.menu,'name'],"").replace('menu','') + ' Menu QR Code',this.encode({ menu:this.menu,price_list:this.price_list })])
       else {
         let params = [{ type:this.type,price_list:this.price_list,menu:this.menu }], titles = [_.get(this.pls,[this.price_list,'name']) + ' Price List ' + this.type + ' QR Code'];
         if(this.type === 'Home Delivery') { params[0]['customer'] = this.customer; titles[0] = titles[0] + ' for ' + _.get(this.customers,[this.customer,'name'])  }
