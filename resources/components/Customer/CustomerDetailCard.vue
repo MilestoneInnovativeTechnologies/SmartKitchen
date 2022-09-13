@@ -7,6 +7,7 @@
       <q-input :value="params.phone === undefined ? customer.phone : params.phone" @input="params.phone = $event" dense :color="clr" outlined label="Phone" />
       <q-input :value="params.email === undefined ? customer.email : params.email" @input="params.email = $event" dense :color="clr" outlined label="Email" />
       <q-input :value="params.address === undefined ? customer.address : params.address" @input="params.address = $event" dense :color="clr" outlined label="Address" type="textarea" />
+      <q-select :value="params.status === undefined ? customer.status : params.status" @input="params.status = $event" dense :color="clr" outlined label="Status" :options="['Active','Inactive']" />
     </q-card-section>
     <q-card-actions class="row q-col-gutter-x-sm q-px-md q-py-xs" align="center">
       <div><q-btn color="negative" size="sm" padding="sm" @click="remove" label="Remove Image" /></div>
@@ -30,7 +31,7 @@ export default {
   props: ['id','color'],
   data(){ return {
     loading: false, img: null,
-    params: { name:undefined, phone:undefined, address:undefined, email:undefined }
+    params: { name:undefined, phone:undefined, address:undefined, email:undefined, status:undefined }
   } },
   computed: {
     clr(){ return this.color || 'positive' },

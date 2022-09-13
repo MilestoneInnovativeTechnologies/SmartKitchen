@@ -28,7 +28,7 @@ export default {
     options: [],
   } },
   computed: {
-    ...mapState('customers',{ customers:'data' }),
+    ...mapState('customers',{ customers:state => _.filter(state.data,['status','Active']) }),
     customer_options(){ return o_customers(this.customers) },
     customer: {
       get(){ return this.value === undefined ? null : (this.get === undefined ? this.value : _.find(this.customer_options,[this.get,this.value])) },
