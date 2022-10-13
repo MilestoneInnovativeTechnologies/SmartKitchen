@@ -47,6 +47,7 @@
         <q-btn label="BILL" color="secondary" class="q-px-md" @click="generate" :disabled="!customer || items.length === 0" />
       </div>
     </q-card-section>
+    <BrowserPrintCardActions :token="token" />
     <q-inner-loading :showing="loading"><q-spinner-facebook color="secondary" size="2em" /></q-inner-loading>
   </q-card>
 </template>
@@ -57,10 +58,11 @@ import {human_date2, is_period, is_today, precision, time} from "assets/helpers"
 import UserSelectDropDown from "components/Users/UserSelectDropDown";
 import OrderCustomer from "components/Order/OrderCustomer";
 import TaxNatureSelectDropDown from "components/Tax/TaxNatureSelectDropDown";
+import BrowserPrintCardActions from "components/BrowserPrintCardActions";
 
 export default {
   name: "TokenBillGenerate",
-  components: {TaxNatureSelectDropDown, OrderCustomer, UserSelectDropDown},
+  components: {BrowserPrintCardActions, TaxNatureSelectDropDown, OrderCustomer, UserSelectDropDown},
   props: ['token','close'],
   data(){ return {
     loading: false, discount: 0, tax: null,

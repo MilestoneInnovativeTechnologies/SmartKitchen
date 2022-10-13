@@ -54,6 +54,7 @@
       <q-space />
       <q-btn label="Add Payment" color="positive" class="q-px-md" @click="pay" :disabled="amount === 0" />
     </q-card-actions>
+    <BrowserPrintCardActions :token="token" />
     <q-inner-loading :showing="loading"><q-spinner-facebook color="positive" size="2em" /></q-inner-loading>
     <q-dialog v-model="cancel_confirm" persistent>
       <q-card>
@@ -77,10 +78,11 @@ import UserSelectDropDown from "components/Users/UserSelectDropDown";
 import TaxNatureSelectDropDown from "components/Tax/TaxNatureSelectDropDown";
 import ChefLayout from "layouts/ChefLayout";
 import {PaymentsTypes} from "assets/assets";
+import BrowserPrintCardActions from "components/BrowserPrintCardActions";
 
 export default {
   name: "BillMakePayment",
-  components: {ChefLayout, TaxNatureSelectDropDown, UserSelectDropDown},
+  components: {BrowserPrintCardActions, ChefLayout, TaxNatureSelectDropDown, UserSelectDropDown},
   props: ['bill'],
   data(){ return {
     loading: false, discount: 0, tax: null,

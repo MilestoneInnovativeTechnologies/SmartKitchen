@@ -40,10 +40,10 @@ export default {
   } },
   computed: {
     ...mapState({
-      name({ items:{ data }}){ return _.get(data,[this.item.item,'name']) },
-      available({ kitchens:{ items } }){ return !!_.filter(_.get(items,this.kitchen),['item',this.item.item]).length }
+      available({ kitchens:{ items } }){ return !!_.filter(_.get(items,this.kitchen),['item',this.item.item.id]).length }
     }),
-    eligible(){ return this.item.kitchen === this.kitchen || (!this.item.kitchen && this.available) },
+    name(){ return this.item.item.name },
+    eligible(){ return this.item?.kitchen?.id === this.kitchen || (!this.item.kitchen && this.available) },
     since(){ return _.toInteger(_.get(_.last(this.item.progress_timing),'time')) },
     time(){ let s = this.now - this.since; let time = (s < 60) ? s : ((s < 3600) ? _.toInteger(s/60) : _.toInteger(s/3600)); return _.toInteger(time); },
     unit(){ let s = this.now - this.since; return (s < 60) ? 'seconds' : ((s < 3600) ? 'minutes' : 'hours') },

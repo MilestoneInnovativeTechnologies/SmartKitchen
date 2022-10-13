@@ -15,6 +15,7 @@
       </div>
     </q-card-actions>
     <OrderSummaryWaiterOrderItemsList :token="token" :noserve="noserve" @select="token_item_select" :selected="token_items_selected" />
+    <BrowserPrintCardActions :token="token" />
   </q-card>
 </template>
 
@@ -29,10 +30,11 @@ import TokenBillGenerate from "components/Bill/TokenBillGenerate";
 import PaymentCollectCard from "components/Payment/PaymentCollectCard";
 import OrderSummaryItemsManage from "components/Order/OrderSummaryItemsManage";
 import TokenItemSelect from "assets/mixins/TokenItemSelect";
+import BrowserPrintCardActions from "components/BrowserPrintCardActions";
 
 export default {
   name: "OrderSummaryReceptionistOrder",
-  components: {OrderSummaryItemsManage, PaymentCollectCard, TokenBillGenerate, CustomerDetailCard, CardImageTitle, OrderSummaryWaiterOrderItemsList},
+  components: {BrowserPrintCardActions, OrderSummaryItemsManage, PaymentCollectCard, TokenBillGenerate, CustomerDetailCard, CardImageTitle, OrderSummaryWaiterOrderItemsList},
   data(){ return {
     manage_mode: false, bill_generate_mode: false, info: false, collect_payment_mode: false,
   } },

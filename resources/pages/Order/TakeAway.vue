@@ -60,6 +60,7 @@
                 <q-space />
                 <q-btn v-show="token.balance" label="Add Payment" color="positive" class="q-px-md" @click="pay(token)" :disabled="amount === 0" />
               </q-card-actions>
+              <BrowserPrintCardActions :token="token" />
               <q-inner-loading :showing="loading"><q-spinner-facebook color="positive" size="2em" /></q-inner-loading>
             </q-card>
           </q-expansion-item>
@@ -94,10 +95,11 @@ import TaxNatureSelectDropDown from "components/Tax/TaxNatureSelectDropDown";
 import PaymentTypeSelectDropDown from "components/Payment/PaymentTypeSelectDropDown";
 import OrderCustomer from "components/Order/OrderCustomer";
 import FilterInputText from "components/FilterInputText";
+import BrowserPrintCardActions from "components/BrowserPrintCardActions";
 
 export default {
   name: 'PageTakeAway',
-  components: {FilterInputText, OrderCustomer, PaymentTypeSelectDropDown, TaxNatureSelectDropDown, Masonry, PriceListSelectDropDown},
+  components: {BrowserPrintCardActions, FilterInputText, OrderCustomer, PaymentTypeSelectDropDown, TaxNatureSelectDropDown, Masonry, PriceListSelectDropDown},
   mixins: [Bills],
   data(){ return {
     pl_mode: false, min_width: 390,

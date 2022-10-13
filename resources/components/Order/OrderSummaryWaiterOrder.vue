@@ -13,6 +13,7 @@
       </div>
     </q-card-actions>
     <OrderSummaryWaiterOrderItemsList :token="token" @select="token_item_select" :selected="token_items_selected" />
+    <BrowserPrintCardActions :token="token" />
     <q-dialog v-model="bill_generate_mode" persistent><div :style="popup_width()"><TokenBillGenerate :token="token" :close="true" @generated="bill_generate_mode = false" /></div></q-dialog>
     <q-dialog v-model="collect_payment_mode" persistent><PaymentCollectCard :style="popup_width()" :bill="token.bill" @paid="collect_payment_mode = false" /></q-dialog>
     <q-dialog v-model="manage_mode" persistent><OrderSummaryItemsManage :token="token" :style="popup_width()" @close="manage_mode = false" @done="manage_mode = false" /></q-dialog>
@@ -27,9 +28,10 @@ import TokenBillGenerate from "components/Bill/TokenBillGenerate";
 import PaymentCollectCard from "components/Payment/PaymentCollectCard";
 import OrderSummaryItemsManage from "components/Order/OrderSummaryItemsManage";
 import TokenItemSelect from "assets/mixins/TokenItemSelect";
+import BrowserPrintCardActions from "components/BrowserPrintCardActions";
 export default {
   name: "OrderSummaryWaiterOrder",
-  components: {OrderSummaryItemsManage, PaymentCollectCard, TokenBillGenerate, CardImageTitle, OrderSummaryWaiterOrderItemsList},
+  components: {BrowserPrintCardActions, OrderSummaryItemsManage, PaymentCollectCard, TokenBillGenerate, CardImageTitle, OrderSummaryWaiterOrderItemsList},
   props: ['token'],
   data(){ return {
     manage_mode: false, bill_generate_mode: false, collect_payment_mode: false,

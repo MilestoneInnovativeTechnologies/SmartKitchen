@@ -100,7 +100,7 @@ Route::group([
 
 Route::view('menu','SK::menu');
 
-Route::any('print',function(){
-    return view('SK::print');
-});
+Route::any('print',function(){ return view('SK::print'); });
+Route::any('print2',function(){ return view('SK::print2'); });
+Route::get('browser_print',function(){ return view('SK::browser_print'); })->name('browser_print');
 

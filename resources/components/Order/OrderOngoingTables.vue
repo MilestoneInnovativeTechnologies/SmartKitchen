@@ -21,7 +21,7 @@
               <q-item v-for="(item,idx) in row.items" :key="hKey(row.id,idx,item.id)">
                 <q-item-section>
                   <q-item-label class="text-bold">{{ item.quantity }} X {{ item.name }}</q-item-label>
-                  <q-item-label caption v-if="item.kitchen"><q-icon size="xs" name="outdoor_grill" /> {{ item.kitchen }}</q-item-label>
+                  <q-item-label caption v-if="item.kitchen"><q-icon size="xs" name="outdoor_grill" /> {{ item.kitchen.name }}</q-item-label>
                   <q-item-label caption v-if="item.narration" class="text-italic">{{ item.narration }}</q-item-label>
                 </q-item-section>
                 <q-item-section side>
@@ -29,6 +29,7 @@
                 </q-item-section>
               </q-item>
             </q-list>
+            <BrowserPrintCardActions :token="row" />
           </q-card>
         </div>
       </template>
@@ -42,10 +43,11 @@ import {h_key, image} from "assets/helpers";
 import {TokenProgressColor} from "assets/assets";
 import CardImageTitle from "components/CardImageTitle";
 import Masonry from "components/Masonry";
+import BrowserPrintCardActions from "components/BrowserPrintCardActions";
 
 export default {
   name: "OrderOngoingTables",
-  components: {Masonry, CardImageTitle},
+  components: {BrowserPrintCardActions, Masonry, CardImageTitle},
   data(){ return {
     cColor: { New:'red-2',Processing:'purple-2',Completed:'green-2' },
     bColor: TokenProgressColor,
@@ -58,7 +60,7 @@ export default {
     allowable_users(){ return _.concat(null,this.me,this.receptionists) },
     ...mapState({
       items({ items:{ data } }){ return _(data).mapValues('name').value() },
-      kitchens({ kitchens:{ data } }){ return _(data).mapValues('name').value() },
+      kitchens({ kitchens:{ data } }){ return data/*_(data).mapValues('name').value()*/ },
       tokens({ tokens:{ data,items },seating,customers }){
         return _(data).filter(({ progress,type,user }) => this.fProgress.includes(progress) && type === 'Dining' && _.includes(this.allowable_users,user)).map(token => Object.assign({},token,
           { items: this.iNameAttach(items[token.id]) },

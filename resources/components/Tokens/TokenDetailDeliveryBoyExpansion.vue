@@ -32,15 +32,18 @@
         <q-btn v-if="!Bill" label="Generate Bill" color="red" padding="xs md" @click="$emit('action',['delivery_bill',token])" />
         <q-btn v-else label="Delivered" color="positive" padding="xs md" @click="$emit('action',['delivery_pay',token])" />
       </q-card-actions>
+      <BrowserPrintCardActions :token="token" />
     </q-card>
   </q-expansion-item>
 </template>
 
 <script>
 import {image, precision} from "assets/helpers";
+import BrowserPrintCardActions from "components/BrowserPrintCardActions";
 
 export default {
   name: "TokenDetailDeliveryBoyExpansion",
+  components: {BrowserPrintCardActions},
   props: ['label','caption','token','color'],
   computed: {
     clr(){ return this.color || 'primary' },

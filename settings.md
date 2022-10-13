@@ -38,6 +38,8 @@ Make the value to any of 1,true,True,yes,Yes to make the selection of template a
 If it doesn't have this setting and have any template in the name kot_add_print_template, kot_modify_print_template, kot_cancel_print_template, then specified template will be used.
 The data available for template will have the token item detail under the attribute name item and have additional attribute named item_state which have value Added, Modified, Cancelled
 
+browser_print
+If it needs printing from browser using the printer installed withing the PC or browsing device, then make this setting to any of true. The template for printing is developed used laravel blade template, which can be managed from `/print2` url.
 
 ping_frequency
 Normally by default, ping action (updating data from server) occurs on each 15 seconds, that is 4 pings per minute.
