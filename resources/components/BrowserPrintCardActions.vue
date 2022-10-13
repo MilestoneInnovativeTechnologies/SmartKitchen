@@ -7,43 +7,20 @@
 </template>
 
 <script>
-import {settings_boolean} from "assets/helpers";
-import bills from "assets/mixins/Bills";
-
-const BPPath = [location.protocol+'/',location.host,'browser_print'].join('/');
+import BrowserPrint from "assets/mixins/BrowserPrint";
 
 export default {
   name: "BrowserPrintCardActions",
   props: ['token','bill'],
-  mixins: [bills],
+  mixins: [BrowserPrint],
   computed: {
-    browser_print(){ return settings_boolean(settings('browser_print')) === true },
     Token(){ return this.token ? this.tokenToToken(this.token) : this.billToToken(this.bill) },
     Bill(){ return this.bill ? this.billToBill(this.bill) : this.tokenToBill(this.token) },
     Kitchens(){ return _(this.Token.items).map('kitchen').filter().uniqBy('id').value() }
   },
   methods: {
-    tokenToToken(tkn){
-      if(_.isObject(tkn)) return tkn;
-      return _.find(this.tokens,['id',_.toNumber(tkn)])
-    },
-    billToToken(bill){
-      if(_.isObject(bill)) return this.tokenToToken(bill.token);
-      return _.get(_.find(this.bills,['id',_.toNumber(bill)]),'token',null)
-    },
-    billToBill(bill){
-      if(_.isObject(bill)) return bill;
-      return _.find(this.bills,['id',_.toNumber(bill)])
-    },
-    tokenToBill(tkn){
-      if(_.isObject(tkn)) return _.get(this.token_bill,_.toNumber(tkn.id))
-      return _.get(this.token_bill,_.toNumber(tkn),null)
-    },
-
-    url(args){ return BPPath + '?' + _.map(args,(v,k) => `${k}=${v}`).join('&') },
-
-    printBill(){ let win = window.open(this.url({ page:'bill',id:this.Bill.id }),'_blank'); setTimeout(win => win.close(),1500,win) },
-    printKOT({ id }){ let win = window.open(this.url({ page:'kitchen',id,token:this.Token.id }),'_blank'); setTimeout(win => win.close(),1500,win) }
+    printBill(){ this.BrowserPrint('bill',this.Bill.id) },
+    printKOT({ id }){ this.BrowserPrint('kitchen',id,this.Token.id) },
   }
 }
 </script>

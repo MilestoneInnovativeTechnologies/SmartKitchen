@@ -30,6 +30,7 @@
       <q-btn dense :color="color" size="sm" label="Progress Timings" @click="token_timings = true" />
       <q-btn dense :color="color" size="sm" :label="print_label || 'Print'" @click="$emit('print')" />
     </q-card-actions>
+    <BrowserPrintCardActions :token="token" />
     <q-dialog persistent v-model="token_timings">
       <TokenTimingCard :timing="timing" :color="color" bordered separator style="min-width: 65vw" />
     </q-dialog>
@@ -41,9 +42,10 @@
 import TokenTimingCard from "components/Tokens/TokenTimingCard";
 import ArchiveTokenListItem from "components/Archive/Token/ArchiveTokenListItem";
 import ItemDetailStack from "components/ItemDetailStack";
+import BrowserPrintCardActions from "components/BrowserPrintCardActions";
 export default {
   name: "ArchiveTokenDetail",
-  components: {ItemDetailStack, ArchiveTokenListItem, TokenTimingCard},
+  components: {BrowserPrintCardActions, ItemDetailStack, ArchiveTokenListItem, TokenTimingCard},
   props: ['token','color','print_label'],
   data(){ return {
     token_timings: false,

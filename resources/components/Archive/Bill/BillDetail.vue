@@ -70,6 +70,7 @@
       <q-btn dense color="cyan" size="sm" v-show="bill.payable > bill.paid" label="Add Payment" @click="add_payment = true" />
       <q-btn dense color="teal" size="sm" label="Print" @click="$emit('print')" />
     </q-card-actions>
+    <BrowserPrintCardActions :bill="bill" />
     <q-dialog persistent v-model="add_payment" transition-show="zoom-in" transition-hide="zoom-out">
       <BillPaymentAdd :bill="bill" style="min-width: 60vw" @added="add_payment = false" />
     </q-dialog>
@@ -79,10 +80,11 @@
 <script>
 import {human_date2} from "assets/helpers";
 import BillPaymentAdd from "components/Archive/Bill/BillPaymentAdd";
+import BrowserPrintCardActions from "components/BrowserPrintCardActions";
 
 export default {
   name: "BillDetail",
-  components: {BillPaymentAdd},
+  components: {BrowserPrintCardActions, BillPaymentAdd},
   props: ['bill'],
   data(){ return {
     add_payment: false,

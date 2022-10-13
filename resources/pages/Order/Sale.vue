@@ -93,11 +93,12 @@ import QuickOrder from "components/Order/QuickOrder";
 import QuickMode from "assets/mixins/QuickMode";
 import MenuSelect from "components/Menu/MenuSelect";
 import KeyPressCapture from "assets/mixins/KeyPressCapture";
+import BrowserPrint from "assets/mixins/BrowserPrint";
 
 export default {
   name: 'PageSale',
   components: { MenuSelect, QuickOrder, GroupItemsSelect, GroupStickyButton, PaymentTypeSelectDropDown, TaxNatureSelectDropDown, OrderCustomer, PriceListSelectDropDown, FilterInputText },
-  mixins: [QuickMode,KeyPressCapture],
+  mixins: [QuickMode,KeyPressCapture,BrowserPrint],
   data(){ return {
     group: 0, item_filter: '', fab: true, offset: [12,65],
     payment_mode: false, processing: false,
@@ -151,13 +152,14 @@ export default {
     removeItem(idx){ this.params.items.splice(idx,1); this.proceed() },
     notify(itemIndex){ if(!this.quick) this.$q.notify(`${this.params.items.length} x Items <br>${_.sumBy(this.params.items,'quantity')} x Quantities <br>${this.params.items[itemIndex].quantity}x ${this.itemName(this.params.items[itemIndex].item)}`) },
     complete(){ if(!this.params.customer) return alert('Choose Customer'); this.processing = true; post('token','create',this.params).then(this.completed) },
-    completed(){
+    completed(token){
       this.payment_mode = false;
       this.params.items.splice(0,this.params.items.length);
       this.params.customer = this.default_customer;
       if(_.has(this,['$refs','quick_order','$data','code'])) this.$refs['quick_order'].$data.code = 0
       this.params.advance_type = PaymentsTypes[0];
       this.processing = false;
+      if(this.browser_print && token && token.id) this.BrowserPrint('bill',_.get(this.tokenToBill(token.id),'id'));
     },
     moveFab (ev) {
       this.draggingFab = ev.isFirst !== true && ev.isFinal !== true
