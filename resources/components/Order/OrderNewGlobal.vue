@@ -8,7 +8,7 @@
         <QuickOrder @item="item" :items="params.items" :price_list="params.price_list" @done="proceed" />
       </template>
       <template v-else>
-        <FilterInputText @text="item_filter = $event" class="q-mb-xs" autofocus />
+        <FilterInputText @text="item_filter = $event" class="q-mb-xs" :autofocus="!!$q.platform.is.desktop" />
         <GroupItemsSelect :selected="active_group" :filter="item_filter" :price_list="params.price_list" :type="params.type" :item_quantities="item_quantities" @item="item" @quantity="setQuantity" @proceed="proceed" />
       </template>
     </q-card-section>

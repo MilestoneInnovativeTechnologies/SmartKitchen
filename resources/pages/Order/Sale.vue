@@ -4,7 +4,7 @@
       <QuickOrder @item="addItem" :items="params.items" :price_list="params.price_list" @done="proceed" ref="quick_order" />
     </template>
     <template v-else>
-      <FilterInputText @text="item_filter = $event" class="q-mb-xs" autofocus />
+      <FilterInputText @text="item_filter = $event" class="q-mb-xs" :autofocus="!!$q.platform.is.desktop" />
       <GroupItemsSelect :selected="group" :filter="item_filter" :price_list="params.price_list" @item="addItem" type="Sale" :item_quantities="item_quantities" @quantity="setQuantity" @proceed="proceed" />
       <GroupStickyButton v-model="group" :type="params.type" />
       <q-page-sticky position="bottom-right" :offset="offset">
