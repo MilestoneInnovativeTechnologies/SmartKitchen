@@ -19,6 +19,9 @@
 import CustomerCreate from "components/Customer/CustomerCreate";
 import {o_customer, o_customers, popup_width} from "assets/helpers";
 import { mapState } from 'vuex';
+
+const customer_label_format = settings('customer_display_format') || '[name], [phone]'
+
 export default {
   name: "OrderCustomer",
   components: {CustomerCreate},
@@ -29,7 +32,7 @@ export default {
   } },
   computed: {
     ...mapState('customers',{ customers:state => _.filter(state.data,['status','Active']) }),
-    customer_options(){ return o_customers(this.customers) },
+    customer_options(){ return o_customers(this.customers,customer_label_format) },
     customer: {
       get(){ return this.value === undefined ? null : (this.get === undefined ? this.value : _.find(this.customer_options,[this.get,this.value])) },
       set(customer){ this.$emit('input',this.get === undefined ? customer : _.get(customer,this.get,null)) }
@@ -41,8 +44,8 @@ export default {
       update(() => {
         const needle = (val || '').toLowerCase();
         this.options = needle
-          ? o_customers(this.customers).filter(v => _.values(v).join(' ').toLowerCase().indexOf(needle) > -1)
-          : o_customers(this.customers)
+          ? this.customer_options.filter(v => _.values(v).join(' ').toLowerCase().indexOf(needle) > -1)
+          : this.customer_options
       })
     },
     createCustomer(val){
@@ -52,7 +55,7 @@ export default {
     },
     closeCreate(customer){
       this.create_mode = false;
-      this.customer = customer ? o_customer(customer) : null;
+      this.customer = customer ? o_customer(customer,customer_label_format) : null;
     },
   },
   created(){

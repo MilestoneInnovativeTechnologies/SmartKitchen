@@ -72,6 +72,13 @@ The purpose of these settings is, In any type of Order, what should be the defau
 The setting name should be like take_away_default_customer, sale_default_customer etc.
 Type specified setting have more priority than that of default_customer. The setting default_customer is used all over other than type specified.
 
+customer_display_format
+While selecting customer from the options list, the displaying customer details can be customized using this settings. By default display format is [name], [phone]
+This can be made to any format using the following available keys id,name,phone,address,email,status
+Ex: [name], Phone:[phone], Adr: [address]
+Ex: [name] - [phone]
+Ex: [address] - [name], [phone]
+Please avoid using `(` and `)`
 
 remote_<branch_code>_price_list, remote_<branch_code>, <branch_code>_price_list, <branch_code>
 This should be the name of a price list.

@@ -8,8 +8,10 @@ export function tap(){ TapAudio.play() }
 
 export function h_key(){ return _.kebabCase(Array.from(arguments).join(' ')) }
 
-export function o_customer(customer){ return _.assign({},customer,{ label:[customer.name,customer.phone].join(', ') }) }
-export function o_customers(customers){ let o_customers = _(customers).map(o_customer).value(); o_customers.unshift(o_customer({ id:0,name:'New Customer',phone:'000' })); return o_customers; }
+export function template_obj(temp,obj){ return temp.replace(/\[(\w+)\]/g,(fT,tT) => obj?.[tT] || '') }
+
+export function o_customer(customer,temp){ customer['label'] = template_obj(temp,customer); return customer }
+export function o_customers(customers,temp){ let o_customers = _(customers).map(customer => o_customer(customer,temp)).value(); o_customers.unshift(o_customer({ id:0,name:'New Customer',phone:'000' },temp)); return o_customers; }
 
 export function precision(number,length){ return _.toNumber(number).toFixed(length || 2) }
 
