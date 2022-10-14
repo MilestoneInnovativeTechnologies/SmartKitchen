@@ -6,7 +6,7 @@
         <OrderSummaryReceptionistOrder :token="token" @action="OSA_action" />
       </template>
     </Masonry>
-    <OrderSummaryActionPopups @done="OSA_action_done" v-bind="OSA_CB" />
+    <OrderSummaryActionPopups @done="OSA_action_done" v-bind="OSA_CB" @token_customer_changed="tokenCustomerChanged" />
     <Pagination :records="Tokens" v-model="showing" />
     <transition appear enter-active-class="animated fadeIn" leave-active-class="animated fadeOut">
       <q-page-sticky v-show="!order && (fab || tokens.length < 6)" position="bottom-right" :offset="offset">
@@ -47,7 +47,11 @@ export default {
     popup_width,
     hKey({ id }){ h_key('order','summary','order',id) },
     scrolled(pos){ this.fab = true },
-    move(ev){ this.offset = [this.offset[0] - ev.delta.x, this.offset[1] - ev.delta.y] }
+    move(ev){ this.offset = [this.offset[0] - ev.delta.x, this.offset[1] - ev.delta.y] },
+    tokenCustomerChanged(){
+      let token_id = _.get(this.OSA_Object,'id',null); if(!token_id) return;
+      this.OSA_Object = _.find(this.active_tokens,['id',token_id])
+    }
   },
   watch: {
     fab: {

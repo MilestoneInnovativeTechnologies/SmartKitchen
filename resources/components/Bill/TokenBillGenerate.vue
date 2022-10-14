@@ -83,7 +83,7 @@ export default {
   methods: {
     precision,
     date(date){ return is_today(date) ? time(date) : human_date2(date) },
-    assign(customer){ this.loading = true; post('token','customer',{ token:this.token.id,customer }).then(() => this.loading = false) },
+    assign(customer){ this.loading = true; post('token','customer',{ token:this.token.id,customer }).then(() => this.loading = false).then(() => this.$emit('customer_changed')) },
     discount_percent(e){
       if(is_period(e.keyCode) && (this.prv_per || _.includes(_.toString(this.discount),"."))) {
         setTimeout(() => {

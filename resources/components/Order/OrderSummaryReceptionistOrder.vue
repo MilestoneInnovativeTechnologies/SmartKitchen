@@ -26,7 +26,6 @@ import {images} from "assets/default_images";
 import {DiningTypeColor} from "assets/assets";
 import {image, popup_width, settings_boolean} from "assets/helpers";
 import CustomerDetailCard from "components/Customer/CustomerDetailCard";
-import TokenBillGenerate from "components/Bill/TokenBillGenerate";
 import PaymentCollectCard from "components/Payment/PaymentCollectCard";
 import OrderSummaryItemsManage from "components/Order/OrderSummaryItemsManage";
 import TokenItemSelect from "assets/mixins/TokenItemSelect";
@@ -34,7 +33,7 @@ import BrowserPrintCardActions from "components/BrowserPrintCardActions";
 
 export default {
   name: "OrderSummaryReceptionistOrder",
-  components: {BrowserPrintCardActions, OrderSummaryItemsManage, PaymentCollectCard, TokenBillGenerate, CustomerDetailCard, CardImageTitle, OrderSummaryWaiterOrderItemsList},
+  components: {BrowserPrintCardActions, OrderSummaryItemsManage, PaymentCollectCard, CustomerDetailCard, CardImageTitle, OrderSummaryWaiterOrderItemsList},
   data(){ return {
     manage_mode: false, bill_generate_mode: false, info: false, collect_payment_mode: false,
   } },

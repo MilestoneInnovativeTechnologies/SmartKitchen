@@ -1,6 +1,6 @@
 <template>
   <div>
-    <q-dialog :value="bill_generate" persistent @before-hide="done"><TokenBillGenerate :token="item" :style="popup_width()" :close="true" @generated="done" /></q-dialog>
+    <q-dialog :value="bill_generate" persistent @before-hide="done"><TokenBillGenerate :token="item" :style="popup_width()" :close="true" @generated="done" @customer_changed="$emit('token_customer_changed')" /></q-dialog>
     <q-dialog :value="collect_payment" persistent @before-hide="done"><PaymentCollectCard :style="popup_width()" :bill="bill" @paid="done" /></q-dialog>
     <q-dialog :value="customer_detail" persistent @before-hide="done"><CustomerDetailCard v-if="customer_id" :id="customer_id" style="max-width: 360px; width: 90vw;" color="purple" /></q-dialog>
     <q-dialog :value="token_items" persistent @before-hide="done"><OrderSummaryItemsManage :token="item" :style="popup_width()" @close="done" @done="done" /></q-dialog>
