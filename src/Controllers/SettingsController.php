@@ -4,8 +4,6 @@ namespace Milestone\SmartKitchen\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
-use Milestone\SmartKitchen\Models\Model;
 use Milestone\SmartKitchen\Models\Settings;
 
 class SettingsController extends Controller
@@ -57,13 +55,6 @@ class SettingsController extends Controller
             return $this->delete();
         }
         return $setting;
-    }
-
-    // Unused function..
-    public function remove(){
-        if(!request()->has('id') || !request()->filled('id')) return [];
-        Settings::destroy(\request()->get('id'));
-        return \request()->get('id');
     }
 
     public static function removeDeleted(){

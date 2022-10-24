@@ -3,6 +3,7 @@
 namespace Milestone\SmartKitchen\Traits;
 
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 use Milestone\SmartKitchen\Models\Price;
 use Milestone\SmartKitchen\Models\Settings;
@@ -12,7 +13,7 @@ trait TokenPrintTrait
 {
     private static $Settings = null;
     private static function settings($name,$not_has_value = null){
-        if(self::$Settings === null) self::$Settings = Settings::pluck('value','name')->toArray();
+        if(self::$Settings === null) self::$Settings = Cache::get('settings');
         return Arr::has(self::$Settings,$name) ? $name : $not_has_value;
     }
 

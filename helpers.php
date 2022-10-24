@@ -31,7 +31,7 @@ function truncate($string,$length) {
     return substr($string,0,$length-2) . '..';
 }
 function settings($name,$bool = false){
-    $value = \Illuminate\Support\Arr::get(\Milestone\SmartKitchen\Models\Settings::pluck('value','name'),$name);
+    $value = \Illuminate\Support\Arr::get(\Illuminate\Support\Facades\Cache::get(\Milestone\SmartKitchen\Models\Settings::$cache_key),$name);
     if(!$bool) return $value;
     if(in_array($value,explode(",","1,true,True,yes,Yes"))) return true;
     if(in_array($value,explode(",","0,false,False,no,No"))) return false;
