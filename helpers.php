@@ -49,3 +49,12 @@ function fetch_from_date(){
     $recent_days_length = settings('recent_days_length') ?: sk('recent_days_length') ?: 7;
     return now()->subRealDays($recent_days_length)->startOfDay()->toDateTimeString();
 }
+function features($key){
+    $features = \Illuminate\Support\Facades\Cache::rememberForever('features',function(){
+        $subscription = \Illuminate\Support\Facades\Storage::get('subscription');
+        $P1 = explode("/",$subscription)[0];
+        [$keys,$values] = \Milestone\SmartKitchen\Controllers\SubscriptionController::Decode(substr($P1,39,strlen($P1)-37-39));
+        return array_combine($keys,$values);
+    });
+    return $key ? \Illuminate\Support\Arr::get($features,$key) : $features;
+}
