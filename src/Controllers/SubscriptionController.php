@@ -3,6 +3,7 @@
 namespace Milestone\SmartKitchen\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 
 class SubscriptionController extends Controller
@@ -34,7 +35,7 @@ class SubscriptionController extends Controller
             if(empty($matches)){ file_put_contents(base_path('.env'),$env . "\nCLIENT_KEY=".($key)."\n"); }
             else file_put_contents(base_path('.env'),preg_replace('/CLIENT_KEY\=.*/','CLIENT_KEY='.$key,$env));
             if(Storage::exists('subscription')){ Storage::put('subscription.undo',Storage::get('subscription')); }
-            Storage::put('subscription',$request->input('code'));
+            Storage::put('subscription',$request->input('code')); $this->cacheFeatures($request->input('code'));
             return redirect()->route('subscription');
         }
         return redirect()->route('login');
@@ -62,6 +63,13 @@ class SubscriptionController extends Controller
     public static function LoginCredentials($credentials = []){
         if(self::ExipreTimestamp() <= time()) $credentials['role'] = 'Administrator';
         return $credentials;
+    }
+
+    public function cacheFeatures($code){
+        $P1 = explode("/",$code)[0];
+        [$keys,$values] = self::Decode(substr($P1,39,strlen($P1)-37-39));
+        $features = array_combine($keys,$values);
+        Cache::forever('features',$features);
     }
 
     public function action(Request $request){
