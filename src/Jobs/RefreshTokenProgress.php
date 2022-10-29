@@ -9,6 +9,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Str;
+use Milestone\SmartKitchen\Events\TokenUpdated;
 use Milestone\SmartKitchen\Models\Token;
 
 class RefreshTokenProgress
@@ -57,11 +58,13 @@ class RefreshTokenProgress
     }
 
     private function makeProgress($progress){
+        if($progress === $this->token->progress) return Log::info('Token already in ' . $progress . '.. Leaving untouched!!');
         $class = Str::of('\Milestone\SmartKitchen\Events\TokenProgressMakingAs')->append($progress)->__toString();
         $class::dispatch($this->token);
         $this->token->update(['progress' => $progress]);
         Log::info('Token progress made to ' .$progress. '!!');
         $class = Str::of('\Milestone\SmartKitchen\Events\TokenProgressMadeAs')->append($progress)->__toString();
         $class::dispatch($this->token);
+        TokenUpdated::dispatch($this->token,'progress');
     }
 }

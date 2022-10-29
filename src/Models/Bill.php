@@ -4,6 +4,7 @@ namespace Milestone\SmartKitchen\Models;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
+use Milestone\SmartKitchen\Events\BillUpdated;
 use Milestone\SmartKitchen\Jobs\TryMakingBillAsCancelled;
 use Milestone\SmartKitchen\Scopes\NotCancelledScope;
 
@@ -27,6 +28,10 @@ class Bill extends Model
             }
         });
     }
+
+    protected $dispatchesEvents = [
+        'updated' => BillUpdated::class
+    ];
 
     public function scopeRecent($Q){
         return $Q->where('updated_at','>=',fetch_from_date());

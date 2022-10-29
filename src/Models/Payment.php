@@ -3,6 +3,7 @@
 namespace Milestone\SmartKitchen\Models;
 
 use Illuminate\Support\Arr;
+use Milestone\SmartKitchen\Events\PaymentUpdated;
 use Milestone\SmartKitchen\Scopes\ActiveOnlyScope;
 
 class Payment extends Model
@@ -13,6 +14,10 @@ class Payment extends Model
 
     public $printer_name = 'payment_printer';
     public $print_template = 'payment_print_template';
+
+    protected $dispatchesEvents = [
+        'updated' => PaymentUpdated::class,
+    ];
 
     public function scopeRecent($Q){
         return $Q->where('updated_at','>=',fetch_from_date());

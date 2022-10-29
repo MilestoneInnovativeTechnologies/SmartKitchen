@@ -78,6 +78,5 @@ export default {
     completed(Nw,Ol){ if(!Ol || Nw.length > Ol.length) {
       attention(); this.alert = 'amber'; setTimeout(vm => vm.alert = false,15000,this)
     } }
-  }
-}
+  }}
 </script>

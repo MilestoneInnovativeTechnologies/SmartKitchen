@@ -3,6 +3,8 @@
 namespace Milestone\SmartKitchen\Controllers;
 
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Cache;
+use Milestone\SmartKitchen\Jobs\FireSMS;
 use Milestone\SmartKitchen\Models\Bill;
 use Milestone\SmartKitchen\Models\Customer;
 use Milestone\SmartKitchen\Models\Item;
@@ -82,6 +84,7 @@ class APIController extends Controller
             }
         }
         cache()->put(ck(),$before);
+        if(features('EZ85V') === 'Yes') $this->processSMSQueue();
         return $data;//response($data,200,$cache_headers);
     }
 
@@ -122,5 +125,16 @@ class APIController extends Controller
         if(method_exists($model,'fetch')) return $model::fetch($after,$before,$lid);
         if(method_exists($model,'scopeOwn')) return $model->own()->sync($after,$before,$lid)->take(data_limit())->get();
         return $model->sync($after,$before,$lid)->take(data_limit())->get();
+    }
+
+    public function processSMSQueue(){
+        if(Cache::has('sms_queue')) {
+            $queue = Cache::pull('sms_queue',[]);
+            if(!empty($queue)) {
+                [$url,$method,$params] = array_shift($queue);
+                FireSMS::Fire($url,$method,$params);
+                if(!empty($queue)) Cache::put('sms_queue',$queue,3*60);
+            } else Cache::forget('sms_queue');
+        }
     }
 }

@@ -28,7 +28,7 @@ const layout_child = {
     'day_token_summary','day_sale_summary','sales_by_type','sales_summary_by_type','sales_count_by_item','item_wise_sale_summary','kitchen_stock','bill_summary','payments','payments_by_type',
     'bill_summary_tax','bill_summary_tax_nature','tax_bill_detail','tax_details','bill_summary_customer','bill_summary_user_type','bill_by_user','delivery_boy_bills',
     'orders_by_waiter','orders_by_receptionist','orders_by_delivery_boy','user_orders', 'kitchen_processing','item_processing','chef_performance',
-    'data_import','menu_qr_codes','menu_sync_data','remote_kitchen_manage',
+    'data_import','menu_qr_codes','menu_sync_data','remote_kitchen_manage','sms_manage',
     'remote_orders_by_customer','remote_order_summary_by_customer','day_wise_remote_order_summary','day_wise_remote_order_delivery','remote_order_by_item','remote_order_summary_by_item',
     'bill_by_customer','bill_payments','bill_payments_by_type','bills_unpaid','bills_unpaid_customer','bills_unpaid_type','bills_unpaid_user',
     'group_wise_order_summary','group_items_order_summary','payment_type_summary','customer_payments','customer_payment_type'
@@ -142,6 +142,7 @@ const route_master = {
   customer_payments: { name:'customer_payments', path:'/report/customer/payments', component: () => import('pages/Report/Reports/ReportCustomerPayments'), meta:{ title:'Customer Payments',controls:['range','customer'] } },
   customer_payment_type: { name:'customer_payment_type', path:'/report/customer/payment/type', component: () => import('pages/Report/Reports/ReportCustomerByPaymentType'), meta:{ title:'Customer Payment Type',controls:['range','customer','payment_type'] } },
   display_pay_bill_qr_code: { name:'display_pay_bill_qr_code', path:'/bill/pay', component: () => import('pages/Display/BillPayQRCode'), meta:{ out_ping:true,color:'positive' } },
+  sms_manage: { name:'sms_manage', path:'/sms/manage', component: () => import('pages/SMS/SMSManage'), meta:{ color:'green-9',title:'SMS Template Manage' } },
 }
 
 const feature_routes = {

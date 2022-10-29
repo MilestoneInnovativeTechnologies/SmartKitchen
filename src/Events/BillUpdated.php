@@ -9,19 +9,17 @@ use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
-use Milestone\SmartKitchen\Models\TokenItem;
+use Milestone\SmartKitchen\Models\Bill;
 
-class TokenItemServed
+class BillUpdated
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $tokenItem, $user, $token_id;
+    public $item = 'bill', $happened = 'updated', $token_id;
 
-    public function __construct(TokenItem $tokenItem, $user)
+    public function __construct(Bill $bill)
     {
-        $this->tokenItem = $tokenItem;
-        $this->user = $user;
-        $this->token_id = is_object($tokenItem->token) ? $tokenItem->token->id : $tokenItem->token;
+        $this->token_id = is_object($bill->token) ? $bill->token->id : $bill->token;
     }
 
 }

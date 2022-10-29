@@ -18,6 +18,7 @@ class BillCreated
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public $bill, $bill_id, $token_id, $user_id;
+    public $item = 'bill', $happened = 'created';
 
     public function __construct(Bill $bill)
     {

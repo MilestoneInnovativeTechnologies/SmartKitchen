@@ -21,7 +21,9 @@ class Subscribers
             ],
 
             \Milestone\SmartKitchen\Events\TokenCreating::class =>  [],
-            \Milestone\SmartKitchen\Events\TokenCreated::class =>  [],
+            \Milestone\SmartKitchen\Events\TokenCreated::class =>  [
+                CheckAndProceedForSMS::class
+            ],
             \Milestone\SmartKitchen\Events\TokenItemPrepared::class =>  [],
             \Milestone\SmartKitchen\Events\TokenItemsSaving::class =>  [],
             \Milestone\SmartKitchen\Events\TokenItemsSaved::class =>  [
@@ -51,7 +53,7 @@ class Subscribers
             ],
             \Milestone\SmartKitchen\Events\TokenItemProcessing::class =>  [],
             \Milestone\SmartKitchen\Events\TokenItemProcessed::class =>  [
-                TryMakingTokenProgressAsProcessing::class,
+                TryRefreshingTokenProgress::class,
                 KOTAutoCompleteProcessing::class,
             ],
             \Milestone\SmartKitchen\Events\TokenItemCompleting::class =>  [],
@@ -60,7 +62,7 @@ class Subscribers
             ],
             \Milestone\SmartKitchen\Events\TokenItemServing::class =>  [],
             \Milestone\SmartKitchen\Events\TokenItemServed::class =>  [
-                TryMakingTokenProgressAsCompleted::class
+                TryRefreshingTokenProgress::class
             ],
             \Milestone\SmartKitchen\Events\TokenItemCancelling::class =>  [],
             \Milestone\SmartKitchen\Events\TokenItemCancelled::class =>  [
@@ -101,13 +103,18 @@ class Subscribers
             \Milestone\SmartKitchen\Events\TokenCustomerSetting::class =>  [],
             \Milestone\SmartKitchen\Events\TokenCustomerSet::class =>  [],
 
+            \Milestone\SmartKitchen\Events\TokenUpdated::class =>  [
+                CheckAndProceedForSMS::class
+            ],
+
             \Milestone\SmartKitchen\Events\BillCreating::class =>  [
                 SetTokenCustomer::class
             ],
             \Milestone\SmartKitchen\Events\BillCreated::class =>  [
-                TryMakingTokenProgressAsBilled::class,
+                TryRefreshingTokenProgress::class,
                 CheckForAdvancePayments::class,
                 CheckAndProceedForAutoPayment::class,
+                CheckAndProceedForSMS::class
             ],
             \Milestone\SmartKitchen\Events\BillProgressMakingAsCancelled::class => [],
             \Milestone\SmartKitchen\Events\BillProgressMadeAsCancelled::class => [
@@ -120,9 +127,18 @@ class Subscribers
             \Milestone\SmartKitchen\Events\BillProgressMakingAsPaid::class => [],
             \Milestone\SmartKitchen\Events\BillProgressMadeAsPaid::class => [],
 
+            \Milestone\SmartKitchen\Events\BillUpdated::class => [
+                CheckAndProceedForSMS::class
+            ],
+
             \Milestone\SmartKitchen\Events\PaymentCreating::class =>  [],
             \Milestone\SmartKitchen\Events\PaymentCreated::class =>  [
-                UpdateBillProgress::class
+                UpdateBillProgress::class,
+                CheckAndProceedForSMS::class
+            ],
+
+            \Milestone\SmartKitchen\Events\PaymentUpdated::class =>  [
+                CheckAndProceedForSMS::class
             ],
 
             \Milestone\SmartKitchen\Events\KitchenStockReducing::class =>  [],

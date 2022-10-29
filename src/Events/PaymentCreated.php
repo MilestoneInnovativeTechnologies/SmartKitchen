@@ -15,12 +15,14 @@ class PaymentCreated
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $payment, $bill;
+    public $payment, $bill, $token_id;
+    public $item = 'payment', $happened = 'created';
 
     public function __construct(Payment $payment)
     {
         $this->payment = $payment->load('Bill');
         $this->bill = $payment->Bill;
+        $this->token_id = is_object($payment->Bill->token) ? $payment->Bill->token->id : $payment->Bill->token;
     }
 
 }

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Milestone\SmartKitchen\Events\TokenCreated;
 use Milestone\SmartKitchen\Events\TokenItemAdded;
 use Milestone\SmartKitchen\Events\TokenItemAdding;
 use Milestone\SmartKitchen\Events\TokenItemPrepared;
@@ -16,6 +17,7 @@ use Milestone\SmartKitchen\Events\TokenItemsSaving;
 use Milestone\SmartKitchen\Events\TokenItemsUpdated;
 use Milestone\SmartKitchen\Events\TokenItemUpdated;
 use Milestone\SmartKitchen\Events\TokenItemUpdating;
+use Milestone\SmartKitchen\Events\TokenUpdated;
 use Milestone\SmartKitchen\Models\Bill;
 use Milestone\SmartKitchen\Models\Kitchen;
 use Milestone\SmartKitchen\Models\Tax;
@@ -43,7 +45,9 @@ class TokenController extends Controller
         }
         TokenItemsSaving::dispatch($Items);
         $Token->Items()->saveMany($Items);
-        TokenItemsSaved::dispatch($Token->fresh()->Items,$user,$Token->id);
+        $Token = $Token->fresh();
+        TokenItemsSaved::dispatch($Token->Items,$user,$Token->id);
+        TokenCreated::dispatch($Token);
         return $Token;
     }
 
@@ -177,6 +181,7 @@ class TokenController extends Controller
     public function customer(Request $request){
         if(!$request->filled(['token'])) return;
         Token::find($request->input('token'))->update($request->only('customer'));
+        TokenUpdated::dispatch(Token::find($request->input('token')),'customer');
         Bill::where('token',$request->token)->where('progress','!=','Cancelled')->update($request->only('customer'));
     }
 

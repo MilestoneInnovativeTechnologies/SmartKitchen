@@ -29,3 +29,6 @@ set a web serial in milestoneit.net and give the same at config > sk.php > web_s
 ## Configuration
 
 1. set printers
+
+### SMS Gateway
+This should be enabled in subscription. Once this enabled, admin portal will have menu for creating templates. More details are mentioned in sms doc

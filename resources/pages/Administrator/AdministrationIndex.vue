@@ -35,6 +35,12 @@
     <div class="row q-col-gutter-xs q-mt-xs">
       <AdministratorMenuItem :color="color[3]" :route="{ name:'data_import' }" icon="source" text="Import" />
     </div>
+    <template v-if="EZ85V === 'Yes'">
+      <div class="col-12 text-bold q-mt-md">SMS</div>
+      <div class="row q-col-gutter-xs q-mt-xs">
+        <AdministratorMenuItem :color="color[6]" :route="{ name:'sms_manage' }" icon="comment" text="SMS Templates" />
+      </div>
+    </template>
     <template v-if="GH56E === 'Yes'">
       <div class="col-12 text-bold q-mt-md">Online Menu</div>
       <div class="row q-col-gutter-xs q-mt-xs">
@@ -55,13 +61,13 @@
 import AdministratorDashboardMetricsMain from "components/Administrator/AdministratorDashboardMetricsMain";
 import Jumbotron from "components/Jumbotron";
 import AdministratorMenuItem from "components/Administrator/AdministratorMenuItem";
-const { GH56E,JI36A,CC71V,DP71V,KJ30I } = require('boot/subscription').FEATURES
+const { GH56E,JI36A,CC71V,DP71V,KJ30I,EZ85V } = require('boot/subscription').FEATURES
 export default {
   name: 'PageAdministratorIndex',
   components: {AdministratorMenuItem, Jumbotron, AdministratorDashboardMetricsMain},
   data(){ return {
-    color: ['accent','info','secondary','brown','deep-orange','teal-14'],
-    GH56E,JI36A,CC71V,DP71V,KJ30I
+    color: ['accent','info','secondary','brown','deep-orange','teal-14','green-9'],
+    GH56E,JI36A,CC71V,DP71V,KJ30I,EZ85V
   } },
   created(){ this.$store.commit('public',{ mode:'administration' }) }
 }

@@ -9,19 +9,20 @@ use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
-use Milestone\SmartKitchen\Models\TokenItem;
+use Milestone\SmartKitchen\Models\Payment;
 
-class TokenItemServed
+class PaymentUpdated
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $tokenItem, $user, $token_id;
+    public $payment, $bill, $token_id;
+    public $item = 'payment', $happened = 'updated';
 
-    public function __construct(TokenItem $tokenItem, $user)
+    public function __construct(Payment $payment)
     {
-        $this->tokenItem = $tokenItem;
-        $this->user = $user;
-        $this->token_id = is_object($tokenItem->token) ? $tokenItem->token->id : $tokenItem->token;
+        $this->payment = $payment->load('Bill');
+        $this->bill = $payment->Bill;
+        $this->token_id = is_object($payment->Bill->token) ? $payment->Bill->token->id : $payment->Bill->token;
     }
 
 }

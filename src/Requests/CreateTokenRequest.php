@@ -4,8 +4,6 @@ namespace Milestone\SmartKitchen\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Auth;
-use Milestone\SmartKitchen\Events\TokenCreated;
 use Milestone\SmartKitchen\Events\TokenCreating;
 use Milestone\SmartKitchen\Models\PriceList;
 use Milestone\SmartKitchen\Models\Token;
@@ -47,7 +45,6 @@ class CreateTokenRequest extends FormRequest
         $data = $this->only(['type','seating','date','price_list','user','customer','narration','progress']);
         TokenCreating::dispatch($data);
         $token = Token::create($data);
-        TokenCreated::dispatch($token);
         return $token;
     }
 }

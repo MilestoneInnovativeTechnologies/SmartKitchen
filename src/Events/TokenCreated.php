@@ -15,11 +15,12 @@ class TokenCreated
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $token;
+    public $token, $token_id, $item = 'token', $happened = 'created';
 
     public function __construct(Token $token)
     {
         $this->token = $token;
+        $this->token_id = $token->id;
     }
 
 }

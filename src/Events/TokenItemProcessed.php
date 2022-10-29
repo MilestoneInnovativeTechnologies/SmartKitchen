@@ -15,7 +15,7 @@ class TokenItemProcessed
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $tokenItem, $kitchen, $item, $token, $user;
+    public $tokenItem, $kitchen, $item, $token, $token_id, $user;
 
     public function __construct(TokenItem $tokenItem, $user)
     {
@@ -23,6 +23,7 @@ class TokenItemProcessed
         $this->kitchen = $tokenItem->kitchen;
         $this->item = $tokenItem->item;
         $this->token = $tokenItem->token;
+        $this->token_id = is_object($tokenItem->token) ? $tokenItem->token->id : $tokenItem->token;
         $this->user = $user;
     }
 
