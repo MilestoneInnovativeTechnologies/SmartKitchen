@@ -106,6 +106,12 @@ While setting this menu name to either of these
 1,true,True,yes,Yes then the corresponding users can confirm the online orders
 
 
+qr_code_level
+This is error correction level of QR Code generate for online menu.
+Accepted values are L,Q,M,H. For details, check at https://www.npmjs.com/package/qrcode.vue
+By default, M is taken
+
+
 take_away_waiter_handle, take_away_receptionist_handle
 When the feature Take Away is enabled, then a menu named Take Away will be available where all Take Away orders can manage. By default, receptionist can handle but waiter can't. This can disable/enable by having these setting.
 0,false,False,no,No then the corresponding users won't have take away menu

@@ -22,7 +22,7 @@
       <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4 col-xl-3" v-for="(qr_code,idx) in qr_codes" :key="'olm-qrcode-'+idx">
         <q-card>
           <q-bar class="bg-primary text-white text-caption q-py-lg">{{ qr_code[0] }}<q-space /><q-btn icon="get_app" flat round @click="download(idx)" /></q-bar>
-          <q-card-section class="text-center"><QrcodeVue :value="qr_code[1]" :size="size" level="M" :ref="'QR'+idx" /></q-card-section>
+          <q-card-section class="text-center"><QrcodeVue :value="qr_code[1]" :size="size" :level="level" :ref="'QR'+idx" /></q-card-section>
           <q-card-section class="bg-grey-2 text-primary text-center text-caption"><q-btn type="a" :href="qr_code[1]" :label="qr_code[0]" dense flat size="sm" no-caps target="_blank" /></q-card-section>
         </q-card>
       </div>
@@ -49,7 +49,7 @@ export default {
   components: { DateTime, SeatSelectDropDown, PriceListSelectDropDown, OrderCustomer, OrderTypeSelectDropDown, MenuSelectDropDown, QrcodeVue },
   data(){ return {
     GH75F,
-    menu: null, type: null, customer: null, price_list: null, seating: null, size: 300,
+    menu: null, type: null, customer: null, price_list: null, seating: null, size: 300, level: settings('qr_code_level') || 'M',
     validity: next_month('YYYY-MM-DD HH:mm:ss'), enable_order: false, all_tables: 'Yes',
     qr_codes: [], url: [(JI36A ? host : _.trimEnd(LOGIN.replace('login','menu'),'/')),('#'),(JI36A || 'local'),btoa(JSON.stringify(firebaseConfigs)),""].join('/')
   } },
