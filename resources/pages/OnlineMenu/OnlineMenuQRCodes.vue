@@ -51,7 +51,7 @@ export default {
     GH75F,
     menu: null, type: null, customer: null, price_list: null, seating: null, size: 300, level: settings('qr_code_level') || 'M',
     validity: next_month('YYYY-MM-DD HH:mm:ss'), enable_order: false, all_tables: 'Yes',
-    qr_codes: [], url: [(JI36A ? host : _.trimEnd(LOGIN.replace('login','menu'),'/')),('#'),(JI36A || 'local'),btoa(JSON.stringify(firebaseConfigs)),""].join('/')
+    qr_codes: [], url: [(JI36A ? ('https://' + host) : _.trimEnd(LOGIN.replace('login','menu'),'/')),('#'),(JI36A || 'local'),btoa(JSON.stringify(firebaseConfigs)),""].join('/')
   } },
   computed: mapState({ seats: state => state.seating.data, customers: state => state.customers.data, menus: state => state.menus.data, pls: state => state.prices.list }),
   methods: {
