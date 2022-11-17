@@ -7,7 +7,7 @@ use Milestone\SmartKitchen\Engine\Token;
 use Milestone\SmartKitchen\Jobs\FireSMS;
 use Milestone\SmartKitchen\Models\Settings;
 
-class SMSController extends Controller
+class SmsController extends Controller
 {
 
     public function store_defaults(Request $request){
