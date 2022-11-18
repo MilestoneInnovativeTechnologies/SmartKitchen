@@ -54,7 +54,7 @@ export const EDITION = SUBSCRIPTION_ARRAY['edition'];
 
 function KJDU(){ return CODE_VALID ? CODE.split("/")[0] : '' }
 function UEPQ(){ return KJDU().substr(34,5) + "" + KJDU().substr(-5); }
-function QWPO(){ return UEPQ() === _.toString(_.toInteger(new Date(SUBSCRIPTION_ARRAY['expiry']).getTime()/1000)) }
+function QWPO(){ return (_.toInteger(UEPQ()) + ((330 + new Date().getTimezoneOffset()) * 60)) === _.toInteger(new Date(SUBSCRIPTION_ARRAY['expiry']).getTime()/1000) }
 
 // E03
 if(!QWPO()) { CODE_VALID = false; CODE_INVALID_REASON = "Code is corrupted"; CODE_INVALID_DETAIL = "Expiry date mismatches"; CODE_INVALID_ERROR_CODE = 'E03' }
