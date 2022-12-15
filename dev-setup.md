@@ -1,5 +1,5 @@
 Create Laravel and Clone smartkitchen code from github into appropriate folder <br />
-`laravel new SK && cd SK && mkdir milestone && cd milestone && git clone https://github.com/MilestoneInnovativeTechnologies/SmartKitchen.git smartkitchen && cd .. && composer require spatie/laravel-medialibrary doctrine/dbal tymon/jwt-auth guzzlehttp/guzzle mike42/escpos-php`
+`laravel new SK && cd SK && mkdir milestone && cd milestone && git clone https://github.com/MilestoneInnovativeTechnologies/SmartKitchen.git smartkitchen && cd .. && composer require spatie/laravel-medialibrary doctrine/dbal hisorange/browser-detect guzzlehttp/guzzle mike42/escpos-php && composer require -w tymon/jwt-auth --ignore-platform-reqs`
 
 Add following entries in composer.json<br />
 `"Milestone\\SmartKitchen\\": "milestone/smartkitchen/src"` to autoload -> psr-4
