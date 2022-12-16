@@ -114,7 +114,12 @@ module.exports = function (/* ctx */) {
     // https://quasar.dev/quasar-cli/developing-pwa/configuring-pwa
     pwa: {
       workboxPluginMode: 'GenerateSW', // 'GenerateSW' or 'InjectManifest'
-      workboxOptions: {}, // only for GenerateSW
+      workboxOptions: {
+		exclude: [ /\.html$/ ],
+		navigateFallback: false,
+		navigateFallbackAllowlist: [],
+		skipWaiting: true
+	  }, // only for GenerateSW
       manifest: {
         name: `Smart Kitchen`,
         short_name: `Smart Kitchen`,
@@ -147,7 +152,8 @@ module.exports = function (/* ctx */) {
           {
             src: 'icons/icon-512x512.png',
             sizes: '512x512',
-            type: 'image/png'
+            type: 'image/png',
+			purpose: "any maskable"
           }
         ]
       }

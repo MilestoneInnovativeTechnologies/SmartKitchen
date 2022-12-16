@@ -1,6 +1,6 @@
 {
   "name": "smart-kitchen",
-  "version": "1.9.63",
+  "version": "1.9.65",
   "description": "Kitchen Order Token as its simple way",
   "productName": "Smart Kitchen",
   "author": "Milestone Innovative Technologies <info@milestoneit.net>",
@@ -26,6 +26,7 @@
     "quasar": "^1.0.0"
   },
   "devDependencies": {
+    "@babel/plugin-proposal-optional-chaining": "^7.18.9",
     "@quasar/app": "^2.0.0",
     "cors": "^2.8.5",
     "vuex": "^3.6.2",

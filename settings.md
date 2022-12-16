@@ -41,6 +41,11 @@ The data available for template will have the token item detail under the attrib
 browser_print
 If it needs printing from browser using the printer installed withing the PC or browsing device, then make this setting to any of true. The template for printing is developed used laravel blade template, which can be managed from `/print2` url.
 
+installable
+Smart kitchen is developed using PWA techniques, as it can be allowed to install into Mobile and Desktop devices. By default, prompting for install in disabled. It can be enabled by adding a setting in this name,
+installable, having 1,2 as its value. If its value is 1, then when logged in, a Prompt will be popup asking to install. If its value is 2 then, an icon will be displayed just before the logout button for installing.
+If its value is 0, then installing prompt will be disabled, means no installation option will made available.
+
 ping_frequency
 Normally by default, ping action (updating data from server) occurs on each 15 seconds, that is 4 pings per minute.
 This means ping_frequency is 4. This can be changed as per requirement. Ex: if made 10, then 10 pings per minute, ie on each 6 seconds it updates data from server 

@@ -10,6 +10,7 @@
         <QuickToggle v-if="quick_enabled" />
         <q-btn flat round dense icon="switch_account" :to="{ name:'customers' }" v-if="customer_manage" />
         <ManualSync />
+		<InstallPrompt v-if="installable" />
         <Logout />
       </q-toolbar>
     </q-header>
@@ -33,6 +34,7 @@
 
 <script>
 import ManualSync from "components/ManualSync";
+import InstallPrompt from "components/InstallPrompt";
 import Logout from "components/Logout";
 import {attention, settings_boolean} from "assets/helpers";
 import QuickToggle from "components/QuickToggle";
@@ -40,11 +42,12 @@ import Bills from "assets/mixins/Bills";
 const { RS44Z } = require('boot/subscription').FEATURES
 export default {
   name: 'DeliveryBoyLayout',
-  components: {QuickToggle, Logout, ManualSync},
+  components: {QuickToggle, Logout, ManualSync, InstallPrompt},
   mixins: [Bills],
   data () { return { name:_USER.name, logout: LOGOUT } },
   computed: {
     hide_others(){ return settings_boolean(settings('delivery_boy_hide_others_billed')) === true },
+	installable(){ return ![undefined,'0'].includes(settings('installable')) },
     billable(){
       return _(this.tokens)
         .filter(token => token.type === 'Home Delivery' && is_all_completed(token.items))

@@ -21,8 +21,6 @@ import settings from './settings'
 import online from './online'
 
 import research from './research'
-
-
 export default new Vuex.Store({
   modules: {
     server,

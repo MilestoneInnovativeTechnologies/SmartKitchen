@@ -11,6 +11,7 @@
         <q-btn flat round dense icon="menu_book" :to="{ name:'waiter_menu' }" />
         <q-btn flat round dense icon="switch_account" :to="{ name:'customers' }" v-if="customer_manage" />
         <ManualSync />
+		<InstallPrompt v-if="installable" />
         <Logout />
       </q-toolbar>
     </q-header>
@@ -34,13 +35,14 @@
 
 <script>
 import ManualSync from "components/ManualSync";
+import InstallPrompt from "components/InstallPrompt";
 import Logout from "components/Logout";
 import {settings_boolean} from "assets/helpers";
 import QuickToggle from "components/QuickToggle";
 const { GH75F,GH56E,RS44Z,NA57A } = require('boot/subscription').FEATURES
 export default {
   name: 'WaiterLayout',
-  components: {QuickToggle, Logout, ManualSync},
+  components: {QuickToggle, Logout, ManualSync, InstallPrompt},
   data () { return {
     waiter:_USER.name,
     online_enabled: (GH75F === 'Yes' && GH56E === 'Yes'),
@@ -48,6 +50,7 @@ export default {
   } },
   computed: {
     online(){ return this.online_enabled && settings_boolean(settings('online_order_waiter_handle')) !== false },
+	installable(){ return ![undefined,'0'].includes(settings('installable')) },
     customer_manage(){ return settings('manage_customer',_USER.role) },
     bop_enabled(){ return (settings_boolean(settings('waiter_generate_bills')) !== false || settings_boolean(settings('waiter_make_payments')) !== false) },
     quick_enabled(){ return RS44Z === 'Yes' && this.$route.name === 'order_new' },

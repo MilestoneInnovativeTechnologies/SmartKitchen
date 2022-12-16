@@ -15,6 +15,7 @@
         <q-btn flat round dense icon="receipt_long" class="lt-sm" :to="{ name:'bills' }" ><q-badge color="red" :label="completed.length" transparent floating v-show="completed.length>0" /></q-btn>
         <q-btn flat round dense label="---" :disable="true" color="primary" />
         <ManualSync />
+		<InstallPrompt v-if="installable" />
         <Logout />
       </q-toolbar>
     </q-header>
@@ -43,6 +44,7 @@
 
 <script>
 import ManualSync from "components/ManualSync";
+import InstallPrompt from "components/InstallPrompt";
 import {mapState} from "vuex";
 import {attention, popup_width, settings_boolean} from "assets/helpers";
 import Logout from "components/Logout";
@@ -51,7 +53,7 @@ import InstantItemCreateCard from "components/Item/InstantItemCreateCard";
 const { GH75F,GH56E,CC71V,DP71V,KK99V,CZ03Y,RS44Z,NA57A } = require('boot/subscription').FEATURES
 export default {
   name: 'ReceptionistLayout',
-  components: {InstantItemCreateCard, QuickToggle, Logout, ManualSync},
+  components: {InstantItemCreateCard, QuickToggle, Logout, ManualSync, InstallPrompt},
   data(){ return { receptionist:_USER.name, logout: LOGOUT, alert:false,
     online_enabled: (GH75F === 'Yes' && GH56E === 'Yes'),
     remote_enabled: (CC71V === 'Yes' && _.trim(DP71V) !== '' ),
@@ -64,6 +66,7 @@ export default {
     customer_manage(){ return settings('manage_customer',_USER.role) },
     item_create(){ return settings_boolean(settings('instant_item_create')) === true },
     remote_manage(){ return this.remote_enabled && KK99V === 'Yes' && settings_boolean(settings('receptionist_remote_orders')) !== false },
+    installable(){ return ![undefined,'0'].includes(settings('installable')) },
     quick_enabled(){ return RS44Z === 'Yes' && ['order_new','sale'].includes(this.$route.name) },
     take_away_manage(){ return this.take_away_enabled && settings_boolean(settings('take_away_receptionist_handle')) !== false },
     create_item: {
@@ -78,5 +81,6 @@ export default {
     completed(Nw,Ol){ if(!Ol || Nw.length > Ol.length) {
       attention(); this.alert = 'amber'; setTimeout(vm => vm.alert = false,15000,this)
     } }
-  }}
+  }
+}
 </script>
