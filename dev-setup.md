@@ -21,6 +21,11 @@ set **config** > **sk.php** > `domain`<br />
 set **config** > **sk.php** > `timezone`<br /><br />
 Migrate Database and add api key<br />
 `php artisan migrate && php artisan jwt:secret`<br />
+
+It is expecting a line in **.env** file like <br />
+JWT_SECRET=64_length_characters<br />
+If tymon/jwt-auth:dev-develop is what required for this project, this line wouldn't be there. So add this line manually with the 64_length_characters we will get from cmd once the above command `php artisan jwt:secret` is executed<br />
+
 add following lines to **.env** file<br />
 _MEDIA_DISK=media_<br />
 _DEMO_SERIAL=1000000000000001_<br /><br />
