@@ -3,7 +3,7 @@ $dev = env('DEV') === 'YES';
 $files = json_decode(@file_get_contents(public_path('pack.json')),true);
 @endphp
 @if($dev)
-    <base href="http://sk:8080">
+    <base href="http://127.0.0.1:8080">
     <script src=vendor.js></script>
     <script src=app.js></script>
 @else
